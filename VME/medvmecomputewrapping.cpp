@@ -4975,8 +4975,7 @@ int medVMEComputeWrapping::InternalStore(mafStorageElement *parent)
 				int index = -1;
 				for(int j=0; j< lc->GetNumberOfLandmarks(); j++)
 				{
-					mafVME *child = lc->GetLandmark(j);
-					if(mafString(child->GetName()).Equals(m_OrderMiddlePointsNameVMEList[i])) index = j;
+					if(mafString(lc->GetLandmarkName(j)).Equals(m_OrderMiddlePointsNameVMEList[i])) index = j;
 				}
 
 				PushIdVector(index);
@@ -5308,11 +5307,11 @@ mafGUI* medVMEComputeWrapping::CreateGuiForOldMeter( mafGUI *gui ){
 				if(mafVMELandmarkCloud *lc = mafVMELandmarkCloud::SafeDownCast(i->second.m_Node))
 				{
 					int idx = m_OrderMiddlePointsVMEList[++j];
-					mafVMELandmark *landmark  = lc->GetLandmark(idx);
-					if(landmark)
+					const char *landmarkNm  = lc->GetLandmarkName(idx);
+					if(landmarkNm)
 					{
-						m_ListBox->Append(landmark->GetName());
-						m_OrderMiddlePointsNameVMEList.push_back(landmark->GetName());
+						m_ListBox->Append(landmarkNm);
+						m_OrderMiddlePointsNameVMEList.push_back(landmarkNm);
 					}
 				}
 				else
@@ -5892,10 +5891,10 @@ void medVMEComputeWrapping::SyncronizeList()
 				if(mafVMELandmarkCloud *lc = mafVMELandmarkCloud::SafeDownCast(i->second.m_Node))
 				{
 					int idx = m_OrderMiddlePointsVMEList[++j];
-					mafVMELandmark *landmark  = lc->GetLandmark(idx);
-					if(landmark)
+					const char *landmarkNm  = lc->GetLandmarkName(idx);
+					if(landmarkNm)
 					{
-						m_OrderMiddlePointsNameVMEList.push_back(landmark->GetName());
+						m_OrderMiddlePointsNameVMEList.push_back(landmarkNm);
 					}
 				}
 				else
