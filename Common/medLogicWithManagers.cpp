@@ -405,7 +405,9 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 			mafLogicWithManagers::OnEvent(maf_event);
 			break; 
 		} // end switch case
+    return;
 	} // end if SafeDowncast
+  mafLogicWithManagers::OnEvent(maf_event);
 }
 
 
