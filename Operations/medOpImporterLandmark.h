@@ -90,6 +90,9 @@ protected:
   void DestroyDictionary();
   void DictionaryUpdate();
 
+  void LMRenameUpdate();
+  bool LoadLMRename();
+  void DestroyLMRename();
   
   enum ID_LANDMARK_IMPORTER
   {
@@ -99,6 +102,8 @@ protected:
     ID_STRING_SEPARATION,
     ID_LOAD_DICT,
     ID_CLEAR_DICT,
+    ID_LOAD_LMREN,
+    ID_CLEAR_LMREN,
     MINID,
   };
 
@@ -111,6 +116,8 @@ protected:
   int                               m_TagFileFlag;
   mafString                         m_DictionaryFileName;
   std::map<mafString, mafString>    m_dictionaryStruct;
+  mafString                         m_LMRenameFileName;
+  std::map<mafString, mafString>    m_LMRenameStruct;
 
 
 };

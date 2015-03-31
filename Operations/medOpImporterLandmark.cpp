@@ -58,6 +58,7 @@ medOpImporterLandmark::medOpImporterLandmark(const mafString& label) : Superclas
 	
 	m_TagFileFlag        = true;
 	m_DictionaryFileName = "";
+  m_LMRenameFileName = "";
 }
 //----------------------------------------------------------------------------
 medOpImporterLandmark::~medOpImporterLandmark( ) 
@@ -100,11 +101,15 @@ void medOpImporterLandmark::CreateGui()
   m_Gui->String(ID_STRING_SEPARATION,"",&m_StringSeparation,"Insert here the right char for separation");
   m_Gui->Divider();
   m_Gui->Bool(ID_TYPE_FILE,"Tagged file",&m_TagFileFlag,0,"Check if the format is NAME x y z");
+  m_Gui->Label("");
+  m_Gui->FileOpen(ID_LOAD_LMREN, "Rename",  &m_LMRenameFileName, "*.txt");
+  m_Gui->Button(ID_CLEAR_LMREN, "Clean", "", "Press to cancel using LM renamer" );  
   m_Gui->Divider();
-  m_Gui->FileOpen(ID_LOAD_DICT, "Dictionary",  &m_DictionaryFileName, "*.txt");
+  m_Gui->FileOpen(ID_LOAD_DICT, "Segment",  &m_DictionaryFileName, "*.txt");
   m_Gui->Button(ID_CLEAR_DICT, "Clean", "", "Press to cancel using dictionary" );  
 
   m_Gui->Enable(ID_CLEAR_DICT, (m_DictionaryFileName != ""));
+  m_Gui->Enable(ID_CLEAR_LMREN, (m_LMRenameFileName != ""));
 
   m_Gui->OkCancel();
   m_Gui->Enable(ID_ENABLE_STRING,!m_TagFileFlag);
@@ -209,6 +214,15 @@ void medOpImporterLandmark::OnEvent(mafEventBase *maf_event)
         DictionaryUpdate();
         break;
       }
+      case ID_CLEAR_LMREN:
+        {
+          m_LMRenameFileName = "";
+        }//WARNING! NO break operator here, execution will continue in ID_LOAD_DICT
+      case ID_LOAD_LMREN:
+        {
+          LMRenameUpdate();
+          break;
+        }
     default:
       mafEventMacro(*e);
       break;
@@ -340,7 +354,7 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
   //cloud->Open();*/
 
   std::ifstream  landmarkFileStream(fname);
-  char name[50];
+  char nameBuf[50];
   char time[30] = "0";
   char tx[30];
   char ty[30];
@@ -365,14 +379,16 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
 
   while(!landmarkFileStream.fail())
   {
-    landmarkFileStream >> name;
-    if(name[0] == '#' || mafString(name) == "") 
+    landmarkFileStream >> nameBuf;
+	mafString nameStr;
+	nameStr = mafString(nameBuf);
+    if(nameBuf[0] == '#' || nameStr == "") 
     {
       //jump the comment or the blank line
-      landmarkFileStream.getline(name,20);
+      landmarkFileStream.getline(nameBuf,20);
       continue;
     }
-    else if(mafString(name) == "Time")
+    else if(nameStr == "Time")
     {
       landmarkFileStream >> time;
       counter = 0;
@@ -388,7 +404,13 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
       z = atof(tz);
       t = atof(time);
 
-      std::map<mafString, std::pair<mafVMELandmarkCloud*, int> >::iterator it = lms.find(mafString(name));
+	  std::map<mafString, mafString>::iterator renIt = m_LMRenameStruct.find(nameStr);
+	  //trajectory name found
+	  if(renIt != m_LMRenameStruct.end())
+		  nameStr = renIt->second;
+
+
+      std::map<mafString, std::pair<mafVMELandmarkCloud*, int> >::iterator it = lms.find(nameStr);
       if(it == lms.end())
       {
         mafVMELandmarkCloud *addTo = specCloud;//by default add to this specific cloud
@@ -396,7 +418,7 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
         if(usingDictionary)
         {
           //find current trajectory name in dictionary
-          std::map<mafString, mafString>::iterator nmIt = m_dictionaryStruct.find(name);
+          std::map<mafString, mafString>::iterator nmIt = m_dictionaryStruct.find(nameStr);
           //trajectory name found
           if(nmIt != m_dictionaryStruct.end())
           {
@@ -463,8 +485,8 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
             }
           }
         }
-        int idx = addTo->AppendLandmark(name, false);
-        it = lms.insert(std::make_pair(mafString(name), std::make_pair(addTo, idx))).first;
+        int idx = addTo->AppendLandmark(nameStr, false);
+        it = lms.insert(std::make_pair(nameStr, std::make_pair(addTo, idx))).first;
       }
 
       it->second.first->SetLandmark(it->second.second, x ,y ,z,t);
@@ -641,3 +663,51 @@ void medOpImporterLandmark::DictionaryUpdate()
   }
 }
 
+//----------------------------------------------------------------------------
+bool medOpImporterLandmark::LoadLMRename()
+//----------------------------------------------------------------------------
+{
+  vcl_string landmarkName, segmentName;
+  vcl_ifstream LMRenameInputStream(m_LMRenameFileName, std::ios::in);
+
+  if(LMRenameInputStream.is_open() == 0)
+    return false;
+  while(LMRenameInputStream >> landmarkName)	
+  {
+    LMRenameInputStream >> segmentName;			
+    std::map<mafString, mafString>::iterator it = m_LMRenameStruct.find(landmarkName.c_str());
+    if(it != m_LMRenameStruct.end())
+    {
+      m_LMRenameStruct.clear();
+      return false;
+    }
+    m_LMRenameStruct[landmarkName.c_str()] = segmentName.c_str();
+  }
+  return true;
+}
+//----------------------------------------------------------------------------
+void medOpImporterLandmark::DestroyLMRename()
+//----------------------------------------------------------------------------
+{
+  m_LMRenameStruct.clear();
+}
+//----------------------------------------------------------------------------
+void medOpImporterLandmark::LMRenameUpdate() 
+//----------------------------------------------------------------------------
+{
+  bool emptyName = (m_LMRenameFileName == "");
+  DestroyLMRename();
+  if(!emptyName)
+  {
+    if(!LoadLMRename())
+    {
+      wxLogMessage("Error reading LM renamer.");
+      m_LMRenameFileName = "";
+    }
+  }
+  if(m_Gui)
+  {
+    m_Gui->Enable(ID_CLEAR_LMREN, !emptyName);
+    m_Gui->Update();
+  }
+}
