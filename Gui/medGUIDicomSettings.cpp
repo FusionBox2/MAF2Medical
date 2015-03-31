@@ -30,7 +30,7 @@
 #include "mafGUICheckListBox.h"
 
 //----------------------------------------------------------------------------
-medGUIDicomSettings::medGUIDicomSettings(mafObserver *Listener, const mafString &label):
+medGUIDicomSettings::medGUIDicomSettings(mafBaseEventHandler *Listener, const mafString &label):
 mafGUISettings(Listener, label)
 //----------------------------------------------------------------------------
 {

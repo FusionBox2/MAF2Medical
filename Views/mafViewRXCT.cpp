@@ -122,12 +122,12 @@ mafViewRXCT::~mafViewRXCT()
   }
 }
 //----------------------------------------------------------------------------
-mafView *mafViewRXCT::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewRXCT::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   mafViewRXCT *v = new mafViewRXCT(m_Label);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

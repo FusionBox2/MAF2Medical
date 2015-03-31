@@ -28,7 +28,7 @@
 #include "mafVMELandmark.h"
 #include "mmaMeter.h"
 #include "mmaMaterial.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mafTransform.h"
 #include "mafStorageElement.h"
 #include "mafIndent.h"
@@ -588,7 +588,7 @@ void medVMEComputeWrapping::DirectConnectSE(){
 	d0 = sqrt(vtkMath::Distance2BetweenPoints(m_StartPoint,m_EndPoint));
 	m_Distance = d0;
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update(); 
 }
 //note : c coord is using local value
@@ -934,7 +934,7 @@ void medVMEComputeWrapping::WrapCylinderCylinderObstacleSet(){
 	//m_Goniometer->Update();
 	//m_Goniometer->GetOutput()->Update();
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update(); 
 }
 void medVMEComputeWrapping::WrapCylinderOnlyObstacleSetBasic2(double *Sg,double *Pg,int idx,boolean reverseFlag,double &segLength,double *Tout,double *Qout){
@@ -1059,7 +1059,7 @@ void medVMEComputeWrapping::WrapCylinderOnlyObstacleSet(int idx){
 	vtkDEL(Line2);
 	vtkDEL(hCurve);
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update(); 
 }
 double medVMEComputeWrapping::GetQTsegment(double R,double *Q,double *T){
@@ -1422,7 +1422,7 @@ void medVMEComputeWrapping::WrapCylinderOnly(int step){
 
 	}
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update(); 
 
 }
@@ -2317,7 +2317,7 @@ void medVMEComputeWrapping::WrapSphereOnly(const int step,bool allowIntersectFla
 
 		m_Distance = LmFinal;
 
-		m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+		InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 		GetWrappedMeterOutput()->Update(); 
 	}else{
 		DirectConnectSE();
@@ -2693,7 +2693,7 @@ void medVMEComputeWrapping::GetCylinderCylinderWrap(const int step){
 
 
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update(); 
 
 
@@ -3061,7 +3061,7 @@ void medVMEComputeWrapping::GetSphereCylinderWrap(const int step,double *viaPoin
 		outputFile2.close();
 
 
-		m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+		InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 		GetWrappedMeterOutput()->Update(); 
 
 	}else{
@@ -4818,7 +4818,7 @@ void medVMEComputeWrapping::SingleWrapAutomatedIOR(mafVME * wrapped_vme,double *
 	m_Goniometer->AddInput(clipData->GetOutput());
 	//---------------over--------------------------
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update();
 
 
@@ -6188,11 +6188,11 @@ void medVMEComputeWrapping::InternalUpdateManual()//first
 		else
 			m_Distance = -1;
 
-		m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+		InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 
 
 		if(GetMeterMeasureType() == medVMEComputeWrapping::ABSOLUTE_MEASURE && GetMeterAttributes()->m_ThresholdEvent > 0 && m_Distance >= 0 && m_Distance >= threshold)
-			m_EventSource->InvokeEvent(this,LENGTH_THRESHOLD_EVENT);
+			InvokeEvent(this,LENGTH_THRESHOLD_EVENT);
 
 
 
@@ -6359,7 +6359,7 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
 
     m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
 
-    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
     GetWrappedMeterOutput()->Update();
 
     return;
@@ -6384,7 +6384,7 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
 
     m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
 
-    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
     GetWrappedMeterOutput()->Update();
 
     return;
@@ -6750,7 +6750,7 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
   m_Goniometer->AddInput(m_LineSource2->GetOutput());
 
 
-  m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+  InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
   GetWrappedMeterOutput()->Update(); 
 }
 //-----------------------------------------------------------------------
@@ -7116,7 +7116,7 @@ void medVMEComputeWrapping::InternalUpdateAutomatedIOR()//third
 		m_Goniometer->AddInput(m_Clip->GetOutput());
 
 
-		m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+		InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 		GetWrappedMeterOutput()->Update(); 
 	}
 	else
@@ -7281,7 +7281,7 @@ void medVMEComputeWrapping::AvoidWrapping(double *local_start, double *local_end
 
 	m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
 
-	m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+	InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
 	GetWrappedMeterOutput()->Update();
 }
 //-------------------------------------------------------------------------

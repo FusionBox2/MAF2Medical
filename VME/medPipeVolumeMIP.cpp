@@ -57,7 +57,7 @@
 #include "vtkOutlineSource.h"
 //#include "vtkColorTransferFunction.h"
 #include "vtkMAFVolumeRayCastMapper.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 
 //----------------------------------------------------------------------------
 mafCxxTypeMacro(medPipeVolumeMIP);

@@ -33,7 +33,7 @@
 #include "mafGUILutPreset.h"
 #include "mafTransformBase.h"
 #include "mafVMEOutputMesh.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mafAbsMatrixPipe.h"
 
 #include "mafDataVector.h"
@@ -126,7 +126,7 @@ void mafPipeMeshSlice_BES::Create(mafSceneNode *n)
   m_ActorWired      = NULL;
   m_MapperWired     = NULL;
 
-  m_Vme->GetEventSource()->AddObserver(this);
+  m_Vme->AddObserver(this);
 
 	ExecutePipe();
 
@@ -315,7 +315,7 @@ void mafPipeMeshSlice_BES::RemoveActorsFromAssembly(vtkMAFAssembly *assembly)
 mafPipeMeshSlice_BES::~mafPipeMeshSlice_BES()
 //----------------------------------------------------------------------------
 {
-	m_Vme->GetEventSource()->RemoveObserver(this);
+	m_Vme->RemoveObserver(this);
 	RemoveActorsFromAssembly(m_AssemblyFront);
 
   vtkDEL(m_Plane);

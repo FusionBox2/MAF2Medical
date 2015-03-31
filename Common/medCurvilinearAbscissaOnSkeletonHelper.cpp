@@ -356,7 +356,7 @@ vtkIdType &outputVertexId, vtkIdType &outputEdgeID, vtkIdType &outputBranchId)
 }
   
 
-medCurvilinearAbscissaOnSkeletonHelper::medCurvilinearAbscissaOnSkeletonHelper( mafVME *inputVME, mafObserver *listener, bool testMode)
+medCurvilinearAbscissaOnSkeletonHelper::medCurvilinearAbscissaOnSkeletonHelper( mafVME *inputVME, mafBaseEventHandler *listener, bool testMode)
 {
   m_InputVME = inputVME;
   m_ConstraintVMEPolylineGraph = NULL;
@@ -371,7 +371,7 @@ medCurvilinearAbscissaOnSkeletonHelper::medCurvilinearAbscissaOnSkeletonHelper( 
   m_CurvilinearAbscissa = 0;
   m_GUICurvilinearAbscissa = m_CurvilinearAbscissa;
 
-  m_Listener = listener;
+  SetListener(listener);
   m_Gui = NULL;
 
   if (!m_TestMode)

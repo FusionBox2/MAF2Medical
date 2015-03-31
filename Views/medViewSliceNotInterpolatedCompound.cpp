@@ -59,13 +59,13 @@ void medViewSliceNotInterpolatedCompound::PackageView()
 }
 
 //----------------------------------------------------------------------------
-mafView *medViewSliceNotInterpolatedCompound::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewSliceNotInterpolatedCompound::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   // Copy the view and sub-views attributes
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSliceNotInterpolatedCompound *v = new medViewSliceNotInterpolatedCompound(m_Label);
-  v->m_Listener = Listener;
+  SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

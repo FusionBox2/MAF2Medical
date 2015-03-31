@@ -25,7 +25,7 @@
 #include "vnl/vnl_vector.h"
 #include <vector>
 #include "mafString.h"
-#include "mafObserver.h"
+#include "mafEventSender.h"
 
 using namespace std;
 
@@ -59,7 +59,7 @@ helper->ParseDicomDirectory();
 cout << helper->GetFileNumberForPlaneIFrameJ();
 
 */
-class MED_OPERATION_EXPORT medDicomCardiacMRIHelper
+class MED_OPERATION_EXPORT medDicomCardiacMRIHelper : public mafEventSender
 {
 public:
 
@@ -68,9 +68,6 @@ public:
   ~medDicomCardiacMRIHelper();
   
 
-  /** Set the Listener that will receive event-notification. */
-  void SetListener(mafObserver *Listener) {m_Listener = Listener;};
- 
   /**
   Input modality enum */
   enum INPUT_MODALITY { DICOM_DIRECTORY_ABS_PATH = 0, DICOM_SLICES_ABS_FILE_NAMES_VECTOR = 1, NUMBER_OF_MODALITIES = 2 };
@@ -158,8 +155,6 @@ public:
   bool GetTestMode() { return m_TestMode; };
 
 private:
-
-  mafObserver *m_Listener;
 
   mafString m_InputDicomDirectoryABSPath;
 

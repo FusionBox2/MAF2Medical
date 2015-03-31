@@ -64,7 +64,7 @@ public:
   virtual void SetExternalView(mafViewVTK *childView);
 
   /** Function that clones instance of the object. */
-  virtual mafView *Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+  virtual mafView *Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
 
   /** Update camera */
   virtual void CameraUpdate();

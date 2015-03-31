@@ -27,7 +27,7 @@
 #include "mafGUI.h"
 
 //----------------------------------------------------------------------------
-medGUISettingsAdvanced::medGUISettingsAdvanced(mafObserver *Listener, const mafString &label):
+medGUISettingsAdvanced::medGUISettingsAdvanced(mafBaseEventHandler *Listener, const mafString &label):
 mafGUISettings(Listener, label)
 //----------------------------------------------------------------------------
 {

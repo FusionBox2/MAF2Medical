@@ -55,7 +55,7 @@ class MED_INTERACTION_EXPORT medGizmoPolylineGraph : public mafGizmoInterface
 public:
   /** The only way to construct correctly the instance */
   inline static medGizmoPolylineGraph* New(mafNode* inputVme, 
-    mafObserver *Listener = NULL, const char *name = "GizmoPath", bool showOnlyDirectionAxis = false, bool testMode = false)
+    mafBaseEventHandler *Listener = NULL, const char *name = "GizmoPath", bool showOnlyDirectionAxis = false, bool testMode = false)
   {
     medGizmoPolylineGraph* pThis = new medGizmoPolylineGraph(inputVme,Listener, name, showOnlyDirectionAxis, testMode);
     pThis->InternalInitInstance();
@@ -73,7 +73,7 @@ public:
   }
 
 protected:
-  medGizmoPolylineGraph(mafNode* inputVme, mafObserver *Listener = NULL, const char *name = "GizmoPath", bool showOnlyDirectionAxis = false, bool testMode = false);
+  medGizmoPolylineGraph(mafNode* inputVme, mafBaseEventHandler *Listener = NULL, const char *name = "GizmoPath", bool showOnlyDirectionAxis = false, bool testMode = false);
   
   /** Initializes the object. May not be called twice (unless Done method was called).  */
   virtual void InternalInitInstance();

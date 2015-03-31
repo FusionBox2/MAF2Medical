@@ -82,12 +82,12 @@ mafViewGlobalSliceCompound::~mafViewGlobalSliceCompound()
 	cppDEL(m_LutSlider);
 }
 //----------------------------------------------------------------------------
-mafView *mafViewGlobalSliceCompound::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewGlobalSliceCompound::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   mafViewGlobalSliceCompound *v = new mafViewGlobalSliceCompound(m_Label, m_ViewRowNum, m_ViewColNum);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

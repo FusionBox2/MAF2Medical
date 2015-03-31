@@ -28,7 +28,7 @@
 #include "mafVMELandmark.h"
 #include "mmaMeter.h"
 #include "mmaMaterial.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mafTransform.h"
 #include "mafStorageElement.h"
 #include "mafIndent.h"
@@ -618,7 +618,7 @@ void medVMEWrappedMeter::InternalUpdateAutomatedIOR()
     m_Goniometer->AddInput(m_Clip->GetOutput());
 
 
-    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
     GetWrappedMeterOutput()->Update(); 
   }
   else
@@ -798,7 +798,7 @@ void medVMEWrappedMeter::AvoidWrapping(double *local_start, double *local_end)
   
   m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
 
-  m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+  InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
   GetWrappedMeterOutput()->Update();
 }
 //-----------------------------------------------------------------------
@@ -957,7 +957,7 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
 
     m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
 
-    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
     GetWrappedMeterOutput()->Update();
 
     return;
@@ -982,7 +982,7 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
 
     m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
 
-    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
     GetWrappedMeterOutput()->Update();
 
     return;
@@ -1338,7 +1338,7 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
   m_Goniometer->AddInput(m_LineSource2->GetOutput());
 
 
-  m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+  InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
   GetWrappedMeterOutput()->Update(); 
 }
 //-----------------------------------------------------------------------
@@ -1556,11 +1556,11 @@ void medVMEWrappedMeter::InternalUpdateManual()
     else
       m_Distance = -1;
 
-    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
     
 
     if(GetMeterMeasureType() == medVMEWrappedMeter::ABSOLUTE_MEASURE && GetMeterAttributes()->m_ThresholdEvent > 0 && m_Distance >= 0 && m_Distance >= threshold)
-      m_EventSource->InvokeEvent(this,LENGTH_THRESHOLD_EVENT);
+      InvokeEvent(this,LENGTH_THRESHOLD_EVENT);
 
     
 

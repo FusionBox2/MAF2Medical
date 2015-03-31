@@ -21,7 +21,6 @@
 // includes :
 //----------------------------------------------------------------------------
 #include "medCommonDefines.h"
-#include "mafObserver.h"
 #include "medWizardBlock.h"
 #include <vector>
 
@@ -42,7 +41,7 @@ EXPORT_STL_VECTOR(MED_COMMON_EXPORT,medWizardBlock *);
   Class Name: medWizard.
   Class for wizard creation each wizard must extend this block
 */
-class MED_COMMON_EXPORT medWizard : mafObserver
+class MED_COMMON_EXPORT medWizard : mafBaseEventHandler, public mafEventSender
 {
 public:
 
@@ -84,9 +83,6 @@ protected:
   /** Execute the wizard */
   void Execute();
 
-  /** Sets The event listener */
-  void SetListener(mafObserver *Listener);
-
   /** returns a description about current step in wizard */
   mafString GetDescriptionTitle();
 
@@ -108,8 +104,6 @@ protected:
 
   /** Set the selected VME, this function must be called before execution begin*/
   void SetSelectedVME(mafNode *node);
-
-  mafObserver    *m_Listener;
 
 private:
 

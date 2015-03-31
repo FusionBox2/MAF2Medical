@@ -29,7 +29,7 @@
 #include "mafAxes.h"
 #include "mmaMaterial.h"
 #include "mafVMEOutputPolyline.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 
 #include "mafDataVector.h"
 #include "mafVMEGenericAbstract.h"
@@ -113,7 +113,7 @@ void medVisualPipePolylineGraph::Create(mafSceneNode *n)
   m_Axes            = NULL;
   m_ActorBranchId   = NULL;
 
-  m_Vme->GetEventSource()->AddObserver(this);
+  m_Vme->AddObserver(this);
 
   InitializeFromTag();
 
@@ -413,7 +413,7 @@ medVisualPipePolylineGraph::~medVisualPipePolylineGraph()
 {
   RemoveActorsFromAssembly(m_AssemblyFront);
 
-  m_Vme->GetEventSource()->RemoveObserver(this);
+  m_Vme->RemoveObserver(this);
 
   vtkDEL(m_ActorBranchId);
   vtkDEL(m_Sphere);

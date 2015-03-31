@@ -79,7 +79,7 @@ medGUILutHistogramSwatch::medGUILutHistogramSwatch(wxWindow* parent, wxWindowID 
 //----------------------------------------------------------------------------
 {
   m_ShowThreshold= false;
-	m_Listener = NULL;
+	SetListener(NULL);
   m_Editable = false;
   SetMaterial(NULL);
 
@@ -179,7 +179,7 @@ void medGUILutHistogramSwatch::OnLeftMouseButtonDown(wxMouseEvent &event)
     }
     //run only if editable
 
-    medGUILutHistogramEditor::ShowLutHistogramDialog(m_DataSet,m_Material,"Histogram Lut Editor",m_Listener,  GetId());
+    medGUILutHistogramEditor::ShowLutHistogramDialog(m_DataSet,m_Material,"Histogram Lut Editor",GetListener(),  GetId());
 
     Modified();
   }

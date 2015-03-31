@@ -30,7 +30,7 @@
 
 #include "mafVME.h"
 #include "medVMEOutputSurfaceEditor.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mmaMaterial.h"
 
 #include "vtkMAFAssembly.h"
@@ -67,7 +67,7 @@ void medPipeSurfaceEditor::Create(mafSceneNode *n)
 
 	medVMEOutputSurfaceEditor *out_polyline = medVMEOutputSurfaceEditor::SafeDownCast(m_Vme->GetOutput());
 	assert(out_polyline);
-	m_Vme->GetEventSource()->AddObserver(this);
+	m_Vme->AddObserver(this);
 	vtkPolyData *data = vtkPolyData::SafeDownCast(out_polyline->GetVTKData());
 	assert(data);
 	data->Update();
@@ -100,7 +100,7 @@ medPipeSurfaceEditor::~medPipeSurfaceEditor()
 //----------------------------------------------------------------------------
 {
 	m_AssemblyFront->RemovePart(m_Actor);
-	m_Vme->GetEventSource()->RemoveObserver(this);
+	m_Vme->RemoveObserver(this);
 
 	vtkDEL(m_Actor);
 	vtkDEL(m_Mapper);

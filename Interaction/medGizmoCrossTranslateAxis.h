@@ -55,7 +55,7 @@ class vtkAppendPolyData;
 class medGizmoCrossTranslateAxis: public mafGizmoInterface 
 {
 public:
-           medGizmoCrossTranslateAxis(mafVME *input, mafObserver *listener = NULL);
+           medGizmoCrossTranslateAxis(mafVME *input, mafBaseEventHandler *listener = NULL);
   virtual ~medGizmoCrossTranslateAxis(); 
   
   /** 
@@ -66,9 +66,6 @@ public:
   //----------------------------------------------------------------------------
   // events handling 
   //----------------------------------------------------------------------------
-  
-  /** Set the event receiver object*/
-  void  SetListener(mafObserver *Listener) {m_Listener = Listener;};
   
   /** Events handling*/        
   virtual void OnEvent(mafEventBase *maf_event);
@@ -218,10 +215,6 @@ protected:
 
   /** isa generic*/
   mafInteractorGenericMouse *m_IsaGen;
-
-  /**
-  Register the event receiver object*/
-  mafObserver *m_Listener;
 
   /** test friend */
   friend class mafGizmoTranslateAxisTest;

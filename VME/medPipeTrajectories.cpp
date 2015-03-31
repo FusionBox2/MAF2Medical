@@ -35,7 +35,7 @@
 #include "mafVMEOutputPolyline.h"
 #include "mafVMELandmarkCloud.h"
 #include "mafVMELandmark.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mmuTimeSet.h"
 
 #include "vtkAppendPolyData.h"
@@ -82,7 +82,7 @@ void medPipeTrajectories::Create(mafSceneNode *n)
  // m_MatrixVector = vmeGeneric->GetMatrixVector();
    m_MatrixVector = m_Landmark->GetMatrixVector();
 
-  m_Vme->GetEventSource()->AddObserver(this);
+  m_Vme->AddObserver(this);
 
   double radius;
   if(mafVMELandmarkCloud *cloud = mafVMELandmarkCloud::SafeDownCast(m_Vme->GetParent()))
@@ -145,7 +145,7 @@ void medPipeTrajectories::Create(mafSceneNode *n)
 medPipeTrajectories::~medPipeTrajectories()
 //----------------------------------------------------------------------------
 {
-  m_Landmark->GetEventSource()->RemoveObserver(this);
+  m_Landmark->RemoveObserver(this);
   m_AssemblyFront->RemovePart(m_Actor);
   m_AssemblyFront->AddPart(m_OutlineActor);
 

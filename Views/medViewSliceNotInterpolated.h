@@ -58,7 +58,7 @@ public:
   /*virtual void CreateGuiView(){Superclass::CreateGuiView();};*/
 
   /** Function that clones instance of the object. */
-  virtual mafView* Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+  virtual mafView* Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
 
   /** Create VME visual pipe */
   virtual void VmeShow(mafNode *vme, bool show);

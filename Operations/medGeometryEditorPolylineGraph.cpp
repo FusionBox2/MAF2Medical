@@ -48,7 +48,7 @@
 #include "vtkCellLocator.h"
 
 //----------------------------------------------------------------------------
-medGeometryEditorPolylineGraph::medGeometryEditorPolylineGraph(mafVME *input, mafObserver *listener,medVMEPolylineGraph *polyline,bool testMode)
+medGeometryEditorPolylineGraph::medGeometryEditorPolylineGraph(mafVME *input, mafBaseEventHandler *listener,medVMEPolylineGraph *polyline,bool testMode)
 //----------------------------------------------------------------------------
 {
 	m_PolylineGraph = new mafPolylineGraph;
@@ -70,7 +70,7 @@ medGeometryEditorPolylineGraph::medGeometryEditorPolylineGraph(mafVME *input, ma
 		m_VMEPolylineEditor->ReparentTo(mafVME::SafeDownCast(input->GetRoot()));
 
 	m_InputVME	=	input;
-	m_Listener	= listener;
+	SetListener(listener);
 
 	m_CurrentBranch = 0;
 

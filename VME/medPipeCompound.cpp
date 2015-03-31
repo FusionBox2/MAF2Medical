@@ -150,7 +150,7 @@ children from parent instead of vice versa as usually. */
 class mafGUIAutoResized : public mafGUI
 {
 public:
-  mafGUIAutoResized(mafObserver *listener) : mafGUI(listener) {    
+  mafGUIAutoResized(mafBaseEventHandler *listener) : mafGUI(listener) {    
   }
 
 protected:

@@ -24,7 +24,7 @@
 // Forward declarations:
 //----------------------------------------------------------------------------
 class mafObject;
-class mafObserver;
+class mafBaseEventHandler;
 class mafString;
 /**
   class name: mafVMEVolumeLargeUtils
@@ -56,7 +56,7 @@ public:
   1, if it is small volume and 2, if it is large volume.
   For large volumes, it returns also path, where the brick files
   should be placed (see szOutDir) */
-  static int VolumeLargeCheck(mafObject* caller, mafObserver* listener,
+  static int VolumeLargeCheck(mafObject* caller, mafBaseEventHandler* listener,
     int VOI[6], int nDataType, int nNumOfComp, 
     int nMemLimit, mafString& szOutDir);
 
@@ -64,7 +64,7 @@ public:
   Typical call: GetBrickedLayoutDir(this, m_Listener)
   If an error occurs, an empty string is returned.*/
   static mafString GetBrickedLayoutDir(void* sender, 
-    mafObserver* listener);
+    mafBaseEventHandler* listener);
 
   //BES: 17.7.2008 - moved to mafDecl.h as mafFormatDataSize
   ///** Formats the specified size to B, KB, MB or GB */

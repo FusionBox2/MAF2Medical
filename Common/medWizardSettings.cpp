@@ -29,7 +29,7 @@
 #include "mafGUIDialog.h"
 
 //----------------------------------------------------------------------------
-medWizardSettings::medWizardSettings(mafObserver *Listener, const mafString &label):mafGUISettings(Listener, label)
+medWizardSettings::medWizardSettings(mafBaseEventHandler *Listener, const mafString &label):mafGUISettings(Listener, label)
 //----------------------------------------------------------------------------
 {
   //default constructor

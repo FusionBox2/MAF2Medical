@@ -61,7 +61,6 @@ medDicomCardiacMRIHelper::medDicomCardiacMRIHelper()
 {
   m_InputDicomDirectoryABSPath = "UNDEFINED_m_InputDicomDirectoryABSPath";
   m_TestMode = false;
-  m_Listener = NULL;
   m_Mode = DICOM_DIRECTORY_ABS_PATH;
 }
 

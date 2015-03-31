@@ -59,7 +59,7 @@ public:
   virtual void PackageView()=0;
 
   /** Function that clones instance of the object. */
-  virtual mafView *Copy(mafObserver *Listener, bool lightCopyEnabled = false)=0;
+  virtual mafView *Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false)=0;
   
   /** 
   Create the GUI on the bottom of the compounded view. */

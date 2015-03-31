@@ -28,7 +28,7 @@
 // forward references :
 //----------------------------------------------------------------------------
 class mafView;
-class mafObserver;
+class mafBaseEventHandler;
 class mafSceneNode;
 class mafEventBase;
 class mafString;
@@ -70,7 +70,7 @@ public:
   };
   
   /** Function that clones instance of the object. */
-	virtual mafView *Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+	virtual mafView *Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
 
   /** Function that creates renderwindow, scenegraph, specific actors and interactors. */
 	virtual void Create();

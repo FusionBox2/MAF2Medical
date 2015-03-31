@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
 #include "mafGizmoInterface.h"
+#include "mafBaseEventHandler.h"
 #include "mafGizmoHandle.h"
 
 //----------------------------------------------------------------------------
@@ -32,7 +33,6 @@ class mafMatrix;
 class mafVME;
 class mafGizmoTranslatePlane;
 class mafGizmoTranslateAxis;
-class mafObserver;
 class mafGizmoBoundingBox;
 
 //----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ public:
 	};
 
 public:
-	mafGizmoROI_BES(mafVME *input, mafObserver* listener = NULL , 
+	mafGizmoROI_BES(mafVME *input, mafBaseEventHandler* listener = NULL , 
 		int constraintModality = mafGizmoROI_BES::VTK_OUTPUT_BOUNDS,
 		mafVME* parent = NULL, double* usrBounds = NULL);
 

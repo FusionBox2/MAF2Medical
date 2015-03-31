@@ -74,7 +74,7 @@ mafOp* medOpImporterLandmark::Copy()
 	medOpImporterLandmark *cp = new medOpImporterLandmark(m_Label);
 	cp->m_Canundo = m_Canundo;
 	cp->m_OpType = m_OpType;
-	cp->m_Listener = m_Listener;
+  cp->SetListener(GetListener());
 	cp->m_Next = NULL;
 
 	cp->m_Files               = m_Files;

@@ -88,12 +88,12 @@ medViewSliceBlendRX::~medViewSliceBlendRX()
   vtkDEL(m_VtkLUT);
 }
 //----------------------------------------------------------------------------
-mafView *medViewSliceBlendRX::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewSliceBlendRX::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSliceBlendRX *v = new medViewSliceBlendRX(m_Label);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

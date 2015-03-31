@@ -53,7 +53,7 @@ class mafMatrix;
 class medGizmoCrossRotate : public mafGizmoInterface 
 {
 public:
-           medGizmoCrossRotate(mafVME *input, mafObserver* listener = NULL, bool buildGUI = true, int axis = X);
+           medGizmoCrossRotate(mafVME *input, mafBaseEventHandler* listener = NULL, bool buildGUI = true, int axis = X);
   virtual ~medGizmoCrossRotate(); 
 
   /** 

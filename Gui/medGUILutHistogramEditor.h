@@ -56,17 +56,11 @@ public:
   };
 
   /** Constructor. */
-  medGUILutHistogramEditor(vtkDataSet *dataSet,mmaVolumeMaterial *material, char *name="Histogram & Windowing", mafObserver *Listener=NULL, int id=MINID);
+  medGUILutHistogramEditor(vtkDataSet *dataSet,mmaVolumeMaterial *material, char *name="Histogram & Windowing", mafBaseEventHandler *Listener=NULL, int id=MINID);
   
   /** Destructor. */
   virtual ~medGUILutHistogramEditor(); 
   
-  /** Set the event listener */
-  virtual void SetListener(mafObserver *Listener) {m_Listener = Listener;};
-
-  /** Get the event listener */
-  virtual mafObserver *GetListener() {return m_Listener;};
-
   /* Main event handler */
   void OnEvent(mafEventBase *maf_event);
 
@@ -74,7 +68,7 @@ public:
   void OnSize(wxSizeEvent &event);
 
   /** Show the dialog.*/
-  static void ShowLutHistogramDialog(vtkDataSet *dataSet,mmaVolumeMaterial *material, char *name="Histogram & Windowing", mafObserver *Listener=NULL, int id=MINID);
+  static void ShowLutHistogramDialog(vtkDataSet *dataSet,mmaVolumeMaterial *material, char *name="Histogram & Windowing", mafBaseEventHandler *Listener=NULL, int id=MINID);
 
 protected:
 
@@ -96,7 +90,6 @@ protected:
   /** Copy the external Lookup Table given by the user to the internal one.*/
   void CopyLut(vtkLookupTable *from, vtkLookupTable *to);
 	
-  mafObserver *m_Listener;
   mafGUI *m_GuiDialog;
   mafGUIFloatSlider *m_GammaSlider;
   mafGUILutSlider *m_Windowing;

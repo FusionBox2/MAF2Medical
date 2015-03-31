@@ -20,6 +20,7 @@ Writes the BBF file, using data from vtkMAFLargeImageDataSet
 // "Failure#0: The value of ESP was not properly saved across a function call"
 //----------------------------------------------------------------------------
 
+#include "mafEvent.h"
 #include "mafBrickedFileWriter.h"
 #include "../vtkMAF/vtkMAFFileDataProvider.h"
 

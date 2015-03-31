@@ -41,7 +41,6 @@ medGizmoCrossRotateTranslate::medGizmoCrossRotateTranslate()
 	m_NameRTG = "UNDEFINED_RTG_NAME";
 	m_GizmoCrossTranslate = NULL;
 	m_GizmoCrossRotate = NULL;
-	m_Listener = NULL;
 }
 
 medGizmoCrossRotateTranslate::~medGizmoCrossRotateTranslate()
@@ -49,7 +48,7 @@ medGizmoCrossRotateTranslate::~medGizmoCrossRotateTranslate()
 
 }
 
-void medGizmoCrossRotateTranslate::Create(mafVME *input, mafObserver* listener, bool BuildGUI, int normal)
+void medGizmoCrossRotateTranslate::Create(mafVME *input, mafBaseEventHandler* listener, bool BuildGUI, int normal)
 {
 	// input should be a mafVMESlicer slicing a mafVMEVolumeGray
 	mafVMESlicer *slicer = NULL;
@@ -64,7 +63,7 @@ void medGizmoCrossRotateTranslate::Create(mafVME *input, mafObserver* listener, 
 	
 	m_GizmoCrossTranslate = new medGizmoCrossTranslate(input, this, BuildGUI, normal);
 	m_GizmoCrossRotate = new medGizmoCrossRotate(input, this, BuildGUI, normal);
-	m_Listener = listener;
+	SetListener(listener);
 
 	SetAutoscale(true);
 	SetAlwaysVisible(true);

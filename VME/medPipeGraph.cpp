@@ -36,7 +36,7 @@
 #include "mafTagItem.h"
 #include "mafVMEOutputScalar.h"
 #include "mafVMEOutputScalarMatrix.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 
 #include "vtkTextProperty.h"
 #include "vtkDoubleArray.h"
@@ -90,7 +90,7 @@ medPipeGraph::medPipeGraph()
 medPipeGraph::~medPipeGraph()
 //----------------------------------------------------------------------------
 {
-  m_Vme->GetEventSource()->RemoveObserver(this);
+  m_Vme->RemoveObserver(this);
 
   m_RenFront->RemoveActor2D(m_PlotActor);
   m_RenFront->RemoveActor2D(m_PlotTimeLineActor);
@@ -124,7 +124,7 @@ void medPipeGraph::Create(mafSceneNode *n)
   int counter = 0;
   Superclass::Create(n);
 
-  m_Vme->GetEventSource()->AddObserver(this);
+  m_Vme->AddObserver(this);
 
   m_EmgPlot = medVMEAnalog::SafeDownCast(m_Vme);
   m_NumberOfSignals = m_EmgPlot->GetScalarOutput()->GetScalarData().rows()-1; //1 row is for time information

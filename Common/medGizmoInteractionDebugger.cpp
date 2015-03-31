@@ -59,7 +59,7 @@ const bool DEBUG_MODE = true;
 const double defaultLineLength = 50;
  
 
-medGizmoInteractionDebugger::medGizmoInteractionDebugger(mafNode* imputVme, mafObserver *listener, const char* name, bool testMode) 
+medGizmoInteractionDebugger::medGizmoInteractionDebugger(mafNode* imputVme, mafBaseEventHandler *listener, const char* name, bool testMode) 
 {
   Constructor(imputVme, listener, name, testMode);
 }
@@ -85,13 +85,13 @@ void medGizmoInteractionDebugger::CreateInteractor()
   m_VmeGizmo->SetBehavior(m_GizmoInteractor);
 }
 
-void medGizmoInteractionDebugger::Constructor(mafNode *imputVme, mafObserver *listener, const char* name, bool testMode)
+void medGizmoInteractionDebugger::Constructor(mafNode *imputVme, mafBaseEventHandler *listener, const char* name, bool testMode)
 {
   m_CurvilinearAbscissaHelper = NULL;
   m_VmeGizmo = NULL;
 
   m_Name = name;
-  m_Listener = listener;
+  SetListener(listener);
 
   m_InputVME = mafVME::SafeDownCast(imputVme);
 

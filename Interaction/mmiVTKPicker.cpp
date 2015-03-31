@@ -20,6 +20,7 @@
 //----------------------------------------------------------------------------
 
 #include "mmiVTKPicker.h"
+#include "mafEvent.h"
 #include "mafEventInteraction.h"
 
 #include "vtkMAFSmartPointer.h"

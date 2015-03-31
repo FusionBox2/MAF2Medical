@@ -20,7 +20,8 @@
 //----------------------------------------------------------------------------
 
 #include "mafVMEVolumeLargeUtils.h"
-#include "mafObserver.h"
+#include "mafBaseEventHandler.h"
+#include "mafEvent.h"
 #include "mafString.h"
 #include "mafStorage.h"
 #include "mafEventIO.h"
@@ -45,24 +46,35 @@
 }
 
 /*static*/ mafString mafVMEVolumeLargeUtils::GetBrickedLayoutDir(
-  void* sender, mafObserver* m_Listener)
+  void* sender, mafBaseEventHandler* m_Listener)
 {
   //Get directory into which the volume files should be stored.
   //Typical call: GetBrickedLayoutDir(this, m_Listener)
   //If an error occurs, an empty string is returned.
 
   //save the .MSF file
-  mafEventMacro( mafEvent(sender, MENU_FILE_SAVE));	
+  if (m_Listener) 
+  {
+    mafEvent e(sender, MENU_FILE_SAVE);
+    m_Listener->OnEvent(&e);
+  }
 
   mafVMEVolumeGray* pTempVME = mafVMEVolumeGray::New();  
   pTempVME->Register(sender);   //cannot use mafNEW from a static routine
-  mafEventMacro( mafEvent(sender, VME_ADD, pTempVME));
+  if (m_Listener) 
+  {
+    mafEvent e(sender, VME_ADD, pTempVME);
+    m_Listener->OnEvent(&e);
+  }
 
   mafEventIO e(sender, NODE_GET_STORAGE);  
   pTempVME->ForwardUpEvent(e);  
 
-  mafEventMacro( mafEvent(sender, VME_REMOVE, pTempVME));  
-  pTempVME->Delete();  
+  if (m_Listener) 
+  {
+    mafEvent e(sender, VME_REMOVE, pTempVME);
+    m_Listener->OnEvent(&e);
+  }
 
   mafString szStr;
   mafStorage* storage = e.GetStorage();
@@ -162,7 +174,7 @@
 
 //------------------------------------------------------------------------
 /*static*/ int mafVMEVolumeLargeUtils::VolumeLargeCheck(
-      mafObject* caller, mafObserver* listener, int VOI[6], int nDataType, 
+      mafObject* caller, mafBaseEventHandler* listener, int VOI[6], int nDataType, 
       int nNumOfComp, int nMemLimit, mafString& szOutDir)
 //------------------------------------------------------------------------
 {

@@ -51,10 +51,10 @@
 #include "vtkMath.h"
 
 //----------------------------------------------------------------------------
-medGUILandmark::medGUILandmark(mafNode *inputVME, mafObserver *listener, bool testMode /* = false */)
+medGUILandmark::medGUILandmark(mafNode *inputVME, mafBaseEventHandler *listener, bool testMode /* = false */)
 //----------------------------------------------------------------------------
 {
-  m_Listener = listener;
+  SetListener(listener);
   
   m_LMCloud = NULL;
   m_LMCloudName = "lm_cloud";

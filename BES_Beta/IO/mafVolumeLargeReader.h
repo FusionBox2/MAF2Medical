@@ -17,13 +17,14 @@
 #include "mafobject.h"
 #include "medVMEDefines.h"
 #include "mafString.h"
-#include "mafObserver.h"
+#include "mafBaseEventHandler.h"
+#include "mafEventSender.h"
 #include "mafMTime.h"
 #include "vtkImageData.h"
 #include "mafBrickedFileReader.h"
 
 //this is similar to vtkImageMultipleInputOutputFilter 
-class MED_VME_EXPORT mafVolumeLargeReader : public mafObject, mafTimeStamped
+class MED_VME_EXPORT mafVolumeLargeReader : public mafObject, mafTimeStamped, public mafEventSender
 {
 public:
 	mafTypeMacro(mafVolumeLargeReader, mafObject);
@@ -42,9 +43,6 @@ protected:
 	//output data set
 	vtkImageData* m_DataSet;
   vtkRectilinearGrid* m_DataSetRLG;   //rectilinear data set
-
-	//listener that should receive events
-	mafObserver* m_Listener;
 
 	//list of bricked readers (levels)
 	mafBrickedFileReader** m_PLevels;
@@ -163,16 +161,6 @@ public:
 			m_MemoryLimit = memlimit;
 			this->Modified();
 		}
-	}
-
-	//gets the current listener that receives callbacks
-	inline mafObserver* GetListener() {
-		return m_Listener;
-	}
-
-	//sets a listener that should receive callbacks
-	inline void SetListener(mafObserver* listener) {		
-		m_Listener = listener;
 	}
 
 	//gets the total number of bytes in level files

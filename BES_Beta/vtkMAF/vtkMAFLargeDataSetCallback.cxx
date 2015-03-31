@@ -11,30 +11,29 @@
   =========================================================================
 */
 
+#include "mafEvent.h"
 #include "vtkMAFLargeDataSetCallback.h"
-
-#include "mafObserver.h"
 
 #include "vtkObject.h"
 
 /*virtual*/ void vtkMAFLargeDataSetCallback
 	::Execute(vtkObject* caller, unsigned long eventId, void* callData)
 {	
-	if (Listener != NULL)
+	if (GetListener() != NULL)
 	{
 		if (eventId == vtkCommand::ProgressEvent)
 		{
 			mafEvent ev(this, PROGRESSBAR_SET_VALUE, (long)(*((double*)callData)*100));
-			Listener->OnEvent(&ev);
+			InvokeEvent(&ev);
 		}
 		else if (eventId == vtkCommand::StartEvent)
 		{
 			mafEvent ev(this, PROGRESSBAR_SHOW);
-			Listener->OnEvent(&ev);
+      InvokeEvent(&ev);
 
 			ev.SetId(PROGRESSBAR_SET_VALUE);
 			ev.SetArg(0);
-			Listener->OnEvent(&ev);
+      InvokeEvent(&ev);
 
       mafString szStr = caller->GetClassName(); //"Processing ";
 			ev.SetId(PROGRESSBAR_SET_TEXT);
@@ -43,11 +42,11 @@
 		else if (eventId == vtkCommand::EndEvent)
 		{
 			mafEvent ev(this, PROGRESSBAR_HIDE);
-			Listener->OnEvent(&ev);
+      InvokeEvent(&ev);
 		}
 	}
 }
-/*virtual*/ void vtkMAFLargeDataSetCallback::SetListener(mafObserver* listener)
+/*virtual void vtkMAFLargeDataSetCallback::SetListener(mafObserver* listener)
   {
     Listener = listener;
-  }
+  }*/

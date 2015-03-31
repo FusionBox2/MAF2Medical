@@ -77,12 +77,12 @@ mafViewImageCompound::~mafViewImageCompound()
 	cppDEL(m_LutSlider);
 }
 //----------------------------------------------------------------------------
-mafView *mafViewImageCompound::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewImageCompound::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   mafViewImageCompound *v = new mafViewImageCompound(m_Label, m_ViewRowNum, m_ViewColNum);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

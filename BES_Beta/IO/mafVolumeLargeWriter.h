@@ -17,11 +17,12 @@
 #include "medVMEDefines.h"
 #include "mafObject.h"
 #include "mafString.h"
-#include "mafObserver.h"
+#include "mafBaseEventHandler.h"
+#include "mafEventSender.h"
 #include "../vtkMAF/vtkMAFLargeImageData.h"
 #include "vtkDoubleArray.h"
 
-class MED_VME_EXPORT mafVolumeLargeWriter : public mafObject
+class MED_VME_EXPORT mafVolumeLargeWriter : public mafObject, public mafEventSender
 {
 public:
 	mafTypeMacro(mafVolumeLargeWriter, mafObject);
@@ -34,9 +35,6 @@ protected:
 	vtkMAFLargeImageData* m_InputDataSet;
   vtkDoubleArray* m_PInputXYZCoords[3];   //<X,Y,Z-coordinates for rectilinear grids
 
-	//listener that should receive events
-	mafObserver* m_Listener;
-
 	//the maximal allowed ratio of the output and input data
 	double m_DblLimitCoef;
 
@@ -45,11 +43,6 @@ public:
 	virtual ~mafVolumeLargeWriter();
 
 public:
-	//sets a listener that should receive callbacks
-	inline void SetListener(mafObserver* listener) {		
-		m_Listener = listener;
-	}
-
 	//Gets the associated brick file
 	inline mafString GetOutputFileName() {
 		return m_BrickFileName;

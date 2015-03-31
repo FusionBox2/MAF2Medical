@@ -41,14 +41,14 @@
 #include "medGizmoCrossRotateFan.h"
 
 //----------------------------------------------------------------------------
-medGizmoCrossRotate::medGizmoCrossRotate(mafVME* input, mafObserver *listener, bool buildGUI , int axis)
+medGizmoCrossRotate::medGizmoCrossRotate(mafVME* input, mafBaseEventHandler *listener, bool buildGUI , int axis)
 //----------------------------------------------------------------------------
 {
 	axis = Z;
 	assert(input);
 	m_BuildGUI = buildGUI;
 	m_InputVME    = input;
-	m_Listener  = listener;
+	SetListener(listener);
 
 	m_GizmoCrossRotateFan = NULL;
 	m_GizmoCrossRotateAxisNS = NULL;

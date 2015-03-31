@@ -21,7 +21,8 @@
 #include "medGuiDefines.h"
 #include "wx/wizard.h"
 #include "mafEvent.h"
-#include "mafObserver.h"
+#include "mafEventSender.h"
+#include "mafBaseEventHandler.h"
 #include "mafRWI.h"
 
 //----------------------------------------------------------------------------
@@ -47,19 +48,15 @@ enum DIALOG_EXSTYLES
   - lower right
   - lower center
 */
-class MED_GUI_EXPORT medGUIWizardPage : public wxWizardPageSimple, public mafObserver  
+class MED_GUI_EXPORT medGUIWizardPage : public wxWizardPageSimple, public mafBaseEventHandler, public mafEventSender
 {
 public:
   /** constructor. */
 	medGUIWizardPage (medGUIWizard *wizardParent,long style = medUSEGUI | medUSERWI,wxString label="",bool plugCentralGui = true,bool plugLeftGui = true,bool plugRightGui = true);
   /** destructor. */
 	virtual ~medGUIWizardPage ();
-  /** Set the Listener that will receive event-notification. */
-	void SetListener(mafObserver *Listener) {m_Listener = Listener;};
   /** Precess events coming from other objects. */
 	void OnEvent(mafEventBase *maf_event);
-
-	mafObserver *m_Listener;
 
   /** Add in wizard gui, another gui in lower left position. */
 	void AddGuiLowerLeft(mafGUI *gui);

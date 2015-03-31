@@ -58,17 +58,17 @@
 
 
 //----------------------------------------------------------------------------
-mafGizmoSlice::mafGizmoSlice(mafNode* inputVme, mafObserver *Listener /* = NULL */, const char *name /* =  */, bool inverseHandle /* = false */, double centralClipfactor /* = 0 */)
+mafGizmoSlice::mafGizmoSlice(mafNode* inputVme, mafBaseEventHandler *Listener /* = NULL */, const char *name /* =  */, bool inverseHandle /* = false */, double centralClipfactor /* = 0 */)
 //----------------------------------------------------------------------------
 {
   CreateGizmoSlice(inputVme, Listener, name, inverseHandle, centralClipfactor);
 }
 //----------------------------------------------------------------------------
-void mafGizmoSlice::CreateGizmoSlice(mafNode *imputVme, mafObserver *listener, const char *name, bool inverseHandle, double centralClipfactor)
+void mafGizmoSlice::CreateGizmoSlice(mafNode *imputVme, mafBaseEventHandler *listener, const char *name, bool inverseHandle, double centralClipfactor)
 //----------------------------------------------------------------------------
 {
   m_Name = name;
-  m_Listener = listener;
+  SetListener(listener);
   
   // this is the only supported modality for the moment...
   m_Modality = G_LOCAL;
@@ -615,7 +615,7 @@ void mafGizmoSlice::SetInput( mafVME *vme )
   if (m_VmeGizmo != NULL)
   {
     DestroyGizmoSlice();
-    CreateGizmoSlice(vme, m_Listener, m_Name, m_InverseHandle, m_CentralClipFactor);
+    CreateGizmoSlice(vme, GetListener(), m_Name, m_InverseHandle, m_CentralClipFactor);
   }
 }
 //----------------------------------------------------------------------------

@@ -777,12 +777,12 @@ void mafViewArbitrarySlice::OnEventThis(mafEventBase *maf_event)
 	}
 }
 //----------------------------------------------------------------------------
-mafView *mafViewArbitrarySlice::Copy(mafObserver *Listener, bool lightCopyEnabled)
-	//----------------------------------------------------------------------------
+mafView *mafViewArbitrarySlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
+//----------------------------------------------------------------------------
 {
 	m_LightCopyEnabled = lightCopyEnabled;
 	mafViewArbitrarySlice *v = new mafViewArbitrarySlice(m_Label);
-	v->m_Listener = Listener;
+	v->SetListener(Listener);
 	v->m_Id = m_Id;
 	for (int i=0;i<m_PluggedChildViewList.size();i++)
 	{

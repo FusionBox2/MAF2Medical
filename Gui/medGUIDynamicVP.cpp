@@ -50,7 +50,6 @@ medGUIDynamicVP::medGUIDynamicVP( wxWindow* parent, wxWindowID id, long GUIstyle
 //----------------------------------------------------------------------------
 {
   m_SceneNode = NULL;
-  m_Listener = NULL;
   m_VPipes = NULL;
   m_VPipe = NULL;    
   m_ComboVP = NULL;
@@ -250,11 +249,8 @@ void medGUIDynamicVP::OnEvent(mafEventBase *maf_event)
 /*virtual*/ void medGUIDynamicVP::NotifyListener(long nData)
 {
   //notify the listener about change
-  if (m_Listener != NULL)
-  {
-    mafEvent ev(this, m_NotifyId, nData);
-    m_Listener->OnEvent(&ev);
-  }
+  mafEvent ev(this, m_NotifyId, nData);
+  InvokeEvent(&ev);
 }
 
 //------------------------------------------------------------------------

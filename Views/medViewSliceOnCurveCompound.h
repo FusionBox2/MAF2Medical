@@ -136,7 +136,7 @@ protected:
   int m_EnableGPU; ///<Non-zero, if the GPU support for slicing is used (default)
 
 public:
-  /*virtual*/ mafView *Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+  /*virtual*/ mafView *Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
   /*virtual*/ void OnEvent(mafEventBase *maf_event);	
 
   /** 

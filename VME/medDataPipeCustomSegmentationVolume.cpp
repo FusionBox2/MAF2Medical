@@ -24,6 +24,7 @@
 
 #include "medDataPipeCustomSegmentationVolume.h"
 
+#include "mafEvent.h"
 #include "mafVME.h"
 #include "medVMESegmentationVolume.h"
 

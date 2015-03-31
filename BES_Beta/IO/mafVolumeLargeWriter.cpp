@@ -38,7 +38,6 @@ mafVolumeLargeWriter::mafVolumeLargeWriter()
   m_PInputXYZCoords[2] = NULL;
 	m_DblLimitCoef = 1.35;	//NB. upper bound is lest than 2, 
 							            //even 30 levels has 1.2+
-	m_Listener = NULL;
 }
 
 mafVolumeLargeWriter::~mafVolumeLargeWriter()
@@ -251,7 +250,7 @@ int mafVolumeLargeWriter::CreateLODs(int nMaxSampleRate, vtkIdType64& nTotalMaxS
 
 	//process every LOD
 	mafBrickedFileWriter bf;
-	bf.SetListener(m_Listener);	
+	bf.SetListener(GetListener());	
 	bf.SetInputDataSet(m_InputDataSet);
   bf.SetInputXCoordinates(m_PInputXYZCoords[0]);
   bf.SetInputYCoordinates(m_PInputXYZCoords[1]);

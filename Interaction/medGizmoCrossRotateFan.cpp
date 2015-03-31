@@ -51,7 +51,7 @@
 #include "vtkProperty.h"
 
 //----------------------------------------------------------------------------
-medGizmoCrossRotateFan::medGizmoCrossRotateFan(mafVME *input, mafObserver *listener)
+medGizmoCrossRotateFan::medGizmoCrossRotateFan(mafVME *input, mafBaseEventHandler *listener)
 //----------------------------------------------------------------------------
 {
   m_StartTheta = m_EndTheta = 0;
@@ -59,7 +59,7 @@ medGizmoCrossRotateFan::medGizmoCrossRotateFan(mafVME *input, mafObserver *liste
 
   // default axis is X
   m_ActiveAxis  = X;
-  m_Listener  = listener;
+  SetListener(listener);
   m_InputVme    = input;
 
   mafMatrix *absInputMatrix = m_InputVme->GetOutput()->GetAbsMatrix();
@@ -75,8 +75,8 @@ medGizmoCrossRotateFan::medGizmoCrossRotateFan(mafVME *input, mafObserver *liste
   m_Gizmo = mafVMEGizmo::New();
   m_Gizmo->SetName("fan");
   m_Gizmo->SetData(m_ChangeFanAxisTPDF->GetOutput());
-  m_Gizmo->SetMediator(m_Listener);
-  this->SetMediator(m_Listener);
+  m_Gizmo->SetMediator(GetListener());
+  this->SetMediator(GetListener());
 
   // set the default axis to X axis
   this->SetAxis(m_ActiveAxis);

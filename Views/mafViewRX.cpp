@@ -65,12 +65,12 @@ mafViewRX::~mafViewRX()
 {
 }
 //----------------------------------------------------------------------------
-mafView *mafViewRX::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewRX::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   mafViewRX *v = new mafViewRX(m_Label, m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   v->m_PipeMap = m_PipeMap;
   v->m_LightCopyEnabled = lightCopyEnabled;

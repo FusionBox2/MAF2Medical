@@ -40,8 +40,6 @@ medGUIWizard::medGUIWizard(const wxString& title, bool testMode /* = false */)
 : wxWizard()
 //----------------------------------------------------------------------------
 {
-	m_Listener = NULL;
-
 	m_FirstPage = NULL;
 
 	m_EnableChangePage = true;

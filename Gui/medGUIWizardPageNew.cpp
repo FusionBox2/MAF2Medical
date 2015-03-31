@@ -57,7 +57,6 @@ medGUIWizardPageNew::medGUIWizardPageNew(medGUIWizard *wizardParent,long style, 
 : wxWizardPageSimple(wizardParent)
 //----------------------------------------------------------------------------
 {
-	m_Listener = NULL;
   m_ColorLUT = NULL;
   m_ZCropSlider = NULL;
   m_ZCropOn = false;

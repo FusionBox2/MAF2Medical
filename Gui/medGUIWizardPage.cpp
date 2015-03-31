@@ -49,8 +49,6 @@ medGUIWizardPage::medGUIWizardPage(medGUIWizard *wizardParent,long style /* = me
 
   m_Style = style;
 
-	m_Listener = NULL;
-
 	m_FirstPage = NULL;
 
 	m_GUISizer = new wxBoxSizer( wxHORIZONTAL );

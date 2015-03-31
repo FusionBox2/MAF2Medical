@@ -61,7 +61,7 @@
 
 #include "mafTagArray.h"
 //----------------------------------------------------------------------------
-medGizmoCrossTranslatePlane::medGizmoCrossTranslatePlane(mafVME *input, mafObserver *listener)
+medGizmoCrossTranslatePlane::medGizmoCrossTranslatePlane(mafVME *input, mafBaseEventHandler *listener)
 //----------------------------------------------------------------------------
 {
 	m_LastColor[0][S0] = -1;
@@ -101,7 +101,7 @@ medGizmoCrossTranslatePlane::medGizmoCrossTranslatePlane(mafVME *input, mafObser
 	this->SetIsActive(false);
 
 	m_IsaComp[0]  = m_IsaComp[1] =  NULL;
-	m_Listener  = listener;
+  SetListener(listener);
 	m_InputVme    = input;
 	m_Length = 1;
 
@@ -137,7 +137,7 @@ medGizmoCrossTranslatePlane::medGizmoCrossTranslatePlane(mafVME *input, mafObser
 		vmeName << i;
 		m_Gizmo[i]->SetName(vmeName.GetCStr());
 		m_Gizmo[i]->SetData(m_RotatePDF[i]->GetOutput());
-		m_Gizmo[i]->SetMediator(m_Listener);
+		m_Gizmo[i]->SetMediator(GetListener());
 	}
 	// assign isa to S1 and S2;
 	m_Gizmo[S0]->SetBehavior(m_IsaComp[S0]);
@@ -619,7 +619,7 @@ void medGizmoCrossTranslatePlane::CreateFeedbackGizmoPipeline()
 	m_FeedbackStuffAppendPolydata->Update();
 
 	m_TranslationFeedbackGizmo->SetName("PlaneTranslationFeedbackGizmo");
-	m_TranslationFeedbackGizmo->SetMediator(m_Listener);
+	m_TranslationFeedbackGizmo->SetMediator(GetListener());
 	m_TranslationFeedbackGizmo->SetData(m_FeedbackStuffAppendPolydata->GetOutput());
 	assert(m_InputVme);
 

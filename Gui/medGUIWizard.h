@@ -21,7 +21,8 @@
 #include "medGuiDefines.h"
 #include "wx/wizard.h"
 #include "mafEvent.h"
-#include "mafObserver.h"
+#include "mafEventSender.h"
+#include "mafBaseEventHandler.h"
 #include "mafGUI.h"
 //----------------------------------------------------------------------------
 // Const:
@@ -32,15 +33,13 @@
   This class is the container of wizard pages in order to handle typical gui wizard widget.
   It can set first page and enable changing pages.
 */
-class MED_GUI_EXPORT medGUIWizard : public wxWizard, public mafObserver  
+class MED_GUI_EXPORT medGUIWizard : public wxWizard, public mafBaseEventHandler, public mafEventSender  
 {
 public:
   /** constructor. */
 	medGUIWizard (const wxString& title, bool testMode = false);
   /** destructor. */
 	virtual ~medGUIWizard (); 
-  /** Set the Listener that will receive event-notification. */
-	void SetListener(mafObserver *Listener) {m_Listener = Listener;};
   /** Precess events coming from other objects. */
 	void OnEvent(mafEventBase *maf_event);
 
@@ -69,7 +68,6 @@ public:
 		ID_LAST,
 	};
 
-	mafObserver *m_Listener;
 
 private:
 

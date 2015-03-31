@@ -61,7 +61,7 @@ class vtkTubeFilter;
 class medGizmoCrossTranslatePlane: public mafGizmoInterface 
 {
 public:
-           medGizmoCrossTranslatePlane(mafVME *input, mafObserver *listener = NULL);
+           medGizmoCrossTranslatePlane(mafVME *input, mafBaseEventHandler *listener = NULL);
   virtual ~medGizmoCrossTranslatePlane(); 
   
   /** 
@@ -72,9 +72,6 @@ public:
   //----------------------------------------------------------------------------
   // events handling 
   //----------------------------------------------------------------------------
-  
-  /** Set the event receiver object*/
-  void  SetListener(mafObserver *Listener) {m_Listener = Listener;};
   
   /** Events handling*/        
   virtual void OnEvent(mafEventBase *maf_event);
@@ -209,10 +206,6 @@ protected:
 
   /** Used by mafInteractorGenericMouse */
   vtkTransform *m_PivotTransform;
-
-  /**
-  Register the event receiver object*/
-  mafObserver *m_Listener;
 
   /** Register Gizmo status*/
   bool m_IsActive;

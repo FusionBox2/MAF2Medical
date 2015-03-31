@@ -19,6 +19,7 @@
 
 #include "medGuiDefines.h"
 #include "mafEvent.h"
+#include "mafEventSender.h"
 #include "vtkLookupTable.h"
 //----------------------------------------------------------------------------
 /** mafGUILutSwatch : widget representing a LUT, usually used to call the LutEditor.
@@ -28,7 +29,7 @@ class vtkDataSet;
 class mmaVolumeMaterial;
 class mafGUI;
 
-class MED_GUI_EXPORT medGUILutHistogramSwatch: public wxPanel
+class MED_GUI_EXPORT medGUILutHistogramSwatch: public wxPanel, public mafEventSender
 {
 public:
   /** constructor. */
@@ -62,16 +63,7 @@ public:
   /* method for updating GUI on LUT update */
   void Modified();
 
-  /** Set the event listener */
-  virtual void SetListener(mafObserver *Listener) {m_Listener = Listener;};
-
-  /** Get the event listener */
-  virtual mafObserver *GetListener() {return m_Listener;};
-
-
 protected:
-  mafObserver *m_Listener;
-
   wxBitmap m_Bmp;      
   /** overrided to prevent flickering */
   void OnEraseBackground(wxEraseEvent& event) {};  

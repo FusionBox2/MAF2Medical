@@ -22,23 +22,25 @@
 //----------------------------------------------------------------------------
 #include "medCommonDefines.h"
 #include "vtkIdList.h"
+#include "mafEvent.h"
+#include "mafEventSender.h"
+#include "mafBaseEventHandler.h"
 
 //----------------------------------------------------------------------------
 // Forward declarations:
 //----------------------------------------------------------------------------
-class mafEvent;
 class mafVME;
 class mafPolylineGraph;
 class medVMEPolylineGraph;
 
 /** Decorate input vme with curvilinear abscissa interface for medVMEPolylineGraph 
  constrained interaction */
-class MED_COMMON_EXPORT medCurvilinearAbscissaOnSkeletonHelper : mafObserver
+class MED_COMMON_EXPORT medCurvilinearAbscissaOnSkeletonHelper : mafBaseEventHandler, public mafEventSender
 {
 public:
 
   /** Pass the vme you want to decorate with curvilinear abscissa interface */
-  medCurvilinearAbscissaOnSkeletonHelper(mafVME *inputVME, mafObserver *listener = NULL, bool testMode = false);
+  medCurvilinearAbscissaOnSkeletonHelper(mafVME *inputVME, mafBaseEventHandler *listener = NULL, bool testMode = false);
  
   /** Set the polyline graph constraint */
   void SetConstraintPolylineGraph(medVMEPolylineGraph* constraintPolylineGraph);
@@ -111,7 +113,6 @@ private:
   double m_GUICurvilinearAbscissa;
   bool m_TestMode;
 
-  mafObserver *m_Listener;
   mafGUI      *m_Gui;    
 
 };

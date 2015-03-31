@@ -44,14 +44,14 @@
 #include "vtkMatrix4x4.h"
 
 //----------------------------------------------------------------------------
-medGUITransformSliders::medGUITransformSliders(mafVME *input, double translationRange[6], mafObserver *listener /* = NULL */, bool enableScaling /* = true */,bool testMode /* = false */)
+medGUITransformSliders::medGUITransformSliders(mafVME *input, double translationRange[6], mafBaseEventHandler *listener /* = NULL */, bool enableScaling /* = true */,bool testMode /* = false */)
 //----------------------------------------------------------------------------
 {
   assert(input);
 
   m_EnableScaling = enableScaling;
   m_CurrentTime = -1;
-  m_Listener = listener;
+  SetListener(listener);
   m_InputVME = input;
   m_Gui = NULL;
   m_TestMode = testMode;

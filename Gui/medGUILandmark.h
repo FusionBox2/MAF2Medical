@@ -23,6 +23,7 @@
 #include "medGuiDefines.h"
 #include "mafVME.h"
 #include "mafEvent.h"
+#include "mafEventSender.h"
 
 //----------------------------------------------------------------------------
 // forward references :
@@ -46,16 +47,13 @@ class mafVMELandmarkCloud;
   - Code cleaning and improve documentation
 */
 
-class MED_GUI_EXPORT medGUILandmark : public mafObserver
+class MED_GUI_EXPORT medGUILandmark : public mafBaseEventHandler, public mafEventSender
 {
 public:
   /** constructor */
-  medGUILandmark(mafNode *InputVME, mafObserver *listener = NULL, bool testMode  = false);
+  medGUILandmark(mafNode *InputVME, mafBaseEventHandler *listener = NULL, bool testMode  = false);
 	/** destructor */
   ~medGUILandmark(); 
-
-  /** Set the event receiver object*/
-  void  SetListener(mafObserver *Listener) {m_Listener = Listener;};
 
   /** Events handling*/        
   virtual void OnEvent(mafEventBase *maf_event);
@@ -147,7 +145,6 @@ protected:
   mafInteractorGenericMouse *m_IsaTranslateSnap;
   mafInteractor *m_OldInputVMEBehavior;
 
-  mafObserver *m_Listener;
   mafGUI      *m_Gui;
 
   mafString m_LMCloudName;

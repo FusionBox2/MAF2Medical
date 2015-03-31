@@ -54,7 +54,7 @@ See the COPYINGS file for license details
 
 #include "mafGUIFloatSlider.h"
 #include "mafEventInteraction.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mafIndent.h"
 
 #include "mafVMESurface.h"
@@ -138,7 +138,7 @@ medViewSliceOnCurve::~medViewSliceOnCurve()
     //This is hack to deal with it:
 
     // find the root
-    mafObserver* listener = NULL;
+    mafBaseEventHandler* listener = NULL;
     mafVMERoot* root = mafVMERoot::SafeDownCast(m_Gizmo->GetOutput()->GetParent());
     if (root != NULL)
     {
@@ -157,13 +157,13 @@ medViewSliceOnCurve::~medViewSliceOnCurve()
 }
 
 //----------------------------------------------------------------------------
-mafView *medViewSliceOnCurve::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewSliceOnCurve::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {  
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSliceOnCurve *v = this->NewInstance(); 
   v->m_Label = m_Label;
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
 
   for (int i = 0;i < m_PluggedChildViewList.size(); i++) {

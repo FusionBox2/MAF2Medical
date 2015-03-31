@@ -24,7 +24,6 @@
 
 #include "medDecl.h"
 #include "medWizard.h"
-#include "mafObserver.h"
 #include "medWizardBlock.h"
 
 
@@ -37,7 +36,6 @@ medWizard::medWizard(const wxString &label,  const wxString &name)
   m_Name=name;
   m_Label     = label;
   m_CurrentBlock=NULL;
-  m_Listener=NULL;
   m_ShowProgressBar=false;
 }
 
@@ -48,7 +46,6 @@ medWizard::medWizard()
   //Setting default values
   m_Label  = "Default Wizard Name";
   m_CurrentBlock=NULL;
-  m_Listener=NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -101,14 +98,6 @@ void medWizard::SetMenuPath( wxString path )
 {
   //Set the menu path for the wizard 
   m_MenuPath=path;
-}
-
-//----------------------------------------------------------------------------
-void medWizard::SetListener( mafObserver *Listener )
-//----------------------------------------------------------------------------
-{
-  //Setting the listener 
-  m_Listener = Listener;
 }
 
 //----------------------------------------------------------------------------

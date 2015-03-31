@@ -92,12 +92,12 @@ mafViewCT::~mafViewCT()
 	m_ViewCTCompound = NULL;
 }
 //----------------------------------------------------------------------------
-mafView *mafViewCT::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewCT::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
 	mafViewCT *v = new mafViewCT(m_Label);
-	v->m_Listener = Listener;
+  v->SetListener(Listener);
 	v->m_Id = m_Id;
 	for (int i=0;i<m_PluggedChildViewList.size();i++)
 	{

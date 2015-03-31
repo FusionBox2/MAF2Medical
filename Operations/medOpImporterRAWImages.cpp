@@ -869,7 +869,7 @@ bool medOpImporterRAWImages::VolumeLargeCheck()
   }
 
   mafString szStr;
-  int nResult = mafVMEVolumeLargeUtils::VolumeLargeCheck(this, m_Listener,
+  int nResult = mafVMEVolumeLargeUtils::VolumeLargeCheck(this, GetListener(),
     VOI, GetVTKDataType(), m_Bit != 3 ? 1 : 3, m_MemLimit, szStr);
 
   if (nResult == 0)
@@ -1268,7 +1268,7 @@ bool medOpImporterRAWImages::Import()
     wr.SetInputDataSet(r->GetOutput());
     wr.SetInputZCoordinates(ZDoubleArray);   //is NULL for regular girds
     wr.SetOutputFileName(m_OutputFileName);
-    wr.SetListener(this->m_Listener);
+    wr.SetListener(GetListener());
     vtkDEL(ZDoubleArray);                    //no longer needed
 
     if (wr.Update())

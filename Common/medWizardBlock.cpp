@@ -148,14 +148,6 @@ void medWizardBlock::SetSelectedVME( mafNode *node )
 }
 
 //----------------------------------------------------------------------------
-void medWizardBlock::SetListener( mafObserver *Listener )
-//----------------------------------------------------------------------------
-{
-  //setting the event listener
-  m_Listener = Listener;
-}
-
-//----------------------------------------------------------------------------
 mafString medWizardBlock::GetDescriptionLabel()
 //----------------------------------------------------------------------------
 {

@@ -81,7 +81,7 @@ public:
 	virtual void OnEvent(mafEventBase *maf_event);
 
    /** Function that clones instance of the object. */
-	virtual mafView* Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+	virtual mafView* Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
 
   /** Force the updating of the camera. */
 	virtual void CameraUpdate();

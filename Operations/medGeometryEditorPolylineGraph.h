@@ -21,7 +21,9 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "medOperationsDefines.h"
-#include "mafObserver.h"
+#include "mafEvent.h"
+#include "mafEventSender.h"
+#include "mafBaseEventHandler.h"
 #include "mafPolylineGraph.h"
 #include "vtkSystemIncludes.h"
 
@@ -49,11 +51,11 @@ class vtkPolyData;
   It creates ISA, can add, insert, remove, move point in the polyline graph,
   it can also add, remove branch in which points are.
 */
-class MED_OPERATION_EXPORT medGeometryEditorPolylineGraph: public mafObserver 
+class MED_OPERATION_EXPORT medGeometryEditorPolylineGraph: public mafBaseEventHandler, public mafEventSender
 {
 public:
   /** contructor*/
-	medGeometryEditorPolylineGraph(mafVME *input=NULL, mafObserver *listener = NULL, medVMEPolylineGraph *polyline=NULL,bool testMode=false);
+	medGeometryEditorPolylineGraph(mafVME *input=NULL, mafBaseEventHandler *listener = NULL, medVMEPolylineGraph *polyline=NULL,bool testMode=false);
 	virtual ~medGeometryEditorPolylineGraph(); 
 
   enum EDITOR_GRAPH_ID
@@ -83,9 +85,6 @@ public:
 	ID_POINT_ACTION = 0,
 	ID_BRANCH_ACTION,
   };
-
-	/** Set the event receiver object*/
-	void  SetListener(mafObserver *Listener) {m_Listener = Listener;};
 
 	/** Events handling*/        
 	virtual void OnEvent(mafEventBase *maf_event);
@@ -163,10 +162,6 @@ protected:
 
   /** compute distance to polyline */
   double ComputeDistancePointLine(double lineP0[3],double lineP1[3],double point[3]);
-
-	/**
-	Register the event receiver object*/
-	mafObserver *m_Listener;
 
 	mafInteractorPicker *m_Picker;
 	mafInteractor *m_OldBehavior;

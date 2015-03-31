@@ -42,7 +42,7 @@ EXPORT_STL_VECTOR(MED_COMMON_EXPORT,medWizard *);
   Class for wizards management 
   This class creates the menu, starts the wizards and manage wizard related events
 */
-class MED_COMMON_EXPORT medWizardManager : mafObserver
+class MED_COMMON_EXPORT medWizardManager : mafBaseEventHandler, public mafEventSender
 {
 public:
 
@@ -90,9 +90,6 @@ private:
   /** Enable/Disable the toolbar's buttons. */
   virtual void EnableToolbar(bool CanEnable = true);
 
-  /** Set the event listener */
-  virtual void SetListener(mafObserver *Listener) {m_Listener = Listener;};
-
   /** Set the flag for warning the user if the operation is undoable. */
   virtual void WarningIfCantUndo (bool warn) {m_Warn = warn;};
 
@@ -121,7 +118,6 @@ private:
   medWizardSettings *m_Settings;
   wxMenuBar         *m_MenuBar; ///< Pointer to the Application's main menù
   wxToolBar         *m_ToolBar; ///< Pointer to the application's Toolbal
-  mafObserver       *m_Listener; 
   mafNode						*m_Selected; ///< Pointer to the current selected node.
   bool               m_Warn; ///< Flag to warn the user when an operation that can not undo is starting.
   medWizardWaitOp   *m_WaitOp;

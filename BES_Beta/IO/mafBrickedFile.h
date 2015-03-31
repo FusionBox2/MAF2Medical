@@ -18,14 +18,15 @@ This abstract class contains the stuff common to both, the reader and writer
 
 #include "mafObject.h"
 #include "mafString.h"
-#include "mafObserver.h"
+#include "mafBaseEventHandler.h"
+#include "mafEventSender.h"
 #include "mafTimeStamped.h"
 
 #include "vtkDoubleArray.h"
 #include "../vtkMAF/vtkMAFFile.h"
 #include "../vtkMAF/vtkMAFDataArrayDescriptor.h"
 
-class mafBrickedFile : public mafObject, public mafTimeStamped
+class mafBrickedFile : public mafObject, public mafTimeStamped, public mafEventSender
 {
 public:
 	mafAbstractTypeMacro(mafBrickedFile, mafObject);
@@ -116,24 +117,11 @@ protected:
 	mafMTime m_LastUpdateTime;
 #pragma endregion 
 
-	//listener that should receive events
-	mafObserver* m_Listener;
-
 protected:
 	mafBrickedFile();
 	virtual ~mafBrickedFile();
 
 public:	
-	//gets the current listener that receives callbacks
-	inline mafObserver* GetListener() {
-		return m_Listener;
-	}
-
-	//sets a listener that should receive callbacks
-	inline void SetListener(mafObserver* listener) {		
-		m_Listener = listener;
-	}
-
 	//Gets the associated brick file
 	inline mafString GetFileName() {
 		return m_BrickFileName;

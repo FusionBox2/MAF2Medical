@@ -928,7 +928,7 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 		int VOI[6];
 		memcpy(VOI, m_VOI, sizeof(int)*6);
 
-		mafObserver* pOldListener = srcB->GetListener();
+		mafBaseEventHandler* pOldListener = srcB->GetListener();
 		srcB->SetListener(NULL);
 
 		int nCurPass = 0, nPasses = ((m_VOI[5] - VOI[4] + nSlicesLim) / nSlicesLim) + 1;			

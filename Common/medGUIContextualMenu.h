@@ -18,28 +18,26 @@
 #define __medGUIContextualMenu_H__
 
 #include "medCommonDefines.h"
+#include "mafEventSender.h"
 
 //----------------------------------------------------------------------------
 // forward references;
 //----------------------------------------------------------------------------
 class mafView;
 class mafEvent;
-class mafObserver;
 
 /**
   Class Name: medGUIContextualMenu.
   Represents the contexctual menu' which compares when click right button 
   over a viewport.
 */
-class MED_COMMON_EXPORT medGUIContextualMenu : public wxMenu
+class MED_COMMON_EXPORT medGUIContextualMenu : public wxMenu, public mafEventSender
 {
 public:
   /** constructor. */
   medGUIContextualMenu();
   /** destructor. */
   virtual ~medGUIContextualMenu();
-  /** Set the listener object, i.e. the object receiving events sent by this object */
-  void SetListener(mafObserver *Listener) {m_Listener = Listener;};
 
 	/** 
   Visualize contextual menu for the MDI child and selected view. */
@@ -48,7 +46,6 @@ public:
 protected:
   wxFrame     *m_ChildViewActive;
   mafView     *m_ViewActive;
-  mafObserver *m_Listener;
 
 	/** Answer contextual menu's selection. */
 	void OnContextualViewMenu(wxCommandEvent& event);

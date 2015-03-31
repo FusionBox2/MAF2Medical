@@ -46,7 +46,7 @@ public:
 	mafTypeMacro(mafViewCT, mafViewCompound);
 
     /** clone the object*/
-	virtual mafView *Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+	virtual mafView *Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
 	/** listen to other object events*/
 	virtual void OnEvent(mafEventBase *maf_event);
 

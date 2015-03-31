@@ -40,7 +40,6 @@ mafVolumeLargeReader::mafVolumeLargeReader(void)
 
 	m_MemoryLimit = 16384;		//16M - experimentally found to be a good constant
 	m_NCurrentLevel = 0;
-	m_Listener = NULL;
 }
 
 mafVolumeLargeReader::~mafVolumeLargeReader(void)

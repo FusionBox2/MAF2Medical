@@ -32,7 +32,7 @@
 #include "mafGUIFloatSlider.h"
 #include "mafGUILutSlider.h"
 #include "mafEventInteraction.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mafNodeIterator.h"
 
 #include "mmaVolumeMaterial.h"
@@ -104,12 +104,12 @@ mafViewOrthoSlice::~mafViewOrthoSlice()
   m_VMElist.clear();
 }
 //----------------------------------------------------------------------------
-mafView *mafViewOrthoSlice::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewOrthoSlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   mafViewOrthoSlice *v = new mafViewOrthoSlice(m_Label);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {
@@ -770,7 +770,7 @@ void mafViewOrthoSlice::DestroyOrthoSlicesAndGizmos()
     mafLogMessage("current volume = NULL");
     return;
   }
-	m_CurrentVolume->GetEventSource()->RemoveObserver(this);
+	m_CurrentVolume->RemoveObserver(this);
 	m_CurrentVolume = NULL;
 	GizmoDelete();
 }

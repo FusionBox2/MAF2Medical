@@ -56,7 +56,7 @@ public:
 
   enum NORMAL {X = 0, Y, Z};
 
-           medGizmoCrossTranslate(mafVME *input, mafObserver* listener = NULL, bool BuildGUI = true, int normal = X);
+           medGizmoCrossTranslate(mafVME *input, mafBaseEventHandler* listener = NULL, bool BuildGUI = true, int normal = X);
   virtual ~medGizmoCrossTranslate(); 
 
   /** 

@@ -57,7 +57,7 @@
 #include "medGizmoCrossRotateFan.h"
 
 //----------------------------------------------------------------------------
-medGizmoCrossRotateAxis::medGizmoCrossRotateAxis(mafVME *input, mafObserver *listener)
+medGizmoCrossRotateAxis::medGizmoCrossRotateAxis(mafVME *input, mafBaseEventHandler *listener)
 //----------------------------------------------------------------------------
 {
 	m_GizmoDirection =NS;
@@ -99,7 +99,7 @@ medGizmoCrossRotateAxis::medGizmoCrossRotateAxis(mafVME *input, mafObserver *lis
 	m_IsaComp = NULL;
 	m_Radius = -1;
 
-	m_Listener = listener;
+  SetListener(listener);
 	m_InputVme = input;
 
 	//-----------------
@@ -119,7 +119,7 @@ medGizmoCrossRotateAxis::medGizmoCrossRotateAxis(mafVME *input, mafObserver *lis
 	m_GizmoCross->SetData(m_LinesRotatePDF->GetOutput());
 
 	medGizmoCrossRotateFan *rotateFan = NULL;
-	rotateFan = dynamic_cast<medGizmoCrossRotateFan *>(m_Listener);
+	rotateFan = dynamic_cast<medGizmoCrossRotateFan *>(GetListener());
 
 	m_GizmoCross->SetMediator(rotateFan->GetMediator());
 
@@ -437,11 +437,6 @@ double medGizmoCrossRotateAxis::GetRadius()
 	return m_Radius;
 }
 
-void medGizmoCrossRotateAxis::SetListener( mafObserver *Listener )
-{
-	m_Listener = Listener;
-}
-
 void medGizmoCrossRotateAxis::SetIsActive( bool isActive )
 {
 	m_IsActive = isActive;
@@ -555,7 +550,7 @@ void medGizmoCrossRotateAxis::CreateFeedbackGizmoPipeline()
 	m_RotationFeedbackGizmo->SetName("AxisRotationFeedbackGizmo");
 
 	medGizmoCrossRotateFan *rotateFan = NULL;
-	rotateFan = dynamic_cast<medGizmoCrossRotateFan *>(m_Listener);
+	rotateFan = dynamic_cast<medGizmoCrossRotateFan *>(GetListener());
 
 	m_RotationFeedbackGizmo->SetMediator(rotateFan->GetMediator());
 	m_RotationFeedbackGizmo->SetData(m_FeedbackStuffAppendPolydata->GetOutput());

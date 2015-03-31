@@ -294,12 +294,12 @@ void medViewSlicer::OnEventThis(mafEventBase *maf_event)
 	}
 }
 //----------------------------------------------------------------------------
-mafView *medViewSlicer::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewSlicer::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSlicer *v = new medViewSlicer(m_Label);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

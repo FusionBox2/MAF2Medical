@@ -38,7 +38,6 @@
 #include "mafSmartPointer.h"
 #include "mafGizmoTranslatePlane.h"
 #include "mafGizmoTranslateAxis.h"
-#include "mafObserver.h"
 #include "mafGizmoBoundingBox.h"
 
 #include "vtkTransform.h"
@@ -52,13 +51,13 @@
 using namespace std;
 
 //----------------------------------------------------------------------------
-mafGizmoROI_BES::mafGizmoROI_BES(mafVME* input, mafObserver *listener , int constraintModality,
+mafGizmoROI_BES::mafGizmoROI_BES(mafVME* input, mafBaseEventHandler *listener , int constraintModality,
 							 mafVME* parent, double* usrBounds)
 //----------------------------------------------------------------------------
 {
 	assert(input);
 	m_InputVME = input;
-	m_Listener = listener;
+	SetListener(listener);
 
 	for (int i = 0; i < 6; i++) {
 		m_UserBounds[i] = 0;

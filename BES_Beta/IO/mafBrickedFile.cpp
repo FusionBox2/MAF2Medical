@@ -32,7 +32,6 @@ mafBrickedFile::mafBrickedFile()
 	m_PExIdxTable = NULL;
 	m_PLowResLevel = NULL;
   m_BrickFile = NULL;
-	m_Listener = NULL;  
   m_PXYZCoords[0] = NULL;
   m_PXYZCoords[1] = NULL;
   m_PXYZCoords[2] = NULL;

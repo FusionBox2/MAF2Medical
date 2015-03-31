@@ -22,7 +22,6 @@ University of Bedfordshire, UK
 #include "mmuIdFactory.h"
 #include "mafDataVector.h"
 #include "mafTagArray.h"
-#include "mafEventSource.h"
 #include "mafVMEOutputSurface.h"
 #include "mafVMEOutputPolyline.h"
 #include "mafDataPipeCustom.h"
@@ -233,7 +232,7 @@ void medVMEStent::OnEvent(mafEventBase *maf_event)
         m_StentLengthModified = true ;
         //SetFixedParameterForSpecialStent();
         InternalUpdate();
-        m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+        InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
         ForwardUpEvent(&mafEvent(this,CAMERA_UPDATE));
         m_Gui->Update();
       }
@@ -245,7 +244,7 @@ void medVMEStent::OnEvent(mafEventBase *maf_event)
         SetVesselSurface(node);
 
         InternalUpdate();
-        m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+        InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
         ForwardUpEvent(&mafEvent(this,CAMERA_UPDATE));
         m_Gui->Update();
       }
@@ -257,7 +256,7 @@ void medVMEStent::OnEvent(mafEventBase *maf_event)
         SetVesselCenterLine(node);
 
         InternalUpdate();
-        m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+        InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
         ForwardUpEvent(&mafEvent(this,CAMERA_UPDATE));
         m_Gui->Update();
       }	
@@ -294,7 +293,7 @@ void medVMEStent::Initialize()
   SetVesselCenterLine(node);
 
   InternalUpdate();
-  m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+  InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
   ForwardUpEvent(&mafEvent(this,CAMERA_UPDATE));
   m_Gui->Update();
 }

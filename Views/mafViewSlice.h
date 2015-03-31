@@ -58,7 +58,7 @@ public:
 
   mafTypeMacro(mafViewSlice, mafViewVTK);
 
-  virtual mafView*  Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+  virtual mafView*  Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
   virtual void			OnEvent(mafEventBase *maf_event);
 
     /** Set the origin of the slice */

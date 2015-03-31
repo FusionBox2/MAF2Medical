@@ -60,13 +60,13 @@ void medViewSliceNotInterpolated::PackageView()
 }
 
 //----------------------------------------------------------------------------
-mafView *medViewSliceNotInterpolated::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewSliceNotInterpolated::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   // Copy the view and sub-views attributes
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSliceNotInterpolated *v = new medViewSliceNotInterpolated(m_Label);
-  v->m_Listener = Listener;
+ SetListener(Listener);
   v->m_Id = m_Id;
   v->PlugVisualPipe("mafVMEVolumeGray", "medPipeVolumeSliceNotInterpolated");
   v->Create();

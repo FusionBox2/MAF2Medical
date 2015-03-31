@@ -46,13 +46,13 @@
 #include "mafVMEVolumeGray.h"
 
 //----------------------------------------------------------------------------
-medGizmoCrossTranslate::medGizmoCrossTranslate(mafVME* input, mafObserver *listener, bool buildGUI, int normal)
+medGizmoCrossTranslate::medGizmoCrossTranslate(mafVME* input, mafBaseEventHandler *listener, bool buildGUI, int normal)
 //----------------------------------------------------------------------------
 {
   assert(input);
 
   m_InputVME = input;
-  m_Listener = listener;
+  SetListener(listener);
   m_BuildGUI = buildGUI;
   m_GTUpDown = NULL;
   m_GTLeftRight = NULL;

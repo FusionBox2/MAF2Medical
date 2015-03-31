@@ -19,26 +19,22 @@
 //----------------------------------------------------------------------------
 #include "medCommonDefines.h"
 #include "vtkCommand.h"
+#include "mafBaseEventHandler.h"
+#include "mafEventSender.h"
 
 //----------------------------------------------------------------------------
 // Forward declarations:
 //----------------------------------------------------------------------------
-class mafObserver;
 
 //this class handles events produced by LargeDataSet
-class MED_COMMON_EXPORT vtkMAFLargeDataSetCallback : public vtkCommand
+class MED_COMMON_EXPORT vtkMAFLargeDataSetCallback : public vtkCommand, public mafEventSender
 {
   //vtkTypeMacro(vtkMAFLargeDataSetCallback,vtkCommand);
 
-protected:
-	mafObserver* Listener;
 public:
 	inline static vtkMAFLargeDataSetCallback* New() {
 		return new vtkMAFLargeDataSetCallback();
 	}
-
-	//set the MAF listener that should process the MAF generated events
-  void SetListener(mafObserver* listener);
 
 	//callback routine called by VTK, translate events into MAF events
 	virtual void Execute(vtkObject* caller, unsigned long eventId, void* callData);
@@ -48,7 +44,6 @@ public:
 
 protected:
 	vtkMAFLargeDataSetCallback() {
-		Listener = NULL;
 	}
 
 	~vtkMAFLargeDataSetCallback() {

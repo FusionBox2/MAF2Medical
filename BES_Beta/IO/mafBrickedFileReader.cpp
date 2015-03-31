@@ -20,6 +20,7 @@ Reads the BBF file, writing data into vtkImageDataSet
 // "Failure#0: The value of ESP was not properly saved across a function call"
 //----------------------------------------------------------------------------
 
+#include "mafEvent.h"
 #include "mafBrickedFileReader.h"
 
 mafCxxTypeMacro(mafBrickedFileReader);

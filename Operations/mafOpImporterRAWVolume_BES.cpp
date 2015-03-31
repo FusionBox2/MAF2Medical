@@ -512,7 +512,7 @@ void mafOpImporterRAWVolume_BES::	OnEvent(mafEventBase *maf_event)
 bool mafOpImporterRAWVolume_BES::VolumeLargeCheck()
 {
   mafString szStr;
-  int nResult = mafVMEVolumeLargeUtils::VolumeLargeCheck(this, m_Listener,
+  int nResult = mafVMEVolumeLargeUtils::VolumeLargeCheck(this, GetListener(),
     m_VOI, GetVTKDataType(), m_NumberOfScalarComponents, m_MemLimit, szStr);
 
   if (nResult == 0)
@@ -676,7 +676,7 @@ bool mafOpImporterRAWVolume_BES::Import()
 		else
 		{		
 			vtkMAFLargeDataSetCallback* ppc = vtkMAFLargeDataSetCallback::New();
-			ppc->SetListener(this->m_Listener);
+			ppc->SetListener(GetListener());
 
 			img = (vtkMAFLargeImageData*)reader->GetOutput();
 			img->AddObserver(vtkCommand::ProgressEvent, ppc);
@@ -694,7 +694,7 @@ bool mafOpImporterRAWVolume_BES::Import()
     if (m_BuildRectilinearGrid)
       wr.SetInputZCoordinates(ZDoubleArray.GetPointer());
 		wr.SetOutputFileName(m_OutputFileName);
-		wr.SetListener(this->m_Listener);
+		wr.SetListener(GetListener());
 		if (wr.Update())
 		{
 			int VOI[6];
@@ -759,7 +759,7 @@ bool mafOpImporterRAWVolume_BES::Import()
       else
       {		
         vtkMAFLargeDataSetCallback* ppc = vtkMAFLargeDataSetCallback::New();
-        ppc->SetListener(this->m_Listener);
+        ppc->SetListener(GetListener());
 
         vtkMAFLargeImageData* img2 = (vtkMAFLargeImageData*)reader->GetOutput();
         img2->AddObserver(vtkCommand::ProgressEvent, ppc);

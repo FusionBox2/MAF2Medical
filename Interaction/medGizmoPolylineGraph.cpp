@@ -57,11 +57,11 @@
 
 #include "mafMemDbg.h"
 
-medGizmoPolylineGraph::medGizmoPolylineGraph(mafNode* imputVme, mafObserver *listener, const char* name, bool showOnlyDirectionAxis, bool testMode) 
+medGizmoPolylineGraph::medGizmoPolylineGraph(mafNode* imputVme, mafBaseEventHandler *listener, const char* name, bool showOnlyDirectionAxis, bool testMode) 
 { 
   m_Name = name;
   m_InputVME = mafVME::SafeDownCast(imputVme);
-  m_Listener = listener;
+  SetListener(listener);
   m_TestMode = testMode;
   
   m_VmeGizmo = NULL;

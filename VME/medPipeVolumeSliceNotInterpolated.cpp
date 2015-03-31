@@ -25,7 +25,7 @@
 #include "medPipeVolumeSliceNotInterpolated.h"
 #include "vtkMEDVolumeSlicerNotInterpolated.h"
 #include "mafVME.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 #include "mafGUI.h"
 #include "vtkLookupTable.h"
 #include "vtkRenderer.h"
@@ -95,7 +95,7 @@ medPipeVolumeSliceNotInterpolated::~medPipeVolumeSliceNotInterpolated()
 //----------------------------------------------------------------------------
 {
   // Destroy allocated objects
-  m_Vme->GetEventSource()->RemoveObserver(this);
+  m_Vme->RemoveObserver(this);
 
   if (m_DataType == VTK_IMAGE_DATA)
   {
@@ -175,7 +175,7 @@ void medPipeVolumeSliceNotInterpolated::Create(mafSceneNode * node)
 //----------------------------------------------------------------------------
 {
   Superclass::Create(node);
-  m_Vme->GetEventSource()->AddObserver(this);
+  m_Vme->AddObserver(this);
   CreateSlice();
 }
 

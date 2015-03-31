@@ -38,7 +38,6 @@ medWizardManager::medWizardManager()
   m_Warn           = true;
   m_ToolBar = NULL;
   m_MenuBar = NULL;
-  m_Listener = NULL;
   m_Selected = NULL;
   m_RunningWizard =NULL;
   m_Settings=new medWizardSettings(this);

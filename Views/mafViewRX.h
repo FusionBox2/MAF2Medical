@@ -50,7 +50,7 @@ public:
   mafTypeMacro(mafViewRX, mafViewVTK);
 
   /** clone an instance of the object*/
-  virtual mafView*  Copy(mafObserver *Listener, bool lightCopyEnabled = false);
+  virtual mafView*  Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled = false);
 
   /** Precess events coming from other objects */
   virtual void			OnEvent(mafEventBase *maf_event);

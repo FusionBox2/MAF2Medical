@@ -82,12 +82,12 @@ medViewVTKCompound::~medViewVTKCompound()
 	cppDEL(m_LutSlider);*/
 }
 //----------------------------------------------------------------------------
-mafView *medViewVTKCompound::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewVTKCompound::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   medViewVTKCompound *v = new medViewVTKCompound(m_Label, m_ViewRowNum, m_ViewColNum);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
   {

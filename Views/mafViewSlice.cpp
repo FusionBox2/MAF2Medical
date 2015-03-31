@@ -120,12 +120,12 @@ mafViewSlice::~mafViewSlice()
   m_CurrentMesh.clear();
 }
 //----------------------------------------------------------------------------
-mafView *mafViewSlice::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *mafViewSlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
   mafViewSlice *v = new mafViewSlice(m_Label, m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType,m_ShowVolumeTICKs,m_TextureInterpolate);
-  v->m_Listener = Listener;
+  v->SetListener(Listener);
   v->m_Id = m_Id;
   v->m_PipeMap = m_PipeMap;
   v->m_LightCopyEnabled = lightCopyEnabled;

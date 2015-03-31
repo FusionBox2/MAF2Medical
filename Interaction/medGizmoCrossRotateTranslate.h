@@ -64,7 +64,7 @@ public:
 	enum COLOR {RED = 0, GREEN , BLUE };
 	void SetColor(int component, int color);
 
-	void Create(mafVME *input, mafObserver* listener = NULL, bool BuildGUI = true, int normal = X);
+	void Create(mafVME *input, mafBaseEventHandler* listener = NULL, bool BuildGUI = true, int normal = X);
 	void SetInput(mafVME *vme);
 
 	/** Superclass override */
@@ -93,8 +93,6 @@ public:
 
 	medGizmoCrossTranslate *m_GizmoCrossTranslate;
 	medGizmoCrossRotate		*m_GizmoCrossRotate;
-
-	mafObserver *m_Listener;
 };
 
 

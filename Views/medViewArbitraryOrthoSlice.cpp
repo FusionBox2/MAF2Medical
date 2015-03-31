@@ -1406,11 +1406,11 @@ void medViewArbitraryOrthoSlice::OnEventThis(mafEventBase *maf_event)
 	}
 }
 
-mafView *medViewArbitraryOrthoSlice::Copy(mafObserver *Listener, bool lightCopyEnabled)
+mafView *medViewArbitraryOrthoSlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 {
 	m_LightCopyEnabled = lightCopyEnabled;
 	medViewArbitraryOrthoSlice *v = new medViewArbitraryOrthoSlice(m_Label);
-	v->m_Listener = Listener;
+	v->SetListener(Listener);
 	v->m_Id = m_Id;
 	for (int i=0;i<m_PluggedChildViewList.size();i++)
 	{
@@ -2720,7 +2720,7 @@ bool medViewArbitraryOrthoSlice::BelongsToZNormalGizmo( mafVME * vme )
 
 	mafVMEGizmo *gizmo = mafVMEGizmo::SafeDownCast(vme);
 
-	mafObserver *mediator = NULL;
+	mafBaseEventHandler *mediator = NULL;
 	mediator = gizmo->GetMediator();
 
 	medGizmoCrossTranslate *translate = NULL;
@@ -2756,7 +2756,7 @@ bool medViewArbitraryOrthoSlice::BelongsToXNormalGizmo( mafVME * vme )
 {
 	mafVMEGizmo *gizmo = mafVMEGizmo::SafeDownCast(vme);
 
-	mafObserver *mediator = NULL;
+	mafBaseEventHandler *mediator = NULL;
 	mediator = gizmo->GetMediator();
 
 	medGizmoCrossTranslate *translate = NULL;
@@ -2789,7 +2789,7 @@ bool medViewArbitraryOrthoSlice::BelongsToYNormalGizmo( mafVME * vme )
 {
 	mafVMEGizmo *gizmo = mafVMEGizmo::SafeDownCast(vme);
 
-	mafObserver *mediator = NULL;
+	mafBaseEventHandler *mediator = NULL;
 	mediator = gizmo->GetMediator();
 
 	medGizmoCrossTranslate *translate = NULL;

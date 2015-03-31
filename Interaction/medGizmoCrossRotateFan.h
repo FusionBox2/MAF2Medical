@@ -70,7 +70,7 @@ class mafRefSys;
 class medGizmoCrossRotateFan: public mafGizmoInterface
 {
 public:
-           medGizmoCrossRotateFan(mafVME *input, mafObserver *listener = NULL);
+           medGizmoCrossRotateFan(mafVME *input, mafBaseEventHandler *listener = NULL);
   virtual ~medGizmoCrossRotateFan(); 
   
   /** 
@@ -81,9 +81,6 @@ public:
   //----------------------------------------------------------------------------
   // events handling 
   //----------------------------------------------------------------------------
-  
-  /** Set the event receiver object*/
-  void  SetListener(mafObserver *Listener) {m_Listener = Listener;};
   
   /** Events handling*/        
   virtual void OnEvent(mafEventBase *maf_event);
@@ -126,10 +123,6 @@ protected:
   /** Register input vme*/
   mafVME *m_InputVme;
 
-  /**
-  Register the event receiver object*/
-  mafObserver *m_Listener;
- 
   /** Register the gizmo axis */
   int m_ActiveAxis;
   

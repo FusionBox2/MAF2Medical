@@ -19,7 +19,8 @@
 //----------------------------------------------------------------------------
 #include "medGuiDefines.h"
 #include "mafEvent.h"
-#include "mafObserver.h"
+#include "mafEventSender.h"
+#include "mafBaseEventHandler.h"
 #include "mafGUIPanel.h"
 
 //----------------------------------------------------------------------------
@@ -49,7 +50,7 @@ mafEvent::GetArg). medGUIDynamicVP can be configured so it does not contain
 neither close button nor create combo nor any other widget. In such a
 special mode, the construction of visual pipe is governed by the caller.*/
 //----------------------------------------------------------------------------
-class MED_GUI_EXPORT medGUIDynamicVP: public mafGUIPanel, public mafObserver
+class MED_GUI_EXPORT medGUIDynamicVP: public mafGUIPanel, public mafBaseEventHandler, public mafEventSender
 {
 public:  
   enum PLAYER_WIDGET_ID
@@ -109,7 +110,6 @@ protected:
 protected:  
   long m_GuiStyle;                ///<style/mode of the GUI
   wxWindowID  m_NotifyId;         ///<Id used for when listener is notified
-  mafObserver* m_Listener;        ///<object that is notified when something changes (notified by ID)
 
   const SUPPORTED_VP_ENTRY* m_VPipes; ///<list of currently supported visual pipes, terminated by (NULL, NULL)
 
@@ -139,16 +139,6 @@ public:
     const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL);
   /** destructor */
   virtual ~medGUIDynamicVP();    
-
-  /** Gets the listener that will be notified when any control changes. */
-  inline mafObserver* GetListener(){
-    return m_Listener;
-  };
-
-  /** Specifies the listener that will be notified when any control changes. */
-  inline void SetListener(mafObserver *Listener){
-    m_Listener = Listener;
-  };
 
   /** Gets the currently associated name with the GUI. */
   inline const char* GetName() {

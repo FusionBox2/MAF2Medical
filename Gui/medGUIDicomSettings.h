@@ -47,7 +47,7 @@ class MED_GUI_EXPORT medGUIDicomSettings : public mafGUISettings
 {
 public:
   /** constructor.*/
-	medGUIDicomSettings(mafObserver *Listener, const mafString &label = _("Dicom"));
+	medGUIDicomSettings(mafBaseEventHandler *Listener, const mafString &label = _("Dicom"));
   /** destructor.*/
 	~medGUIDicomSettings(); 
 

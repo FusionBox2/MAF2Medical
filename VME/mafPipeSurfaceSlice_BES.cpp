@@ -38,7 +38,7 @@
 #include "mafVMEOutputPointSet.h"
 #include "mafVMEOutputLandmarkCloud.h"
 #include "mafVMELandmarkCloud.h"
-#include "mafEventSource.h"
+#include "mafEventSender.h"
 
 #include "vtkMAFSmartPointer.h"
 #include "vtkMAFAssembly.h"
@@ -110,7 +110,7 @@ void mafPipeSurfaceSlice_BES::Create(mafSceneNode *n/*, bool use_axes*/)
   vtkPolyData *data = NULL;
   mmaMaterial *material = NULL;
 
-	m_Vme->GetEventSource()->AddObserver(this);
+	m_Vme->AddObserver(this);
   
   if(m_Vme->GetOutput()->IsMAFType(mafVMEOutputSurface))
   {
@@ -304,7 +304,7 @@ void mafPipeSurfaceSlice_BES::Create(mafSceneNode *n/*, bool use_axes*/)
 mafPipeSurfaceSlice_BES::~mafPipeSurfaceSlice_BES()
 //----------------------------------------------------------------------------
 {
-  m_Vme->GetEventSource()->RemoveObserver(this);
+  m_Vme->RemoveObserver(this);
   m_AssemblyFront->RemovePart(m_Actor);
   m_AssemblyFront->RemovePart(m_OutlineActor);
 

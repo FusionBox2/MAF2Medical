@@ -61,7 +61,7 @@
 #include "vtkAppendPolyData.h"
 
 //----------------------------------------------------------------------------
-medGizmoCrossTranslateAxis::medGizmoCrossTranslateAxis(mafVME *input, mafObserver *listener)
+medGizmoCrossTranslateAxis::medGizmoCrossTranslateAxis(mafVME *input, mafBaseEventHandler *listener)
 //----------------------------------------------------------------------------
 {
 
@@ -98,7 +98,7 @@ medGizmoCrossTranslateAxis::medGizmoCrossTranslateAxis(mafVME *input, mafObserve
 
 	m_IsaComp = NULL;
 
-	m_Listener = listener;
+	SetListener(listener);
 	m_InputVme = input;
 
 	// default axis is X
@@ -118,7 +118,7 @@ medGizmoCrossTranslateAxis::medGizmoCrossTranslateAxis(mafVME *input, mafObserve
 	//  m_TranslationCylinderGizmo->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 1));
 	m_TranslationCylinderGizmo->SetName("AxisTranslationGizmo");
 	m_TranslationCylinderGizmo->SetData(m_Append->GetOutput());
-	m_TranslationCylinderGizmo->SetMediator(m_Listener);
+	m_TranslationCylinderGizmo->SetMediator(GetListener());
 	// cone gizmo
 
 	// assign isa to cylinder and cone
@@ -595,7 +595,7 @@ void medGizmoCrossTranslateAxis::CreateFeedbackGizmoPipeline()
 	m_FeedbackStuffAppendPolydata->Update();
 
 	m_TranslationFeedbackGizmo->SetName("AxisTranslationFeedbackGizmo");
-	m_TranslationFeedbackGizmo->SetMediator(m_Listener);
+	m_TranslationFeedbackGizmo->SetMediator(GetListener());
 	m_TranslationFeedbackGizmo->SetData(m_FeedbackStuffAppendPolydata->GetOutput());
 	//  m_TranslationFeedbackGizmo->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 1));
 	assert(m_InputVme);

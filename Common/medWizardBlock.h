@@ -22,6 +22,7 @@
 //----------------------------------------------------------------------------
 #include "medCommonDefines.h"
 #include "mafEvent.h"
+#include "mafEventSender.h"
 
 //----------------------------------------------------------------------------
 // forward reference
@@ -31,7 +32,7 @@
   Class Name: medWizardBlock.
   Class for the base wizard block, each block on a wizard must extend this block
 */
-class MED_COMMON_EXPORT medWizardBlock 
+class MED_COMMON_EXPORT medWizardBlock : public mafEventSender
 {
 public:
 
@@ -91,9 +92,6 @@ protected:
   /** Set the selected VME, this function must be called before execution begin*/
   void SetSelectedVME(mafNode *node);
 
-  /** Sets The event listener */
-  void SetListener(mafObserver *Listener);
-
   /** Return true if the user has aborted the operation */
   int Success();
 
@@ -109,7 +107,6 @@ protected:
   mafNode *m_InputVME; ///< The vme selected on operation start.
   int m_Success;
   int m_Running;
-  mafObserver    *m_Listener;
   mafString m_DescriptionLabel;
   long m_BlockProgress;
 

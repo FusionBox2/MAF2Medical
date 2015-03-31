@@ -32,7 +32,7 @@
   Class Name: medWizardSelectionBlock.
   Class for create a multiple choice switch inside wizard graph
 */
-class MED_COMMON_EXPORT medWizardBlockInformation : public medWizardBlock,mafObserver
+class MED_COMMON_EXPORT medWizardBlockInformation : public medWizardBlock,mafBaseEventHandler
 {
 public:
 

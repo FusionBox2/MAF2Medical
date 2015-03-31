@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------
 // forward declarations :
 //----------------------------------------------------------------------------
+class mafView;
 
 class MED_INTERACTION_EXPORT medInteractorSegmentationPicker : public mafInteractorCameraMove
 {
