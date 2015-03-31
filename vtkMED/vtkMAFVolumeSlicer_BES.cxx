@@ -1305,8 +1305,8 @@ bool vtkMAFVolumeSlicer_BES::CreateGPUProvider()
   //}
   //fclose(f);
 
-  wxString err;
-  if (!m_pGPUProvider->CreateShaders(NULL, ps, &err))
+  char err[MAX_PATH + 1];
+  if (!m_pGPUProvider->CreateShaders(NULL, ps, err))
   {
     vtkErrorMacro(<< "GPUProvider->CreateShaders failed:" << err);
     delete[] m_pGPUProvider;
@@ -1354,8 +1354,8 @@ void vtkMAFVolumeSlicer_BES::CreateImageGPU(OutputDataType* output, vtkImageData
   //set the size of texture
   m_pGPUProvider->SetTarget(xs, ys, xs*dx, ys*dy);
 
-  wxString szErr;
-  if (!m_pGPUProvider->BeginExecute(&szErr))
+  char szErr[MAX_PATH + 1];
+  if (!m_pGPUProvider->BeginExecute(szErr))
   {    
     vtkErrorMacro(<< "GPUProvider->BeginExecute failed:" << szErr);
     return; //terminate process
