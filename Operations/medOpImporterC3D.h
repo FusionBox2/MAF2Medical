@@ -41,8 +41,9 @@ for movement analysis data. http://www.c3d.org/
 class MED_OPERATION_EXPORT medOpImporterC3D: public mafOp
 {
 public:
+  mafTypeMacro(medOpImporterC3D, mafOp)
   /** constructor */
-  medOpImporterC3D(wxString label);
+  medOpImporterC3D(const mafString& label="");
   /** destructor */
  ~medOpImporterC3D();
   /** retrieve the copy of the object */

@@ -34,9 +34,10 @@
 
 #include <iostream>
 
+mafCxxTypeMacro(medOpImporterAnalogWS)
+
 //----------------------------------------------------------------------------
-medOpImporterAnalogWS::medOpImporterAnalogWS(const wxString &label) :
-mafOp(label)
+medOpImporterAnalogWS::medOpImporterAnalogWS(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_IMPORTER;
@@ -56,7 +57,7 @@ medOpImporterAnalogWS::~medOpImporterAnalogWS()
 mafOp* medOpImporterAnalogWS::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpImporterAnalogWS *cp = new medOpImporterAnalogWS(m_Label);
+	medOpImporterAnalogWS *cp = new medOpImporterAnalogWS(GetLabel());
 	cp->m_File = m_File;
   cp->m_FileDir = m_FileDir;
 	return cp;

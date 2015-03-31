@@ -35,7 +35,7 @@ class medOp2DMeasure: public mafOp
 {
 public:
   /** constructor. */
-	medOp2DMeasure(const wxString &label = "2DMeasure");
+	medOp2DMeasure(const mafString& label = "2DMeasure");
   /** destructor. */
 	~medOp2DMeasure(); 
 

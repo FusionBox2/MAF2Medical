@@ -36,7 +36,7 @@ class MED_OPERATION_EXPORT medOpImporterVTK: public mafOpImporterVTK
 {
 public:
   /** constructor */
-  medOpImporterVTK(const wxString &label = "medVTKImporter");
+  medOpImporterVTK(const mafString& label = "medVTKImporter");
   /** destructor */
   ~medOpImporterVTK(); 
 

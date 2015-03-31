@@ -38,7 +38,8 @@ Vicon Workstation© employed in Human Movement Analysis.*/
 class MED_OPERATION_EXPORT medOpImporterLandmarkWS : public mafOp
 {
 public:
-	medOpImporterLandmarkWS(wxString label);
+  mafTypeMacro(medOpImporterLandmarkWS, mafOp)
+	medOpImporterLandmarkWS(const mafString& label = "");
 	~medOpImporterLandmarkWS(); 
 	mafOp* Copy();
 

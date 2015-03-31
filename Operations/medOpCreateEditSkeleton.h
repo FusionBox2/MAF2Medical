@@ -39,7 +39,7 @@ class MED_OPERATION_EXPORT medOpCreateEditSkeleton: public mafOp
 {
 public:
   /** constructor */
-	medOpCreateEditSkeleton(wxString label = "Create/Edit Skeleton");
+	medOpCreateEditSkeleton(const mafString& label = "Create/Edit Skeleton");
   /** destructor */
 	~medOpCreateEditSkeleton(); 
 

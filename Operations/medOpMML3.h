@@ -102,7 +102,8 @@
 class MED_OPERATION_EXPORT medOpMML3: public mafOp
 {
 public:
-  medOpMML3(const wxString &label); ///< constructor
+  mafTypeMacro(medOpMML3, mafOp)
+  medOpMML3(const mafString& label=""); ///< constructor
   ~medOpMML3(); ///< destructor
 
   mafOp* Copy();

@@ -59,7 +59,7 @@ mafCxxTypeMacro(medOpSegmentationRegionGrowingConnectedThreshold);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSegmentationRegionGrowingConnectedThreshold::medOpSegmentationRegionGrowingConnectedThreshold(wxString label) : mafOp(label)
+medOpSegmentationRegionGrowingConnectedThreshold::medOpSegmentationRegionGrowingConnectedThreshold(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType  = OPTYPE_OP;
@@ -120,7 +120,7 @@ bool medOpSegmentationRegionGrowingConnectedThreshold::Accept(mafNode *node)
 mafOp* medOpSegmentationRegionGrowingConnectedThreshold::Copy()   
 //----------------------------------------------------------------------------
 {
-  return new medOpSegmentationRegionGrowingConnectedThreshold(m_Label);
+  return new medOpSegmentationRegionGrowingConnectedThreshold(GetLabel());
 }
 //----------------------------------------------------------------------------
 void medOpSegmentationRegionGrowingConnectedThreshold::OpRun()   

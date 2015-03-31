@@ -86,7 +86,7 @@ mafCxxTypeMacro(medOpComputeInertialTensor);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpComputeInertialTensor::medOpComputeInertialTensor(const wxString &label) :
+medOpComputeInertialTensor::medOpComputeInertialTensor(const mafString &label) :
 mafOp(label)
 //----------------------------------------------------------------------------
 {
@@ -128,7 +128,7 @@ medOpComputeInertialTensor::~medOpComputeInertialTensor( )
 mafOp* medOpComputeInertialTensor::Copy()   
 //----------------------------------------------------------------------------
 {
-	 medOpComputeInertialTensor* op_copy = new medOpComputeInertialTensor(m_Label);
+	 medOpComputeInertialTensor* op_copy = new medOpComputeInertialTensor(GetLabel());
    op_copy->m_DefaultDensity = this->m_DefaultDensity;
 
    return op_copy;
@@ -214,7 +214,7 @@ void medOpComputeInertialTensor::OnEvent(mafEventBase *maf_event)
 		{
 			mafEvent helpEvent;
 			helpEvent.SetSender(this);
-			mafString operationLabel = this->m_Label;
+			mafString operationLabel = GetLabel();
 			helpEvent.SetString(&operationLabel);
 			helpEvent.SetId(OPEN_HELP_PAGE);
 			mafEventMacro(helpEvent);

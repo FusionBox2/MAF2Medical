@@ -46,7 +46,7 @@ class MED_OPERATION_EXPORT medOpExporterMeters: public mafOp
 {
 public:
   /** object constructor */
-  medOpExporterMeters(const wxString &label = "WrappedMeter");
+  medOpExporterMeters(const mafString& label = "WrappedMeter");
   /** object destructor */
   ~medOpExporterMeters(); 
   /** RTTI Macro */

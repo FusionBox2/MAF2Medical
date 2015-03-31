@@ -61,8 +61,7 @@ mafCxxTypeMacro(medOpFreezeVME);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpFreezeVME::medOpFreezeVME(wxString label) :
-mafOp(label)
+medOpFreezeVME::medOpFreezeVME(const mafString& label) : Superclass(label)
 	//----------------------------------------------------------------------------
 {
 	m_OpType  = OPTYPE_OP;
@@ -90,7 +89,7 @@ bool medOpFreezeVME::Accept(mafNode *node)
 mafOp* medOpFreezeVME::Copy()   
 	//----------------------------------------------------------------------------
 {
-	medOpFreezeVME *cp = new medOpFreezeVME(m_Label);
+	medOpFreezeVME *cp = new medOpFreezeVME(GetLabel());
 	return cp;
 }
 //----------------------------------------------------------------------------

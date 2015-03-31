@@ -30,6 +30,7 @@
 #include "mafVME.h"
 #include "mafTagArray.h"
 #include "mafSmartPointer.h"
+#include "mafFilesDirs.h"
 
 //----------------------------------------------------------------------------
 // forward references :
@@ -44,7 +45,7 @@ template <class MotionReader>
 class medOpImporterMotionData : public mafOp
 {
 public:
-  medOpImporterMotionData(const wxString &label, const wxString &pgdWildc, const wxString &dicWildc) :  mafOp(label), m_PgdWildc(pgdWildc), m_DicWildc(dicWildc)
+  medOpImporterMotionData(const mafString& label, const mafString& pgdWildc, const mafString& dicWildc) :  mafOp(label), m_PgdWildc(pgdWildc), m_DicWildc(dicWildc)
         //----------------------------------------------------------------------------
   {
     m_OpType	= OPTYPE_IMPORTER;
@@ -76,7 +77,7 @@ public:
     //----------------------------------------------------------------------------
   {
     //non devo incrementare l'id counter --- vfc le operazioni sono gia inserite nei menu;
-    medOpImporterMotionData *cp = new medOpImporterMotionData(m_Label, m_PgdWildc, m_DicWildc);
+    medOpImporterMotionData *cp = new medOpImporterMotionData(GetLabel(), m_PgdWildc, m_DicWildc);
     cp->m_Canundo = m_Canundo;
     cp->m_OpType = m_OpType;
     cp->SetListener(GetListener());
@@ -145,8 +146,8 @@ public:
 
     m_Vme = reader;
 
-    wxString path, name, ext;
-    wxSplitPath(m_File.c_str(),&path,&name,&ext);
+    mafString path, name, ext;
+    mafSplitPath(m_File,&path,&name,&ext);
     m_Vme->SetName(name);
 
     mafTagItem tag_Nature;
@@ -162,14 +163,14 @@ public:
   }
   //----------------------------------------------------------------------------
   /** Set file name. */
-  void SetFileName(wxString filename)   
+  void SetFileName(const mafString& filename)   
     //----------------------------------------------------------------------------
   {
     m_File = filename;
   }
   //----------------------------------------------------------------------------
   /** Set dictionary name. */
-  void SetDictionaryName(wxString dicname)   
+  void SetDictionaryName(const mafString& dicname)   
     //----------------------------------------------------------------------------
   {
     m_Dict = dicname;
@@ -218,12 +219,12 @@ public:
   
 
 protected:
-  wxString m_FileDir;
-	wxString m_DictDir;
-	wxString m_File;
-	wxString m_Dict;
-  wxString m_PgdWildc;
-  wxString m_DicWildc;
+  mafString m_FileDir;
+	mafString m_DictDir;
+	mafString m_File;
+	mafString m_Dict;
+  mafString m_PgdWildc;
+  mafString m_DicWildc;
 	mafVME  *m_Vme; 						
 	int m_DictionaryAvailable;
 };

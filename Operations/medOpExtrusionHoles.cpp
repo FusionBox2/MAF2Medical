@@ -54,8 +54,7 @@ mafCxxTypeMacro(medOpExtrusionHoles);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpExtrusionHoles::medOpExtrusionHoles(const wxString &label) :
-mafOp(label)
+medOpExtrusionHoles::medOpExtrusionHoles(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_Canundo = true;
@@ -109,7 +108,7 @@ bool medOpExtrusionHoles::Accept(mafNode *node)
 mafOp *medOpExtrusionHoles::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpExtrusionHoles(m_Label));
+	return (new medOpExtrusionHoles(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

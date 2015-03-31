@@ -38,8 +38,7 @@ mafCxxTypeMacro(medOpCreateWrappedMeter);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpCreateWrappedMeter::medOpCreateWrappedMeter(const wxString &label) :
-mafOp(label)
+medOpCreateWrappedMeter::medOpCreateWrappedMeter(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -56,7 +55,7 @@ medOpCreateWrappedMeter::~medOpCreateWrappedMeter( )
 mafOp* medOpCreateWrappedMeter::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpCreateWrappedMeter(m_Label);
+	return new medOpCreateWrappedMeter(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpCreateWrappedMeter::Accept(mafNode *node)

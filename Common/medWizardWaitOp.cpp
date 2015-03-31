@@ -38,7 +38,7 @@ mafCxxTypeMacro(medWizardWaitOp);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medWizardWaitOp::medWizardWaitOp(const wxString &label) :
+medWizardWaitOp::medWizardWaitOp(const mafString &label) :
 mafOp(label)
 //----------------------------------------------------------------------------
 {
@@ -54,7 +54,7 @@ medWizardWaitOp::~medWizardWaitOp( )
 mafOp* medWizardWaitOp::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medWizardWaitOp(m_Label);
+	return new medWizardWaitOp(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medWizardWaitOp::Accept(mafNode *node)

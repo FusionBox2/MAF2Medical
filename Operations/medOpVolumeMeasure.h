@@ -52,7 +52,7 @@ class MED_OPERATION_EXPORT medOpVolumeMeasure: public mafOp
 {
 public:
              
-            	 medOpVolumeMeasure(wxString label = "Volume Measure");
+            	 medOpVolumeMeasure(const mafString& label = "Volume Measure");
 	virtual     ~medOpVolumeMeasure();
 	virtual void OnEvent(mafEventBase *maf_event);
 

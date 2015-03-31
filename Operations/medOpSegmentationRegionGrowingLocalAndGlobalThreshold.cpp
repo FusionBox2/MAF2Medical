@@ -80,8 +80,7 @@ mafCxxTypeMacro(medOpSegmentationRegionGrowingLocalAndGlobalThreshold);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSegmentationRegionGrowingLocalAndGlobalThreshold::medOpSegmentationRegionGrowingLocalAndGlobalThreshold(wxString label) :
-mafOp(label)
+medOpSegmentationRegionGrowingLocalAndGlobalThreshold::medOpSegmentationRegionGrowingLocalAndGlobalThreshold(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType  = OPTYPE_OP;
@@ -140,7 +139,7 @@ mafOp* medOpSegmentationRegionGrowingLocalAndGlobalThreshold::Copy()
 //----------------------------------------------------------------------------
 {
   /** return a copy of itself, needs to put it into the undo stack */
-  return new medOpSegmentationRegionGrowingLocalAndGlobalThreshold(m_Label);
+  return new medOpSegmentationRegionGrowingLocalAndGlobalThreshold(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpSegmentationRegionGrowingLocalAndGlobalThreshold::Accept(mafNode* vme)

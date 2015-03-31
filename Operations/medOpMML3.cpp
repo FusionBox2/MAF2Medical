@@ -65,7 +65,7 @@
 
 
 
-
+mafCxxTypeMacro(medOpMML3)
 
 
 
@@ -125,7 +125,7 @@ enum MML_IDS
 
 //----------------------------------------------------------------------------
 // Constructor
-medOpMML3::medOpMML3(const wxString &label) : mafOp(label)
+medOpMML3::medOpMML3(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   //
@@ -267,7 +267,7 @@ bool medOpMML3::Accept(mafNode* vme)
 mafOp* medOpMML3::Copy() 
 //------------------------------------------------------------------------------
 {
-  return new medOpMML3(m_Label);
+  return new medOpMML3(GetLabel());
 }
 
 //----------------------------------------------------------------------------

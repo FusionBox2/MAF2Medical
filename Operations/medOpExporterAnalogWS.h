@@ -36,7 +36,8 @@ class name: medOpExporterAnalogWS
 class MED_OPERATION_EXPORT medOpExporterAnalogWS : public mafOp
 {
 public:
-	medOpExporterAnalogWS(const wxString &label = "Analog Exporter");
+  mafTypeMacro(medOpExporterAnalogWS, public mafOp)
+	medOpExporterAnalogWS(const mafString& label = "Analog Exporter");
 	~medOpExporterAnalogWS(); 
 	mafOp* Copy();
 

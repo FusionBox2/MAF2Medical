@@ -59,8 +59,7 @@ mafCxxTypeMacro(medOpFillHoles);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpFillHoles::medOpFillHoles(const wxString &label) :
-mafOp(label)
+medOpFillHoles::medOpFillHoles(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -117,7 +116,7 @@ bool medOpFillHoles::Accept(mafNode *node)
 mafOp *medOpFillHoles::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpFillHoles(m_Label));
+	return (new medOpFillHoles(GetLabel()));
 }
 //----------------------------------------------------------------------------
 void medOpFillHoles::OpRun()   

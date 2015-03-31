@@ -39,9 +39,10 @@
 
 #include <iostream>
 
+mafCxxTypeMacro(medOpImporterLandmarkWS)
+
 //----------------------------------------------------------------------------
-medOpImporterLandmarkWS::medOpImporterLandmarkWS(wxString label) :
-mafOp(label)
+medOpImporterLandmarkWS::medOpImporterLandmarkWS(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_IMPORTER;
@@ -60,7 +61,7 @@ medOpImporterLandmarkWS::~medOpImporterLandmarkWS()
 mafOp* medOpImporterLandmarkWS::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpImporterLandmarkWS *cp = new medOpImporterLandmarkWS(m_Label);
+	medOpImporterLandmarkWS *cp = new medOpImporterLandmarkWS(GetLabel());
 	cp->m_Canundo = m_Canundo;
 	cp->m_OpType = m_OpType;
   cp->SetListener(GetListener());

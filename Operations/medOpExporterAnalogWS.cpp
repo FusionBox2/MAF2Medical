@@ -39,9 +39,10 @@ using namespace std;
 #define TAG_FORMAT "ANALOG"
 #define FREQ 1.00
 
+mafCxxTypeMacro(medOpExporterAnalogWS)
+
 //----------------------------------------------------------------------------
-medOpExporterAnalogWS::medOpExporterAnalogWS(const wxString &label) :
-mafOp(label)
+medOpExporterAnalogWS::medOpExporterAnalogWS(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_EXPORTER;
@@ -65,7 +66,7 @@ bool medOpExporterAnalogWS::Accept(mafNode *node)
 mafOp* medOpExporterAnalogWS::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpExporterAnalogWS *cp = new medOpExporterAnalogWS(m_Label);
+	medOpExporterAnalogWS *cp = new medOpExporterAnalogWS(GetLabel());
 	cp->m_File = m_File;
 	return cp;
 }

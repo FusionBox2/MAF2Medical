@@ -56,8 +56,7 @@ mafCxxTypeMacro(medOpEqualizeHistogram);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpEqualizeHistogram::medOpEqualizeHistogram(const wxString &label) :
-mafOp(label)
+medOpEqualizeHistogram::medOpEqualizeHistogram(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -88,7 +87,7 @@ bool medOpEqualizeHistogram::Accept(mafNode *node)
 mafOp *medOpEqualizeHistogram::Copy()   
 //----------------------------------------------------------------------------
 {
-  return (new medOpEqualizeHistogram(m_Label));
+  return (new medOpEqualizeHistogram(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

@@ -49,7 +49,7 @@ class vtkMatrix4x4;
 class MED_OPERATION_EXPORT medOpIterativeRegistration : public mafOp
 {
   public:
-    medOpIterativeRegistration(wxString label = "Iterative Registration");
+    medOpIterativeRegistration(const mafString& label = "Iterative Registration");
     ~medOpIterativeRegistration(); 
 
     virtual void OnEvent(mafEventBase *maf_event);

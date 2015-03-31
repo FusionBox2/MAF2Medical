@@ -96,8 +96,7 @@ mafCxxTypeMacro(medOpMove);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpMove::medOpMove(const wxString &label) :
-mafOpTransformInterface(label)
+medOpMove::medOpMove(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_EnableScaling = FALSE;
@@ -140,7 +139,7 @@ bool medOpMove::Accept(mafNode* vme)
 mafOp* medOpMove::Copy()   
 //----------------------------------------------------------------------------
 {
-  return new medOpMove(m_Label);
+  return new medOpMove(GetLabel());
 }
 
 //----------------------------------------------------------------------------
@@ -291,7 +290,7 @@ void medOpMove::OnEventThis(mafEventBase *maf_event)
 	  {
 		  mafEvent helpEvent;
 		  helpEvent.SetSender(this);
-		  mafString operationLabel = this->m_Label;
+		  mafString operationLabel = GetLabel();
 		  helpEvent.SetString(&operationLabel);
 		  helpEvent.SetId(OPEN_HELP_PAGE);
 		  mafEventMacro(helpEvent);

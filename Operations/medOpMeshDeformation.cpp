@@ -94,7 +94,7 @@ mafCxxTypeMacro(medOpMeshDeformation);
 #define SELECT_CC_COR   4
 
 //----------------------------------------------------------------------------
-medOpMeshDeformation::medOpMeshDeformation(const wxString &label) : mafOp(label)
+medOpMeshDeformation::medOpMeshDeformation(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -163,7 +163,7 @@ bool medOpMeshDeformation::Accept(mafNode *node)
 mafOp *medOpMeshDeformation::Copy()   
 //----------------------------------------------------------------------------
 {
-  return (new medOpMeshDeformation(m_Label));
+  return (new medOpMeshDeformation(GetLabel()));
 }
 
 //----------------------------------------------------------------------------
@@ -672,7 +672,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
 		{
 			mafEvent helpEvent;
 			helpEvent.SetSender(this);
-			mafString operationLabel = this->m_Label;
+			mafString operationLabel = GetLabel();
 			helpEvent.SetString(&operationLabel);
 			helpEvent.SetId(OPEN_HELP_PAGE);
 			mafEventMacro(helpEvent);

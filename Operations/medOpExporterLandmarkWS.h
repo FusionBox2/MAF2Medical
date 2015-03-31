@@ -35,7 +35,7 @@ class name: medOpExporterLandmarkWS
 class MED_OPERATION_EXPORT medOpExporterLandmarkWS : public mafOp
 {
 public:
-	medOpExporterLandmarkWS(const wxString &label = "Trajectories Exporter");
+	medOpExporterLandmarkWS(const mafString &label = "Trajectories Exporter");
 	~medOpExporterLandmarkWS(); 
 	mafOp* Copy();
 

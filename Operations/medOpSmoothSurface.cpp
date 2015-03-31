@@ -45,8 +45,7 @@ mafCxxTypeMacro(medOpSmoothSurface);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSmoothSurface::medOpSmoothSurface(const wxString &label) :
-mafOp(label)
+medOpSmoothSurface::medOpSmoothSurface(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -80,7 +79,7 @@ bool medOpSmoothSurface::Accept(mafNode *node)
 mafOp *medOpSmoothSurface::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpSmoothSurface(m_Label));
+	return (new medOpSmoothSurface(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

@@ -35,7 +35,7 @@ class vtkPolyData;
 class MED_OPERATION_EXPORT medOpSubdivide: public mafOp
 {
 public:
-	medOpSubdivide(const wxString &label = "Subdivide");
+	medOpSubdivide(const mafString& label = "Subdivide");
 	~medOpSubdivide(); 
 	
   /*virtual*/ void OnEvent(mafEventBase *maf_event);

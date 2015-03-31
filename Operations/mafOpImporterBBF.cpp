@@ -39,15 +39,14 @@ mafCxxTypeMacro(mafOpImporterBBF);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-mafOpImporterBBF::mafOpImporterBBF(const wxString &label) :
-mafOp(label)
+mafOpImporterBBF::mafOpImporterBBF(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType  = OPTYPE_IMPORTER;
 	m_Canundo = true;
 	m_File    = "";
   m_VmeLarge = NULL;
-  m_FileDir = mafGetApplicationDirectory().GetCStr();
+  m_FileDir = mafGetApplicationDirectory();
 }
 //----------------------------------------------------------------------------
 mafOpImporterBBF::~mafOpImporterBBF()
@@ -59,7 +58,7 @@ mafOpImporterBBF::~mafOpImporterBBF()
 mafOp* mafOpImporterBBF::Copy()   
 //----------------------------------------------------------------------------
 {
-  mafOpImporterBBF *cp = new mafOpImporterBBF(m_Label);
+  mafOpImporterBBF *cp = new mafOpImporterBBF(GetLabel());
   cp->m_File			= m_File;
   return cp;
 }
@@ -97,13 +96,14 @@ int mafOpImporterBBF::ImportBBF()
 	if(!this->m_TestMode)
 		wxBusyInfo wait(_("Loading file: ..."));
   
-  size_t idx1 = m_File.find_last_of("_");
-  size_t idx2 = m_File.find_last_of(".");
-  size_t idx3 = m_File.find_last_of("\\");
+  wxString wxfilestring = m_File.GetCStr();
+  size_t idx1 = wxfilestring.find_last_of("_");
+  size_t idx2 = wxfilestring.find_last_of(".");
+  size_t idx3 = wxfilestring.find_last_of("\\");
 
-  wxString nFileName = m_File.Mid(0,idx1)+m_File.Mid(idx2);
+  wxString nFileName = wxfilestring.Mid(0,idx1)+wxfilestring.Mid(idx2);
   size_t idx4 = nFileName.find_last_of(".");
-  wxString showName = m_File.Mid(idx3+1,idx4-idx3-1);
+  wxString showName = wxfilestring.Mid(idx3+1,idx4-idx3-1);
   mafVolumeLargeReader *reader = mafVolumeLargeReader::New();
   reader->SetFileName(nFileName);
   reader->Update();

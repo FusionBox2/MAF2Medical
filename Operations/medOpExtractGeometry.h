@@ -65,7 +65,7 @@ public:
   };
 
   /** constructor. */
-  medOpExtractGeometry(const wxString &label = "Extract Geometry from binary volume");
+  medOpExtractGeometry(const mafString &label = "Extract Geometry from binary volume");
   
   /** destructor. */
   ~medOpExtractGeometry(); 

@@ -38,7 +38,7 @@ class MED_OPERATION_EXPORT medOpComputeWrapping: public mafOp
 {
 public:
   /** constructor */
-  medOpComputeWrapping(const wxString &label = "CreateWrappedMeter");
+  medOpComputeWrapping(const mafString& label = "CreateWrappedMeter");
   /** destructor */
   ~medOpComputeWrapping();
 

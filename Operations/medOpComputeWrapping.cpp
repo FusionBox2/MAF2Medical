@@ -38,8 +38,7 @@ mafCxxTypeMacro(medOpComputeWrapping);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpComputeWrapping::medOpComputeWrapping(const wxString &label) :
-mafOp(label)
+medOpComputeWrapping::medOpComputeWrapping(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -56,7 +55,7 @@ medOpComputeWrapping::~medOpComputeWrapping( )
 mafOp* medOpComputeWrapping::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpComputeWrapping(m_Label);
+	return new medOpComputeWrapping(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpComputeWrapping::Accept(mafNode *node)

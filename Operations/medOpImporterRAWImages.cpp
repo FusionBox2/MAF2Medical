@@ -80,7 +80,7 @@ mafCxxTypeMacro(medOpImporterRAWImages);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpImporterRAWImages::medOpImporterRAWImages(wxString label) : mafOp(label)
+medOpImporterRAWImages::medOpImporterRAWImages(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType					= OPTYPE_IMPORTER;
@@ -164,7 +164,7 @@ medOpImporterRAWImages::~medOpImporterRAWImages()
 mafOp *medOpImporterRAWImages::Copy()
 //----------------------------------------------------------------------------
 {
-  return new medOpImporterRAWImages(m_Label);
+  return new medOpImporterRAWImages(GetLabel());
 }
 //----------------------------------------------------------------------------
 // Constants :

@@ -39,8 +39,7 @@ mafCxxTypeMacro(medOpTriangulateSurface);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpTriangulateSurface::medOpTriangulateSurface(const wxString &label) :
-mafOp(label)
+medOpTriangulateSurface::medOpTriangulateSurface(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -72,7 +71,7 @@ bool medOpTriangulateSurface::Accept(mafNode *node)
 mafOp *medOpTriangulateSurface::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpTriangulateSurface(m_Label));
+	return (new medOpTriangulateSurface(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

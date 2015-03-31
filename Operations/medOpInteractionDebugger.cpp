@@ -64,8 +64,7 @@ enum Mesh_Importer_ID
 mafCxxTypeMacro(medOpInteractionDebugger);
 
 
-medOpInteractionDebugger::medOpInteractionDebugger(const wxString &label) :
-mafOp(label)
+medOpInteractionDebugger::medOpInteractionDebugger(const mafString& label) : Superclass(label)
 {
   m_OpType  = OPTYPE_OP;
   m_Canundo = true;
@@ -87,7 +86,7 @@ bool medOpInteractionDebugger::Accept(mafNode *node)
 mafOp* medOpInteractionDebugger::Copy()   
 
 {
-  medOpInteractionDebugger *cp = new medOpInteractionDebugger(m_Label);
+  medOpInteractionDebugger *cp = new medOpInteractionDebugger(GetLabel());
   return cp;
 }
 

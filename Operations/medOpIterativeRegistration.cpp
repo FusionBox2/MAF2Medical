@@ -57,8 +57,7 @@ mafCxxTypeMacro(medOpIterativeRegistration);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpIterativeRegistration::medOpIterativeRegistration(wxString label) 
-: mafOp(label)
+medOpIterativeRegistration::medOpIterativeRegistration(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -89,7 +88,7 @@ medOpIterativeRegistration::~medOpIterativeRegistration( )
 mafOp* medOpIterativeRegistration::Copy()
 //----------------------------------------------------------------------------
 {
-  return (new medOpIterativeRegistration(m_Label));
+  return (new medOpIterativeRegistration(GetLabel()));
 }
 //----------------------------------------------------------------------------
 bool medOpIterativeRegistration::Accept(mafNode *node)

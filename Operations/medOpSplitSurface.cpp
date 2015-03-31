@@ -62,8 +62,7 @@ mafCxxTypeMacro(medOpSplitSurface);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSplitSurface::medOpSplitSurface(const wxString &label) :
-mafOp(label)
+medOpSplitSurface::medOpSplitSurface(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -126,7 +125,7 @@ medOpSplitSurface::~medOpSplitSurface()
 mafOp* medOpSplitSurface::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpSplitSurface(m_Label);
+	return new medOpSplitSurface(GetLabel());
 }
 
 //----------------------------------------------------------------------------

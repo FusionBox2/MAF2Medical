@@ -40,8 +40,7 @@ mafCxxTypeMacro(medOpSubdivide);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSubdivide::medOpSubdivide(const wxString &label) :
-mafOp(label)
+medOpSubdivide::medOpSubdivide(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -69,7 +68,7 @@ bool medOpSubdivide::Accept(mafNode *node)
 mafOp *medOpSubdivide::Copy()   
 //----------------------------------------------------------------------------
 {
-  return (new medOpSubdivide(m_Label));
+  return (new medOpSubdivide(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

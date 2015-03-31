@@ -44,11 +44,11 @@ Transform a vme using constrains
 class MED_OPERATION_EXPORT medOpMove : public mafOpTransformInterface
 {
 public:
-  medOpMove(const wxString &label = "Move\tCtrl+T");
+  medOpMove(const mafString& label = "Move\tCtrl+T");
  ~medOpMove(); 
   virtual void OnEvent(mafEventBase *maf_event);
   
-  mafTypeMacro(medOpMove, mafOp);
+  mafTypeMacro(medOpMove, mafOpTransformInterface);
 
   mafOp* Copy();
 

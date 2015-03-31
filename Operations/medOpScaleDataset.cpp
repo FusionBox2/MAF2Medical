@@ -63,8 +63,7 @@ mafCxxTypeMacro(medOpScaleDataset);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpScaleDataset::medOpScaleDataset(const wxString &label) :
-mafOpTransformInterface(label)
+medOpScaleDataset::medOpScaleDataset(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType = OPTYPE_OP;
@@ -90,7 +89,7 @@ bool medOpScaleDataset::Accept(mafNode* vme)
 mafOp* medOpScaleDataset::Copy()   
 //----------------------------------------------------------------------------
 {
-  return new medOpScaleDataset(m_Label);
+  return new medOpScaleDataset(GetLabel());
 }
 
 //----------------------------------------------------------------------------
@@ -176,7 +175,7 @@ void medOpScaleDataset::OnEventThis(mafEventBase *maf_event)
 	  {
 		  mafEvent helpEvent;
 		  helpEvent.SetSender(this);
-		  mafString operationLabel = this->m_Label;
+		  mafString operationLabel = GetLabel();
 		  helpEvent.SetString(&operationLabel);
 		  helpEvent.SetId(OPEN_HELP_PAGE);
 		  mafEventMacro(helpEvent);

@@ -43,9 +43,10 @@
 #include "mafVMERoot.h"
 #include "mafClassicICPRegistration.h"
 
+mafCxxTypeMacro(medOpClassicICPRegistration)
+
 //----------------------------------------------------------------------------
-medOpClassicICPRegistration::medOpClassicICPRegistration(wxString label) :
-mafOp(label)
+medOpClassicICPRegistration::medOpClassicICPRegistration(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType  = OPTYPE_OP;
@@ -70,7 +71,7 @@ medOpClassicICPRegistration::~medOpClassicICPRegistration( )
 mafOp* medOpClassicICPRegistration::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpClassicICPRegistration(m_Label);
+	return new medOpClassicICPRegistration(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpClassicICPRegistration::Accept(mafNode* vme)
@@ -161,7 +162,7 @@ void medOpClassicICPRegistration::OnEvent(mafEventBase *maf_event)
 				{
 					mafEvent helpEvent;
 					helpEvent.SetSender(this);
-					mafString operationLabel = this->m_Label;
+					mafString operationLabel = GetLabel();
 					helpEvent.SetString(&operationLabel);
 					helpEvent.SetId(OPEN_HELP_PAGE);
 					mafEventMacro(helpEvent);

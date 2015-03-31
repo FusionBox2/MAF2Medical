@@ -38,7 +38,8 @@ class mafEvent;
 class MED_OPERATION_EXPORT medOpImporterLandmark : public mafOp
 {
 public:
-  medOpImporterLandmark(wxString label);
+  mafTypeMacro(medOpImporterLandmark, mafOp)
+  medOpImporterLandmark(const mafString& label = "");
   ~medOpImporterLandmark(); 
   mafOp* Copy();
   virtual void OnEvent(mafEventBase *maf_event);

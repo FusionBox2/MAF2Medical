@@ -36,7 +36,7 @@
 class MED_OPERATION_EXPORT medOpFreezeVME: public mafOp
 {
 public:
-	medOpFreezeVME(wxString label = "Freeze VME");
+	medOpFreezeVME(const mafString& label = "Freeze VME");
 	~medOpFreezeVME(); 
 	
   mafTypeMacro(medOpFreezeVME, mafOp);

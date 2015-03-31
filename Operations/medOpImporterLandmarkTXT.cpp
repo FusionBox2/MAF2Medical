@@ -52,9 +52,10 @@ enum ID_LANDMARK_IMPORTER
 };
 //----------------------------------------------------------------------------
 
+mafCxxTypeMacro(medOpImporterLandmarkTXT)
+
 //----------------------------------------------------------------------------
-medOpImporterLandmarkTXT::medOpImporterLandmarkTXT(wxString label) :
-mafOp(label)
+medOpImporterLandmarkTXT::medOpImporterLandmarkTXT(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_IMPORTER;
@@ -75,7 +76,7 @@ medOpImporterLandmarkTXT::~medOpImporterLandmarkTXT()
 mafOp* medOpImporterLandmarkTXT::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpImporterLandmarkTXT *cp = new medOpImporterLandmarkTXT(m_Label);
+	medOpImporterLandmarkTXT *cp = new medOpImporterLandmarkTXT(GetLabel());
 	cp->m_Canundo = m_Canundo;
 	cp->m_OpType = m_OpType;
 	cp->SetListener(GetListener());

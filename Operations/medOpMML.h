@@ -59,6 +59,7 @@ class mafGUIButton;
 class MED_OPERATION_EXPORT medOpMML: public mafOp
 {
 public:
+  mafTypeMacro(medOpMML, mafOp)
   void ApplyInverseRegistrationOps();
   void ApplyRegistrationOps();        // Apply the deformations to the model
   void OnSOperationButton();
@@ -67,7 +68,7 @@ public:
   void OnPOperationButton();
   void Update();
   bool SetUpWidget();
-  medOpMML(const wxString &label);
+  medOpMML(const mafString& label = "");
   virtual ~medOpMML(); 
   void   OnEvent(mafEventBase *e);
   mafOp* Copy();

@@ -86,7 +86,7 @@ enum MAKE_VME_TIMEVARYING_ID
 };
 
 //----------------------------------------------------------------------------
-medOpMakeVMETimevarying::medOpMakeVMETimevarying(const wxString &label /* = "Make Timevariyng VME" */,bool showShadingPlane /* = false */) : mafOp(label)
+medOpMakeVMETimevarying::medOpMakeVMETimevarying(const mafString& label /* = "Make Timevariyng VME" */,bool showShadingPlane /* = false */) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -131,7 +131,7 @@ bool medOpMakeVMETimevarying::Accept(mafNode* vme)
 mafOp *medOpMakeVMETimevarying::Copy()
 //----------------------------------------------------------------------------
 {
-	return new medOpMakeVMETimevarying(m_Label);
+	return new medOpMakeVMETimevarying(GetLabel());
 }
 
 //----------------------------------------------------------------------------

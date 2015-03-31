@@ -49,9 +49,9 @@ using namespace std;
 #define FREQ 1.00
 #define DELTA 5.0
 
+mafCxxTypeMacro(medOpExporterGRFWS)
 //----------------------------------------------------------------------------
-medOpExporterGRFWS::medOpExporterGRFWS(const wxString &label) :
-mafOp(label)
+medOpExporterGRFWS::medOpExporterGRFWS(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_EXPORTER;
@@ -103,7 +103,7 @@ bool medOpExporterGRFWS::Accept(mafNode *node)
 mafOp* medOpExporterGRFWS::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpExporterGRFWS *cp = new medOpExporterGRFWS(m_Label);
+	medOpExporterGRFWS *cp = new medOpExporterGRFWS(GetLabel());
 	cp->m_File = m_File;
   cp->m_Resolution = m_Resolution;
   cp->m_FastMethod = m_FastMethod;

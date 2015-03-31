@@ -30,9 +30,10 @@
 #include "mafVME.h"
 //#include "mafC3DReader.h"
 
+mafCxxTypeMacro(medOpImporterC3D)
+
 //----------------------------------------------------------------------------
-medOpImporterC3D::medOpImporterC3D(wxString label) :
-mafOp(label)
+medOpImporterC3D::medOpImporterC3D(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_IMPORTER;
@@ -41,9 +42,9 @@ mafOp(label)
 	m_Vme			= NULL;
 	this->m_DictionaryAvailable = 0;
 
-	m_FileDir = mafGetApplicationDirectory().GetCStr(); 
+	m_FileDir = mafGetApplicationDirectory(); 
   m_FileDir +=  "/Data/External/";
-	m_DictDir = mafGetApplicationDirectory().GetCStr();
+	m_DictDir = mafGetApplicationDirectory();
   m_DictDir += "/Config/Dictionary/";
 }
 //----------------------------------------------------------------------------
@@ -57,7 +58,7 @@ mafOp* medOpImporterC3D::Copy()
 //----------------------------------------------------------------------------
 {
 	//non devo incrementare l'id counter --- vfc le operazioni sono gia inserite nei menu;
-	medOpImporterC3D *cp = new medOpImporterC3D(m_Label);
+	medOpImporterC3D *cp = new medOpImporterC3D(GetLabel());
 	cp->m_Canundo = m_Canundo;
 	cp->m_OpType = m_OpType;
   cp->SetListener(GetListener());

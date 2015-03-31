@@ -38,8 +38,9 @@ Importer for ground reactions force, used in motion analysis
 class MED_OPERATION_EXPORT medOpImporterGRFWS : public mafOp
 {
 public:
+  mafTypeMacro(medOpImporterGRFWS, public mafOp)
   /** constructor */
-	medOpImporterGRFWS(const wxString &label = "GRF Importer");
+	medOpImporterGRFWS(const mafString& label = "GRF Importer");
   /** destructor */
 	~medOpImporterGRFWS(); 
 
@@ -88,8 +89,8 @@ protected:
   mafVMEVector        *m_MomentRight;
   mafVMEGroup         *m_Group;
 
-  wxString             m_FileDir;
-	wxString             m_File;
+  mafString             m_FileDir;
+	mafString             m_File;
 
 };
 #endif

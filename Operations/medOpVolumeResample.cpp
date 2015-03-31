@@ -74,7 +74,7 @@ mafCxxTypeMacro(medOpVolumeResample);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpVolumeResample::medOpVolumeResample(const wxString &label /* =  */,bool showShadingPlane /* = false */) : mafOp(label)
+medOpVolumeResample::medOpVolumeResample(const mafString& label /* =  */,bool showShadingPlane /* = false */) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -357,7 +357,7 @@ void medOpVolumeResample::GizmoDelete()
 mafOp *medOpVolumeResample::Copy()
 //----------------------------------------------------------------------------
 {
-	return new medOpVolumeResample(m_Label,m_ShowShadingPlane);
+	return new medOpVolumeResample(GetLabel(),m_ShowShadingPlane);
 }
 //----------------------------------------------------------------------------
 void medOpVolumeResample::InizializeVMEDummy()   
@@ -808,7 +808,7 @@ void medOpVolumeResample::OnEventThis(mafEventBase *maf_event)
 		{
 			mafEvent helpEvent;
 			helpEvent.SetSender(this);
-			mafString operationLabel = this->m_Label;
+			mafString operationLabel = GetLabel();
 			helpEvent.SetString(&operationLabel);
 			helpEvent.SetId(OPEN_HELP_PAGE);
 			mafEventMacro(helpEvent);

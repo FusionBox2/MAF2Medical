@@ -57,7 +57,7 @@ class MED_OPERATION_EXPORT medOpComputeInertialTensor: public mafOp
 {
 public:
   /** constructor */
-  medOpComputeInertialTensor(const wxString &label = "ComputeInertialTensor");
+  medOpComputeInertialTensor(const mafString &label = "ComputeInertialTensor");
   /** destructor */
   ~medOpComputeInertialTensor();
 

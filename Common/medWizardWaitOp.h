@@ -37,7 +37,7 @@ class MED_COMMON_EXPORT medWizardWaitOp: public mafOp
 {
 public:
   /** constructor */
-  medWizardWaitOp(const wxString &label = "Go to text step\n");
+  medWizardWaitOp(const mafString &label = "Go to text step\n");
   /** destructor */
   ~medWizardWaitOp();
 

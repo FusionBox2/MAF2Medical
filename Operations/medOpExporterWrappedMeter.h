@@ -40,7 +40,7 @@ class MED_OPERATION_EXPORT medOpExporterWrappedMeter: public mafOp
 {
 public:
   /** object constructor */
-  medOpExporterWrappedMeter(const wxString &label = "ActionLine");
+  medOpExporterWrappedMeter(const mafString& label = "ActionLine");
   /** object destructor */  
   ~medOpExporterWrappedMeter(); 
 

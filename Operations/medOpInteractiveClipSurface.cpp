@@ -68,8 +68,7 @@ mafCxxTypeMacro(medOpInteractiveClipSurface);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpInteractiveClipSurface::medOpInteractiveClipSurface(const wxString &label) :
-mafOp(label)
+medOpInteractiveClipSurface::medOpInteractiveClipSurface(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -141,7 +140,7 @@ medOpInteractiveClipSurface::~medOpInteractiveClipSurface()
 mafOp* medOpInteractiveClipSurface::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpInteractiveClipSurface(m_Label);
+	return new medOpInteractiveClipSurface(GetLabel());
 }
 
 //----------------------------------------------------------------------------

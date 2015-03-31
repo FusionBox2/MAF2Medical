@@ -59,7 +59,7 @@ mafCxxTypeMacro(medOpMergeDicomSeries);
 //----------------------------------------------------------------------------
 
 
-medOpMergeDicomSeries::medOpMergeDicomSeries(wxString label):
+medOpMergeDicomSeries::medOpMergeDicomSeries(const mafString& label):
 mafOp(label)
 //----------------------------------------------------------------------------
 {
@@ -77,7 +77,7 @@ mafOp *medOpMergeDicomSeries::Copy()
 //----------------------------------------------------------------------------
 {
   // returns a copy of this operation
-	medOpMergeDicomSeries *op = new medOpMergeDicomSeries(m_Label);
+	medOpMergeDicomSeries *op = new medOpMergeDicomSeries(GetLabel());
 	return op;
 }
 //----------------------------------------------------------------------------

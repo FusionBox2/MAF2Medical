@@ -47,7 +47,7 @@ mafCxxTypeMacro(medOpExporterVTKXML);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpExporterVTKXML::medOpExporterVTKXML(const wxString &label) :
+medOpExporterVTKXML::medOpExporterVTKXML(const mafString &label) :
 mafOp(label)
 //----------------------------------------------------------------------------
 {
@@ -77,7 +77,7 @@ bool medOpExporterVTKXML::Accept(mafNode *node)
 mafOp* medOpExporterVTKXML::Copy()   
 //----------------------------------------------------------------------------
 {
-  medOpExporterVTKXML *cp = new medOpExporterVTKXML(m_Label);
+  medOpExporterVTKXML *cp = new medOpExporterVTKXML(GetLabel());
   cp->m_File = m_File;
   return cp;
 }

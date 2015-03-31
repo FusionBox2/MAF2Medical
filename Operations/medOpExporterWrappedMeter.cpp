@@ -53,8 +53,7 @@ mafCxxTypeMacro(medOpExporterWrappedMeter);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpExporterWrappedMeter::medOpExporterWrappedMeter(const wxString &label) :
-mafOp(label)
+medOpExporterWrappedMeter::medOpExporterWrappedMeter(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType = OPTYPE_EXPORTER;
@@ -71,7 +70,7 @@ medOpExporterWrappedMeter::~medOpExporterWrappedMeter( )
 mafOp* medOpExporterWrappedMeter::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpExporterWrappedMeter *cp = new medOpExporterWrappedMeter(m_Label);
+	medOpExporterWrappedMeter *cp = new medOpExporterWrappedMeter(GetLabel());
 	cp->m_File = m_File;
 	return cp;
 }

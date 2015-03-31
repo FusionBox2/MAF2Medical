@@ -60,8 +60,7 @@ enum ID_REGISTER_CLUSTERS
 	AFFINE
 };
 //----------------------------------------------------------------------------
-medOpRegisterClusters::medOpRegisterClusters(wxString label) :
-mafOp(label)
+medOpRegisterClusters::medOpRegisterClusters(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -117,7 +116,7 @@ medOpRegisterClusters::~medOpRegisterClusters( )
 mafOp* medOpRegisterClusters::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpRegisterClusters(m_Label);
+	return new medOpRegisterClusters(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpRegisterClusters::Accept(mafNode* node)

@@ -55,7 +55,8 @@ Exporterr for ground reactions force, used in motion analysis
 class MED_OPERATION_EXPORT medOpExporterGRFWS : public mafOp
 {
 public:
-	medOpExporterGRFWS(const wxString &label = "GRF Exporter");
+  mafTypeMacro(medOpExporterGRFWS,mafOp)
+	medOpExporterGRFWS(const mafString& label = "GRF Exporter");
 	~medOpExporterGRFWS(); 
 	
   /** Copy the operation. */

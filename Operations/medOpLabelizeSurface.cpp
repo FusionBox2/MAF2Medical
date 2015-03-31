@@ -65,8 +65,7 @@ mafCxxTypeMacro(medOpLabelizeSurface);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpLabelizeSurface::medOpLabelizeSurface(const wxString &label) :
-mafOp(label)
+medOpLabelizeSurface::medOpLabelizeSurface(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -120,7 +119,7 @@ medOpLabelizeSurface::~medOpLabelizeSurface()
 mafOp* medOpLabelizeSurface::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpLabelizeSurface(m_Label);
+	return new medOpLabelizeSurface(GetLabel());
 }
 
 //----------------------------------------------------------------------------

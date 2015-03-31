@@ -66,7 +66,7 @@ class MED_OPERATION_EXPORT medOpImporterDicomOffis : public mafOp
 {
 public:
 	/** constructor */
-	medOpImporterDicomOffis(wxString label = "Importer DICOM");
+	medOpImporterDicomOffis(const mafString& label = "Importer DICOM");
 	/** RTTI macro */
 	mafTypeMacro(medOpImporterDicomOffis, mafOp);
 

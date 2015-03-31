@@ -67,7 +67,7 @@ If the first slice is not 0, the slice offset (m_offset) must be setted. */
 class MED_OPERATION_EXPORT medOpImporterRAWImages: public mafOp
 {
 public:
-  medOpImporterRAWImages(wxString label="RAWImporterImage");
+  medOpImporterRAWImages(const mafString& label="RAWImporterImage");
   virtual     ~medOpImporterRAWImages();
 
   mafTypeMacro(medOpImporterRAWImages, mafOp);

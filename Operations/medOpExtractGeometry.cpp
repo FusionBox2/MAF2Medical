@@ -68,7 +68,7 @@ mafCxxTypeMacro(medOpExtractGeometry);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpExtractGeometry::medOpExtractGeometry(const wxString &label) :
+medOpExtractGeometry::medOpExtractGeometry(const mafString &label) :
 mafOp(label)
 //----------------------------------------------------------------------------
 {
@@ -126,7 +126,7 @@ bool medOpExtractGeometry::Accept(mafNode *node)
 mafOp *medOpExtractGeometry::Copy()   
 //----------------------------------------------------------------------------
 {
-  return (new medOpExtractGeometry(m_Label));
+  return (new medOpExtractGeometry(GetLabel()));
 }
 //----------------------------------------------------------------------------
 void medOpExtractGeometry::OpRun()   

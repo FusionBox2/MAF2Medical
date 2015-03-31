@@ -42,7 +42,7 @@ class mafGUIDialog;
 class MED_OPERATION_EXPORT medOpRegisterClusters: public mafOp
 {
 public:
-  medOpRegisterClusters(wxString label = _("Register Landmark Cloud"));
+  medOpRegisterClusters(const mafString& label = _("Register Landmark Cloud"));
  ~medOpRegisterClusters(); 
   virtual void OnEvent(mafEventBase *maf_event);
   

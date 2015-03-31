@@ -57,7 +57,7 @@ class MED_OPERATION_EXPORT mafOpImporterRAWVolume_BES: public mafOp
 {	
 public:
 
-  mafOpImporterRAWVolume_BES(const wxString &label = "RAWImporterLargeVolume");
+  mafOpImporterRAWVolume_BES(const mafString& label = "RAWImporterLargeVolume");
   virtual     ~mafOpImporterRAWVolume_BES();
   virtual void OnEvent(mafEventBase *maf_event);
 

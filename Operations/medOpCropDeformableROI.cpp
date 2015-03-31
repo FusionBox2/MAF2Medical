@@ -46,8 +46,7 @@ mafCxxTypeMacro(medOpCropDeformableROI);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpCropDeformableROI::medOpCropDeformableROI(const wxString &label) :
-mafOp(label)
+medOpCropDeformableROI::medOpCropDeformableROI(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -79,7 +78,7 @@ bool medOpCropDeformableROI::Accept(mafNode *node)
 mafOp *medOpCropDeformableROI::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpCropDeformableROI(m_Label));
+	return (new medOpCropDeformableROI(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

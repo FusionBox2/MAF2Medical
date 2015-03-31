@@ -62,8 +62,7 @@ mafCxxTypeMacro(medOpFlipNormals);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpFlipNormals::medOpFlipNormals(wxString label) :
-mafOp(label)
+medOpFlipNormals::medOpFlipNormals(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType  = OPTYPE_OP;
@@ -114,7 +113,7 @@ mafOp* medOpFlipNormals::Copy()
 //----------------------------------------------------------------------------
 {
 	/** return a copy of itself, needs to put it into the undo stack */
-	return new medOpFlipNormals(m_Label);
+	return new medOpFlipNormals(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpFlipNormals::Accept(mafNode* vme)

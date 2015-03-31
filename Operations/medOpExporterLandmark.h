@@ -37,7 +37,7 @@ class MED_OPERATION_EXPORT medOpExporterLandmark: public mafOp
 {
 public:
   mafTypeMacro(medOpExporterLandmark, mafOp);
-	medOpExporterLandmark(const wxString &label = "Landmark Exporter");
+	medOpExporterLandmark(const mafString& label = "Landmark Exporter");
 	~medOpExporterLandmark(); 
 	mafOp* Copy();
   void OnEvent(mafEventBase *maf_event);
@@ -58,8 +58,8 @@ protected:
   void ExportingTraverse(std::ostream &out, const char *dirName, mafNode* node);
   void ExportOneCloud(std::ostream &out, mafVMELandmarkCloud* cloud);
 
-	wxString	m_File;
-	wxString	m_FileDir;
+	mafString	m_File;
+	mafString	m_FileDir;
   int       m_GlobalPos;
 };
 #endif

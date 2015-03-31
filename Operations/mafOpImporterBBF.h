@@ -24,7 +24,7 @@ class MED_OPERATION_EXPORT mafOpImporterBBF: public mafOp
 {
 public:
   /** constructor. */
-  mafOpImporterBBF(const wxString &label = "BBFImporter");
+  mafOpImporterBBF(const mafString& label = "BBFImporter");
   /** destructor. */
  ~mafOpImporterBBF(); 
   
@@ -48,8 +48,8 @@ public:
   void SetFileName(const char *name) {m_File = name;};
 
 protected:
-  wxString m_File;
-  wxString m_FileDir;
+  mafString m_File;
+  mafString m_FileDir;
   
   mafVMEVolumeLarge *m_VmeLarge;
 };

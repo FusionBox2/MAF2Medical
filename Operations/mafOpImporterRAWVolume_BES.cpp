@@ -66,7 +66,7 @@ mafCxxTypeMacro(mafOpImporterRAWVolume_BES);
 //#define New() NewDbg(__FILE__, __LINE__)
 
 //----------------------------------------------------------------------------
-mafOpImporterRAWVolume_BES::mafOpImporterRAWVolume_BES(const wxString &label) : mafOp(label)
+mafOpImporterRAWVolume_BES::mafOpImporterRAWVolume_BES(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType			= OPTYPE_IMPORTER;
@@ -135,7 +135,7 @@ mafOpImporterRAWVolume_BES::~mafOpImporterRAWVolume_BES()
 mafOp *mafOpImporterRAWVolume_BES::Copy()
 //----------------------------------------------------------------------------
 {
-	return new mafOpImporterRAWVolume_BES(m_Label);
+	return new mafOpImporterRAWVolume_BES(GetLabel());
 }
 //----------------------------------------------------------------------------
 // Constants :

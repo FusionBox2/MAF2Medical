@@ -41,7 +41,7 @@ class MED_OPERATION_EXPORT medOpSurfaceMirror: public mafOp
 {
 public:
   /** constructor */
-	medOpSurfaceMirror(wxString label = "Surface Mirror");
+	medOpSurfaceMirror(const mafString& label = "Surface Mirror");
   /** destructor */
 	~medOpSurfaceMirror();
   /** handle events which becomes from other classes */

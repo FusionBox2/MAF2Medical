@@ -35,7 +35,7 @@ class mafVME;
 class MED_OPERATION_EXPORT medOpExporterVTKXML: public mafOp
 {
 public:
-  medOpExporterVTKXML(const wxString &label = "VTKXMLExporter");
+  medOpExporterVTKXML(const mafString &label = "VTKXMLExporter");
  ~medOpExporterVTKXML(); 
   
   mafTypeMacro(medOpExporterVTKXML, mafOp);

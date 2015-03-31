@@ -204,8 +204,7 @@ int CompareImageNumber(const medDicomSlice **arg1,const medDicomSlice **arg2);
 
 WX_DEFINE_LIST(medDicomSeriesSliceList);
 //----------------------------------------------------------------------------
-medOpImporterDicomOffis::medOpImporterDicomOffis(wxString label):
-mafOp(label)
+medOpImporterDicomOffis::medOpImporterDicomOffis(const mafString& label) : Superclass(label)
 	//----------------------------------------------------------------------------
 {
 	m_OpType = OPTYPE_IMPORTER;
@@ -347,7 +346,7 @@ medOpImporterDicomOffis::~medOpImporterDicomOffis()
 mafOp *medOpImporterDicomOffis::Copy()
 	//----------------------------------------------------------------------------
 {
-	medOpImporterDicomOffis *importer = new medOpImporterDicomOffis(m_Label);
+	medOpImporterDicomOffis *importer = new medOpImporterDicomOffis(GetLabel());
 	importer->m_ResampleFlag = m_ResampleFlag;
 	importer->m_DicomDirectoryABSFileName = m_DicomDirectoryABSFileName;
 	importer->m_DiscardPosition = m_DiscardPosition;

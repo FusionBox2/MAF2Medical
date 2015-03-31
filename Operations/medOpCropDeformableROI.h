@@ -44,7 +44,7 @@ class MED_OPERATION_EXPORT medOpCropDeformableROI: public mafOp
 {
 public:
   /** construct */
-	medOpCropDeformableROI(const wxString &label = "CropDeformableROI");
+	medOpCropDeformableROI(const mafString& label = "CropDeformableROI");
   /** destructor */
 	~medOpCropDeformableROI(); 
   /** process events coming from other components */

@@ -34,6 +34,7 @@
 #include "mafVMEGroup.h"
 
 #include "mafGUI.h"
+#include "mafFilesDirs.h"
 
 #include <vtkCubeSource.h>
 #include <vtkTransformPolyDataFilter.h>
@@ -47,15 +48,16 @@
 
 #define DELTA 5.0
 
+mafCxxTypeMacro(medOpImporterGRFWS)
+
 //----------------------------------------------------------------------------
-medOpImporterGRFWS::medOpImporterGRFWS(const wxString &label) :
-mafOp(label)
+medOpImporterGRFWS::medOpImporterGRFWS(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType       	= OPTYPE_IMPORTER;
 	m_Canundo	      = true;
 	m_File		      = "";
-	m_FileDir       = (mafGetApplicationDirectory() + "/Data/External/").c_str();
+	m_FileDir       = mafGetApplicationDirectory() + "/Data/External/";
   m_Output        = NULL;
   m_PlatformLeft  = NULL;
   m_PlatformRight = NULL;
@@ -91,7 +93,7 @@ void medOpImporterGRFWS::OpUndo()
 mafOp* medOpImporterGRFWS::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpImporterGRFWS *cp = new medOpImporterGRFWS(m_Label);
+	medOpImporterGRFWS *cp = new medOpImporterGRFWS(GetLabel());
 	cp->m_Canundo = m_Canundo;
 	cp->m_OpType = m_OpType;
   cp->SetListener(GetListener());
@@ -119,7 +121,7 @@ void medOpImporterGRFWS::OpRun()
 void medOpImporterGRFWS::Read()   
 //----------------------------------------------------------------------------
 {
-  wxFileInputStream inputFile( m_File );
+  wxFileInputStream inputFile( m_File.GetCStr());
   wxTextInputStream text( inputFile );
 
   wxString line;
@@ -149,14 +151,14 @@ void medOpImporterGRFWS::ReadForcePlates()
 	  mafEventMacro(mafEvent(this,PROGRESSBAR_SHOW));
   }
 
-  wxString path, name, ext;
-  wxSplitPath(m_File.c_str(),&path,&name,&ext);
+  mafString path, name, ext;
+  mafSplitPath(m_File,&path,&name,&ext);
 
   mafTagItem tag_Nature;
   tag_Nature.SetName("VME_NATURE");
   tag_Nature.SetValue("NATURAL");
 
-  wxFileInputStream inputCountFile( m_File );
+  wxFileInputStream inputCountFile( m_File.GetCStr() );
   wxTextInputStream textCount( inputCountFile );
 
   wxString line_count;
@@ -168,7 +170,7 @@ void medOpImporterGRFWS::ReadForcePlates()
   } while (!inputCountFile.Eof());
   totlines = totlines - 10;
 
-  wxFileInputStream inputFile( m_File );
+  wxFileInputStream inputFile( m_File.GetCStr() );
   wxTextInputStream text( inputFile );
 
   wxString line;
@@ -493,14 +495,14 @@ void medOpImporterGRFWS::ReadSingleVector()
 	  mafEventMacro(mafEvent(this,PROGRESSBAR_SHOW));
   }
 
-  wxString path, name, ext;
-  wxSplitPath(m_File.c_str(),&path,&name,&ext);
+  mafString path, name, ext;
+  mafSplitPath(m_File,&path,&name,&ext);
 
   mafTagItem tag_Nature;
   tag_Nature.SetName("VME_NATURE");
   tag_Nature.SetValue("NATURAL");
 
-  wxFileInputStream inputCountFile( m_File );
+  wxFileInputStream inputCountFile( m_File.GetCStr() );
   wxTextInputStream textCount( inputCountFile );
 
   wxString line_count;
@@ -512,7 +514,7 @@ void medOpImporterGRFWS::ReadSingleVector()
   } while (!inputCountFile.Eof());
   totlines = totlines - 5;
 
-  wxFileInputStream inputFile( m_File );
+  wxFileInputStream inputFile( m_File.GetCStr());
   wxTextInputStream text( inputFile );
 
   wxString line;

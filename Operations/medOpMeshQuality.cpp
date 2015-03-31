@@ -58,8 +58,7 @@ mafCxxTypeMacro(medOpMeshQuality);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpMeshQuality::medOpMeshQuality(const wxString &label) :
-mafOp(label)
+medOpMeshQuality::medOpMeshQuality(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -91,7 +90,7 @@ bool medOpMeshQuality::Accept(mafNode *node)
 mafOp *medOpMeshQuality::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpMeshQuality(m_Label));
+	return (new medOpMeshQuality(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

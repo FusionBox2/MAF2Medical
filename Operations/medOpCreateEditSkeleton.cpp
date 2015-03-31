@@ -40,8 +40,7 @@ mafCxxTypeMacro(medOpCreateEditSkeleton);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpCreateEditSkeleton::medOpCreateEditSkeleton(wxString label) :
-mafOp(label)
+medOpCreateEditSkeleton::medOpCreateEditSkeleton(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType  = OPTYPE_OP;
@@ -65,7 +64,7 @@ mafOp* medOpCreateEditSkeleton::Copy()
 //----------------------------------------------------------------------------
 {
 	/** return a copy of itself, needs to put it into the undo stack */
-	return new medOpCreateEditSkeleton(m_Label);
+	return new medOpCreateEditSkeleton(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpCreateEditSkeleton::Accept(mafNode* vme)

@@ -42,8 +42,7 @@ mafCxxTypeMacro(medOpSurfaceMirror);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSurfaceMirror::medOpSurfaceMirror(wxString label) :
-mafOp(label)
+medOpSurfaceMirror::medOpSurfaceMirror(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType			 		= OPTYPE_OP;
@@ -71,7 +70,7 @@ medOpSurfaceMirror::~medOpSurfaceMirror( )
 mafOp* medOpSurfaceMirror::Copy()   
 //----------------------------------------------------------------------------
 {
-  medOpSurfaceMirror *cp = new medOpSurfaceMirror(m_Label);
+  medOpSurfaceMirror *cp = new medOpSurfaceMirror(GetLabel());
   cp->m_Canundo		= m_Canundo;
   cp->m_OpType		= m_OpType;
   cp->SetListener(GetListener());
@@ -187,7 +186,7 @@ void medOpSurfaceMirror::OnEvent(mafEventBase *maf_event)
 			{
 				mafEvent helpEvent;
 				helpEvent.SetSender(this);
-				mafString operationLabel = this->m_Label;
+				mafString operationLabel = GetLabel();
 				helpEvent.SetString(&operationLabel);
 				helpEvent.SetId(OPEN_HELP_PAGE);
 				mafEventMacro(helpEvent);

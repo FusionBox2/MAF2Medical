@@ -55,7 +55,7 @@ class MED_OPERATION_EXPORT medOpSmoothSurfaceCells: public mafOp
 {
 public:
 
-	medOpSmoothSurfaceCells(wxString label = "Smooth Cells");
+	medOpSmoothSurfaceCells(const mafString& label = "Smooth Cells");
 	~medOpSmoothSurfaceCells(); 
 
 	mafTypeMacro(medOpSmoothSurfaceCells, mafOp);

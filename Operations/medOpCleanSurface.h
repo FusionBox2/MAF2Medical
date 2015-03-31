@@ -37,7 +37,7 @@ class MED_OPERATION_EXPORT medOpCleanSurface: public mafOp
 {
 public:
   /** constructor */
-	medOpCleanSurface(const wxString &label = "CleanSurface");
+	medOpCleanSurface(const mafString& label = "CleanSurface");
   /** destructor */
 	~medOpCleanSurface();
   /** Answer to the messages coming from interface. */ 

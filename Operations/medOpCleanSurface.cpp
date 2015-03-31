@@ -39,8 +39,7 @@ mafCxxTypeMacro(medOpCleanSurface);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpCleanSurface::medOpCleanSurface(const wxString &label) :
-mafOp(label)
+medOpCleanSurface::medOpCleanSurface(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -72,7 +71,7 @@ bool medOpCleanSurface::Accept(mafNode *node)
 mafOp *medOpCleanSurface::Copy()   
 //----------------------------------------------------------------------------
 {
-	return (new medOpCleanSurface(m_Label));
+	return (new medOpCleanSurface(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Constants:

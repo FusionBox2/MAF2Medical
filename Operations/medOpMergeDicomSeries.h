@@ -30,7 +30,7 @@ class MED_OPERATION_EXPORT medOpMergeDicomSeries : public mafOp
 {
 public:
 	/** constructor */
-  medOpMergeDicomSeries(wxString label = "Merge DICOM Series");
+  medOpMergeDicomSeries(const mafString& label = "Merge DICOM Series");
 
   /** destructor */
   ~medOpMergeDicomSeries();

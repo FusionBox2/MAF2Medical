@@ -39,8 +39,7 @@ mafCxxTypeMacro(medOpExporterLandmark);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpExporterLandmark::medOpExporterLandmark(const wxString &label) :
-mafOp(label)
+medOpExporterLandmark::medOpExporterLandmark(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType = OPTYPE_EXPORTER;
@@ -416,7 +415,7 @@ void medOpExporterLandmark::ExportLandmark()
     }
     else*/
     {
-      ExportingTraverse(f_Out, m_FileDir.c_str(), m_Input);
+      ExportingTraverse(f_Out, m_FileDir.GetCStr(), m_Input);
     }
   }
   if(!m_TestMode)
@@ -429,7 +428,7 @@ void medOpExporterLandmark::ExportLandmark()
 mafOp* medOpExporterLandmark::Copy()   
 //----------------------------------------------------------------------------
 {
-  medOpExporterLandmark *cp = new medOpExporterLandmark(m_Label);
+  medOpExporterLandmark *cp = new medOpExporterLandmark(GetLabel());
   cp->m_Canundo      = m_Canundo;
   cp->m_OpType       = m_OpType;
   cp->SetListener(GetListener());

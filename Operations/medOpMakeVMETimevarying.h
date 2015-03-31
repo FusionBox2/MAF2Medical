@@ -49,7 +49,7 @@ class MED_OPERATION_EXPORT medOpMakeVMETimevarying: public mafOp
 {
 public:
 
-  medOpMakeVMETimevarying(const wxString &label = "Make Timevariyng VME",bool showShadingPlane = false);
+  medOpMakeVMETimevarying(const mafString& label = "Make Timevariyng VME",bool showShadingPlane = false);
 	virtual ~medOpMakeVMETimevarying();
 	virtual void OnEvent(mafEventBase *maf_event);
 	

@@ -37,7 +37,7 @@ using namespace std;
 #define FREQ 1.00
 
 //----------------------------------------------------------------------------
-medOpExporterLandmarkWS::medOpExporterLandmarkWS(const wxString &label) :
+medOpExporterLandmarkWS::medOpExporterLandmarkWS(const mafString &label) :
 mafOp(label)
 //----------------------------------------------------------------------------
 {
@@ -62,7 +62,7 @@ bool medOpExporterLandmarkWS::Accept(mafNode *node)
 mafOp* medOpExporterLandmarkWS::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpExporterLandmarkWS *cp = new medOpExporterLandmarkWS(m_Label);
+	medOpExporterLandmarkWS *cp = new medOpExporterLandmarkWS(GetLabel());
 	cp->m_File = m_File;
 	return cp;
 }

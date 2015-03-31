@@ -40,8 +40,7 @@ mafCxxTypeMacro(medOpImporterVTK);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpImporterVTK::medOpImporterVTK(const wxString &label) :
-mafOpImporterVTK(label)
+medOpImporterVTK::medOpImporterVTK(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_VmePolyLine = NULL;
@@ -56,7 +55,7 @@ medOpImporterVTK::~medOpImporterVTK()
 mafOp* medOpImporterVTK::Copy()   
 //----------------------------------------------------------------------------
 {
-  medOpImporterVTK *cp = new medOpImporterVTK(m_Label);
+  medOpImporterVTK *cp = new medOpImporterVTK(GetLabel());
   cp->m_File			= m_File;
   return cp;
 }

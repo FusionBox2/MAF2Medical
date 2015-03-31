@@ -41,8 +41,9 @@ this class provides the landmark importing written in the following format:
 class MED_OPERATION_EXPORT medOpImporterLandmarkTXT : public mafOp
 {
 public:
+  mafTypeMacro(medOpImporterLandmarkTXT, mafOp)
   /** object constructor */
-	medOpImporterLandmarkTXT(wxString label);
+	medOpImporterLandmarkTXT(const mafString& label = "");
   /** object destructor */
 	~medOpImporterLandmarkTXT();
   /** method for clone object */

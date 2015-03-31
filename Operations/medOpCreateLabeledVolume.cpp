@@ -39,8 +39,7 @@ mafCxxTypeMacro(medOpCreateLabeledVolume);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpCreateLabeledVolume::medOpCreateLabeledVolume(const wxString &label) :
-mafOp(label)
+medOpCreateLabeledVolume::medOpCreateLabeledVolume(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -57,7 +56,7 @@ medOpCreateLabeledVolume::~medOpCreateLabeledVolume( )
 mafOp* medOpCreateLabeledVolume::Copy()   
 //----------------------------------------------------------------------------
 {
-	return new medOpCreateLabeledVolume(m_Label);
+	return new medOpCreateLabeledVolume(GetLabel());
 }
 //----------------------------------------------------------------------------
 bool medOpCreateLabeledVolume::Accept(mafNode *node)

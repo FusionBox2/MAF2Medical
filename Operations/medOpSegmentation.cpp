@@ -143,7 +143,7 @@ mafCxxTypeMacro(medOpSegmentation);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpSegmentation::medOpSegmentation(const wxString &label) : mafOp(label)
+medOpSegmentation::medOpSegmentation(const mafString &label) : mafOp(label)
 //----------------------------------------------------------------------------
 {
   m_OpType	= OPTYPE_OP;
@@ -305,7 +305,7 @@ bool medOpSegmentation::Accept(mafNode *node)
 mafOp *medOpSegmentation::Copy()   
 //----------------------------------------------------------------------------
 {
-  return (new medOpSegmentation(m_Label));
+  return (new medOpSegmentation(GetLabel()));
 }
 //----------------------------------------------------------------------------
 void medOpSegmentation::OpRun()   
@@ -635,7 +635,7 @@ void medOpSegmentation::CreateOpDialog()
   wxPoint defPos = wxDefaultPosition;
   wxSize defSize = wxDefaultSize;
 
-  m_Dialog = new mafGUIDialog(m_Label, mafCLOSEWINDOW);  
+  m_Dialog = new mafGUIDialog(GetLabel().GetCStr(), mafCLOSEWINDOW);  
   m_Dialog->SetListener(this);
 
   m_GuiDialog = new mafGUI(this);

@@ -48,8 +48,7 @@ mafCxxTypeMacro(medOpExporterMeters);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOpExporterMeters::medOpExporterMeters(const wxString &label) :
-mafOp(label)
+medOpExporterMeters::medOpExporterMeters(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   m_OpType = OPTYPE_EXPORTER;
@@ -73,7 +72,7 @@ medOpExporterMeters::~medOpExporterMeters( )
 mafOp* medOpExporterMeters::Copy()   
 //----------------------------------------------------------------------------
 {
-	medOpExporterMeters *cp = new medOpExporterMeters(m_Label);
+	medOpExporterMeters *cp = new medOpExporterMeters(GetLabel());
 	cp->m_File = m_File;
 	return cp;
 }

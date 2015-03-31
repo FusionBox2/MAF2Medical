@@ -42,8 +42,7 @@ mafCxxTypeMacro(medOp2DMeasure);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medOp2DMeasure::medOp2DMeasure(const wxString &label) 
-:mafOp(label)
+medOp2DMeasure::medOp2DMeasure(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_OP;
@@ -82,7 +81,7 @@ bool medOp2DMeasure::Accept(mafNode *node)
 mafOp* medOp2DMeasure::Copy()
 //----------------------------------------------------------------------------
 {
-	return (new medOp2DMeasure(m_Label));
+	return (new medOp2DMeasure(GetLabel()));
 }
 //----------------------------------------------------------------------------
 // Widgets ID's

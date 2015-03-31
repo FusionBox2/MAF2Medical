@@ -43,8 +43,9 @@ class mafString;
 class MED_OPERATION_EXPORT medOpClassicICPRegistration: public mafOp
 {
 public:
+  mafTypeMacro(medOpClassicICPRegistration, mafOp)
   /** constructor */
-	medOpClassicICPRegistration(wxString label);
+	medOpClassicICPRegistration(const mafString& label = "");
   /** destructor */
 	~medOpClassicICPRegistration();
   /** method allows to handle events from other objects*/

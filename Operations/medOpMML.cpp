@@ -53,6 +53,7 @@
 #include "mafTagArray.h"
 #include "mafTagItem.h"
 
+mafCxxTypeMacro(medOpMML)
 
 //----------------------------------------------------------------------------
 enum 
@@ -91,7 +92,7 @@ enum
 };
 
 //----------------------------------------------------------------------------
-medOpMML::medOpMML(const wxString &label) : mafOp(label)
+medOpMML::medOpMML(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
   //
@@ -210,7 +211,7 @@ bool medOpMML::Accept(mafNode* vme)
 }
 
 //----------------------------------------------------------------------------
-mafOp* medOpMML::Copy() {return new medOpMML(m_Label);}
+mafOp* medOpMML::Copy() {return new medOpMML(GetLabel());}
 
 //----------------------------------------------------------------------------
 void medOpMML::OpDo()  {}

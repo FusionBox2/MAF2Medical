@@ -43,14 +43,15 @@
 
 const bool DEBUG_MODE = true;
 
+mafCxxTypeMacro(medOpImporterLandmark)
+
 //----------------------------------------------------------------------------
-medOpImporterLandmark::medOpImporterLandmark(wxString label) :
-mafOp(label)
+medOpImporterLandmark::medOpImporterLandmark(const mafString& label) : Superclass(label)
 //----------------------------------------------------------------------------
 {
 	m_OpType	= OPTYPE_IMPORTER;
 	m_Canundo	= true;
-	m_FileDir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
+	m_FileDir = mafGetApplicationDirectory() + "/Data/External/";
   m_TypeSeparation = 0;
   m_EnableString = 0;
   m_StringSeparation = mafString("");
@@ -71,7 +72,7 @@ mafOp* medOpImporterLandmark::Copy()
 //----------------------------------------------------------------------------
 {
 	//non devo incrementare l'id counter --- vfc le operazioni sono gia inserite nei menu;
-	medOpImporterLandmark *cp = new medOpImporterLandmark(m_Label);
+	medOpImporterLandmark *cp = new medOpImporterLandmark(GetLabel());
 	cp->m_Canundo = m_Canundo;
 	cp->m_OpType = m_OpType;
   cp->SetListener(GetListener());
