@@ -1145,15 +1145,15 @@ void medOpMML::OnUndo()
   case 0: // place
     // other buttons off
     m_TranslateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_TranslateOpButton->SetTitle("T");
+    m_TranslateOpButton->SetLabel("T");
     m_RotateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_RotateOpButton->SetTitle("R");
+    m_RotateOpButton->SetLabel("R");
     m_ScaleOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_ScaleOpButton->SetTitle("S");
+    m_ScaleOpButton->SetLabel("S");
 
     // this button on
     m_PlaceOpButton->SetBackgroundColour(Green);
-    m_PlaceOpButton->SetTitle(">>P<<");
+    m_PlaceOpButton->SetLabel(">>P<<");
 
     //
     ResetOperation();
@@ -1168,15 +1168,15 @@ void medOpMML::OnUndo()
   case 1: // translate
     // other buttons off
     m_PlaceOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_PlaceOpButton->SetTitle("P");
+    m_PlaceOpButton->SetLabel("P");
     m_RotateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_RotateOpButton->SetTitle("R");
+    m_RotateOpButton->SetLabel("R");
     m_ScaleOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_ScaleOpButton->SetTitle("S");
+    m_ScaleOpButton->SetLabel("S");
 
     // this button on
     m_TranslateOpButton->SetBackgroundColour(Green);
-    m_TranslateOpButton->SetTitle(">>T<<");
+    m_TranslateOpButton->SetLabel(">>T<<");
 
     //
     ResetOperation();
@@ -1191,15 +1191,15 @@ void medOpMML::OnUndo()
   case 2: // rotate
     // other buttons off
     m_PlaceOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_PlaceOpButton->SetTitle("P");
+    m_PlaceOpButton->SetLabel("P");
     m_TranslateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_TranslateOpButton->SetTitle("T");
+    m_TranslateOpButton->SetLabel("T");
     m_ScaleOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_ScaleOpButton->SetTitle("S");
+    m_ScaleOpButton->SetLabel("S");
 
     // this button on
     m_RotateOpButton->SetBackgroundColour(Green);
-    m_RotateOpButton->SetTitle(">>R<<");
+    m_RotateOpButton->SetLabel(">>R<<");
 
     //
     ResetOperation();
@@ -1220,15 +1220,15 @@ void medOpMML::OnUndo()
   {
     // other buttons off
     m_PlaceOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_PlaceOpButton->SetTitle("P");
+    m_PlaceOpButton->SetLabel("P");
     m_TranslateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_TranslateOpButton->SetTitle("T");
+    m_TranslateOpButton->SetLabel("T");
     m_RotateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-    m_RotateOpButton->SetTitle("R");
+    m_RotateOpButton->SetLabel("R");
 
     // this button on
     m_ScaleOpButton->SetBackgroundColour(Green);
-    m_ScaleOpButton->SetTitle(">>S<<");
+    m_ScaleOpButton->SetLabel(">>S<<");
 
     m_Model->GetScaledTextActor1()->GetPositionCoordinate()->SetValue(0.0, 0.9);
 
@@ -1401,7 +1401,7 @@ void medOpMML::OnContourLineAxesVisibility()
 
   if (m_ShowAxes)
   {
-    m_AxesOnOffButton->SetTitle("Axes Off");
+    m_AxesOnOffButton->SetLabel("Axes Off");
     // action line coordinate system
     //Model->GetPositiveXAxisActor()->VisibilityOn();
     //Model->GetNegativeXAxisActor()->VisibilityOn();
@@ -1418,7 +1418,7 @@ void medOpMML::OnContourLineAxesVisibility()
   }
   else
   {
-    m_AxesOnOffButton->SetTitle("Axes On");
+    m_AxesOnOffButton->SetLabel("Axes On");
     // action line coordinate system
     //Model->GetPositiveXAxisActor()->VisibilityOff();
     //Model->GetNegativeXAxisActor()->VisibilityOff();
@@ -1444,7 +1444,7 @@ void medOpMML::OnContourVisibility()
 
   if (m_ContourVisibility) // visible
   {
-    m_ContourOnOffButton->SetTitle("Contour Off");
+    m_ContourOnOffButton->SetLabel("Contour Off");
 
     m_Model->GetNEContourActor()->VisibilityOn();
     m_Model->GetNWContourActor()->VisibilityOn();
@@ -1465,7 +1465,7 @@ void medOpMML::OnContourVisibility()
   }
   else // non-visible
   {
-    m_ContourOnOffButton->SetTitle("Contour On");
+    m_ContourOnOffButton->SetLabel("Contour On");
 
     m_Model->GetNEContourActor()->VisibilityOff();
     m_Model->GetNWContourActor()->VisibilityOff();
@@ -3386,15 +3386,15 @@ void medOpMML::OnPOperationButton()
 
   // other buttons off
   m_TranslateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_TranslateOpButton->SetTitle("T");
+  m_TranslateOpButton->SetLabel("T");
   m_RotateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_RotateOpButton->SetTitle("R");
+  m_RotateOpButton->SetLabel("R");
   m_ScaleOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_ScaleOpButton->SetTitle("S");
+  m_ScaleOpButton->SetLabel("S");
 
   // this button on
   m_PlaceOpButton->SetBackgroundColour(Green);
-  m_PlaceOpButton->SetTitle(">>P<<");
+  m_PlaceOpButton->SetLabel(">>P<<");
 
   //
   ResetOperation();
@@ -3443,15 +3443,15 @@ void medOpMML::OnTOperationButton()
 
   // other buttons off
   m_PlaceOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_PlaceOpButton->SetTitle("P");
+  m_PlaceOpButton->SetLabel("P");
   m_RotateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_RotateOpButton->SetTitle("R");
+  m_RotateOpButton->SetLabel("R");
   m_ScaleOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_ScaleOpButton->SetTitle("S");
+  m_ScaleOpButton->SetLabel("S");
 
   // this button on
   m_TranslateOpButton->SetBackgroundColour(Green);
-  m_TranslateOpButton->SetTitle(">>T<<");
+  m_TranslateOpButton->SetLabel(">>T<<");
 
   //
   ResetOperation();
@@ -3500,15 +3500,15 @@ void medOpMML::OnROperationButton()
 
   // other buttons off
   m_PlaceOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_PlaceOpButton->SetTitle("P");
+  m_PlaceOpButton->SetLabel("P");
   m_TranslateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_TranslateOpButton->SetTitle("T");
+  m_TranslateOpButton->SetLabel("T");
   m_ScaleOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_ScaleOpButton->SetTitle("S");
+  m_ScaleOpButton->SetLabel("S");
 
   // this button on
   m_RotateOpButton->SetBackgroundColour(Green);
-  m_RotateOpButton->SetTitle(">>R<<");
+  m_RotateOpButton->SetLabel(">>R<<");
 
   //
   ResetOperation();
@@ -3552,15 +3552,15 @@ void medOpMML::OnSOperationButton()
 
   // other buttons off
   m_PlaceOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_PlaceOpButton->SetTitle("P");
+  m_PlaceOpButton->SetLabel("P");
   m_TranslateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_TranslateOpButton->SetTitle("T");
+  m_TranslateOpButton->SetLabel("T");
   m_RotateOpButton->SetBackgroundColour(m_ButtonBackgroundColour);
-  m_RotateOpButton->SetTitle("R");
+  m_RotateOpButton->SetLabel("R");
 
   // this button on
   m_ScaleOpButton->SetBackgroundColour(Green);
-  m_ScaleOpButton->SetTitle(">>S<<");
+  m_ScaleOpButton->SetLabel(">>S<<");
 
   m_Model->GetScaledTextActor1()->GetPositionCoordinate()->SetValue(0.0, 0.9);
 

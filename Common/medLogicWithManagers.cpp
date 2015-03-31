@@ -659,7 +659,7 @@ void medLogicWithManagers::CreateWizardToolbar()
   m_WizardLabel->Disable();
  
 
-  m_Win->AddDockPane(m_WizardGauge,  wxPaneInfo()
+  m_Win->AddDockPane(m_WizardGauge,  wxAuiPaneInfo()
     .Name("wizardgauge")
     //.Caption(wxT("ToolBar1"))
     .Top()
@@ -673,7 +673,7 @@ void medLogicWithManagers::CreateWizardToolbar()
     );
   
 
-  m_Win->AddDockPane(tmp,  wxPaneInfo()
+  m_Win->AddDockPane(tmp,  wxAuiPaneInfo()
     .Name("tmpwithtest")
     //.Caption(wxT("ToolBar2"))
     .Top()
@@ -686,7 +686,7 @@ void medLogicWithManagers::CreateWizardToolbar()
     .Gripper(false)
     );
 
-  m_Win->AddDockPane(serparatorBar,  wxPaneInfo()
+  m_Win->AddDockPane(serparatorBar,  wxAuiPaneInfo()
     .Name("separator")
     //.Caption(wxT("ToolBar3"))
     .Top()

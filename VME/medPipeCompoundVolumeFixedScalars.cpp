@@ -21,6 +21,7 @@
 #include "medDecl.h"
 #include "medPipeCompoundVolumeFixedScalars.h"
 #include "medGUIDynamicVP.h"
+#include "wx/notebook.h"
 
 //----------------------------------------------------------------------------
 mafCxxTypeMacro(medPipeCompoundVolumeFixedScalars);
