@@ -49,8 +49,12 @@
 #include "vtkCamera.h"
 
 //----------------------------------------------------------------------------
+mafCxxAbstractTypeMacro(medViewCompoundWindowing)
+//----------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------
 medViewCompoundWindowing::medViewCompoundWindowing(const mafString& label, int num_row, int num_col)
-: mafViewCompound(label,num_row,num_col)
+: Superclass(label,num_row,num_col)
 //----------------------------------------------------------------------------
 {
 	m_LutWidget       = NULL;
