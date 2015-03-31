@@ -204,6 +204,7 @@ int medVMEComputeWrapping::DeepCopy(mafNode *a)
 		this->m_EndVme2Name = meter->m_EndVme2Name;
 		this->m_WrappedVmeName1 = meter->m_WrappedVmeName1;
 		this->m_WrappedVmeName2 = meter->m_WrappedVmeName2;
+        m_WrapReverseNew = meter->m_WrapReverseNew;
 
 		this->m_WrappedVmeName = meter->m_WrappedVmeName;
 		this->m_ViaPointName = meter->m_ViaPointName;
@@ -5015,6 +5016,7 @@ int medVMEComputeWrapping::InternalStore(mafStorageElement *parent)
 		parent->StoreInteger("WrapMode2", m_WrappedMode2);
 		parent->StoreInteger("WrapSide", m_WrapSide);
 		parent->StoreInteger("WrapReverse", m_WrapReverse);
+		parent->StoreInteger("WrapReverseNew", m_WrapReverseNew);
 		parent->StoreInteger("WrapClass",m_WrappedClass);
 
 		return MAF_OK;
@@ -5039,6 +5041,7 @@ int medVMEComputeWrapping::InternalRestore(mafStorageElement *node)
 			node->RestoreInteger("WrapMode2", m_WrappedMode2);
 			node->RestoreInteger("WrapSide", m_WrapSide);
 			node->RestoreInteger("WrapReverse", m_WrapReverse);
+			node->RestoreInteger("WrapReverseNew", m_WrapReverseNew);
 			node->RestoreInteger("WrapClass",m_WrappedClass);
 			return MAF_OK;
 		}
