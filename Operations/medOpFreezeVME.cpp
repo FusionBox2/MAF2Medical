@@ -83,7 +83,7 @@ bool medOpFreezeVME::Accept(mafNode *node)
 	return (node->IsMAFType(mafVME) && 
 		!node->IsMAFType(mafVMEGenericAbstract) && 
 		!node->IsMAFType(mafVMERoot) &&
-		//!node->IsMAFType(mafVMERefSys) &&
+		//!node->IsMAFType(mafVMERefSysAbstract) &&
 		!node->IsMAFType(mafVMEVolume) ); //return if is a procedural vme
 }
 //----------------------------------------------------------------------------

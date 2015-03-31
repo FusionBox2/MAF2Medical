@@ -68,8 +68,28 @@ enum MAF_TRANSFORM_ID
   ID_ROLLOUT_GIZMO_ROTATE,
   ID_ROLLOUT_GIZMO_SCALE,
   ID_ROLLOUT_SAVE_POS,
+  ID_TRANSLATE_X,
+  ID_TRANSLATE_Y,
+  ID_TRANSLATE_Z,
+  ID_ROTATE_X,
+  ID_ROTATE_Y,
+  ID_ROTATE_Z,
+  ID_SCALE_X,
+  ID_SCALE_Y,
+  ID_SCALE_Z,
   ID_HELP,
 };
+
+namespace
+{
+  void DecomposeMatrix(const mafMatrix& delta, double *translation, double *rotation, double *scaling)
+  {
+    mafTransform::GetPosition(delta, translation);
+    mafTransform::GetOrientation(delta, rotation);
+    mafTransform::GetScale(delta, scaling);
+  }
+}
+
 
 //----------------------------------------------------------------------------
 mafCxxTypeMacro(medOpMove);
@@ -93,6 +113,9 @@ mafOpTransformInterface(label)
   m_GuiTransformMouse            = NULL;
   m_GuiSaveRestorePose      = NULL;
   m_GuiTransformTextEntries = NULL;
+  m_TransfTranslation[0] = m_TransfTranslation[1] = m_TransfTranslation[2] = 0;
+  m_TransfRotation[0] = m_TransfRotation[1] = m_TransfRotation[2] = 0;
+  m_TransfScaling[0] = m_TransfScaling[1] = m_TransfScaling[2] = 1;
 }
 //----------------------------------------------------------------------------
 medOpMove::~medOpMove()
@@ -111,7 +134,7 @@ bool medOpMove::Accept(mafNode* vme)
 	/*mafEvent e(this,VIEW_SELECTED);
 	mafEventMacro(e);*/
 	return (vme!=NULL && vme->IsMAFType(mafVME) && !vme->IsA("mafVMERoot") 
-    && !vme->IsA("mafVMEExternalData") && !vme->IsA("mafVMERefSys") /*&& e.GetBool()*/);
+    && !vme->IsA("mafVMEExternalData") && !vme->IsA("mafVMERefSysAbstract") /*&& e.GetBool()*/);
 }
 //----------------------------------------------------------------------------
 mafOp* medOpMove::Copy()   
@@ -142,6 +165,16 @@ void medOpMove::OpRun()
     ShowGui();
   }
 }
+void medOpMove::GetDelta(mafMatrix& delta)
+{
+  mafMatrix newMatr;
+  mafMatrix oldMatr;
+  mafMatrix convMatrix;
+  newMatr = m_NewAbsMatrix;
+  oldMatr = m_OldAbsMatrix;
+  oldMatr.Invert();
+  mafMatrix::Multiply4x4(newMatr, oldMatr, delta);
+}
 
 //----------------------------------------------------------------------------
 void medOpMove::OnEvent(mafEventBase *maf_event)
@@ -157,24 +190,44 @@ void medOpMove::OnEvent(mafEventBase *maf_event)
   else if (maf_event->GetSender() == m_GuiTransformMouse) // from gui transform
   {
     OnEventGuiTransformMouse(maf_event);
+    mafMatrix delta;
+    GetDelta(delta);
+    DecomposeMatrix(delta, m_TransfTranslation, m_TransfRotation, m_TransfScaling);
+    m_Gui->Update();
   }
   else if (maf_event->GetSender() == m_GizmoTranslate) // from translation gizmo
   {
     OnEventGizmoTranslate(maf_event);
+    mafMatrix delta;
+    GetDelta(delta);
+    DecomposeMatrix(delta, m_TransfTranslation, m_TransfRotation, m_TransfScaling);
+    m_Gui->Update();
   }
   else if (maf_event->GetSender() == m_GizmoRotate) // from rotation gizmo
   {
     OnEventGizmoRotate(maf_event);
+    mafMatrix delta;
+    GetDelta(delta);
+    DecomposeMatrix(delta, m_TransfTranslation, m_TransfRotation, m_TransfScaling);
+    m_Gui->Update();
   }
   else if (maf_event->GetSender() == this->m_GuiSaveRestorePose) // from save/restore gui
   {
     OnEventGuiSaveRestorePose(maf_event); 
 		mafEventMacro(mafEvent(this,CAMERA_UPDATE));
+    mafMatrix delta;
+    GetDelta(delta);
+    DecomposeMatrix(delta, m_TransfTranslation, m_TransfRotation, m_TransfScaling);
+    m_Gui->Update();
   }
   else if (maf_event->GetSender() == this->m_GuiTransformTextEntries)
   {
     OnEventGuiTransformTextEntries(maf_event);
 		mafEventMacro(mafEvent(this,CAMERA_UPDATE));
+    mafMatrix delta;
+    GetDelta(delta);
+    DecomposeMatrix(delta, m_TransfTranslation, m_TransfRotation, m_TransfScaling);
+    m_Gui->Update();
   }
   else
   {
@@ -245,6 +298,39 @@ void medOpMove::OnEventThis(mafEventBase *maf_event)
 	  }
 	  break;
     
+    case ID_TRANSLATE_X:
+    case ID_TRANSLATE_Y:
+    case ID_TRANSLATE_Z:
+    case ID_ROTATE_X:
+    case ID_ROTATE_Y:
+    case ID_ROTATE_Z:
+    case ID_SCALE_X:
+    case ID_SCALE_Y:
+    case ID_SCALE_Z:
+    {
+      mafSmartPointer<mafTransform> tran;
+      tran->Scale(m_TransfScaling[0], m_TransfScaling[1], m_TransfScaling[2],POST_MULTIPLY);
+      tran->RotateY(m_TransfRotation[1], POST_MULTIPLY);
+      tran->RotateX(m_TransfRotation[0], POST_MULTIPLY);
+      tran->RotateZ(m_TransfRotation[2], POST_MULTIPLY);
+      tran->SetPosition(m_TransfTranslation);
+      mafMatrix::Multiply4x4(tran->GetMatrix(), m_OldAbsMatrix, m_NewAbsMatrix);
+      m_NewAbsMatrix.SetTimeStamp(m_CurrentTime);
+      ((mafVME*)m_Input)->SetAbsMatrix(m_NewAbsMatrix, m_CurrentTime);
+
+      // update gizmos positions
+      if (m_GizmoTranslate) m_GizmoTranslate->SetAbsPose(m_RefSysVME->GetOutput()->GetAbsMatrix());
+      if (m_GizmoRotate) m_GizmoRotate->SetAbsPose(m_RefSysVME->GetOutput()->GetAbsMatrix());
+      if (m_GuiTransformMouse) m_GuiTransformMouse->SetRefSys(m_RefSysVME);
+
+      // update gui 
+      m_GuiTransformTextEntries->SetAbsPose(((mafVME *)m_Input)->GetOutput()->GetAbsMatrix());
+
+      m_Gui->Update();
+      mafEventMacro(mafEvent(this,CAMERA_UPDATE));
+      break;
+    }
+
 	case ID_SHOW_GIZMO:
     {
       // update gizmo choose gui
@@ -565,6 +651,29 @@ void medOpMove::CreateGui()
 
   // add transform gui to operation
   m_Gui->AddGui(m_GuiTransformMouse->GetGui());
+
+  m_Gui->Double(ID_TRANSLATE_X, "Translate X", &m_TransfTranslation[0]);
+  m_Gui->Double(ID_TRANSLATE_Y, "Translate Y", &m_TransfTranslation[1]);
+  m_Gui->Double(ID_TRANSLATE_Z, "Translate Z", &m_TransfTranslation[2]);
+  m_Gui->Double(ID_ROTATE_X, "Rotate X", &m_TransfRotation[0]);
+  m_Gui->Double(ID_ROTATE_Y, "Rotate Y", &m_TransfRotation[1]);
+  m_Gui->Double(ID_ROTATE_Z, "Rotate Z", &m_TransfRotation[2]);
+
+  m_Gui->Enable(ID_TRANSLATE_X, true);
+  m_Gui->Enable(ID_TRANSLATE_Y, true);
+  m_Gui->Enable(ID_TRANSLATE_Z, true);
+  m_Gui->Enable(ID_ROTATE_X, true);
+  m_Gui->Enable(ID_ROTATE_Y, true);
+  m_Gui->Enable(ID_ROTATE_Z, true);
+  if (false)
+  {
+    m_Gui->Double(ID_SCALE_X, "Scale X", &m_TransfScaling[0], 0);
+    m_Gui->Double(ID_SCALE_Y, "Scale Y", &m_TransfScaling[1], 0);
+    m_Gui->Double(ID_SCALE_Z, "Scale Z", &m_TransfScaling[2], 0);
+    m_Gui->Enable(ID_SCALE_X, true);
+    m_Gui->Enable(ID_SCALE_Y, true);
+    m_Gui->Enable(ID_SCALE_Z, true);
+  }
 
   //---------------------------------
   // Text transform Gui

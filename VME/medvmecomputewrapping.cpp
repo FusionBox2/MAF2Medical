@@ -105,8 +105,8 @@ medVMEComputeWrapping::medVMEComputeWrapping()
 	output->SetTransform(m_Transform); // force my transform in the output
 	SetOutput(output);
 
-	m_WrappedMode1 = -1;
-	m_WrappedMode2 = -1;
+	//m_WrappedMode1 = -1;
+	//m_WrappedMode2 = -1;
 
 
 	m_Mat = new mafMatrix3x3();

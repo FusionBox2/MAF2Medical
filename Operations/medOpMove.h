@@ -70,6 +70,7 @@ protected:
   /** Create the gui */
   virtual void CreateGui();
   
+  void GetDelta(mafMatrix& delta);
   void OnEventThis(mafEventBase *maf_event);  
   void OnEventGizmoTranslate(mafEventBase *maf_event);
   void OnEventGizmoRotate(mafEventBase *maf_event);
@@ -86,6 +87,10 @@ protected:
   mafGUITransformMouse        *m_GuiTransformMouse;
   mafGUISaveRestorePose       *m_GuiSaveRestorePose;
   mafGUITransformTextEntries  *m_GuiTransformTextEntries;
+
+  double                      m_TransfTranslation[3];
+  double                      m_TransfRotation[3];
+  double                      m_TransfScaling[3];
 
   double m_RotationStep;
   double m_TranslationStep;

@@ -22,8 +22,8 @@
 //----------------------------------------------------------------------------
 #include "medOperationsDefines.h"
 #include "mafOp.h"
-#include "mafVMELandmarkCloud.h"
 
+class mafVMELandmarkCloud;
 //----------------------------------------------------------------------------
 // forward references :
 //----------------------------------------------------------------------------
@@ -32,15 +32,15 @@
 // medOpExporterLandmark :
 //----------------------------------------------------------------------------
 /** Exporter for the landmark coordinates: the data are exported in ASCII format. 
-Each raw represents a landmark and contains the (x,y,z) coordinate.
-The exporter can be performed on a single Landmark Cloud or on a tree containing many of them.
-In the latter case the operation exports all the LCs in the input VME sub-tree. */
+Each raw represents a landmark and contains the (x,y,z) coordinate.*/
 class MED_OPERATION_EXPORT medOpExporterLandmark: public mafOp
 {
 public:
+  mafTypeMacro(medOpExporterLandmark, mafOp);
 	medOpExporterLandmark(const wxString &label = "Landmark Exporter");
 	~medOpExporterLandmark(); 
 	mafOp* Copy();
+  void OnEvent(mafEventBase *maf_event);
 
 	/** Return true for the acceptable vme type. */
 	bool Accept(mafNode *node);
@@ -48,23 +48,18 @@ public:
 	/** Build the interface of the operation, i.e the dialog that let choose the name of the output file. */
 	void OpRun();
 
-  /** Look for landmarks in the sub-tree */
-  int FindLandmarkClouds(mafNode* node);  
-
   /** Export landmarks contained into a mafVMELandmarkCloud.*/
-  void ExportLandmark(mafVMELandmarkCloud* cloud = NULL);
+  void ExportLandmark();
 
-  /** Set the filename for the file to export */
+  /** Set the filename for the .stl to export */
   void SetFileName(const char *file_name) {m_File = file_name;};
 
-  /** Set the filename for the directory where to export */
-  void SetDirName(const char *file_name) {m_FileDir = file_name;};
-
 protected:
+  void ExportingTraverse(std::ostream &out, const char *dirName, mafNode* node);
+  void ExportOneCloud(std::ostream &out, mafVMELandmarkCloud* cloud);
+
 	wxString	m_File;
 	wxString	m_FileDir;
-
-  std::vector<mafVMELandmarkCloud*> m_LC_vector;
-  std::vector<mafString> m_LC_names;
+  int       m_GlobalPos;
 };
 #endif
