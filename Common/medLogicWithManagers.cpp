@@ -148,7 +148,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 
 					  wxString path,name,ext;
 					  wxSplitPath(imageFileName->GetCStr(),&path,&name,&ext);
-					  wxString oldWD = wxGetWorkingDirectory();
+					  wxString oldWD = wxGetCwd();
 					  wxSetWorkingDirectory(path);
 					  wxString command = "START  ";
 					  command = command + name+"."+ext;
@@ -202,7 +202,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 
 					  wxString path,name,ext;
 					  wxSplitPath(imageFileName,&path,&name,&ext);
-					  wxString oldWD = wxGetWorkingDirectory();
+					  wxString oldWD = wxGetCwd();
 					  wxSetWorkingDirectory(path);
 					  wxString command = "START  ";
 					  command = command + name+"."+ext;
