@@ -1,0 +1,4 @@
+8a9,11
+>   #if (_MSC_VER >= 1800) // 2008 or later
+>     #include <algorithm>
+>   #endif
