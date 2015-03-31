@@ -14,8 +14,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 PROJECT (MED)
 
 
-# Create the header to configure the classes.
-CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/medDefines.h.in ${PROJECT_BINARY_DIR}/medDefines.h @ONLY)
 
 #-----------------------------------------------------------------------------
 # this define the MAF_SUBPROJECT macro
@@ -303,6 +301,8 @@ ELSE (MAF_FOUND)
   MESSAGE (FATAL_ERROR "MAF library not found or configuration error, cannot build MED")
 ENDIF (MAF_FOUND)
 
+# Create the header to configure the classes.
+CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/medDefines.h.in ${PROJECT_BINARY_DIR}/medDefines.h @ONLY)
 
 #-----------------------------------------------------------------------------
 # MEDICAL_PARABUILD deploy stuff.  
