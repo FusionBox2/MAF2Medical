@@ -607,6 +607,7 @@ protected:
 
 	vtkLineSource     *m_LineSource;
 	vtkLineSource     *m_LineSource2;
+  vtkLineSource     *m_LineSource3;
 	//vtkLineSource     *m_LineSourceMiddle;
 	vtkAppendPolyData *m_Goniometer;
 	vtkPatchLine      *m_LinePatcher;

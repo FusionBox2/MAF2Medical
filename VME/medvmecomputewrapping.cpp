@@ -114,6 +114,7 @@ medVMEComputeWrapping::medVMEComputeWrapping()
 
 	vtkNEW(m_LineSource);
 	vtkNEW(m_LineSource2);
+  vtkNEW(m_LineSource3);
 	vtkNEW(m_Goniometer);
 	vtkNEW(m_LinePatcher);
 
@@ -147,6 +148,7 @@ medVMEComputeWrapping::~medVMEComputeWrapping()
 	mafDEL(m_Transform);
 	vtkDEL(m_LineSource);
 	vtkDEL(m_LineSource2);
+  vtkDEL(m_LineSource3);
 	vtkDEL(m_Goniometer);
 	vtkDEL(m_LinePatcher);
 	mafDEL(m_TmpTransform);
@@ -6500,7 +6502,7 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
     locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
     numPntInt = temporaryIntersection->GetNumberOfPoints();
   }
-  while(numPntInt != 0);
+  while(numPntInt != 0 && suplMax < 1e+6);
 
   do 
   {
@@ -6608,7 +6610,7 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
     locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
     numPntInt = temporaryIntersection->GetNumberOfPoints();
   }
-  while(numPntInt != 0);
+  while(numPntInt != 0 && suplMax < 1e+6);
 
   do 
   {
@@ -6706,15 +6708,19 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
 
   m_Clip->SetInput(m_Cutter->GetOutput());
   m_Clip->SetClipFunction(m_PlaneClip);
+  m_Clip->Update();
 
   double clipLength = 0;
-  double numberOfCells = m_Clip->GetOutput()->GetNumberOfCells();
+  int numberOfCells = m_Clip->GetOutput()->GetNumberOfCells();
   for(int i=0; i<numberOfCells; i++)
   {
     clipLength += sqrt(m_Clip->GetOutput()->GetCell(i)->GetLength2());
   }
 
   m_Distance += clipLength;
+
+  if(numberOfCells == 0)
+    m_Distance += sqrt(vtkMath::Distance2BetweenPoints(pointTangent1, pointTangent2));
 
 
   ////////////////////////////////////////////////////////
@@ -6730,12 +6736,18 @@ void medVMEComputeWrapping::InternalUpdateAutomated()
   m_LineSource2->SetPoint1(pointTangent2[0],pointTangent2[1],pointTangent2[2]);
   m_LineSource2->SetPoint2(local_end[0],local_end[1],local_end[2]);
 
+  //m_LineSource3->SetPoint1(pointTangent1[0],pointTangent1[1],pointTangent1[2]);
+  //m_LineSource3->SetPoint2(pointTangent2[0],pointTangent2[1],pointTangent2[2]);
+
   m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
   m_LineSource->SetPoint2(pointTangent1[0],pointTangent1[1],pointTangent1[2]);
 
   m_Goniometer->AddInput(m_LineSource->GetOutput());
   //m_Goniometer->AddInput(m_LineSourceMiddle->GetOutput());
-  m_Goniometer->AddInput(m_Clip->GetOutput());
+  if(numberOfCells > 0)
+    m_Goniometer->AddInput(m_Clip->GetOutput());
+  else
+    m_Goniometer->AddInput(m_LineSource3->GetOutput());
   m_Goniometer->AddInput(m_LineSource2->GetOutput());
 
 
