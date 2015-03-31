@@ -438,7 +438,7 @@ void medOpSegmentation::OpDo()
   lutPreset(4,m_OutputVolume->GetMaterial()->m_ColorLut);
   m_OutputVolume->GetMaterial()->m_ColorLut->SetTableRange(0,255);
   m_OutputVolume->GetMaterial()->UpdateFromTables();
-  m_OutputVolume->GetTagArray()->SetTag("SEGMENTATION_PARENT",wxString::Format("%d",m_Volume->GetId()).c_str(),MAF_STRING_TAG);
+  m_OutputVolume->GetTagArray()->SetTag(mafTagItem("SEGMENTATION_PARENT",wxString::Format("%d",m_Volume->GetId()).c_str()));
 
   mafTagItem *ti = m_OutputVolume->GetTagArray()->GetTag("VME_NATURE");
   if(ti)
@@ -529,11 +529,11 @@ void medOpSegmentation::DeleteOutputs(mafNode* vme)
 bool medOpSegmentation::IsOutput(mafNode* vme)
   //----------------------------------------------------------------------------
 {
-  if(vme->GetTagArray() && vme->GetTagArray()->IsTagPresent("SEGMENTATION_PARENT")==true)
+  if(!vme->GetTagArray())
+    return false;
+  if(const mafTagItem *ti = vme->GetTagArray()->GetTag("SEGMENTATION_PARENT"))
   {
-    const char *tagValue = vme->GetTagArray()->GetTag("SEGMENTATION_PARENT")->GetValue();
-
-    if(atoi(tagValue) == m_Volume->GetId())
+    if(atoi(ti->GetValue()) == m_Volume->GetId())
     {
       return true;
     }

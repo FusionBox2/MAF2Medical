@@ -426,15 +426,14 @@ void medVMELabeledVolume::GenerateLabeledVolume()
 void medVMELabeledVolume::RetrieveTag()
 //----------------------------------------------------------------------
 { 
-  bool tagPresent = this->GetTagArray()->IsTagPresent("LABELS");
-  if (!tagPresent)
+  m_TagLabel = this->GetTagArray()->GetTag( "LABELS" );
+  if (!m_TagLabel)
   {
     mafTagItem tag_Item;
     tag_Item.SetName("LABELS");
     this->GetTagArray()->SetTag(tag_Item);
+    m_TagLabel = this->GetTagArray()->GetTag( "LABELS" );
   }
-  m_TagLabel = new mafTagItem;
-  m_TagLabel = this->GetTagArray()->GetTag( "LABELS" );
 }
 
 //-----------------------------------------------------------------------

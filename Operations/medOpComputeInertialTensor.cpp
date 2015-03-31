@@ -153,7 +153,7 @@ void medOpComputeInertialTensor::OpDo()
   mafVME* vme = (mafVME*) m_Input;
 
 
-  if (!vme->GetTagArray()->IsTagPresent("LOCAL_CENTER_OF_MASS_COMPONENTS"))
+  if (!vme->GetTagArray()->GetTag("LOCAL_CENTER_OF_MASS_COMPONENTS"))
   {
 	  if (m_LocalCenterOfMassTag.GetNumberOfComponents()>0)
 	  {
@@ -161,7 +161,7 @@ void medOpComputeInertialTensor::OpDo()
 	  }
   }
 
-  if (!vme->GetTagArray()->IsTagPresent("PRINCIPAL_INERTIAL_TENSOR_COMPONENTS"))
+  if (!vme->GetTagArray()->GetTag("PRINCIPAL_INERTIAL_TENSOR_COMPONENTS"))
   {
     if (m_PrincipalInertialTensorTag.GetNumberOfComponents()>0)
     {
@@ -169,7 +169,7 @@ void medOpComputeInertialTensor::OpDo()
     }
   }
 
-  if (!vme->GetTagArray()->IsTagPresent("INERTIAL_TENSOR_COMPONENTS"))
+  if (!vme->GetTagArray()->GetTag("INERTIAL_TENSOR_COMPONENTS"))
   {
 	  if (m_InertialTensorTag.GetNumberOfComponents()>0)
 	  {
@@ -177,7 +177,7 @@ void medOpComputeInertialTensor::OpDo()
 	  }
   }
   
-  if (!vme->GetTagArray()->IsTagPresent("SURFACE_MASS"))
+  if (!vme->GetTagArray()->GetTag("SURFACE_MASS"))
   {
     if (m_TagMass.GetNumberOfComponents()>0)
     {

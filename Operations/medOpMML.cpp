@@ -649,19 +649,22 @@ void medOpMML::OnMuscleSelection()
 
   // if muscle registered previously
   // read in relevant tags stored in
-  if(vme->GetTagArray()->IsTagPresent("STATUS_TAG"))
+  if(vme->GetTagArray()->GetTag("STATUS_TAG"))
   {
     // flag (active)
     m_RegistrationStatus = 1;
 
     // tag 2: number of slices
-    if(vme->GetTagArray()->IsTagPresent("NUMBER_OF_SLICES_TAG") == false)
+    mafTagItem *NumberOfSlicesTag;
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("NUMBER_OF_SLICES_TAG"))
+    {
+      NumberOfSlicesTag = ti;
+    }
+    else
     {
       wxMessageBox("Number of slices tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    mafTagItem *NumberOfSlicesTag;
-    NumberOfSlicesTag = vme->GetTagArray()->GetTag("NUMBER_OF_SLICES_TAG");
     m_ScansNumber = NumberOfSlicesTag->GetComponentAsDouble(0);
 
     // can not change slice number
@@ -669,13 +672,16 @@ void medOpMML::OnMuscleSelection()
     m_ScansNumberTxt->SetValidator(mafGUIValidator(this,ID_CHOOSE_FAKE,m_ScansNumberTxt,&m_ScansNumber2,3,100)); // min/max values
 
     // tag 3: xy scaling factors
-    if(vme->GetTagArray()->IsTagPresent("XY_SCALING_FACTORS_TAG") == false)
+    mafTagItem *XYScalingFactorsTag;
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("XY_SCALING_FACTORS_TAG"))
+    {
+      XYScalingFactorsTag = ti;
+    }
+    else
     {
       wxMessageBox("XY scaling factors tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    mafTagItem *XYScalingFactorsTag;
-    XYScalingFactorsTag = vme->GetTagArray()->GetTag("XY_SCALING_FACTORS_TAG");
     m_RegistrationXYScalingFactor = XYScalingFactorsTag->GetValueAsDouble(0);
 
     // can not change xy scaling factor
@@ -685,53 +691,71 @@ void medOpMML::OnMuscleSelection()
     // tag 4: operation stack
     //
     // slice id
-    if(vme->GetTagArray()->IsTagPresent("SLICE_ID_STACK_TAG") == false)
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("SLICE_ID_STACK_TAG"))
+    {
+      m_SliceIdStackTag = ti;
+    }
+    else
     {
       wxMessageBox("Slice id tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    m_SliceIdStackTag = vme->GetTagArray()->GetTag("SLICE_ID_STACK_TAG");
 
     // z value
-    if(vme->GetTagArray()->IsTagPresent("Z_VALUE_STACK_TAG") == false)
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("Z_VALUE_STACK_TAG"))
+    {
+      m_ZValueStackTag = ti;
+    }
+    else
     {
       wxMessageBox("Z value tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    m_ZValueStackTag = vme->GetTagArray()->GetTag("Z_VALUE_STACK_TAG");
 
     // operation type
-    if(vme->GetTagArray()->IsTagPresent("OPERATION_TYPE_STACK_TAG") == false)
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("OPERATION_TYPE_STACK_TAG"))
+    {
+      m_OperationTypeStackTag = ti;
+    }
+    else
     {
       wxMessageBox("Operation type tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    m_OperationTypeStackTag = vme->GetTagArray()->GetTag("OPERATION_TYPE_STACK_TAG");
 
     // parameter 1
-    if(vme->GetTagArray()->IsTagPresent("PARAMETER_1_STACK_TAG") == false)
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("PARAMETER_1_STACK_TAG"))
+    {
+      m_Parameter1StackTag = ti;
+    }
+    else
     {
       wxMessageBox("Parameter 1 tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    m_Parameter1StackTag = vme->GetTagArray()->GetTag("PARAMETER_1_STACK_TAG");
 
     // parameter 2
-    if(vme->GetTagArray()->IsTagPresent("PARAMETER_2_STACK_TAG") == false)
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("PARAMETER_2_STACK_TAG"))
+    {
+      m_Parameter2StackTag = ti;
+    }
+    else
     {
       wxMessageBox("Parameter 2 tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    m_Parameter2StackTag = vme->GetTagArray()->GetTag("PARAMETER_2_STACK_TAG");
 
     // tag 5: type of muscle
-    if(vme->GetTagArray()->IsTagPresent("TYPE_OF_MUSCLE_TAG") == false)
+    mafTagItem *TypeOfMuscleTag;
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag("TYPE_OF_MUSCLE_TAG"))
+    {
+      TypeOfMuscleTag = ti;
+    }
+    else
     {
       wxMessageBox("Type of muscle tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
       return;
     }
-    mafTagItem *TypeOfMuscleTag;
-    TypeOfMuscleTag = vme->GetTagArray()->GetTag("TYPE_OF_MUSCLE_TAG");
     m_MuscleType = TypeOfMuscleTag->GetComponentAsDouble(0);
 
     // set m_Surface to parent vme (original non-registered muscle)

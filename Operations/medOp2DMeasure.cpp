@@ -158,9 +158,8 @@ void medOp2DMeasure::OpRun()
 
   // storing
   mafNode *root = (mafNode *)m_Input->GetRoot();
-  if(root->GetTagArray()->IsTagPresent("2D_MEASURE"))
+  if(mafTagItem *measure_item = root->GetTagArray()->GetTag("2D_MEASURE"))
   {
-    mafTagItem *measure_item = root->GetTagArray()->GetTag("2D_MEASURE");
     int c = measure_item->GetNumberOfComponents();
     for(int i = 0; i < c; i++)
     {
@@ -588,8 +587,8 @@ void medOp2DMeasure::OpStop(int result)
   for(int i = 0; i < c; i++)
     measure_item.SetComponent(mafString(m_MeasureList->GetString(i)),i);
   mafNode *root = (mafNode *)m_Input->GetRoot();
-  if(root->GetTagArray()->IsTagPresent("2D_MEASURE"))
-  root->GetTagArray()->DeleteTag("2D_MEASURE");
+  if(root->GetTagArray()->GetTag("2D_MEASURE"))
+    root->GetTagArray()->DeleteTag("2D_MEASURE");
   root->GetTagArray()->SetTag(measure_item);
   mafEventMacro(mafEvent(this,VME_MODIFIED,root));
 

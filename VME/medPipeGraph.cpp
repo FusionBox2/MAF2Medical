@@ -207,16 +207,18 @@ void medPipeGraph::Create(mafSceneNode *n)
   m_PlotActor->SetVisibility(1);
   m_PlotActor->SetXValuesToValue();
 
-  bool tagPresent = m_Vme->GetTagArray()->IsTagPresent("SIGNALS_COLOR");
-  if (!tagPresent)
+  bool tagPresent = true;
+  mafTagItem *tag_Signals = m_Vme->GetTagArray()->GetTag("SIGNALS_COLOR");
+  if (!tag_Signals)
   {
+    tagPresent = false;
     mafTagItem tag_Sig;
     tag_Sig.SetName("SIGNALS_COLOR");
     tag_Sig.SetNumberOfComponents(m_NumberOfSignals*3); //3 color values each signal
     m_Vme->GetTagArray()->SetTag(tag_Sig);
+    tag_Signals = m_Vme->GetTagArray()->GetTag("SIGNALS_COLOR");
   }
 
-  mafTagItem *tag_Signals = m_Vme->GetTagArray()->GetTag("SIGNALS_COLOR");
   for (long n = 0; n < m_NumberOfSignals; n++)
   {
     long id = n*3;
@@ -239,17 +241,18 @@ void medPipeGraph::Create(mafSceneNode *n)
     }
   }
 
-  tagPresent = false;
-  tagPresent = m_Vme->GetTagArray()->IsTagPresent("AXIS_TITLE");
-  if (!tagPresent)
+  tagPresent = true;
+  mafTagItem *tagAxisTile = m_Vme->GetTagArray()->GetTag("AXIS_TITLE");
+  if (!tagAxisTile)
   {
+    tagPresent = false;
     mafTagItem tag_Sig;
     tag_Sig.SetName("AXIS_TITLE");
     tag_Sig.SetNumberOfComponents(2);
     m_Vme->GetTagArray()->SetTag(tag_Sig);
+    tagAxisTile = m_Vme->GetTagArray()->GetTag("AXIS_TITLE");
   }
 
-  mafTagItem *tagAxisTile = m_Vme->GetTagArray()->GetTag("AXIS_TITLE");
   if (tagPresent) //Retrieve axis title from tag
   {
     m_TitileX = tagAxisTile->GetValue(0);
@@ -468,9 +471,12 @@ void medPipeGraph::CreateLegend()
       name = m_CheckBox->GetItemLabel(c);
       m_LegendBox_Actor->SetEntryString(counter_legend, name.GetCStr());
 
-      m_ColorRGB[0] = tag_Signals->GetValueAsDouble(idx);
-      m_ColorRGB[1] = tag_Signals->GetValueAsDouble(idx+1);
-      m_ColorRGB[2] = tag_Signals->GetValueAsDouble(idx+2);
+      if(tag_Signals)
+      {
+        m_ColorRGB[0] = tag_Signals->GetValueAsDouble(idx);
+        m_ColorRGB[1] = tag_Signals->GetValueAsDouble(idx+1);
+        m_ColorRGB[2] = tag_Signals->GetValueAsDouble(idx+2);
+      }
       m_LegendBox_Actor->SetEntryColor(counter_legend, m_ColorRGB);
       counter_legend++;
     }
@@ -486,8 +492,8 @@ void medPipeGraph::ChangeItemName()
 //----------------------------------------------------------------------------
 {
   m_CheckBox->SetItemLabel(m_ItemId, (wxString)m_ItemName);
-  mafTagItem *t = m_Vme->GetTagArray()->GetTag("SIGNALS_NAME");
-  t->SetValue(m_ItemName, m_ItemId);
+  if(mafTagItem *t = m_Vme->GetTagArray()->GetTag("SIGNALS_NAME"))
+    t->SetValue(m_ItemName, m_ItemId);
   m_CheckBox->Update();
 }
 
@@ -495,9 +501,11 @@ void medPipeGraph::ChangeItemName()
 void medPipeGraph::ChangeAxisTitle()
 //----------------------------------------------------------------------------
 {
-  mafTagItem *t = m_Vme->GetTagArray()->GetTag("AXIS_TITLE");
-  t->SetValue(m_TitileX, 0);
-  t->SetValue(m_TitileY, 1);
+  if(mafTagItem *t = m_Vme->GetTagArray()->GetTag("AXIS_TITLE"))
+  {
+    t->SetValue(m_TitileX, 0);
+    t->SetValue(m_TitileY, 1);
+  }
 }
 
 //----------------------------------------------------------------------------
@@ -505,12 +513,14 @@ void medPipeGraph::ChangeSignalColor()
 //----------------------------------------------------------------------------
 {
   m_PlotActor->SetPlotColor(m_ItemId, m_ColorRGB);
-  mafTagItem *t = m_Vme->GetTagArray()->GetTag("SIGNALS_COLOR");
+  if(mafTagItem *t = m_Vme->GetTagArray()->GetTag("SIGNALS_COLOR"))
+  {
 
-  long colorId = m_ItemId*3;
-  t->SetValue(m_ColorRGB[0], colorId);
-  t->SetValue(m_ColorRGB[1], colorId+1);
-  t->SetValue(m_ColorRGB[2], colorId+2);
+    long colorId = m_ItemId*3;
+    t->SetValue(m_ColorRGB[0], colorId);
+    t->SetValue(m_ColorRGB[1], colorId+1);
+    t->SetValue(m_ColorRGB[2], colorId+2);
+  }
   m_CheckBox->Update();
 }
 
@@ -556,16 +566,18 @@ mafGUI* medPipeGraph::CreateGui()
   m_Gui->Button(ID_DRAW,_("Plot"), "",_("Draw selected items"));
   m_Gui->Divider();
 
-  bool tagPresent = m_Vme->GetTagArray()->IsTagPresent("SIGNALS_NAME");
-  if (!tagPresent)
+  bool tagPresent = true;
+  mafTagItem *tag_Signals = m_Vme->GetTagArray()->GetTag("SIGNALS_NAME");
+  if (!tag_Signals)
   {
+    tagPresent = false;
     mafTagItem tag_Sig;
     tag_Sig.SetName("SIGNALS_NAME");
     tag_Sig.SetNumberOfComponents(m_NumberOfSignals);
     m_Vme->GetTagArray()->SetTag(tag_Sig);
+    tag_Signals = m_Vme->GetTagArray()->GetTag("SIGNALS_NAME");
   }
 
-  mafTagItem *tag_Signals = m_Vme->GetTagArray()->GetTag("SIGNALS_NAME");
   for (int n = 0; n < m_NumberOfSignals; n++)
   {
     if (tagPresent)

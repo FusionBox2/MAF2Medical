@@ -123,12 +123,11 @@ void medOpVolumeMeasure::OpRun()
 	m_Gui->Button(ID_CLOSE_OP,_("Close"));
 
   mafVME *root = (mafVME *)m_Input->GetRoot();
-  if(root->GetTagArray()->IsTagPresent("VOLUME_MEASURE"))
+  if(mafTagItem *measure_item = root->GetTagArray()->GetTag("VOLUME_MEASURE"))
   {
-    mafTagItem *measure_item = root->GetTagArray()->GetTag("VOLUME_MEASURE");
     int c = measure_item->GetNumberOfComponents();
     for(int i = 0; i < c; i++)
-      m_MeasureList->Append(measure_item->GetValue(i));
+      m_MeasureList->Append(measure_item->GetValue(i).GetCStr());
   }
   
   if(m_MeasureList->GetCount() == 0)
@@ -224,7 +223,7 @@ void medOpVolumeMeasure::OpStop(int result)
     for(int i = 0; i < c; i++)
       measure_item.SetComponent(m_MeasureList->GetString(i).c_str(),i);
     mafVME *root = (mafVME *)m_Input->GetRoot();
-    if(root->GetTagArray()->IsTagPresent("VOLUME_MEASURE"))
+    if(root->GetTagArray()->GetTag("VOLUME_MEASURE"))
       root->GetTagArray()->DeleteTag("VOLUME_MEASURE");
     root->GetTagArray()->SetTag(measure_item);
     mafEventMacro(mafEvent(this,VME_MODIFIED,root));

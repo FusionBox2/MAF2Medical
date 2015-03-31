@@ -2733,32 +2733,18 @@ void medOpImporterDicomOffis::ReadDicom()
 
 	//modified by STEFY 9-7-2003(begin)
 	ImportDicomTags();
-	mafTagItem *patient_name;
-	mafTagItem *patient_id;
 
-	const char* p_name;
-	double p_id = 0;
-
-	bool PatientsNameTagIsPresent = false;
-	PatientsNameTagIsPresent = m_TagArray->IsTagPresent("PatientsName");
-	if (PatientsNameTagIsPresent)
+	if (mafTagItem *patient_name = patient_name = m_TagArray->GetTag("PatientsName"))
 	{
-		patient_name = m_TagArray->GetTag("PatientsName");
-		p_name = patient_name->GetValue();
+    if(patient_name->GetNumberOfComponents() > 0)
+      m_PatientName = patient_name->GetValue();
 	}
-	else 
-		p_name = NULL;
 
-	bool PatientIDTagIsPresent = false;
-	PatientIDTagIsPresent = m_TagArray->IsTagPresent("PatientID");
-	if (PatientIDTagIsPresent)
+  if (mafTagItem *patient_id = m_TagArray->GetTag("PatientID"))
 	{
-		patient_id = m_TagArray->GetTag("PatientID");
-		p_id = patient_id->GetValueAsDouble();
+    double p_id = patient_id->GetValueAsDouble();
 		m_Identifier = mafString(p_id);
 	}
-	if (p_name)
-		m_PatientName = p_name;
 
 	int tmp = m_PatientName.FindChr('^');
 	if(tmp != -1 && tmp >= 0 && tmp < m_PatientName.GetSize())

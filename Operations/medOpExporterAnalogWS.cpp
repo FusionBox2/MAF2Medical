@@ -103,7 +103,7 @@ void medOpExporterAnalogWS::Write()
   
   m_Analog = medVMEAnalog::SafeDownCast(m_Input);
   mafTagItem *tag_sig = m_Analog->GetTagArray()->GetTag("SIGNALS_NAME");
-  int n_sig = tag_sig->GetComponents()->size();
+  int n_sig = (tag_sig) ? tag_sig->GetNumberOfComponents() : 0;
 
   mafString empty("");
 
@@ -118,7 +118,8 @@ void medOpExporterAnalogWS::Write()
 
     //Add the third line containing the signal names
     f_Out << "FRAME,";
-    f_Out << tag_sig->GetValue(0);
+    if(n_sig > 0)
+      f_Out << tag_sig->GetValue(0);
     for (int i=1;i<n_sig;i++)
     {
       if (!empty.Equals(tag_sig->GetValue(i)))

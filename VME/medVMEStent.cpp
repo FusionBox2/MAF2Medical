@@ -1301,17 +1301,17 @@ mafNode* medVMEStent::FindTaggedCenterLineVME(mafNode* inputNode)
   mafNode* parentNode = inputNode->GetParent() ;
 
   // search tree for tagged item
-  if (parentNode->GetTagArray()->IsTagPresent("RT3S_CENTER_LINE"))
+  if (parentNode->GetTagArray()->GetTag("RT3S_CENTER_LINE"))
     return parentNode ;
 
   for (int i = 0 ;  i < parentNode->GetNumberOfChildren() ;  i++){
     mafNode* childNode = parentNode->GetChild(i) ;
-    if (childNode->GetTagArray()->IsTagPresent("RT3S_CENTER_LINE"))
+    if (childNode->GetTagArray()->GetTag("RT3S_CENTER_LINE"))
       return childNode ;
 
     for (int j = 0 ;  j < childNode->GetNumberOfChildren() ;  j++){
       mafNode* grandChildNode = childNode->GetChild(j) ;
-      if (grandChildNode->GetTagArray()->IsTagPresent("RT3S_CENTER_LINE"))
+      if (grandChildNode->GetTagArray()->GetTag("RT3S_CENTER_LINE"))
         return grandChildNode ;
     }
   }
@@ -1330,17 +1330,17 @@ mafNode* medVMEStent::FindTaggedVesselVME(mafNode* inputNode)
   mafNode* parentNode = inputNode->GetParent() ;
 
   // search tree for tagged item
-  if (parentNode->GetTagArray()->IsTagPresent("RT3S_VESSEL"))
+  if (parentNode->GetTagArray()->GetTag("RT3S_VESSEL"))
     return parentNode ;
 
   for (int i = 0 ;  i < parentNode->GetNumberOfChildren() ;  i++){
     mafNode* childNode = parentNode->GetChild(i) ;
-    if (childNode->GetTagArray()->IsTagPresent("RT3S_VESSEL"))
+    if (childNode->GetTagArray()->GetTag("RT3S_VESSEL"))
       return childNode ;
 
     for (int j = 0 ;  j < childNode->GetNumberOfChildren() ;  j++){
       mafNode* grandChildNode = childNode->GetChild(j) ;
-      if (grandChildNode->GetTagArray()->IsTagPresent("RT3S_VESSEL"))
+      if (grandChildNode->GetTagArray()->GetTag("RT3S_VESSEL"))
         return grandChildNode ;
     }
   }
@@ -1380,7 +1380,7 @@ mafNode* medVMEStent::FindOrSelectCenterLineVME(mafNode* inputNode)
   if (node != NULL){
     mafLogMessage("Adding tag to centerline vme...\n") ;
     mafVME* vme = mafVME::SafeDownCast(node) ;
-    vme->GetTagArray()->SetTag("RT3S_CENTER_LINE","Polyline");
+    vme->GetTagArray()->SetTag(mafTagItem("RT3S_CENTER_LINE","Polyline"));
   }
 
   if (node == NULL){
@@ -1423,7 +1423,7 @@ mafNode* medVMEStent::FindOrSelectVesselVME(mafNode* inputNode)
   if (node != NULL){
     mafLogMessage("Adding tag to vessel vme...\n") ;
     mafVME* vme = mafVME::SafeDownCast(node) ;
-    vme->GetTagArray()->SetTag("RT3S_VESSEL","Surface");
+    vme->GetTagArray()->SetTag(mafTagItem("RT3S_VESSEL","Surface"));
   }
 
   if (node == NULL){
