@@ -97,7 +97,7 @@ enum AXIS_ID
 };
 
 //----------------------------------------------------------------------------
-medViewSlicer::medViewSlicer(wxString label, bool show_ruler)
+medViewSlicer::medViewSlicer(const mafString& label, bool show_ruler)
 : medViewCompoundWindowing(label, 1, 2)
 //----------------------------------------------------------------------------
 {
@@ -265,7 +265,7 @@ void medViewSlicer::OnEventThis(mafEventBase *maf_event)
 		{
 			mafEvent helpEvent;
 			helpEvent.SetSender(this);
-			mafString viewLabel = this->m_Label;
+			mafString viewLabel = GetLabel();
 			helpEvent.SetString(&viewLabel);
 			helpEvent.SetId(OPEN_HELP_PAGE);
 			mafEventMacro(helpEvent);
@@ -298,7 +298,7 @@ mafView *medViewSlicer::Copy(mafBaseEventHandler *Listener, bool lightCopyEnable
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  medViewSlicer *v = new medViewSlicer(m_Label);
+  medViewSlicer *v = new medViewSlicer(GetLabel());
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)

@@ -49,7 +49,7 @@
 #include "vtkCamera.h"
 
 //----------------------------------------------------------------------------
-medViewCompoundWindowing::medViewCompoundWindowing( wxString label, int num_row, int num_col)
+medViewCompoundWindowing::medViewCompoundWindowing(const mafString& label, int num_row, int num_col)
 : mafViewCompound(label,num_row,num_col)
 //----------------------------------------------------------------------------
 {

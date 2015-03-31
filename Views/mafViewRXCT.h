@@ -46,7 +46,7 @@ class MED_VIEWS_EXPORT mafViewRXCT : public mafViewCompound
 {
 public:
   /** constructor */
-  mafViewRXCT(wxString label = "View RXCT Rotated Volumes Debugger");
+  mafViewRXCT(const mafString& label = "View RXCT Rotated Volumes Debugger");
   /** destructor*/
   virtual ~mafViewRXCT(); 
   

@@ -65,7 +65,7 @@ mafCxxTypeMacro(mafViewGlobalSliceCompound);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-mafViewGlobalSliceCompound::mafViewGlobalSliceCompound( wxString label, int num_row, int num_col)
+mafViewGlobalSliceCompound::mafViewGlobalSliceCompound(const mafString& label, int num_row, int num_col)
 : medViewCompoundWindowing(label,num_row,num_col)
 //----------------------------------------------------------------------------
 {
@@ -86,7 +86,7 @@ mafView *mafViewGlobalSliceCompound::Copy(mafBaseEventHandler *Listener, bool li
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafViewGlobalSliceCompound *v = new mafViewGlobalSliceCompound(m_Label, m_ViewRowNum, m_ViewColNum);
+  mafViewGlobalSliceCompound *v = new mafViewGlobalSliceCompound(GetLabel(), m_ViewRowNum, m_ViewColNum);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
@@ -152,7 +152,7 @@ void mafViewGlobalSliceCompound::OnEvent(mafEventBase *maf_event)
 			{
 				mafEvent helpEvent;
 				helpEvent.SetSender(this);
-				mafString viewLabel = this->m_Label;
+				mafString viewLabel = GetLabel();
 				helpEvent.SetString(&viewLabel);
 				helpEvent.SetId(OPEN_HELP_PAGE);
 				mafEventMacro(helpEvent);

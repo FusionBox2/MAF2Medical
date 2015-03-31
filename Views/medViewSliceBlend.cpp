@@ -68,7 +68,7 @@ mafCxxTypeMacro(medViewSliceBlend);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medViewSliceBlend::medViewSliceBlend(wxString label, int camera_position, bool show_axes, bool show_grid, bool show_ruler, int stereo)
+medViewSliceBlend::medViewSliceBlend(const mafString& label, int camera_position, bool show_axes, bool show_grid, bool show_ruler, int stereo)
 :mafViewVTK(label,camera_position,show_axes,show_grid, show_ruler, stereo)
 //----------------------------------------------------------------------------
 {
@@ -98,7 +98,7 @@ medViewSliceBlend::~medViewSliceBlend()
 mafView *medViewSliceBlend::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled /* = false */)
 //----------------------------------------------------------------------------
 {
-  medViewSliceBlend *v = new medViewSliceBlend(m_Label, m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType);
+  medViewSliceBlend *v = new medViewSliceBlend(GetLabel(), m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   v->m_PipeMap = m_PipeMap;
@@ -533,7 +533,7 @@ void medViewSliceBlend::Print(std::ostream& os, const int tabs)// const
   mafIndent indent(tabs);
 
   os << indent << "medViewSliceBlend" << '\t' << this << std::endl;
-  os << indent << "Name" << '\t' << m_Label << std::endl;
+  os << indent << "Name" << '\t' << GetLabel() << std::endl;
   os << std::endl;
   m_Sg->Print(os,1);
 }

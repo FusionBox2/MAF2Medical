@@ -60,7 +60,7 @@ mafCxxTypeMacro(mafViewSingleSliceCompound);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-mafViewSingleSliceCompound::mafViewSingleSliceCompound( wxString label, int num_row, int num_col)
+mafViewSingleSliceCompound::mafViewSingleSliceCompound(const mafString& label, int num_row, int num_col)
 : medViewCompoundWindowing(label,num_row,num_col)
 //----------------------------------------------------------------------------
 {
@@ -81,7 +81,7 @@ mafView *mafViewSingleSliceCompound::Copy(mafBaseEventHandler *Listener, bool li
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafViewSingleSliceCompound *v = new mafViewSingleSliceCompound(m_Label, m_ViewRowNum, m_ViewColNum);
+  mafViewSingleSliceCompound *v = new mafViewSingleSliceCompound(GetLabel(), m_ViewRowNum, m_ViewColNum);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)

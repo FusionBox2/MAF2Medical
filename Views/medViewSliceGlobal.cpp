@@ -73,7 +73,7 @@ enum TEXT_MODE
 };
 
 //----------------------------------------------------------------------------
-medViewSliceGlobal::medViewSliceGlobal(wxString label /* =  */, int camera_position /* = CAMERA_CT */, bool show_axes /* = false */, bool show_grid /* = false */, bool show_ruler /* = false */, int stereo /* = 0 */,bool showTICKs/* =false */,bool textureInterpolate/* =true */)
+medViewSliceGlobal::medViewSliceGlobal(const mafString& label /* =  */, int camera_position /* = CAMERA_CT */, bool show_axes /* = false */, bool show_grid /* = false */, bool show_ruler /* = false */, int stereo /* = 0 */,bool showTICKs/* =false */,bool textureInterpolate/* =true */)
 :mafViewSlice(label,camera_position,show_axes,show_grid, show_ruler, stereo,showTICKs,textureInterpolate)
 //----------------------------------------------------------------------------
 {
@@ -124,7 +124,7 @@ mafView *medViewSliceGlobal::Copy(mafBaseEventHandler *Listener, bool lightCopyE
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  medViewSliceGlobal *v = new medViewSliceGlobal(m_Label, m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType,m_ShowVolumeTICKs,m_TextureInterpolate);
+  medViewSliceGlobal *v = new medViewSliceGlobal(GetLabel(), m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType,m_ShowVolumeTICKs,m_TextureInterpolate);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   v->m_PipeMap = m_PipeMap;
@@ -578,7 +578,7 @@ void medViewSliceGlobal::Print(std::ostream& os, const int tabs)// const
   mafIndent indent(tabs);
 
   os << indent << "medViewSliceGlobal" << '\t' << this << std::endl;
-  os << indent << "Name" << '\t' << m_Label << std::endl;
+  os << indent << "Name" << '\t' << GetLabel() << std::endl;
   os << std::endl;
   m_Sg->Print(os,1);
 }

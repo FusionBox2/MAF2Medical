@@ -39,7 +39,7 @@ class MED_VIEWS_EXPORT mafViewCT : public mafViewCompound
 {
 public:
   /** constructor */
-	mafViewCT(wxString label = "View CT");
+	mafViewCT(const mafString& label = "View CT");
   /** destructor */
 	virtual ~mafViewCT();
   /** RTTI macro */

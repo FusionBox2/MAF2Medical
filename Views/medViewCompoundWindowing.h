@@ -44,7 +44,7 @@ class MED_VIEWS_EXPORT medViewCompoundWindowing: public mafViewCompound
 {
 public:
   /** constructor */
-  medViewCompoundWindowing(wxString label = "View Compound with Windowing", int num_row = 1, int num_col = 1);
+  medViewCompoundWindowing(const mafString& label = "View Compound with Windowing", int num_row = 1, int num_col = 1);
   /** destructor. */
   virtual ~medViewCompoundWindowing(); 
 

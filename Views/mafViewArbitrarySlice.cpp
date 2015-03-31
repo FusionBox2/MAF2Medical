@@ -99,7 +99,7 @@ enum AXIS_ID
 };
 
 //----------------------------------------------------------------------------
-mafViewArbitrarySlice::mafViewArbitrarySlice(wxString label, bool show_ruler)
+mafViewArbitrarySlice::mafViewArbitrarySlice(const mafString& label, bool show_ruler)
 	: medViewCompoundWindowing(label, 1, 2)
 	//----------------------------------------------------------------------------
 {
@@ -661,7 +661,7 @@ void mafViewArbitrarySlice::OnEventThis(mafEventBase *maf_event)
 			{
 				mafEvent helpEvent;
 				helpEvent.SetSender(this);
-				mafString viewLabel = this->m_Label;
+				mafString viewLabel = GetLabel();
 				helpEvent.SetString(&viewLabel);
 				helpEvent.SetId(OPEN_HELP_PAGE);
 				mafEventMacro(helpEvent);
@@ -781,7 +781,7 @@ mafView *mafViewArbitrarySlice::Copy(mafBaseEventHandler *Listener, bool lightCo
 //----------------------------------------------------------------------------
 {
 	m_LightCopyEnabled = lightCopyEnabled;
-	mafViewArbitrarySlice *v = new mafViewArbitrarySlice(m_Label);
+	mafViewArbitrarySlice *v = new mafViewArbitrarySlice(GetLabel());
 	v->SetListener(Listener);
 	v->m_Id = m_Id;
 	for (int i=0;i<m_PluggedChildViewList.size();i++)

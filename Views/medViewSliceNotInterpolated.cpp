@@ -33,7 +33,7 @@
 mafCxxTypeMacro(medViewSliceNotInterpolated);
 
 //----------------------------------------------------------------------------
-medViewSliceNotInterpolated::medViewSliceNotInterpolated(wxString label /* = "View Slice not interpolated" */, bool show_ruler /* = false */)
+medViewSliceNotInterpolated::medViewSliceNotInterpolated(const mafString& label /* = "View Slice not interpolated" */, bool show_ruler /* = false */)
 :mafViewVTK(label,CAMERA_OS_Z)
 //----------------------------------------------------------------------------
 {
@@ -65,7 +65,7 @@ mafView *medViewSliceNotInterpolated::Copy(mafBaseEventHandler *Listener, bool l
 {
   // Copy the view and sub-views attributes
   m_LightCopyEnabled = lightCopyEnabled;
-  medViewSliceNotInterpolated *v = new medViewSliceNotInterpolated(m_Label);
+  medViewSliceNotInterpolated *v = new medViewSliceNotInterpolated(GetLabel());
  SetListener(Listener);
   v->m_Id = m_Id;
   v->PlugVisualPipe("mafVMEVolumeGray", "medPipeVolumeSliceNotInterpolated");

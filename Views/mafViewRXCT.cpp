@@ -66,7 +66,7 @@ mafCxxTypeMacro(mafViewRXCT);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-mafViewRXCT::mafViewRXCT(wxString label)
+mafViewRXCT::mafViewRXCT(const mafString& label)
 : mafViewCompound(label, 1, 3)
 //----------------------------------------------------------------------------
 {
@@ -126,7 +126,7 @@ mafView *mafViewRXCT::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafViewRXCT *v = new mafViewRXCT(m_Label);
+  mafViewRXCT *v = new mafViewRXCT(GetLabel());
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
@@ -611,7 +611,7 @@ void mafViewRXCT::OnEvent(mafEventBase *maf_event)
 	  {
 		mafEvent helpEvent;
 		helpEvent.SetSender(this);
-		mafString viewLabel = this->m_Label;
+		mafString viewLabel = GetLabel();
 		helpEvent.SetString(&viewLabel);
 		helpEvent.SetId(OPEN_HELP_PAGE);
 		mafEventMacro(helpEvent);

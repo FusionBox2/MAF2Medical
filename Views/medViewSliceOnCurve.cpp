@@ -162,7 +162,7 @@ mafView *medViewSliceOnCurve::Copy(mafBaseEventHandler *Listener, bool lightCopy
 {  
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSliceOnCurve *v = this->NewInstance(); 
-  v->m_Label = m_Label;
+  v->SetLabel(GetLabel());
   v->SetListener(Listener);
   v->m_Id = m_Id;
 

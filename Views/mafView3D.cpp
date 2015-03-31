@@ -63,7 +63,7 @@ mafCxxTypeMacro(mafView3D);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-mafView3D::mafView3D(wxString label, int camera_position, bool show_axes, bool show_grid, bool show_ruler, int stereo)
+mafView3D::mafView3D(const mafString& label, int camera_position, bool show_axes, bool show_grid, bool show_ruler, int stereo)
 :mafViewVTK(label,camera_position,show_axes,show_grid,show_ruler,stereo)
 //----------------------------------------------------------------------------
 {
@@ -86,7 +86,7 @@ mafView *mafView3D::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafView3D *v = new mafView3D(m_Label, m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType);
+  mafView3D *v = new mafView3D(GetLabel(), m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   v->m_PipeMap = m_PipeMap;

@@ -42,7 +42,7 @@ initialize the visual pipe according to the camera position that is passed throu
 class MED_VIEWS_EXPORT mafViewImage: public mafViewVTK
 {
 public:
-  mafViewImage(wxString label = "Image", int camera_position = CAMERA_FRONT, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0);
+  mafViewImage(const mafString& label = "Image", int camera_position = CAMERA_FRONT, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0);
   virtual ~mafViewImage(); 
 
   mafTypeMacro(mafViewImage, mafViewVTK);

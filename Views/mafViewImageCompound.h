@@ -44,7 +44,7 @@ class MED_VIEWS_EXPORT mafViewImageCompound: public mafViewCompound
 {
 public:
   /** constructor. */
-  mafViewImageCompound(wxString label = "View Single Slice Compound", int num_row = 1, int num_col = 1);
+  mafViewImageCompound(const mafString& label = "View Single Slice Compound", int num_row = 1, int num_col = 1);
   /** destructor. */
   virtual ~mafViewImageCompound(); 
 

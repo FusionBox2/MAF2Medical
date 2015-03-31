@@ -32,7 +32,7 @@
 mafCxxTypeMacro(medViewSliceNotInterpolatedCompound);
 
 //----------------------------------------------------------------------------
-medViewSliceNotInterpolatedCompound::medViewSliceNotInterpolatedCompound(wxString label /* = "View Slice not interpolated" */, bool show_ruler /* = false */)
+medViewSliceNotInterpolatedCompound::medViewSliceNotInterpolatedCompound(const mafString& label /* = "View Slice not interpolated" */, bool show_ruler /* = false */)
 :medViewCompoundWindowing(label,1,1)
 //----------------------------------------------------------------------------
 {
@@ -64,7 +64,7 @@ mafView *medViewSliceNotInterpolatedCompound::Copy(mafBaseEventHandler *Listener
 {
   // Copy the view and sub-views attributes
   m_LightCopyEnabled = lightCopyEnabled;
-  medViewSliceNotInterpolatedCompound *v = new medViewSliceNotInterpolatedCompound(m_Label);
+  medViewSliceNotInterpolatedCompound *v = new medViewSliceNotInterpolatedCompound(GetLabel());
   SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)

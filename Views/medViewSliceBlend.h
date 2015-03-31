@@ -42,7 +42,7 @@ medViewSliceBlend is a View that visualize two volume slice.
 class medViewSliceBlend: public mafViewVTK
 {
 public:
-	medViewSliceBlend(wxString label = "Slice Blend", int camera_position = CAMERA_OS_Z	, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0);
+	medViewSliceBlend(const mafString&  label = "Slice Blend", int camera_position = CAMERA_OS_Z	, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0);
 	virtual ~medViewSliceBlend(); 
 
 	mafTypeMacro(medViewSliceBlend, mafViewVTK);

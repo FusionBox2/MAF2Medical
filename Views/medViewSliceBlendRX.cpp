@@ -61,7 +61,7 @@ mafCxxTypeMacro(medViewSliceBlendRX);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medViewSliceBlendRX::medViewSliceBlendRX(wxString label)
+medViewSliceBlendRX::medViewSliceBlendRX(const mafString&  label)
 : mafViewCompound(label, 1, 2)
 //----------------------------------------------------------------------------
 {
@@ -92,7 +92,7 @@ mafView *medViewSliceBlendRX::Copy(mafBaseEventHandler *Listener, bool lightCopy
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  medViewSliceBlendRX *v = new medViewSliceBlendRX(m_Label);
+  medViewSliceBlendRX *v = new medViewSliceBlendRX(GetLabel());
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)

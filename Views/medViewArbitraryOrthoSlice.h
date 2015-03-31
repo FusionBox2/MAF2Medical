@@ -124,7 +124,7 @@ class MED_VIEWS_EXPORT medViewArbitraryOrthoSlice: public medViewCompoundWindowi
 	*/
 public:
 	/** constructor*/
-	medViewArbitraryOrthoSlice(wxString label = "View Arbitrary OrthoSlice with Windowing", bool show_ruler = false);
+	medViewArbitraryOrthoSlice(const mafString& label = "View Arbitrary Slice with Windowing", bool show_ruler = false);
 
 	/** destructor*/
 	virtual ~medViewArbitraryOrthoSlice(); 

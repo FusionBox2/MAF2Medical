@@ -64,7 +64,7 @@ mafCxxTypeMacro(mafViewOrthoSlice);
 
 
 //----------------------------------------------------------------------------
-mafViewOrthoSlice::mafViewOrthoSlice(wxString label)
+mafViewOrthoSlice::mafViewOrthoSlice(const mafString& label)
 : mafViewCompound(label, 2, 2)
 //----------------------------------------------------------------------------
 {
@@ -108,7 +108,7 @@ mafView *mafViewOrthoSlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEn
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafViewOrthoSlice *v = new mafViewOrthoSlice(m_Label);
+  mafViewOrthoSlice *v = new mafViewOrthoSlice(GetLabel());
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)

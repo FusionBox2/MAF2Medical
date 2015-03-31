@@ -49,7 +49,7 @@ class MED_VIEWS_EXPORT medViewVTKCompound: public medViewCompoundWindowing
 {
 public:
   /** constructor. */
-  medViewVTKCompound(wxString label = "View Compound with Windowing", int num_row = 1, int num_col = 1);
+  medViewVTKCompound(const mafString& label = "View Compound with Windowing", int num_row = 1, int num_col = 1);
   /** destructor. */
   virtual ~medViewVTKCompound(); 
 

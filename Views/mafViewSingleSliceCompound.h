@@ -43,7 +43,7 @@ class MED_VIEWS_EXPORT mafViewSingleSliceCompound: public medViewCompoundWindowi
 {
 public:
   /** constructor */
-  mafViewSingleSliceCompound(wxString label = "View Single Slice Compound with Windowing", int num_row = 1, int num_col = 1);
+  mafViewSingleSliceCompound(const mafString& label = "View Single Slice Compound with Windowing", int num_row = 1, int num_col = 1);
   /** destructor. */
   virtual ~mafViewSingleSliceCompound(); 
 

@@ -131,7 +131,7 @@ enum AXIS_ID
 	Z_AXIS,
 };
 
-medViewArbitraryOrthoSlice::medViewArbitraryOrthoSlice(wxString label, bool show_ruler)
+medViewArbitraryOrthoSlice::medViewArbitraryOrthoSlice(const mafString& label, bool show_ruler)
 : medViewCompoundWindowing(label, 2, 2)
 
 {
@@ -1409,7 +1409,7 @@ void medViewArbitraryOrthoSlice::OnEventThis(mafEventBase *maf_event)
 mafView *medViewArbitraryOrthoSlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled)
 {
 	m_LightCopyEnabled = lightCopyEnabled;
-	medViewArbitraryOrthoSlice *v = new medViewArbitraryOrthoSlice(m_Label);
+	medViewArbitraryOrthoSlice *v = new medViewArbitraryOrthoSlice(GetLabel());
 	v->SetListener(Listener);
 	v->m_Id = m_Id;
 	for (int i=0;i<m_PluggedChildViewList.size();i++)

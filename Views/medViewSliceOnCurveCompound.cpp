@@ -71,7 +71,7 @@ mafCxxTypeMacro(medViewSliceOnCurveCompound);
 #include "mafMemDbg.h"
 
 //----------------------------------------------------------------------------
-medViewSliceOnCurveCompound::medViewSliceOnCurveCompound(wxString label) : medViewCompoundWindowing(label, 1, 3)
+medViewSliceOnCurveCompound::medViewSliceOnCurveCompound(const mafString& label) : medViewCompoundWindowing(label, 1, 3)
 //----------------------------------------------------------------------------
 {  
   m_LayoutConfiguration = medViewSliceOnCurveCompound::LAYOUT_MPS_VERT; 
@@ -141,7 +141,7 @@ mafView *medViewSliceOnCurveCompound::Copy(mafBaseEventHandler *Listener, bool l
 {
   m_LightCopyEnabled = lightCopyEnabled;
   medViewSliceOnCurveCompound *v = this->NewInstance(); 
-  v->m_Label = m_Label;
+  v->SetLabel(GetLabel());
   v->SetListener(Listener);
   v->m_Id = m_Id;
 

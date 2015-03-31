@@ -41,7 +41,7 @@ class MED_VIEWS_EXPORT mafViewGlobalSliceCompound: public medViewCompoundWindowi
 {
 public:
   /** constructor .*/
-  mafViewGlobalSliceCompound(wxString label = "View Global Slice Compound", int num_row = 1, int num_col = 1);
+  mafViewGlobalSliceCompound(const mafString& label = "View Global Slice Compound", int num_row = 1, int num_col = 1);
   /** destructor .*/
   virtual ~mafViewGlobalSliceCompound(); 
 

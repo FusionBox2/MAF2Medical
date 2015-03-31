@@ -67,7 +67,7 @@ mafCxxTypeMacro(medViewVTKCompound);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medViewVTKCompound::medViewVTKCompound( wxString label, int num_row, int num_col)
+medViewVTKCompound::medViewVTKCompound(const mafString& label, int num_row, int num_col)
 : medViewCompoundWindowing(label,num_row,num_col)
 //----------------------------------------------------------------------------
 {
@@ -86,7 +86,7 @@ mafView *medViewVTKCompound::Copy(mafBaseEventHandler *Listener, bool lightCopyE
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  medViewVTKCompound *v = new medViewVTKCompound(m_Label, m_ViewRowNum, m_ViewColNum);
+  medViewVTKCompound *v = new medViewVTKCompound(GetLabel(), m_ViewRowNum, m_ViewColNum);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)

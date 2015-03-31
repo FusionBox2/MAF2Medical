@@ -74,7 +74,7 @@ mafCxxTypeMacro(mafViewSlice);
 const int LAST_SLICE_ORIGIN_VALUE_NOT_INITIALIZED = 0;
 
 //----------------------------------------------------------------------------
-mafViewSlice::mafViewSlice(wxString label /* =  */, int camera_position /* = CAMERA_CT */, bool show_axes /* = false */, bool show_grid /* = false */, bool show_ruler /* = false */, int stereo /* = 0 */,bool showTICKs/* =false */,bool textureInterpolate/* =true */)
+mafViewSlice::mafViewSlice(const mafString& label /* =  */, int camera_position /* = CAMERA_CT */, bool show_axes /* = false */, bool show_grid /* = false */, bool show_ruler /* = false */, int stereo /* = 0 */,bool showTICKs/* =false */,bool textureInterpolate/* =true */)
 :mafViewVTK(label,camera_position,show_axes,show_grid, show_ruler, stereo)
 //----------------------------------------------------------------------------
 {
@@ -124,7 +124,7 @@ mafView *mafViewSlice::Copy(mafBaseEventHandler *Listener, bool lightCopyEnabled
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafViewSlice *v = new mafViewSlice(m_Label, m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType,m_ShowVolumeTICKs,m_TextureInterpolate);
+  mafViewSlice *v = new mafViewSlice(GetLabel(), m_CameraPositionId, m_ShowAxes,m_ShowGrid, m_ShowRuler, m_StereoType,m_ShowVolumeTICKs,m_TextureInterpolate);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   v->m_PipeMap = m_PipeMap;
@@ -944,7 +944,7 @@ void mafViewSlice::Print(std::ostream& os, const int tabs)// const
   mafIndent indent(tabs);
 
   os << indent << "mafViewSlice" << '\t' << this << std::endl;
-  os << indent << "Name" << '\t' << m_Label << std::endl;
+  os << indent << "Name" << '\t' << GetLabel() << std::endl;
   os << std::endl;
   m_Sg->Print(os,1);
 }

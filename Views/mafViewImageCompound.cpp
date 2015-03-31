@@ -60,7 +60,7 @@ mafCxxTypeMacro(mafViewImageCompound);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-mafViewImageCompound::mafViewImageCompound( wxString label, int num_row, int num_col)
+mafViewImageCompound::mafViewImageCompound(const mafString& label, int num_row, int num_col)
 : mafViewCompound(label,num_row,num_col)
 //----------------------------------------------------------------------------
 {
@@ -81,7 +81,7 @@ mafView *mafViewImageCompound::Copy(mafBaseEventHandler *Listener, bool lightCop
 //----------------------------------------------------------------------------
 {
   m_LightCopyEnabled = lightCopyEnabled;
-  mafViewImageCompound *v = new mafViewImageCompound(m_Label, m_ViewRowNum, m_ViewColNum);
+  mafViewImageCompound *v = new mafViewImageCompound(GetLabel(), m_ViewRowNum, m_ViewColNum);
   v->SetListener(Listener);
   v->m_Id = m_Id;
   for (int i=0;i<m_PluggedChildViewList.size();i++)
