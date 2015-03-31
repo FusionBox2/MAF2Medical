@@ -23,6 +23,7 @@
 //----------------------------------------------------------------------------
 #include "wx/listimpl.cpp"
 #include "wx/busyinfo.h"
+#include "wx/numdlg.h"
 
 #include "medOpMergeDicomSeries.h"
 #include "medGUIDicomSettings.h"
