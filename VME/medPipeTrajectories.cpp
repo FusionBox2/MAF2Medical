@@ -70,7 +70,7 @@ medPipeTrajectories::medPipeTrajectories()
   m_OutlineActor    = NULL;
   m_Caption         = NULL;
   m_Interval = 0;
-  m_Labels   = 1;
+  m_Labels   = 0;
 }
 //----------------------------------------------------------------------------
 void medPipeTrajectories::Create(mafNode *node, mafView *view)
