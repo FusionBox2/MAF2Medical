@@ -92,7 +92,7 @@ void medOpImporterLandmark::CreateGui()
 //----------------------------------------------------------------------------
 {
   m_Gui = new mafGUI(this);
-  wxString choices[2] =  {_("Space"),_("Comma")};
+  mafString choices[2] =  {_("Space"),_("Comma")};
   m_Gui->Radio(ID_TYPE_SEPARATION,"Separation",&m_TypeSeparation,2,choices,1,"");   
   m_Gui->Bool(ID_ENABLE_STRING,"Other chars",&m_EnableString,1);
   m_Gui->Divider();

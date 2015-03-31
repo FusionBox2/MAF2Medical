@@ -231,9 +231,9 @@ medPipeWrappedMeter::~medPipeWrappedMeter()
 mafGUI *medPipeWrappedMeter::CreateGui()
 //----------------------------------------------------------------------------
 {
-  const wxString type_measure_string[] = {"absolute", "relative"};
-  const wxString representation_string[] = {"line", "tube"};
-  const wxString color_string[] = {"one", "range"};
+  const mafString type_measure_string[] = {"absolute", "relative"};
+  const mafString representation_string[] = {"line", "tube"};
+  const mafString color_string[] = {"one", "range"};
   int num_choices = 2;
 
   mmaMeter *meter_attrib = m_WrappedMeterVME->GetMeterAttributes();

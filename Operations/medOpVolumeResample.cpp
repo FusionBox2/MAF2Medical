@@ -687,7 +687,7 @@ void medOpVolumeResample::CreateGui()
 	m_Gui->Label("");
 
   m_Gui->Label("ROI Orientation",true);
-	wxString chooses_gizmo[3];
+	mafString chooses_gizmo[3];
 	chooses_gizmo[0]="Translate Origin";
 	chooses_gizmo[1]="Rotate Volume";
 	m_Gui->Combo(ID_CHOOSE_GIZMO,"",&m_GizmoChoose,2,chooses_gizmo);

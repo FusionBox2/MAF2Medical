@@ -1437,10 +1437,10 @@ void medOpSegmentation::CreateSliceNavigationGui()
   // SLICE PLANES
   //////////////////////////////////////////////////////////////////////////
 
-  wxString planes[3];
-  planes[0] = wxString("YZ");
-  planes[1] = wxString("XZ");
-  planes[2] = wxString("XY");
+  mafString planes[3];
+  planes[0] = mafString("XY");
+  planes[1] = mafString("XZ");
+  planes[2] = mafString("YZ");
 
   m_GuiDialog->Combo(ID_SLICE_PLANE, "Slice Plane", &m_CurrentSlicePlane, 3, planes)->SetSelection(m_CurrentSlicePlane);
 
@@ -1499,11 +1499,11 @@ void medOpSegmentation::CreateAutoSegmentationGui()
   mafGUI *currentGui = new mafGUI(this);
 
   currentGui->Label(_("Threshold"),true);
-  std::vector<const char*> increaseLabels;
+  std::vector<mafString> increaseLabels;
   increaseLabels.push_back("+");
   increaseLabels.push_back("+");
   increaseLabels.push_back("+");
-  std::vector<const char*> decreaseLabels;
+  std::vector<mafString> decreaseLabels;
   decreaseLabels.push_back("-");
   decreaseLabels.push_back("-");
   decreaseLabels.push_back("-");
@@ -1539,7 +1539,7 @@ void medOpSegmentation::CreateAutoSegmentationGui()
 
   //end Threshold
 
-  wxString choices[2] = {_("Global"),_("Range")};
+  mafString choices[2] = {_("Global"),_("Range")};
   currentGui->Label("");
   currentGui->Label(_("Threshold type:"),true);
   currentGui->Radio(ID_AUTOMATIC_GLOBAL_THRESHOLD,"",&m_AutomaticGlobalThreshold,2,choices);
@@ -1606,8 +1606,8 @@ void medOpSegmentation::CreateManualSegmentationGui()
   mafGUI *currentGui = new mafGUI(this);
 
   wxString tools[2];
-  tools[0] = wxString("brush");
-  tools[1] = wxString("bucket");
+  tools[0] = mafString("brush");
+  tools[1] = mafString("bucket");
   int w_id = currentGui->GetWidgetId(ID_MANUAL_TOOLS);
 
   wxBoxSizer *manualToolsSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -1746,7 +1746,7 @@ void medOpSegmentation::CreateRefinementGui()
 
   // Action: remove islands OR fill holes.
   m_RefinementSegmentationAction = ID_REFINEMENT_ISLANDS_REMOVE;
-  wxString operations[2];
+  mafString operations[2];
   operations[ID_REFINEMENT_ISLANDS_REMOVE] = wxString("Remove Islands");
   operations[ID_REFINEMENT_HOLES_FILL] = wxString("Fill Holes");
 

@@ -104,7 +104,7 @@ void medGUIDicomSettings::CreateGui()
   m_Gui->Bool(ID_PERCENTAGE_DISTANCE_TOLERANCE,_("Percentage distance tolerance"),&m_PercentageTolerance,1);
   m_Gui->Double(ID_PERCENTAGE_TOLERANCE,_("Value"),&m_PercentageDistanceTolerance,0,MAXDOUBLE,2,"Value in percentage");
 
-  wxString DCM_IMGchoices[2]={_("Skip All"),_("Set Default position")};
+  mafString DCM_IMGchoices[2]={_("Skip All"),_("Set Default position")};
   m_Gui->Label("Dicom image position patient exception handling");
   m_Gui->Combo(ID_DCM_POSITION_PATIENT_CHOICE,_("        "),&m_DCM_ImagePositionPatientchoice,2,DCM_IMGchoices);
 
@@ -113,7 +113,7 @@ void medGUIDicomSettings::CreateGui()
   m_Gui->Divider();
   
   m_Gui->Bool(ID_AUTO_VME_TYPE,_("Auto VME Type"),&m_AutoVMEType,1);
-  wxString typeArray[3] = {_("Volume"),_("Mesh"),_("Image")};
+  mafString typeArray[3] = {_("Volume"),_("Mesh"),_("Image")};
   m_Gui->Radio(ID_SETTING_VME_TYPE, "VME output", &m_OutputType, 3, typeArray, 1, ""/*, wxRA_SPECIFY_ROWS*/);
 
   m_Gui->Divider();
@@ -127,7 +127,7 @@ void medGUIDicomSettings::CreateGui()
   m_Gui->Divider(1);
   m_Gui->Divider();
 
-	wxString choices[4]={_("1x"),_("2x"),_("3x"),_("4x")};
+	mafString choices[4]={_("1x"),_("2x"),_("3x"),_("4x")};
 	m_Gui->Combo(ID_STEP,_("Build Step"),&m_Step,4,choices);
 	m_DicomModalityListBox=m_Gui->CheckList(ID_TYPE_DICOM,_("Modality"));
 	m_DicomModalityListBox->AddItem(ID_CT_MODALITY,_("CT"),m_CheckOnOff[0] != 0);
@@ -141,7 +141,7 @@ void medGUIDicomSettings::CreateGui()
 	m_Gui->Divider(1);
 
 
-  wxString outputNameTypeChoices[3] = {_("Traditional format"),_("Format : 'description_numslices'"),_("Custom")};
+  mafString outputNameTypeChoices[3] = {_("Traditional format"),_("Format : 'description_numslices'"),_("Custom")};
   m_Gui->Radio(ID_OUTPUT_NAME,_("Output name"),&m_OutputNameType,3,outputNameTypeChoices);
   m_NameCompositorList = m_Gui->CheckList(ID_NAME_COMPOSITOR,"");
  // m_NameCompositorList->AddItem(ID_SERIES,_("Series"),m_CheckNameCompositor[ID_SERIES]);

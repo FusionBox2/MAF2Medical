@@ -165,7 +165,7 @@ mafGUI* medVMEStent::CreateGui()
   {
     m_Gui->Label("Stent");
 
-    //wxString stentType[3] = {"normal", "ABBott","Bard"};
+    //mafString stentType[3] = {"normal", "ABBott","Bard"};
     //m_Gui->Combo(CHANGE_STENT_TYPE, "Type", &m_Id_Stent_Type, 3, stentType);
 
 
@@ -176,19 +176,19 @@ mafGUI* medVMEStent::CreateGui()
     //m_Gui->Double(CHANGED_STENT_PARAM,_("Thickness"), &m_Strut_Thickness,0,10,-1,_("strut thickness (mm)"));
 
     m_Gui->Divider(2);
-    wxString stentConfiguration[2] = {"in phase", "out of phase"};
+    mafString stentConfiguration[2] = {"in phase", "out of phase"};
     m_Gui->Combo(CHANGED_STENT_PARAM, "Config.", &m_Id_Stent_Configuration, 2, stentConfiguration);
 
     m_Gui->Divider(2);   
     m_Gui->Label("Link");
-    wxString linkConnection[4] = {"peak-to-valley", "valley-to-peak", "peak-to-peak", "valley-to-valley"};
+    mafString linkConnection[4] = {"peak-to-valley", "valley-to-peak", "peak-to-peak", "valley-to-valley"};
     m_Gui->Combo(CHANGED_STENT_PARAM, "Connection", &m_Id_Link_Connection, 4, linkConnection);
     m_Gui->Double(CHANGED_STENT_PARAM,_("Length"), &m_Link_Length, 0, 10000,-1,_("Link length(longitudinal direction (mm))"));
-    wxString linkAlignment[3] = {"+0", "+1","+2"};
+    mafString linkAlignment[3] = {"+0", "+1","+2"};
     m_Gui->Combo(CHANGED_STENT_PARAM, "alignment", &m_Link_Alignment, 3, linkAlignment);
 
     m_Gui->Divider(2);
-    wxString linkOrientation[3] = {"+0", "+1","-1"};
+    mafString linkOrientation[3] = {"+0", "+1","-1"};
     m_Gui->Combo(CHANGED_STENT_PARAM, "Orientation", &m_Link_Orientation, 3, linkOrientation);	  
 
     m_Gui->Divider(2);

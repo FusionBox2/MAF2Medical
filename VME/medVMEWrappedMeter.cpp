@@ -2080,7 +2080,7 @@ mafGUI* medVMEWrappedMeter::CreateGui()
   int num_mode = 3;
 	int num_wrap = 3;
 //	const wxString mode_choices_string[] = {_("point distance"), _("line distance"), _("line angle")};;
-  const wxString wrap_choices_string[] = {_("manual"), _("automated"), _("IOR_automated")};
+  const mafString wrap_choices_string[] = {_("manual"), _("automated"), _("IOR_automated")};
 
   m_Gui = mafNode::CreateGui(); // Called to show info about vmes' type and name
   m_Gui->SetListener(this);

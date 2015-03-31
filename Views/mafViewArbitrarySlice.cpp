@@ -812,7 +812,7 @@ mafGUI* mafViewArbitrarySlice::CreateGui()
 	//combo box to choose the type of gizmo
 	m_Gui->Label("");
 	m_Gui->Label("Choose Gizmo");
-	wxString Text[2]={_("Gizmo Translation"),_("Gizmo Rotation")};
+	mafString Text[2]={_("Gizmo Translation"),_("Gizmo Rotation")};
 	m_Gui->Combo(ID_COMBO_GIZMOS,"",&m_TypeGizmo,2,Text);
 
 	m_Gui->Label("");

@@ -175,7 +175,7 @@ void medOpMakeVMETimevarying::CreateGui()
 
   //------Add VME panel------//
   m_Gui->Label(&m_CurrentVMEName,true);
-  wxString radioChoice[2];
+  mafString radioChoice[2];
   radioChoice[0] = _("User input");
   radioChoice[1] = _("From VME");
   m_Gui->Radio(ID_TIMESTAMP_MODALITY_RADIO,_("Timestamp Modality"),&m_CurrentVMETimestampModality,2,radioChoice);

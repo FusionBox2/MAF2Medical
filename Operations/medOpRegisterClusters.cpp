@@ -155,7 +155,7 @@ void medOpRegisterClusters::OpRun()
   if(!m_TestMode)
   {
     int num_choices = 3;
-    const wxString choices_string[] = {_("rigid"), _("similarity"), _("affine")}; 
+    const mafString choices_string[] = {_("rigid"), _("similarity"), _("affine")}; 
     mafString wildcard = "Dictionary (*.txt)|*.txt|All Files (*.*)|*.*";
 
     m_Gui = new mafGUI(this);

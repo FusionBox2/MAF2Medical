@@ -2119,7 +2119,7 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 void mafVMEVolumeLarge::AddVoxelsMmCombo(mafGUI* gui, int id, int* pvar)
 {
 	const int UNITCHOISE_NUM = 2;
-	const wxString UNITCHOISE_STR[UNITCHOISE_NUM] = {_("voxels"), _("mm")};
+	const mafString UNITCHOISE_STR[UNITCHOISE_NUM] = {_("voxels"), _("mm")};
 
 	gui->Combo(id, _("units:"), pvar, UNITCHOISE_NUM, UNITCHOISE_STR);
 }

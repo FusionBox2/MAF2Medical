@@ -623,7 +623,7 @@ void medOpMove::CreateGui()
 
   // enable/disable gizmo interaction
   m_Gui->Label("interaction modality", true);
-  wxString interactionModality[2] = {"mouse", "gizmo"};
+  mafString interactionModality[2] = {"mouse", "gizmo"};
   m_Gui->Combo(ID_SHOW_GIZMO,"",&m_UseGizmo,2,interactionModality);
 
   m_Gui->Divider(2);
@@ -631,7 +631,7 @@ void medOpMove::CreateGui()
   m_Gui->Label("left mouse: interact through gizmo");
 
   // choose active gizmo
-  wxString available_gizmos[3] = {"translate", "rotate"};
+  mafString available_gizmos[3] = {"translate", "rotate"};
   m_Gui->Combo(ID_CHOOSE_GIZMO_COMBO, "", &m_ActiveGizmo, 2, available_gizmos);
   m_Gui->Divider(2);
   m_Gui->Label("step parameters:",true);

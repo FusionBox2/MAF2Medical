@@ -601,7 +601,7 @@ void mafViewGlobalSlice::UpdateSliceParameters()
 mafGUI* mafViewGlobalSlice::CreateGui()
 //----------------------------------------------------------------------------
 {
-	wxString Views[3] = {"XY","XZ","YZ"};
+	mafString Views[3] = {"XY","XZ","YZ"};
 
 	assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);

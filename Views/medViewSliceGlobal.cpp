@@ -277,7 +277,7 @@ void medViewSliceGlobal::VmeDeletePipe(mafNode *vme)
 mafGUI *medViewSliceGlobal::CreateGui()
 //-------------------------------------------------------------------------
 {
-  wxString Views[3] = {"Z","Y","X"};
+  mafString Views[3] = {"Z","Y","X"};
 
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);

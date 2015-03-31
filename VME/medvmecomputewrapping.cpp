@@ -5165,8 +5165,8 @@ mafGUI* medVMEComputeWrapping::CreateGuiForNewMeter( mafGUI *gui ){
 	int num_wrap =1;
 	m_WrapSide = 0;
 	//	const wxString mode_choices_string[] = {_("point distance"), _("line distance"), _("line angle")};;
-	const wxString wrap_choices_string[] = { _("Sphere_Cylinder"),_("single Sphere"),_("single Cylinder"),_("double Cylinder")};
-	const wxString wrap_side_string[] = { _("front"),_("back"),_("shortest")};
+	const mafString wrap_choices_string[] = { _("Sphere_Cylinder"),_("single Sphere"),_("single Cylinder"),_("double Cylinder")};
+	const mafString wrap_side_string[] = { _("front"),_("back"),_("shortest")};
 
 
 	gui->SetListener(this);
@@ -5235,7 +5235,7 @@ mafGUI* medVMEComputeWrapping::CreateGuiForOldMeter( mafGUI *gui ){
 	int num_mode = 3;
 	int num_wrap = 3;
 	//	const wxString mode_choices_string[] = {_("point distance"), _("line distance"), _("line angle")};;
-	const wxString wrap_choices_string[] = {_("manual"), _("automated"), _("IOR_automated")};
+	const mafString wrap_choices_string[] = {_("manual"), _("automated"), _("IOR_automated")};
 
 
 	gui->Combo(ID_WRAPPED_METER_MODE,_("wrap"),&m_WrappedMode2,num_wrap,wrap_choices_string,_("Choose the meter mode"));

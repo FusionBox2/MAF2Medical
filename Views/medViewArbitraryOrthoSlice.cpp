@@ -1457,7 +1457,7 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	m_Gui->Label("Red", true);
 	m_Gui->Bool(ID_ENABLE_THICKNESS_RED, "",&m_EnableThickness[RED]);
 
-	wxString thicknessChoices[25] = {"0.5", "1.0", "1.5",\
+	mafString thicknessChoices[25] = {"0.5", "1.0", "1.5",\
 		"2.0", "2.5", "3.0",\
 		"3.5", "4.0", "4.5",\
 		"5.0", "5.5", "6.0",\

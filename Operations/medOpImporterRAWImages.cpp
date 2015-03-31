@@ -263,8 +263,8 @@ void medOpImporterRAWImages::CreateGui()
   {
     m_Dialog = new mafGUIDialogPreview(_("raw importer"), mafCLOSEWINDOW | mafRESIZABLE | mafUSEGUI | mafUSERWI);
 
-    wxString bit_choices[4] = {_("8 bits"),_("16 bits Big Endian"),_("16 bits Little Endian"),_("24 bits (RGB)")};
-    wxString type_choices[2] = {_("interleaved"),_("not interleaved")};
+    mafString bit_choices[4] = {_("8 bits"),_("16 bits Big Endian"),_("16 bits Little Endian"),_("24 bits (RGB)")};
+    mafString type_choices[2] = {_("interleaved"),_("not interleaved")};
 
     m_Gui = new mafGUI(this);
     m_Gui->SetListener(this);
@@ -929,11 +929,11 @@ bool medOpImporterRAWImages::VolumeLargeCheck()
 void medOpImporterRAWImages::	UpdateReader() 
 //----------------------------------------------------------------------------
 {
-  wxString prefix = m_RawDirectory + "\\" + m_Prefix;
+  mafString prefix = m_RawDirectory + "\\" + m_Prefix;
   m_Reader->SetFilePrefix(prefix);
 
-  wxString pattern = m_Pattern + m_Extension;
-  m_Reader->SetFilePattern(pattern.c_str());
+  mafString pattern = m_Pattern + wxString(m_Extension);
+  m_Reader->SetFilePattern(pattern.GetCStr());
 
   m_Reader->SetDataScalarType(GetVTKDataType());
   m_Reader->SetNumberOfScalarComponents(1);
@@ -1048,7 +1048,7 @@ bool medOpImporterRAWImages::Import()
 //----------------------------------------------------------------------------
 {
   wxString prefix = m_RawDirectory + "\\" + m_Prefix;
-  wxString pattern = m_Pattern + m_Extension;
+  wxString pattern = m_Pattern + wxString(m_Extension);
 
 #ifdef VME_VOLUME_LARGE
   vtkMAFSmartPointer< vtkMAFLargeImageReader > r;
@@ -1343,7 +1343,7 @@ void medOpImporterRAWImages::OnStringPrefix()
 //----------------------------------------------------------------------------
 {
   const char* nome_file = (m_Prefix);
-  int length = m_Prefix.Len();
+  int length = m_Prefix.Length();
   m_NumberSlices = 0;
   for( int i = 0; i < m_NumberFile; i++)
   {
@@ -1390,7 +1390,7 @@ bool medOpImporterRAWImages::ControlFilenameList()
 {
   //control how many files are present in directory
   wxString prefix = m_RawDirectory + "\\" + m_Prefix;
-  wxString pattern = m_Pattern + m_Extension;
+  wxString pattern = m_Pattern + wxString(m_Extension);
 
   wxDir dir(m_RawDirectory.GetCStr());
   bool result = true;

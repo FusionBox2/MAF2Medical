@@ -225,7 +225,7 @@ mafGUI* mafViewRXCompound::CreateGui()
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
   
-  wxString m_Choices[2];
+  mafString m_Choices[2];
   m_Choices[0]="Right";
   m_Choices[1]="Left";
   m_Gui->Radio(ID_RIGHT_OR_LEFT,"Side",&m_RightOrLeft,2,m_Choices);

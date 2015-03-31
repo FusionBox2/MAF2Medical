@@ -199,7 +199,7 @@ void medOpExtractGeometry::CreateExtractSurfaceGui()
   m_ExtractSurfaceGui->Label(mafString("Filtering Method"), true);
   m_ExtractSurfaceGui->Divider();
 
-  wxString processingType[3] = {"Poisson", "Taubin and Fill Holes","Taubin"};
+  mafString processingType[3] = {"Poisson", "Taubin and Fill Holes","Taubin"};
   m_ExtractSurfaceGui->Combo(ID_PROCESSING_TYPE, "", &m_ProcessingType, 3, processingType);
 
 

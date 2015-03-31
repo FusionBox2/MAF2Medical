@@ -200,10 +200,10 @@ void medOpSplitSurface::CreateGui()
 {
 	m_Gui = new mafGUI(this);
 	m_Gui->Divider();
-	wxString clip_by_choices[2] = {"surface","implicit function"};
+	mafString clip_by_choices[2] = {"surface","implicit function"};
 	m_Gui->Combo(ID_CLIP_BY,_("clip by"),&m_ClipModality,2,clip_by_choices);
 	m_Gui->Bool(ID_USE_GIZMO,_("use gizmo"),&m_UseGizmo,1);
-	wxString gizmo_name[3] = {"translate","rotate","scale"};
+	mafString gizmo_name[3] = {"translate","rotate","scale"};
 	m_Gui->Combo(ID_CHOOSE_GIZMO,_("gizmo"),&m_GizmoType,3,gizmo_name);
 	m_Gui->Button(ID_CHOOSE_SURFACE,_("clipper surface"));
 	m_Gui->Bool(ID_CLIP_INSIDE,_("reverse clipping"),&m_ClipInside,1);

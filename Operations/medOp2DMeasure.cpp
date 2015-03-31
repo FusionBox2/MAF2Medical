@@ -117,7 +117,7 @@ void medOp2DMeasure::OpRun()
 	//m_2DAngleInteractor->SetListener(this);
   m_IndicatorInteractor2D = medInteractor2DIndicator::New();
   
-  wxString measure[5] = {_("points"), _("lines"), _("angle by lines"), _("angle by points"), _("indicator")};
+  mafString measure[5] = {_("points"), _("lines"), _("angle by lines"), _("angle by points"), _("indicator")};
   
   //in this vector put the measure index that starts a new intercator type.
   m_FirstPositionInteractor.push_back(0); // medInteractor2DDistance (in this iterator there are 2 kind of measures)

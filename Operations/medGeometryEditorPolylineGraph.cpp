@@ -298,10 +298,10 @@ void medGeometryEditorPolylineGraph::CreateGui()
 //----------------------------------------------------------------------------
 {
 	m_Gui =new mafGUI(this);
-	wxString choices_action[2]={_("Point"),_("Branch")};
+	mafString choices_action[2]={_("Point"),_("Branch")};
 	m_Gui->Radio(ID_ACTION,_("Action"),&m_Action,2,choices_action);
 
-	wxString choices_point_tool[4]={_("Add Point"),_("Insert Point"),_("Move Point"),_("Select Point")};
+	mafString choices_point_tool[4]={_("Add Point"),_("Insert Point"),_("Move Point"),_("Select Point")};
 	m_Gui->Radio(ID_POINT_TOOL,_("Point Tool"),&m_PointTool,4,choices_point_tool);
 	m_Gui->Enable(ID_POINT_TOOL,m_Action==ID_POINT_ACTION);
 
@@ -312,7 +312,7 @@ void medGeometryEditorPolylineGraph::CreateGui()
 	m_Gui->Button(ID_BUTTON_POINT_DELETE,_("Delete"));
 	m_Gui->Enable(ID_BUTTON_POINT_DELETE,m_Action==ID_POINT_ACTION && m_SelectedPoint!=UNDEFINED_POINT_ID);
 
-	wxString choices_branch_tool[2]={_("Add Branch"),_("Select Branch")};
+	mafString choices_branch_tool[2]={_("Add Branch"),_("Select Branch")};
 	m_Gui->Radio(ID_BRANCH_TOOL,_("Branch Tool"),&m_BranchTool,2,choices_branch_tool);
 	m_Gui->Enable(ID_BRANCH_TOOL,m_Action==ID_BRANCH_ACTION);
 

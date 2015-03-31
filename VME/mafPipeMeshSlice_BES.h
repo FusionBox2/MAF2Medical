@@ -175,8 +175,8 @@ protected:
   /** Update the visualization with changed scalar*/
   void UpdateLUTAndMapperFromNewActiveScalars();
 
-  wxString                *m_ScalarsName;
-  wxString                *m_ScalarsVTKName;
+  mafString                *m_ScalarsName;
+  mafString                *m_ScalarsVTKName;
 
   mafGUIMaterialButton       *m_MaterialButton;
 

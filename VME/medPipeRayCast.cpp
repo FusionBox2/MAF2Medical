@@ -213,7 +213,7 @@ mafGUI *medPipeRayCast::CreateGui()
   m_Gui->Label(" Layers ", "", true );
   m_Gui->Divider(2);
   //Set Layer type to visualize
-  wxString layersType[4] = {"Default", "Muscular System", "Circulatory System", "Skeleton"};
+  mafString layersType[4] = {"Default", "Muscular System", "Circulatory System", "Skeleton"};
   m_Gui->Combo(ID_CHANGE_OPACITY, "", &m_Preset, 4, layersType);
 
   //Advanced 
@@ -221,7 +221,7 @@ mafGUI *medPipeRayCast::CreateGui()
   m_Gui->Label(" Advanced ", "", true );
   m_Gui->Divider(2);
   
-  wxString modalities[2] = {"CT view", "MR view"};
+  mafString modalities[2] = {"CT view", "MR view"};
   m_Gui->Combo(ID_CHANGE_MODALITY, "", &m_Modality, 2, modalities);
 	
 	m_Gui->Label("");

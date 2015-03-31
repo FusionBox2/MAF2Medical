@@ -197,8 +197,8 @@ void mafOpImporterRAWVolume_BES::OpRun()
 	mafString wildc = _("Raw data (*.raw)|*.raw|All files (*.*)|*.*");
 	m_Gui->FileOpen(ID_FILE,_("file"),&m_RawFile,wildc);
 
-	wxString endian_choices[2] = {_("Big Endian"),_("Little Endian")};
-	wxString scalar_choices[5] = {_("char"),_("short"),_("int"),_("float"),_("double")};
+	mafString endian_choices[2] = {_("Big Endian"),_("Little Endian")};
+	mafString scalar_choices[5] = {_("char"),_("short"),_("int"),_("float"),_("double")};
 	m_Gui->Divider(0);
 	m_Gui->Combo(ID_BITS,_("endian"),&m_Endian,2,endian_choices);
 	m_Gui->Combo(ID_SCALAR_TYPE,"scalar type",&m_ScalarType,5,scalar_choices);

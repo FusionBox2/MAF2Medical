@@ -228,7 +228,7 @@ void medOpLabelizeSurface::CreateGui()
 	m_Gui = new mafGUI(this);
 
 	m_Gui->Bool(ID_USE_GIZMO,_("use gizmo"),&m_UseGizmo,1);
-	wxString gizmo_name[3] = {"translate","rotate","scale"};
+	mafString gizmo_name[3] = {"translate","rotate","scale"};
 	m_Gui->Combo(ID_CHOOSE_GIZMO,_("gizmo"),&m_GizmoType,3,gizmo_name);
 
 	m_Gui->Double(ID_LABEL_VALUE,_("Label"),&m_LabelValue);

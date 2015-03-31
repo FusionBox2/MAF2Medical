@@ -164,7 +164,7 @@ mafGUI* medVMEMaps::CreateGui()
   m_Gui->SetListener(this);
   m_Gui->Divider();
 
-  wxString m_Choices[2];
+  mafString m_Choices[2];
   m_Choices[0]="Distance";
   m_Choices[1]="Density";
   m_Gui->Radio(ID_DENSITY_DISTANCE,"",&m_DensityDistance,2,m_Choices);

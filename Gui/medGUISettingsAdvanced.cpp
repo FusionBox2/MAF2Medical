@@ -41,7 +41,7 @@ void medGUISettingsAdvanced::CreateGui()
 {
   m_Gui = new mafGUI(this);
 
-  wxString choices_conversion[2] = {"NONE","mm2m"};
+  mafString choices_conversion[2] = {"NONE","mm2m"};
   m_Gui->Label(_("Convert Data in SI units"));
   m_Gui->Combo(ID_CONVERSION_UNITS,"",&m_ConversionUnits,2,choices_conversion);
   

@@ -126,9 +126,9 @@ private:
   int m_FitPlot;
 
   mafString   m_ItemName;
-  wxString		m_TitileX;
-  wxString		m_TitileY;
-  wxString    m_Title;
+  mafString		m_TitileX;
+  mafString		m_TitileY;
+  mafString    m_Title;
 
   std::vector<vtkRectilinearGrid*> m_VtkData;
   std::vector<vtkDoubleArray*> m_ScalarArray;

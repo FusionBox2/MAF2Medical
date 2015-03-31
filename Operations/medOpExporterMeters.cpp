@@ -115,7 +115,7 @@ void medOpExporterMeters::CreateGui()
 //----------------------------------------------------------------------------
 {
   mafString wildc = "Wrapped Meter Coordinates(*.txt)|*.txt";
-  wxString choises[4]={"Selected Meter","Classic Meters","Wrapped Meters", "All Meters"};
+  mafString choises[4]={"Selected Meter","Classic Meters","Wrapped Meters", "All Meters"};
 
   m_Gui = new mafGUI(this);
   m_Gui->Label(_("Export:"),true);

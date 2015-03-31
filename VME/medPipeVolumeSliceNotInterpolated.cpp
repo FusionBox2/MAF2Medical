@@ -623,7 +623,7 @@ mafGUI * medPipeVolumeSliceNotInterpolated::CreateGui()
   if(m_ShowGui)
   {
     m_Gui->Lut(ID_LUT,"LUT",m_VolumeLUT); // Lut widget
-    wxString choices[3] = {"X","Y","Z"};
+    mafString choices[3] = {"X","Y","Z"};
     m_Gui->Combo(ID_AXIS,"Axis",&m_SliceAxis,3,choices); // Slice Axis
     m_SliceSlider = m_Gui->FloatSlider(ID_SLICE,"Slice",&m_CurrentSlice, m_Bounds[m_SliceAxis * 2], m_Bounds[(m_SliceAxis * 2) + 1]); // Current slice coordinate
     m_Gui->Divider();

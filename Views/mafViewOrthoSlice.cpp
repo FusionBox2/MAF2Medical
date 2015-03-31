@@ -381,7 +381,7 @@ void mafViewOrthoSlice::OnEvent(mafEventBase *maf_event)
 mafGUI* mafViewOrthoSlice::CreateGui()
 //-------------------------------------------------------------------------
 {
-  wxString layout_choices[3] = {"default","layout 1","layout 2"};
+  mafString layout_choices[3] = {"default","layout 1","layout 2"};
 
   assert(m_Gui == NULL);
 

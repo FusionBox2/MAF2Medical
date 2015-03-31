@@ -174,16 +174,16 @@ protected:
   int      m_SideToBeDragged;
   int      m_GizmoStatus;
   int      m_CropMode;
-  wxString m_Extension;
-  wxString m_Prefix;
-  wxString m_Pattern;
+  mafString m_Extension;
+  mafString m_Prefix;
+  mafString m_Pattern;
 #ifdef VME_VOLUME_LARGE
   int     m_MemLimit;   //<memory limit in MB
 #endif // VME_VOLUME_LARGE
   int     m_UseLookupTable; //<zero, if the preview should use the values in the data directly
 
   bool		 m_Rect;
-  wxString m_CoordFile;	
+  mafString m_CoordFile;	
 
   //preview pipeline
 #ifdef VME_VOLUME_LARGE

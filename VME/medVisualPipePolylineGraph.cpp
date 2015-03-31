@@ -507,7 +507,7 @@ mafGUI *medVisualPipePolylineGraph::CreateGui()
 
   m_Gui->Bool(ID_SHOW_BRANCH_ID,_("show branch id"),&m_ShowBranchId,1);
   m_Gui->Divider(2);
-  const wxString representation_string[] = {_("line"), _("tube"), _("sphere"), _("unconnected sphere")};
+  const mafString representation_string[] = {_("line"), _("tube"), _("sphere"), _("unconnected sphere")};
   int num_choices = 4;
   m_Gui->Combo(ID_POLYLINE_REPRESENTATION,"",&m_Representation,num_choices,representation_string);
 
@@ -685,12 +685,12 @@ void medVisualPipePolylineGraph::UpdateScalars()
 
   if(m_ActiveScalarType == POINT_TYPE)
   {
-    m_Vme->GetOutput()->GetVTKData()->GetPointData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].c_str());
+    m_Vme->GetOutput()->GetVTKData()->GetPointData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].GetCStr());
     m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetScalars()->Modified();
   }
   else if(m_ActiveScalarType == CELL_TYPE)
   {
-    m_Vme->GetOutput()->GetVTKData()->GetCellData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].c_str());
+    m_Vme->GetOutput()->GetVTKData()->GetCellData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].GetCStr());
     m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetScalars()->Modified();
   }
   m_Vme->Modified();
@@ -708,12 +708,12 @@ void medVisualPipePolylineGraph::UpdateScalars()
     {
       if(m_ActiveScalarType == POINT_TYPE)
       {
-        outputVTK->GetPointData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].c_str());
+        outputVTK->GetPointData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].GetCStr());
         outputVTK->GetPointData()->GetScalars()->Modified();
       }
       else if(m_ActiveScalarType == CELL_TYPE)
       {
-        outputVTK->GetCellData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].c_str());
+        outputVTK->GetCellData()->SetActiveScalars(m_ScalarsVTKName[m_ScalarIndex].GetCStr());
         outputVTK->GetCellData()->GetScalars()->Modified();
       }
       outputVTK->Modified();
@@ -744,7 +744,7 @@ void medVisualPipePolylineGraph::UpdatePipeFromScalars()
   m_Table->AddRGBPoint(sr[1],1.0,0.0,0.0);
   m_Table->Build();
 
-  m_Glyph->SelectInputScalars(m_ScalarsName[m_ScalarIndex].c_str());
+  m_Glyph->SelectInputScalars(m_ScalarsName[m_ScalarIndex].GetCStr());
   m_Glyph->SetRange(sr);
   m_Glyph->Update();
 
@@ -770,7 +770,7 @@ void medVisualPipePolylineGraph::CreateFieldDataControlArrays()
   int numPointScalars = m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetNumberOfArrays();
   int numCellScalars = m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetNumberOfArrays();
 
-  wxString *tempScalarsPointsName=new wxString[numPointScalars + numCellScalars];
+  mafString *tempScalarsPointsName=new mafString[numPointScalars + numCellScalars];
   int count=0;
 
   int pointArrayNumber;
@@ -791,8 +791,8 @@ void medVisualPipePolylineGraph::CreateFieldDataControlArrays()
     }
   }
 
-  m_ScalarsName = new wxString[count];
-  m_ScalarsVTKName = new wxString[count];
+  m_ScalarsName = new mafString[count];
+  m_ScalarsVTKName = new mafString[count];
 
   for(int j=0;j<count;j++)
   {

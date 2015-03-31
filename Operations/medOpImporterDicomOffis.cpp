@@ -2188,7 +2188,7 @@ void medOpImporterDicomOffis::CreateLoadPage()
 	m_LoadGuiCenter = new mafGUI(this);
 	if(((medGUIDicomSettings*)GetSetting())->GetShowAdvancedOptionSorting() == TRUE)
 	{
-		wxString choices[3] = {_("X"),_("Y"),_("Z")};
+		mafString choices[3] = {_("X"),_("Y"),_("Z")};
 		m_LoadGuiCenter->Radio(ID_SORT_AXIS,_("Sort type:"),&m_SortAxes,3,choices);
 		m_LoadGuiCenter->Bool(ID_SHOW_SP, "Uniform spacing", &m_Showspacing, 1, _("Uniform spacing"));
 		m_LoadGuiCenter->Enable(ID_SHOW_SP,false);
@@ -2258,7 +2258,7 @@ void medOpImporterDicomOffis::CreateCropPage()
 
 	if(((medGUIDicomSettings*)GetSetting())->EnableChangeSide())
 	{
-		wxString sideChoices[3] = {_("non-valid"),_("Left"),_("Right")};
+		mafString sideChoices[3] = {_("non-valid"),_("Left"),_("Right")};
 		m_CropGuiCenter->Combo(ID_VOLUME_SIDE,_("volume side"),&m_VolumeSide,3,sideChoices);
 	}
 
@@ -2300,9 +2300,9 @@ void medOpImporterDicomOffis::CreateBuildPage()
 		bool type_volume = ((medGUIDicomSettings*)GetSetting())->EnableToRead("VOLUME");
 		bool type_mesh = ((medGUIDicomSettings*)GetSetting())->EnableToRead("MESH");
 		bool type_image = ((medGUIDicomSettings*)GetSetting())->EnableToRead("IMAGE");
-		wxString typeArrayVolumeMeshImage[3] = {_("Volume"),_("Mesh"),_("Image")};    
-		wxString typeArrayImageVolume[2] = {_("Image"),_("Volume")};
-		wxString typeArrayMeshImage[2] = {_("Mesh"),_("Image")};
+		mafString typeArrayVolumeMeshImage[3] = {_("Volume"),_("Mesh"),_("Image")};    
+		mafString typeArrayImageVolume[2] = {_("Image"),_("Volume")};
+		mafString typeArrayMeshImage[2] = {_("Mesh"),_("Image")};
 		if ((type_volume && type_mesh && type_image) || (!type_volume && !type_mesh && !type_image))
 		{
 			m_BuildGuiCenter->Radio(ID_VME_TYPE, "VME output", &m_OutputType, 3, typeArrayVolumeMeshImage, 1, ""/*, wxRA_SPECIFY_ROWS*/);
@@ -2388,7 +2388,7 @@ void medOpImporterDicomOffis::CreateReferenceSystemPage()
 	m_TimeScannerReferenceSystemPage=m_ReferenceSystemGuiLeft->Slider(ID_SCAN_TIME,_("time "),&m_CurrentTime,0,VTK_INT_MAX);
 	m_TimeScannerReferenceSystemPage->SetPageSize(1);
 
-	wxString choices[3];
+	mafString choices[3];
 	choices[0] = _T("XY");
 	choices[1] = _T("XZ");
 	choices[2] = _T("YZ");

@@ -140,8 +140,8 @@ protected:
   /** Update the visualization with changed scalar*/
   void UpdatePipeFromScalars();
 
-  wxString                *m_ScalarsName;
-  wxString                *m_ScalarsVTKName;
+  mafString                *m_ScalarsName;
+  mafString                *m_ScalarsVTKName;
 
   int                      m_PointCellArraySeparation;
   int                      m_ScalarIndex;

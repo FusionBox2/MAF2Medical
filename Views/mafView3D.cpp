@@ -361,7 +361,7 @@ mafGUI *mafView3D::CreateGui()
 {
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
-	wxString choices[4] = {_("ISO"),_("MIP"),_("DRR"),_("VR")};
+	mafString choices[4] = {_("ISO"),_("MIP"),_("DRR"),_("VR")};
 	m_Gui->Combo(ID_COMBO_PIPE,_("Choose pipe"),&m_Choose,4,choices);
 	m_Gui->Enable(ID_COMBO_PIPE,m_CurrentVolume!=NULL);
 	m_Gui->Double(ID_RESAMPLE_FACTOR,_("Resample"),&m_ResampleFactor,0.000001,1);

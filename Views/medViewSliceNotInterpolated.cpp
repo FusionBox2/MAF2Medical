@@ -80,7 +80,7 @@ mafGUI *medViewSliceNotInterpolated::CreateGui()
   // Create the view gui
   m_Gui = new mafGUI(this);
   m_LutSwatch = m_Gui->Lut(ID_LUT,"LUT",m_ColorLUT); // Lut widget
-  wxString choices[3] = {"X","Y","Z"};
+  mafString choices[3] = {"X","Y","Z"};
   m_Gui->Combo(ID_AXIS,"Axis",&m_SliceAxis,3,choices); // Slice Axis
   m_SliceSlider = m_Gui->FloatSlider(ID_SLICE,"Slice",&m_CurrentSlice,MINDOUBLE,MAXDOUBLE); // Current slice coordinate
   m_Gui->Divider();
