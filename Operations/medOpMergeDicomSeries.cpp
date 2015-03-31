@@ -45,7 +45,6 @@
 #include "dcmtk/ofstd/ofstream.h"
 #include "dcmtk/ofstd/ofstring.h"
 #include "dcmtk/dcmdata/dctk.h"
-#include "dcmtk/dcmdata/dcdebug.h"
 #include "dcmtk/dcmdata/cmdlnarg.h"
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
@@ -208,8 +207,8 @@ bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSP
       currentSliceABSFileName.Append(currentSliceLocalFileName);
 
       DJDecoderRegistration::registerCodecs(); // register JPEG codecs
-      DcmRLEDecoderRegistration ::registerCodecs(OFFalse, OFFalse,OFFalse); // register RLE codecs
-      OFCondition status = dicomImg.loadFile(currentSliceABSFileName);//load data into offis structure
+      DcmRLEDecoderRegistration ::registerCodecs(OFFalse, OFFalse); // register RLE codecs
+      OFCondition status = dicomImg.loadFile(currentSliceABSFileName.GetCStr());//load data into offis structure
 
       if (!status.good())
       {
@@ -266,7 +265,7 @@ bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSP
         dicomDataset->findAndGetUint8Array(DCM_PixelData, dicom_buf_char); 
       } 
 
-      status = dicomImg.saveFile(currentSliceABSFileName);
+      status = dicomImg.saveFile(currentSliceABSFileName.GetCStr());
 
       mafLogMessage("Modified file %s",currentSliceABSFileName);
       mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,long((double(i)/double(m_DICOMDirectoryReader->GetNumberOfFiles()))*100)));

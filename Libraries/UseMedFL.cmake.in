@@ -18,10 +18,10 @@ SET(MED_USE_Offis @MED_USE_Offis@)
 # Offis library
 #
 IF (MED_USE_Offis)
-  SET(Offis_DIR @Offis_DIR@)
-  find_package(Offis REQUIRED)
-  INCLUDE(${Offis_CONFIG})
-  INCLUDE(${Offis_USE_FILE})
+  SET(DCMTK_DIR @DCMTK_DIR@)
+  find_package(DCMTK REQUIRED)
+  INCLUDE(${DCMTK_CONFIG})
+  LINK_DIRECTORIES(${DCMTK_DIR}/lib)
 ENDIF (MED_USE_Offis)
 
 #

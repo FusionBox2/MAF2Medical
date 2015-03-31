@@ -35,7 +35,6 @@ const bool DEBUG_MODE = true;
 #include "dcmtk/ofstd/ofstream.h"
 #include "dcmtk/ofstd/ofstring.h"
 #include "dcmtk/dcmdata/dctk.h"
-#include "dcmtk/dcmdata/dcdebug.h"
 #include "dcmtk/dcmdata/cmdlnarg.h"
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
@@ -127,7 +126,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
 
   assert(wxFileExists(file1ABSFileName));
 
-  OFCondition status = dicomFileHandler.loadFile(file1ABSFileName);
+  OFCondition status = dicomFileHandler.loadFile(file1ABSFileName.c_str());
 
   assert(status.good());
 
@@ -211,7 +210,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
 
     assert(wxFileExists(currentSliceABSFileName));
 
-    OFCondition status = dicomFileHandler.loadFile(currentSliceABSFileName);
+    OFCondition status = dicomFileHandler.loadFile(currentSliceABSFileName.c_str());
     
     DcmDataset *dicomDataset = dicomFileHandler.getDataset();
 

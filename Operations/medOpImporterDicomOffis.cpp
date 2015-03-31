@@ -121,7 +121,6 @@ PURPOSE.  See the above copyright notice for more information.
 #include "dcmtk/ofstd/ofstream.h"
 #include "dcmtk/ofstd/ofstring.h"
 #include "dcmtk/dcmdata/dctk.h"
-#include "dcmtk/dcmdata/dcdebug.h"
 #include "dcmtk/dcmdata/cmdlnarg.h"
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
@@ -3884,8 +3883,8 @@ bool medOpImporterDicomOffis::ReadDicomFileList(mafString& currentSliceABSDirNam
 
 
 			DJDecoderRegistration::registerCodecs(); // register JPEG codecs
-			DcmRLEDecoderRegistration ::registerCodecs(OFFalse, OFFalse,OFFalse); // register RLE codecs
-			OFCondition status = dicomImg.loadFile(currentSliceABSFileName);//load data into offis structure
+			DcmRLEDecoderRegistration ::registerCodecs(OFFalse, OFFalse); // register RLE codecs
+			OFCondition status = dicomImg.loadFile(currentSliceABSFileName.GetCStr());//load data into offis structure
 
 			if (!status.good())
 			{
@@ -4356,10 +4355,10 @@ bool medOpImporterDicomOffis::ReadDicomFileList(mafString& currentSliceABSDirNam
 					dicomSliceVTKImageData->Update();
 
 					const char *date,*description,*patientName,*birthdate;
-					dicomDataset->findAndGetString(DCM_PatientsBirthDate,birthdate);
+					dicomDataset->findAndGetString(DCM_PatientBirthDate,birthdate);
 					dicomDataset->findAndGetString(DCM_StudyDate,date);
 					dicomDataset->findAndGetString(DCM_SeriesDescription,description);
-					dicomDataset->findAndGetString(DCM_PatientsName,patientName);
+					dicomDataset->findAndGetString(DCM_PatientName,patientName);
 
 					if (!this->m_TestMode)
 					{
@@ -4463,10 +4462,10 @@ bool medOpImporterDicomOffis::ReadDicomFileList(mafString& currentSliceABSDirNam
 					lastZPos = dcmImagePositionPatient[2];
 
 					const char *date,*description,*patientName,*birthdate;
-					dicomDataset->findAndGetString(DCM_PatientsBirthDate,birthdate);
+					dicomDataset->findAndGetString(DCM_PatientBirthDate,birthdate);
 					dicomDataset->findAndGetString(DCM_StudyDate,date);
 					dicomDataset->findAndGetString(DCM_SeriesDescription,description);
-					dicomDataset->findAndGetString(DCM_PatientsName,patientName);
+					dicomDataset->findAndGetString(DCM_PatientName,patientName);
 
 					m_SeriesIDToSlicesListMap[seriesId]->Append(\
 						new medDicomSlice(m_CurrentSliceABSFileName,dcmImagePositionPatient, \
@@ -4585,10 +4584,10 @@ bool medOpImporterDicomOffis::ReadDicomFileList(mafString& currentSliceABSDirNam
 					}
 
 					const char *date,*description,*patientName,*birthdate;
-					dicomDataset->findAndGetString(DCM_PatientsBirthDate,birthdate);
+					dicomDataset->findAndGetString(DCM_PatientBirthDate,birthdate);
 					dicomDataset->findAndGetString(DCM_StudyDate,date);
 					dicomDataset->findAndGetString(DCM_SeriesDescription,description);
-					dicomDataset->findAndGetString(DCM_PatientsName,patientName);
+					dicomDataset->findAndGetString(DCM_PatientName,patientName);
 
 					if(((medGUIDicomSettings*)GetSetting())->GetOutputNameFormat() == medGUIDicomSettings::TRADITIONAL)
 					{
@@ -4661,10 +4660,10 @@ bool medOpImporterDicomOffis::ReadDicomFileList(mafString& currentSliceABSDirNam
 					dicomDataset->findAndGetFloat64(DCM_TriggerTime,dcmTriggerTime);
 
 					const char *date,*description,*patientName,*birthdate;
-					dicomDataset->findAndGetString(DCM_PatientsBirthDate,birthdate);
+					dicomDataset->findAndGetString(DCM_PatientBirthDate,birthdate);
 					dicomDataset->findAndGetString(DCM_StudyDate,date);
 					dicomDataset->findAndGetString(DCM_SeriesDescription,description);
-					dicomDataset->findAndGetString(DCM_PatientsName,patientName);
+					dicomDataset->findAndGetString(DCM_PatientName,patientName);
 
 					m_SeriesIDToSlicesListMap[seriesId]->Append\
 						(new medDicomSlice(m_CurrentSliceABSFileName,dcmImagePositionPatient,dcmImageOrientationPatient ,\
@@ -5074,7 +5073,7 @@ void medOpImporterDicomOffis::ImportDicomTags()
 	DcmFileFormat dicomImg;  
 	DJDecoderRegistration::registerCodecs(); // register JPEG codecs
 	DcmRLEDecoderRegistration::registerCodecs();
-	OFCondition status = dicomImg.loadFile(m_CurrentSliceABSFileName);//load data into offis structure
+	OFCondition status = dicomImg.loadFile(m_CurrentSliceABSFileName.c_str());//load data into offis structure
 
 	if (!status.good()) 
 	{
