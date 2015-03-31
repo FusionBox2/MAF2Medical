@@ -184,14 +184,14 @@ void vtkWeightedLandmarkTransform::InternalUpdate()
       // a.b^t is already in M.  here we put a.a^t in AAT.
       if (this->Mode == VTK_LANDMARK_AFFINE)
         {
-        AAT[i][0] += a[i]*a[0];
-        AAT[i][1] += a[i]*a[1];
-        AAT[i][2] += a[i]*a[2];
+        AAT[i][0] += a[i]*a[0]*Weight[pt];
+        AAT[i][1] += a[i]*a[1]*Weight[pt];
+        AAT[i][2] += a[i]*a[2]*Weight[pt];
         }
       }
     // accumulate scale factors (if desired)
-    sa += a[0]*a[0]+a[1]*a[1]+a[2]*a[2];
-    sb += b[0]*b[0]+b[1]*b[1]+b[2]*b[2];
+    sa += (a[0]*a[0]+a[1]*a[1]+a[2]*a[2])*Weight[pt];
+    sb += (b[0]*b[0]+b[1]*b[1]+b[2]*b[2])*Weight[pt];
     }
 
   if(this->Mode == VTK_LANDMARK_AFFINE)
