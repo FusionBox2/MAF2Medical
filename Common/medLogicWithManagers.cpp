@@ -309,7 +309,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
     case WIZARD_OP_NEW:
       {
         //Running an op required from the wizard
-        if(m_VMEManager)
+        if(m_NodeManager)
           OnFileNew();
         m_WizardManager->WizardContinue(true);
       }
@@ -594,7 +594,7 @@ bool medLogicWithManagers::OnFileOpen(const mafString& file_to_open)
 //----------------------------------------------------------------------------
 {
   bool res = mafLogicWithManagers::OnFileOpen(file_to_open);
-  if(m_VMEManager)
+  if(m_NodeManager)
   {
       //If there is a wizzard running we need to continue it after open operation
       if (m_WizardManager && m_WizardRunning)
@@ -609,7 +609,7 @@ bool medLogicWithManagers::OnFileSave()
 //----------------------------------------------------------------------------
 {
   bool res = mafLogicWithManagers::OnFileSave();
-  if(m_VMEManager)
+  if(m_NodeManager)
   {
     //If there is a wizard running we need to continue it after save operation
     if (m_WizardManager && m_WizardRunning)
@@ -623,7 +623,7 @@ bool medLogicWithManagers::OnFileSaveAs()
 //----------------------------------------------------------------------------
 {
   bool res = mafLogicWithManagers::OnFileSaveAs();
-  if(m_VMEManager) 
+  if(m_NodeManager) 
   {
     //If there is a wizard running we need to continue it after save operation
     if (m_WizardManager && m_WizardRunning)
