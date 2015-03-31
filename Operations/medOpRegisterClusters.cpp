@@ -319,7 +319,7 @@ void medOpRegisterClusters::OpDo()
 	  wxBusyInfo wait(_("Please wait, working..."));
 
   mafNEW(m_Info);
-  wxString name = wxString::Format("Info for registration %s into %s",m_Source->GetName(), m_Target->GetName());
+  wxString name = wxString::Format("Info for registration %s into %s",m_Source->GetName().GetCStr(), m_Target->GetName().GetCStr());
   m_Info->SetName(name);
   m_Info->SetPosLabel("Registration residual: ", 0);
   m_Info->SetPosShow(true, 0);
@@ -368,7 +368,7 @@ void medOpRegisterClusters::OpDo()
   if(m_Registered || m_Follower)
   {
     mafNEW(m_Result);
-    wxString name = wxString::Format("%s registered into %s",m_Source->GetName(), m_Target->GetName());
+    wxString name = wxString::Format("%s registered into %s",m_Source->GetName().GetCStr(), m_Target->GetName().GetCStr());
     m_Result->SetName(name);
     mafEventMacro(mafEvent(this, VME_ADD, m_Result));
     m_Info->ReparentTo(m_Result);
@@ -577,7 +577,7 @@ void medOpRegisterClusters::OpDo()
 	
 	if(m_Follower)
 	{
-		wxString name = wxString::Format("%s registered on %s",m_Follower->GetName(), m_Target->GetName());
+		wxString name = wxString::Format("%s registered on %s",m_Follower->GetName().GetCStr(), m_Target->GetName().GetCStr());
 		m_Follower->SetName(name);
 		mafEventMacro(mafEvent(this, VME_ADD, m_Follower));
     m_Follower->ReparentTo(m_Result);
@@ -716,7 +716,7 @@ double medOpRegisterClusters::RegisterPoints(double currTime)
 
   if(m_Registered == NULL )
 	{
-		wxString name = wxString::Format("%s registered on %s",m_Source->GetName(), m_Target->GetName());
+		wxString name = wxString::Format("%s registered on %s",m_Source->GetName().GetCStr(), m_Target->GetName().GetCStr());
 		mafNEW(m_Registered);
 		m_Registered->DeepCopy(m_Source);
 		m_Registered->SetName(name);
