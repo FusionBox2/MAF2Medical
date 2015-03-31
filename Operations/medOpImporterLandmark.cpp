@@ -60,7 +60,7 @@ medOpImporterLandmark::medOpImporterLandmark(const mafString& label) : Superclas
 	m_DictionaryFileName = "";
   m_LMRenameFileName = "";
 
-  m_DefaultRadius = 5;
+  m_DefaultRadius = 10;
 }
 //----------------------------------------------------------------------------
 medOpImporterLandmark::~medOpImporterLandmark( ) 
@@ -104,6 +104,8 @@ void medOpImporterLandmark::CreateGui()
   m_Gui->Divider();
   m_Gui->Bool(ID_TYPE_FILE,"Tagged file",&m_TagFileFlag,0,"Check if the format is NAME x y z");
   m_Gui->Label("");
+  m_Gui->Double(ID_RADIUS, "Radius", &m_DefaultRadius, 0);
+  m_Gui->Divider();
   m_Gui->FileOpen(ID_LOAD_LMREN, "Rename",  &m_LMRenameFileName, "*.txt");
   m_Gui->Button(ID_CLEAR_LMREN, "Clean", "", "Press to cancel using LM renamer" );  
   m_Gui->Divider();
@@ -181,6 +183,8 @@ void medOpImporterLandmark::OnEvent(mafEventBase *maf_event)
         OpStop(OP_RUN_CANCEL);
       }
       break;
+      case ID_RADIUS:
+        break;
       case ID_TYPE_FILE:
         {  
           if (m_TagFileFlag)

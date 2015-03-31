@@ -59,6 +59,8 @@ public:
 	void DictionaryOn () { this->SetDictionary((int)1);}
 	void DictionaryOff () { this->SetDictionary((int)0);}
 
+  void SetRadius(double radius){m_DefaultRadius = radius;}
+
 protected:
 
   mafVMERawMotionData();
