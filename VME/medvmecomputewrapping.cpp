@@ -6204,433 +6204,543 @@ void medVMEComputeWrapping::InternalUpdateManual()//first
 }
 
 //-----------------------------------------------------------------------
-void medVMEComputeWrapping::InternalUpdateAutomated()//second
-//-----------------------------------------------------------------------
+void medVMEComputeWrapping::InternalUpdateAutomated()
 {
-	mafVME *start_vme = GetStartVME();
-	mafVME *end_vme   = GetEnd1VME();
-	mafVME *wrapped_vme   = GetWrappedVME();
-
-	bool start_ok = true, end_ok = true;
-
-	double orientation[3];
-	m_Goniometer->RemoveAllInputs();
-
-
-	if (start_vme && end_vme && wrapped_vme)
-	{ 
-		if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
-		{
-			((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,-1);
-			m_TmpTransform->SetMatrix(*start_vme->GetOutput()->GetAbsMatrix());
-			m_TmpTransform->TransformPoint(m_StartPoint,m_StartPoint);
-		}
-		else
-		{
-			start_vme->GetOutput()->GetAbsPose(m_StartPoint, orientation);
-		}
-
-		if(wrapped_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("WrappedVME") != -1)
-		{
-			((mafVMELandmarkCloud *)wrapped_vme)->GetLandmark(GetLinkSubId("WrappedVME"),m_WrappedVMECenter,-1);
-			m_TmpTransform->SetMatrix(*wrapped_vme->GetOutput()->GetAbsMatrix());
-			m_TmpTransform->TransformPoint(m_WrappedVMECenter,m_WrappedVMECenter);
-		}
-		else
-		{
-			wrapped_vme->GetOutput()->GetAbsPose(m_WrappedVMECenter, orientation);
-
-			double translation[3];
-			((vtkPolyData *)wrapped_vme->GetOutput()->GetVTKData())->GetCenter(translation);
-
-			mafMatrix mat;
-			mat.Identity();
-			for(int i=0; i<3; i++)
-				mat.SetElement(i,3,translation[i]);
-			m_TmpTransform->SetMatrix(mat);
-			m_TmpTransform->TransformPoint(m_WrappedVMECenter,m_WrappedVMECenter);
-		}
-
-		if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
-		{
-			((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,-1);
-			m_TmpTransform->SetMatrix(*end_vme->GetOutput()->GetAbsMatrix());
-			m_TmpTransform->TransformPoint(m_EndPoint,m_EndPoint);
-		}
-		else
-		{
-			end_vme->GetOutput()->GetAbsPose(m_EndPoint, orientation);
-		}
-	}
-	else
-	{
-		start_ok = false;
-		end_ok   = false;
-	}
-
-	m_WrappedTangent1[0] =  m_WrappedTangent1[1] = m_WrappedTangent1[2] = 0.0;
-	m_WrappedTangent2[0] =  m_WrappedTangent2[1] = m_WrappedTangent2[2] = 0.0;
-
-
-	if (start_ok && end_ok)
-	{
-		// compute distance between points
-		m_Distance = 0.0;
-
-		// compute start point in local coordinate system
-		double local_start[3];
-		m_TmpTransform->SetMatrix(GetOutput()->GetAbsTransform()->GetMatrix());
-		m_TmpTransform->Invert();
-		m_TmpTransform->TransformPoint(m_StartPoint, local_start);  // m_TmpTransform needed to fix a memory leaks of GetInverse()
-		//GetAbsMatrixPipe()->GetInverse()->TransformPoint(StartPoint,local_start);
-
-		// compute end point in local coordinate system
-		double local_end[3];
-		m_TmpTransform->TransformPoint(m_EndPoint,local_end);
-
-		// compute end point in local coordinate system
-		double local_wrapped_center[3];
-		m_TmpTransform->TransformPoint(m_WrappedVMECenter,local_wrapped_center);
-
-		// use list of tangent point (raw)
-		double pointTangent1[3];
-		double pointTangent2[3];
-
-		//control if the point are allineated
-		double vec1[3], vec2[3], vec3[3];
-		vec1[0] = local_start[0] - local_end[0];
-		vec1[1] = local_start[1] - local_end[1];
-		vec1[2] = local_start[2] - local_end[2];
-
-		vec2[0] = local_start[0] - local_wrapped_center[0];
-		vec2[1] = local_start[1] - local_wrapped_center[1];
-		vec2[2] = local_start[2] - local_wrapped_center[2];
-
-		vec3[0] = local_end[0] - local_wrapped_center[0];
-		vec3[1] = local_end[1] - local_wrapped_center[1];
-		vec3[2] = local_end[2] - local_wrapped_center[2];
-
-		bool aligned = false;
-		double vectorProduct[3];
-		vtkMath::Cross(vec1,vec2, vectorProduct); 
-		if(vectorProduct[0] == 0.0 && vectorProduct[1] == 0.0 && vectorProduct[2] == 0.0)
-			aligned = true;
-
-		// create ordered list of tangent point (2) real algorithm
-		vtkMAFSmartPointer<vtkTransformPolyDataFilter> transformFirstDataInput;
-		transformFirstDataInput->SetTransform((vtkAbstractTransform *)((mafVME *)wrapped_vme)->GetAbsMatrixPipe()->GetVTKTransform());
-		transformFirstDataInput->SetInput((vtkPolyData *)((mafVME *)wrapped_vme)->GetOutput()->GetVTKData());
-		transformFirstDataInput->Update();
-
-		vtkMAFSmartPointer<vtkTransformPolyDataFilter> transformFirstData;
-		transformFirstData->SetTransform((vtkAbstractTransform *)m_TmpTransform->GetVTKTransform());
-		transformFirstData->SetInput((vtkPolyData *)transformFirstDataInput->GetOutput());
-		transformFirstData->Update(); 
-
-		// here REAL ALGORITHM //////////////////////////////
-		vtkMAFSmartPointer<vtkOBBTree> locator;
-		locator->SetDataSet(transformFirstData->GetOutput());
-		locator->SetGlobalWarningDisplay(0);
-		locator->BuildLocator();
-
-		//Control if Start or End point is inside vtk data (surface)
-		if(locator->InsideOrOutside(local_start) <= 0 || locator->InsideOrOutside(local_end) <= 0) 
-		{
-			//if one point is inside connect start and end
-			m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
-			m_LineSource->SetPoint2(local_end[0],local_end[1],local_end[2]);
-			m_Goniometer->AddInput(m_LineSource->GetOutput());
-
-			m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
-
-			m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
-			GetWrappedMeterOutput()->Update();
-
-			return;
-		}
-
-		vtkMAFSmartPointer<vtkPoints> temporaryIntersection;
-		vtkMAFSmartPointer<vtkPoints> pointsIntersection1;
-		vtkMAFSmartPointer<vtkPoints> pointsIntersection2;
-
-		double p1[3], p2[3], p3[3];
-		p1[0] = local_start[0];
-		p1[1] = local_start[1];
-		p1[2] = local_start[2];
-
-		const int factorLenght = 3;
-		p2[0] = local_wrapped_center[0] + factorLenght * (local_wrapped_center[0] - local_start[0]);
-		p2[1] = local_wrapped_center[1] + factorLenght * (local_wrapped_center[1] - local_start[1]);
-		p2[2] = local_wrapped_center[2] + factorLenght * (local_wrapped_center[2] - local_start[2]);
-
-		p3[0] = local_end[0];
-		p3[1] = local_end[1];
-		p3[2] = local_end[2];
-
-		double v1[3],v2[3],vtemp[3];
-		int count =0;
-		int n1 = -1; // number of intersections
-
-		//control if there is an intersection
-		locator->IntersectWithLine(local_start, local_end, temporaryIntersection, NULL);
-
-		//  code to control if exist an intersection between the line draw from start point to end point and 
-		//  the vtk data (surface)
-		int nControl = temporaryIntersection->GetNumberOfPoints();
-		if(aligned == true)
-		{
-			//if there is no intersection with geometry
-			m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
-			m_LineSource->SetPoint2(local_end[0],local_end[1],local_end[2]);
-			m_Goniometer->AddInput(m_LineSource->GetOutput());
-
-			m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
-
-			m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
-			GetWrappedMeterOutput()->Update();
-
-			return;
-		}
-
-		//WRAPPED METER REFACTOR // 2008 09 15
-
-		//local_wrapped_center -> center of wrapped surface
-		//need a vector that is the normal of the plane
-
-		vtkMatrix4x4 *mat = ((mafVME *)wrapped_vme)->GetAbsMatrixPipe()->GetVTKTransform()->GetMatrix();
-		mafMatrix matrix;
-		matrix.SetVTKMatrix(mat);
-		double versorX[3], versorY[3], versorZ[3];
-		matrix.GetVersor(0, versorX);
-		matrix.GetVersor(1, versorY);
-		matrix.GetVersor(2, versorZ);
-		// these versors determine the semiplanes, versor Z determines XY plane.
-		double t;
-		double pseudoIntersection[3];
-
-		// for now only contol y, because data test is oriented in such way
-		bool controlParallel = (vtkPlane::IntersectWithLine(local_start,local_end,versorZ,local_wrapped_center, t, pseudoIntersection)!=0.)?true:false;
-		bool semiplaneControl = (pseudoIntersection[1] - local_wrapped_center[1])<0? true: false ;
-
-
-		if(nControl==0)
-		{
-			if(controlParallel == false || semiplaneControl == false /* INTERSECTION WRAPPED PLANE is positive or zero*/)
-			{
-				//if there is no intersection with geometry
-				m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
-				m_LineSource->SetPoint2(local_end[0],local_end[1],local_end[2]);
-				m_Goniometer->AddInput(m_LineSource->GetOutput());
-
-				m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
-
-				m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
-				GetWrappedMeterOutput()->Update();
-
-				return;
-			}
-			else
-			{
-				// just continue to calculate
-			}
-
-		}
-		//WRAPPED METER REFACTOR // 2008 09 15
-
-		int precision = 50;
-		short wrapside = m_WrapSide == 0 ? (-1) : (1);
-		int invertDirection = 1;
-		while(n1 != 0)
-		{
-			locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
-			n1 = temporaryIntersection->GetNumberOfPoints();
-
-			if(n1 != 0)
-			{
-				pointsIntersection1->DeepCopy(temporaryIntersection);
-			}
-
-			if (n1 == 0 && invertDirection == 1)
-			{
-				invertDirection = -1;
-				precision = 5;
-				n1 = 1;
-			}
-			else if (n1 == 0 && invertDirection == -1)
-			{
-				n1 = 1;
-			}
-			else if (n1 != 0 && invertDirection == -1)
-			{
-				break;
-			}
-
-			if(count == 0)
-			{
-				for(int i = 0; i<3; i++)
-				{
-					v1[i] = (p2[i] - p1[i]);
-					v2[i] = (p3[i] - p2[i]);
-				}
-
-				// the order is important to understand the direction of the control
-				vtkMath::Cross(v1,v2, vtemp);
-				vtkMath::Cross(vtemp,v1, v2);
-				vtkMath::Normalize(v2);
-			}
-
-			for(int i = 0; i<3; i++)
-				p2[i] += (invertDirection*(wrapside*precision) * v2[i]);
-
-			count++;
-		}
-
-
-		p1[0] = local_end[0];
-		p1[1] = local_end[1];
-		p1[2] = local_end[2];
-
-		p2[0] = local_wrapped_center[0] + factorLenght * (local_wrapped_center[0] - local_end[0]);
-		p2[1] = local_wrapped_center[1] + factorLenght * (local_wrapped_center[1] - local_end[1]);
-		p2[2] = local_wrapped_center[2] + factorLenght * (local_wrapped_center[2] - local_end[2]);
-
-		p3[0] = local_start[0];
-		p3[1] = local_start[1];
-		p3[2] = local_start[2];
-
-		count = 0;
-		int n2 = -1; // number of intersections
-		precision = 50;
-		invertDirection = 1;
-		while(n2 != 0)
-		{
-			locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
-			n2 = temporaryIntersection->GetNumberOfPoints();
-
-			if(n2 != 0)
-			{
-				pointsIntersection2->DeepCopy(temporaryIntersection);
-			}
-
-			if (n2 == 0 && invertDirection == 1)
-			{
-				invertDirection = -1;
-				precision = 5;
-				n2 = 1;
-			}
-			else if (n2 == 0 && invertDirection == -1)
-			{
-				n2 = 1;
-			}
-			else if (n2 != 0 && invertDirection == -1)
-			{
-				break;
-			}
-
-			if(count == 0)
-			{
-				for(int i = 0; i<3; i++)
-				{
-					v1[i] = (p2[i] - p1[i]);
-					v2[i] = (p3[i] - p2[i]);
-				}
-
-				// the order is important to understand the direction of the control
-				vtkMath::Cross(v1,v2, vtemp);
-				vtkMath::Cross(vtemp,v1, v2);
-				vtkMath::Normalize(v2);
-			}
-
-			for(int i = 0; i<3; i++)
-				p2[i] += (invertDirection*(wrapside*precision) * v2[i]);
-
-			count++;
-		}
-		////////////////////////////////////////////////////
-
-		if(pointsIntersection1->GetNumberOfPoints() == 0 || pointsIntersection2->GetNumberOfPoints() == 0) return;
-
-		pointTangent1[0] = pointsIntersection1->GetPoint(0)[0];
-		pointTangent1[1] = pointsIntersection1->GetPoint(0)[1];
-		pointTangent1[2] = pointsIntersection1->GetPoint(0)[2];
-
-		pointTangent2[0] = pointsIntersection2->GetPoint(0)[0];
-		pointTangent2[1] = pointsIntersection2->GetPoint(0)[1];
-		pointTangent2[2] = pointsIntersection2->GetPoint(0)[2];
-
-		//here put the code for cut and clip, so there is a wrap
-		m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start,  pointTangent1)) + 
-			sqrt(vtkMath::Distance2BetweenPoints(pointTangent2, local_end));
-
-		//search normal to plane
-
-		m_PlaneSource->SetOrigin(local_wrapped_center);
-		m_PlaneSource->SetPoint1(pointTangent1);
-		m_PlaneSource->SetPoint2(pointTangent2);
-
-		m_PlaneCutter->SetOrigin(local_wrapped_center);
-		m_PlaneCutter->SetNormal(m_PlaneSource->GetNormal());
-
-
-		m_Cutter->SetInput(transformFirstData->GetOutput());
-		m_Cutter->SetCutFunction(m_PlaneCutter);
-
-		double midPoint[3];
-		midPoint[0] = (pointTangent2[0] + pointTangent1[0])/2;
-		midPoint[1] = (pointTangent2[1] + pointTangent1[1])/2;
-		midPoint[2] = (pointTangent2[2] + pointTangent1[2])/2;
-
-		double normal[3];
-		normal[0] = midPoint[0] - local_wrapped_center[0];
-		normal[1] = midPoint[1] - local_wrapped_center[1];
-		normal[2] = midPoint[2] - local_wrapped_center[2];
-
-		if( normal[0] == 0.0 && normal[1] == 0.0 && normal[2] == 0.0) return; // midpoint and center are the same point
-
-		m_PlaneClip->SetOrigin(midPoint);
-		m_PlaneClip->SetNormal(normal);
-
-
-		m_Clip->SetInput(m_Cutter->GetOutput());
-		m_Clip->SetClipFunction(m_PlaneClip);
-
-		double clipLength = 0;
-		double numberOfCells = m_Clip->GetOutput()->GetNumberOfCells();
-		for(int i=0; i<numberOfCells; i++)
-		{
-			clipLength += sqrt(m_Clip->GetOutput()->GetCell(i)->GetLength2());
-		}
-
-		m_Distance += clipLength;
-
-
-		////////////////////////////////////////////////////////
-
-		m_WrappedTangent1[0] = pointTangent1[0];
-		m_WrappedTangent1[1] = pointTangent1[1];
-		m_WrappedTangent1[2] = pointTangent1[2];
-
-		m_WrappedTangent2[0] = pointTangent2[0];
-		m_WrappedTangent2[1] = pointTangent2[1];
-		m_WrappedTangent2[2] = pointTangent2[2];
-
-		m_LineSource2->SetPoint1(pointTangent2[0],pointTangent2[1],pointTangent2[2]);
-		m_LineSource2->SetPoint2(local_end[0],local_end[1],local_end[2]);
-
-		m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
-		m_LineSource->SetPoint2(pointTangent1[0],pointTangent1[1],pointTangent1[2]);
-
-		m_Goniometer->AddInput(m_LineSource->GetOutput());
-		m_Goniometer->AddInput(m_LineSource2->GetOutput());
-		//m_Goniometer->AddInput(m_LineSourceMiddle->GetOutput());
-		m_Goniometer->AddInput(m_Clip->GetOutput());
-
-
-		m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
-		GetWrappedMeterOutput()->Update(); 
-	}
-	else
-		m_Distance = -1;
+  mafVME *start_vme = GetStartVME();
+  mafVME *end_vme   = GetEnd1VME();
+  mafVME *wrapped_vme   = GetWrappedVME();
+
+  bool start_ok = true, end_ok = true;
+
+  double orientation[3];
+  m_Goniometer->RemoveAllInputs();
+
+  mafTimeStamp currTs = GetTimeStamp();
+
+
+  if (start_vme && end_vme && wrapped_vme)
+  { 
+    if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
+    {
+      ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,currTs);
+      mafMatrix tm;
+      start_vme->GetOutput()->GetAbsMatrix(tm, currTs);
+      m_TmpTransform->SetMatrix(tm);
+      m_TmpTransform->TransformPoint(m_StartPoint,m_StartPoint);
+    }
+    else
+    {
+      start_vme->GetOutput()->Update();  
+      start_vme->GetOutput()->GetAbsPose(m_StartPoint, orientation, currTs);
+    }
+
+    if(wrapped_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("WrappedVME") != -1)
+    {
+      ((mafVMELandmarkCloud *)wrapped_vme)->GetLandmark(GetLinkSubId("WrappedVME"),m_WrappedVMECenter,currTs);
+      mafMatrix tm;
+      wrapped_vme->GetOutput()->GetAbsMatrix(tm, currTs);
+      m_TmpTransform->SetMatrix(tm);
+      m_TmpTransform->TransformPoint(m_WrappedVMECenter,m_WrappedVMECenter);
+    }
+    else
+    {
+      wrapped_vme->GetOutput()->GetAbsPose(m_WrappedVMECenter, orientation, currTs);
+
+      double translation[3];
+      ((vtkPolyData *)wrapped_vme->GetOutput()->GetVTKData())->GetCenter(translation);
+
+      mafMatrix mat;
+      mat.Identity();
+      for(int i=0; i<3; i++)
+        mat.SetElement(i,3,translation[i]);
+      m_TmpTransform->SetMatrix(mat);
+      m_TmpTransform->TransformPoint(m_WrappedVMECenter,m_WrappedVMECenter);
+    }
+
+    if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
+    {
+      ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,currTs);
+      mafMatrix tm;
+      end_vme->GetOutput()->GetAbsMatrix(tm, currTs);
+      m_TmpTransform->SetMatrix(tm);
+      m_TmpTransform->TransformPoint(m_EndPoint,m_EndPoint);
+    }
+    else
+    {
+      end_vme->GetOutput()->Update();  
+      end_vme->GetOutput()->GetAbsPose(m_EndPoint, orientation, currTs);
+    }
+  }
+  else
+  {
+    start_ok = false;
+    end_ok   = false;
+  }
+
+  m_WrappedTangent1[0] =  m_WrappedTangent1[1] = m_WrappedTangent1[2] = 0.0;
+  m_WrappedTangent2[0] =  m_WrappedTangent2[1] = m_WrappedTangent2[2] = 0.0;
+
+
+  if (!start_ok || !end_ok)
+  {
+    m_Distance = -1;
+    return;
+  }
+  // compute distance between points
+  m_Distance = 0.0;
+
+  mafMatrix mtl;
+  GetOutput()->GetAbsMatrix(mtl, currTs);
+  m_TmpTransform->SetMatrix(mtl);
+  m_TmpTransform->Invert();
+
+  // compute start point in local coordinate system
+  double local_start[3];
+  m_TmpTransform->TransformPoint(m_StartPoint, local_start);  // m_TmpTransform needed to fix a memory leaks of GetInverse()
+  //GetAbsMatrixPipe()->GetInverse()->TransformPoint(StartPoint,local_start);
+
+  // compute end point in local coordinate system
+  double local_end[3];
+  m_TmpTransform->TransformPoint(m_EndPoint,local_end);
+
+  // compute end point in local coordinate system
+  double local_wrapped_center[3];
+  m_TmpTransform->TransformPoint(m_WrappedVMECenter,local_wrapped_center);
+
+  // use list of tangent point (raw)
+  double pointTangent1[3];
+  double pointTangent2[3];
+
+  //control if the point are allineated
+  double vec1[3], vec2[3], vec3[3];
+  vec1[0] = local_start[0] - local_end[0];
+  vec1[1] = local_start[1] - local_end[1];
+  vec1[2] = local_start[2] - local_end[2];
+
+  vec2[0] = local_start[0] - local_wrapped_center[0];
+  vec2[1] = local_start[1] - local_wrapped_center[1];
+  vec2[2] = local_start[2] - local_wrapped_center[2];
+
+  vec3[0] = local_end[0] - local_wrapped_center[0];
+  vec3[1] = local_end[1] - local_wrapped_center[1];
+  vec3[2] = local_end[2] - local_wrapped_center[2];
+
+  bool aligned = false;
+  double vectorProduct[3];
+  vtkMath::Cross(vec1,vec2, vectorProduct); 
+  if(vectorProduct[0] == 0.0 && vectorProduct[1] == 0.0 && vectorProduct[2] == 0.0)
+    aligned = true;
+
+  // create ordered list of tangent point (2) real algorithm
+  vtkMAFSmartPointer<vtkTransformPolyDataFilter> transformFirstDataInput;
+  transformFirstDataInput->SetTransform(wrapped_vme->GetAbsMatrixPipe()->GetVTKTransform());
+  transformFirstDataInput->SetInput((vtkPolyData *)wrapped_vme->GetOutput()->GetVTKData());
+  transformFirstDataInput->Update();
+
+  vtkMAFSmartPointer<vtkTransformPolyDataFilter> transformFirstData;
+  transformFirstData->SetTransform(m_TmpTransform->GetVTKTransform());
+  transformFirstData->SetInput((vtkPolyData *)transformFirstDataInput->GetOutput());
+  transformFirstData->Update(); 
+
+  // here REAL ALGORITHM //////////////////////////////
+  vtkMAFSmartPointer<vtkOBBTree> locator;
+  locator->SetDataSet(transformFirstData->GetOutput());
+  locator->SetGlobalWarningDisplay(0);
+  locator->BuildLocator();
+
+  //Control if Start or End point is inside vtk data (surface)
+  if(locator->InsideOrOutside(local_start) <= 0 || locator->InsideOrOutside(local_end) <= 0) 
+  {
+    //if one point is inside connect start and end
+    m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
+    m_LineSource->SetPoint2(local_end[0],local_end[1],local_end[2]);
+    m_Goniometer->AddInput(m_LineSource->GetOutput());
+
+    m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
+
+    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    GetWrappedMeterOutput()->Update();
+
+    return;
+  }
+
+  vtkMAFSmartPointer<vtkPoints> temporaryIntersection;
+  vtkMAFSmartPointer<vtkPoints> pointsIntersection1;
+  vtkMAFSmartPointer<vtkPoints> pointsIntersection2;
+
+  //control if there is an intersection
+  locator->IntersectWithLine(local_start, local_end, temporaryIntersection, NULL);
+
+  //  code to control if exist an intersection between the line draw from start point to end point and 
+  //  the vtk data (surface)
+  int nControl = temporaryIntersection->GetNumberOfPoints();
+  if(nControl==0)//if(aligned == true)
+  {
+    //if there is no intersection with geometry
+    m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
+    m_LineSource->SetPoint2(local_end[0],local_end[1],local_end[2]);
+    m_Goniometer->AddInput(m_LineSource->GetOutput());
+
+    m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
+
+    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    GetWrappedMeterOutput()->Update();
+
+    return;
+  }
+
+
+
+  //WRAPPED METER REFACTOR // 2008 09 15
+  //local_wrapped_center -> center of wrapped surface
+  //need a vector that is the normal of the plane
+  vtkMatrix4x4 *mat = ((mafVME *)wrapped_vme)->GetAbsMatrixPipe()->GetVTKTransform()->GetMatrix();
+  mafMatrix matrix;
+  matrix.SetVTKMatrix(mat);
+  double versorX[4], versorY[4], versorZ[4];
+  matrix.GetVersor(0, versorX);
+  matrix.GetVersor(1, versorY);
+  matrix.GetVersor(2, versorZ);
+  versorX[3] = 0.0;
+  versorY[3] = 0.0;
+  versorZ[3] = 0.0;
+  m_TmpTransform->GetMatrix().MultiplyPoint(versorX, versorX);
+  m_TmpTransform->GetMatrix().MultiplyPoint(versorY, versorY);
+  m_TmpTransform->GetMatrix().MultiplyPoint(versorZ, versorZ);
+  versorX[3] = 0.0;
+  versorY[3] = 0.0;
+  versorZ[3] = 0.0;
+  // these versors determine the semiplanes, versor Z determines XY plane.
+  double t;
+  double pseudoIntersection[3];
+
+  // for now only contol y, because data test is oriented in such way
+  int  inters = vtkPlane::IntersectWithLine(local_start,local_end,versorZ,local_wrapped_center, t, pseudoIntersection);
+  bool controlParallel  = (inters != 0 || t != VTK_DOUBLE_MAX) ? true : false;
+  //bool semiplaneControl = (pseudoIntersection[1] - local_wrapped_center[1])<0? true: false ;
+
+#ifdef STRANGE_CODE
+  if(controlParallel == false )//|| semiplaneControl == false /* INTERSECTION WRAPPED PLANE is positive or zero*/)
+  {
+    //if there is no intersection with geometry
+    m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
+    m_LineSource->SetPoint2(local_end[0],local_end[1],local_end[2]);
+    m_Goniometer->AddInput(m_LineSource->GetOutput());
+
+    m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start, local_end));
+
+    m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+    GetWrappedMeterOutput()->Update();
+
+    return;
+  }
+  //WRAPPED METER REFACTOR // 2008 09 15
+#endif
+
+
+
+  double p1[3], p2base[3], p2[3], p3[3];
+  p1[0] = local_start[0];
+  p1[1] = local_start[1];
+  p1[2] = local_start[2];
+
+  const int factorLenght = 30;
+  p2[0] = p2base[0] = local_wrapped_center[0] + factorLenght * (local_wrapped_center[0] - local_start[0]);
+  p2[1] = p2base[1] = local_wrapped_center[1] + factorLenght * (local_wrapped_center[1] - local_start[1]);
+  p2[2] = p2base[2] = local_wrapped_center[2] + factorLenght * (local_wrapped_center[2] - local_start[2]);
+
+  p3[0] = local_end[0];
+  p3[1] = local_end[1];
+  p3[2] = local_end[2];
+
+  double v1[3],v2[3],vtemp[3];
+  int count =0;
+  int n1 = -1; // number of intersections
+
+  int precision = 50;
+  int wrapside = m_WrapSide == 0 ? (-1) : (1);
+  int invertDirection = 1;
+  if(aligned)
+  {
+    for(int i = 0; i<3; i++)
+      v2[i] = versorY[i];
+  }
+  else
+  {
+    for(int i = 0; i<3; i++)
+    {
+      v1[i] = (p2[i] - p1[i]);
+      v2[i] = (p3[i] - p2[i]);
+    }
+    // the order is important to understand the direction of the control
+    vtkMath::Cross(v1,v2, vtemp);
+    vtkMath::Cross(vtemp,v1, v2);
+    vtkMath::Normalize(v2);
+  }
+
+  double suplMin = 0.0;
+  double suplMax = suplMin;
+  int    numPntInt;
+
+  for(int i = 0; i<3; i++)
+    p2[i] = p2base[i] + suplMax * v2[i];
+  locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+  numPntInt = temporaryIntersection->GetNumberOfPoints();
+  if(numPntInt == 0)
+  {
+    mafLogMessage("No intersection found on initial step");
+    return;
+  }
+
+  do
+  {
+    suplMax += wrapside * precision;
+    for(int i = 0; i<3; i++)
+      p2[i] = p2base[i] + suplMax * v2[i];
+    locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+    numPntInt = temporaryIntersection->GetNumberOfPoints();
+  }
+  while(numPntInt != 0);
+
+  do 
+  {
+    double tmp = (suplMax + suplMin) / 2;
+    for(int i = 0; i<3; i++)
+      p2[i] = p2base[i] + tmp * v2[i];
+    locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+    numPntInt = temporaryIntersection->GetNumberOfPoints();
+    if(numPntInt == 0)
+      suplMax = tmp;
+    else
+      suplMin = tmp;
+  } 
+  while (fabs(suplMax - suplMin) > 1);
+  for(int i = 0; i<3; i++)
+    p2[i] = p2base[i] + suplMin * v2[i];
+  locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+  pointsIntersection1->DeepCopy(temporaryIntersection);
+
+  /*while(n1 != 0)
+  {
+  locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+  n1 = temporaryIntersection->GetNumberOfPoints();
+
+  if(n1 != 0)
+  {
+  pointsIntersection1->DeepCopy(temporaryIntersection);
+  if (invertDirection == -1)
+  break;
+  }
+  else
+  {
+  if (invertDirection == 1)
+  {
+  invertDirection = -1;
+  precision = 5;
+  n1 = 1;
+  }
+  else //if (invertDirection == -1)
+  {
+  n1 = 1;
+  }
+  }
+
+  for(int i = 0; i<3; i++)
+  p2[i] += (invertDirection*(wrapside*precision) * v2[i]);
+
+  count++;
+  }*/
+
+
+  p1[0] = local_end[0];
+  p1[1] = local_end[1];
+  p1[2] = local_end[2];
+
+  p2[0] = p2base[0] = local_wrapped_center[0] + factorLenght * (local_wrapped_center[0] - local_end[0]);
+  p2[1] = p2base[1] = local_wrapped_center[1] + factorLenght * (local_wrapped_center[1] - local_end[1]);
+  p2[2] = p2base[2] = local_wrapped_center[2] + factorLenght * (local_wrapped_center[2] - local_end[2]);
+
+  p3[0] = local_start[0];
+  p3[1] = local_start[1];
+  p3[2] = local_start[2];
+
+  count = 0;
+  int n2 = -1; // number of intersections
+  precision = 50;
+  invertDirection = 1;
+  if(aligned)
+  {
+    for(int i = 0; i<3; i++)
+      v2[i] = versorY[i];
+  }
+  else
+  {
+    for(int i = 0; i<3; i++)
+    {
+      v1[i] = (p2[i] - p1[i]);
+      v2[i] = (p3[i] - p2[i]);
+    }
+    // the order is important to understand the direction of the control
+    vtkMath::Cross(v1,v2, vtemp);
+    vtkMath::Cross(vtemp,v1, v2);
+    vtkMath::Normalize(v2);
+  }
+
+  suplMin = 0.0;
+  suplMax = suplMin;
+  numPntInt;
+
+  for(int i = 0; i<3; i++)
+    p2[i] = p2base[i] + suplMax * v2[i];
+  locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+  numPntInt = temporaryIntersection->GetNumberOfPoints();
+  if(numPntInt == 0)
+  {
+    mafLogMessage("No intersection found on initial step");
+    return;
+  }
+
+  do
+  {
+    suplMax += wrapside * precision;
+    for(int i = 0; i<3; i++)
+      p2[i] = p2base[i] + suplMax * v2[i];
+    locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+    numPntInt = temporaryIntersection->GetNumberOfPoints();
+  }
+  while(numPntInt != 0);
+
+  do 
+  {
+    double tmp = (suplMax + suplMin) / 2;
+    for(int i = 0; i<3; i++)
+      p2[i] = p2base[i] + tmp * v2[i];
+    locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+    numPntInt = temporaryIntersection->GetNumberOfPoints();
+    if(numPntInt == 0)
+      suplMax = tmp;
+    else
+      suplMin = tmp;
+  } 
+  while (fabs(suplMax - suplMin) > 1);
+  for(int i = 0; i<3; i++)
+    p2[i] = p2base[i] + suplMin * v2[i];
+  locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+  pointsIntersection2->DeepCopy(temporaryIntersection);
+
+
+  /*while(n2 != 0)
+  {
+  locator->IntersectWithLine(p1, p2, temporaryIntersection, NULL);
+  n2 = temporaryIntersection->GetNumberOfPoints();
+
+  if(n2 != 0)
+  {
+  pointsIntersection2->DeepCopy(temporaryIntersection);
+  if (invertDirection == -1)
+  break;
+  }
+  else
+  {
+  if (invertDirection == 1)
+  {
+  invertDirection = -1;
+  precision = 5;
+  n2 = 1;
+  }
+  else //if (invertDirection == -1)
+  {
+  n2 = 1;
+  }
+  }
+
+  for(int i = 0; i<3; i++)
+  p2[i] += (invertDirection*(wrapside*precision) * v2[i]);
+
+  count++;
+  }*/
+  ////////////////////////////////////////////////////
+
+  if(pointsIntersection1->GetNumberOfPoints() == 0 || pointsIntersection2->GetNumberOfPoints() == 0) return;
+
+  pointTangent1[0] = pointsIntersection1->GetPoint(0)[0];
+  pointTangent1[1] = pointsIntersection1->GetPoint(0)[1];
+  pointTangent1[2] = pointsIntersection1->GetPoint(0)[2];
+
+  pointTangent2[0] = pointsIntersection2->GetPoint(0)[0];
+  pointTangent2[1] = pointsIntersection2->GetPoint(0)[1];
+  pointTangent2[2] = pointsIntersection2->GetPoint(0)[2];
+
+  //here put the code for cut and clip, so there is a wrap
+  m_Distance = sqrt(vtkMath::Distance2BetweenPoints(local_start,  pointTangent1)) + 
+    sqrt(vtkMath::Distance2BetweenPoints(pointTangent2, local_end));
+
+  //search normal to plane
+
+  m_PlaneSource->SetOrigin(local_wrapped_center);
+  m_PlaneSource->SetPoint1(pointTangent1);
+  m_PlaneSource->SetPoint2(pointTangent2);
+
+  m_PlaneCutter->SetOrigin(local_wrapped_center);
+  m_PlaneCutter->SetNormal(m_PlaneSource->GetNormal());
+
+
+  m_Cutter->SetInput(transformFirstData->GetOutput());
+  m_Cutter->SetCutFunction(m_PlaneCutter);
+
+  double midPoint[3];
+  midPoint[0] = (pointTangent2[0] + pointTangent1[0])/2;
+  midPoint[1] = (pointTangent2[1] + pointTangent1[1])/2;
+  midPoint[2] = (pointTangent2[2] + pointTangent1[2])/2;
+
+  double normal[3];
+  normal[0] = midPoint[0] - local_wrapped_center[0];
+  normal[1] = midPoint[1] - local_wrapped_center[1];
+  normal[2] = midPoint[2] - local_wrapped_center[2];
+
+  if( normal[0] == 0.0 && normal[1] == 0.0 && normal[2] == 0.0) return; // midpoint and center are the same point
+
+  m_PlaneClip->SetOrigin(midPoint);
+  m_PlaneClip->SetNormal(normal);
+
+
+  m_Clip->SetInput(m_Cutter->GetOutput());
+  m_Clip->SetClipFunction(m_PlaneClip);
+
+  double clipLength = 0;
+  double numberOfCells = m_Clip->GetOutput()->GetNumberOfCells();
+  for(int i=0; i<numberOfCells; i++)
+  {
+    clipLength += sqrt(m_Clip->GetOutput()->GetCell(i)->GetLength2());
+  }
+
+  m_Distance += clipLength;
+
+
+  ////////////////////////////////////////////////////////
+
+  m_WrappedTangent1[0] = pointTangent1[0];
+  m_WrappedTangent1[1] = pointTangent1[1];
+  m_WrappedTangent1[2] = pointTangent1[2];
+
+  m_WrappedTangent2[0] = pointTangent2[0];
+  m_WrappedTangent2[1] = pointTangent2[1];
+  m_WrappedTangent2[2] = pointTangent2[2];
+
+  m_LineSource2->SetPoint1(pointTangent2[0],pointTangent2[1],pointTangent2[2]);
+  m_LineSource2->SetPoint2(local_end[0],local_end[1],local_end[2]);
+
+  m_LineSource->SetPoint1(local_start[0],local_start[1],local_start[2]);
+  m_LineSource->SetPoint2(pointTangent1[0],pointTangent1[1],pointTangent1[2]);
+
+  m_Goniometer->AddInput(m_LineSource->GetOutput());
+  //m_Goniometer->AddInput(m_LineSourceMiddle->GetOutput());
+  m_Goniometer->AddInput(m_Clip->GetOutput());
+  m_Goniometer->AddInput(m_LineSource2->GetOutput());
+
+
+  m_EventSource->InvokeEvent(this, VME_OUTPUT_DATA_UPDATE);
+  GetWrappedMeterOutput()->Update(); 
 }
 //-----------------------------------------------------------------------
 void medVMEComputeWrapping::InternalUpdateAutomatedIOR()//third
