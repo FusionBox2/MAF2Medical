@@ -98,21 +98,21 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 		 break;
 		 case ID_GET_FILENAME:
 			  {
-				  e->SetString(&(m_VMEManager->GetFileName()));
+				  e->SetString(&m_MSFFile);
 			  }
 			  break;
 		 case MENU_FILE_SNAPSHOT:
 			  {
-				  mafString msfFilename = m_VMEManager->GetFileName();
+				  mafString msfFilename = m_MSFFile;
 				  if (msfFilename.IsEmpty())
 				  {
 					  mafString dirName = mafGetApplicationDirectory();
 					  dirName << "\\data\\msf\\";
 
-					  m_VMEManager->SetDirName(dirName);
+					  m_MSFDir = dirName;
 					  this->OnFileSaveAs();
 					  this->OnEvent((mafEventBase*)&mafEvent(this,CAMERA_UPDATE));
-					  msfFilename = m_VMEManager->GetFileName();
+					  msfFilename = m_MSFFile;
 				  }
 
 				  wxString path, name, ext;
@@ -310,7 +310,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
       {
         //Running an op required from the wizard
         if(m_VMEManager)
-          m_VMEManager->MSFNew();
+          OnFileNew();
         m_WizardManager->WizardContinue(true);
       }
     break;
@@ -323,8 +323,8 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
     case WIZARD_RELOAD_MSF:
       {
         UpdateFrameTitle();
-        wxString file;
-        file=m_VMEManager->GetFileName().GetCStr();
+        mafString file;
+        file=m_MSFFile;
         if(file.IsEmpty())
         {
           mafLogMessage ("Reload requested whitout opened MSF");
@@ -333,7 +333,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
         }
         else
         {
-          int opened=m_VMEManager->MSFOpen(file);
+          int opened=OnFileOpen(file);
           //continue wizard after open operation
           m_WizardManager->WizardContinue(opened!=MAF_ERROR);
         }
@@ -590,95 +590,46 @@ void medLogicWithManagers::UpdateFrameTitle()
 }
 
 //----------------------------------------------------------------------------
-void medLogicWithManagers::OnFileOpen(const char *file_to_open)
+bool medLogicWithManagers::OnFileOpen(const mafString& file_to_open)
 //----------------------------------------------------------------------------
 {
+  bool res = mafLogicWithManagers::OnFileOpen(file_to_open);
   if(m_VMEManager)
   {
-    if(m_VMEManager->AskConfirmAndSave())
-    {
-      wxString file;
-      if (m_StorageSettings->GetStorageType() == mafGUISettingsStorage::HTTP)
-      {
-        if (file_to_open != NULL)
-        {
-          file = file_to_open;
-        }
-        else
-        {
-          mafGUIDialogRemoteFile remoteFile;
-          remoteFile.ShowModal();
-          file = remoteFile.GetFile().GetCStr();
-          mafString protocol;
-          if (IsRemote(file.c_str(),protocol))
-          {
-            m_VMEManager->SetHost(remoteFile.GetHost());
-            m_VMEManager->SetRemotePort(remoteFile.GetPort());//
-            m_VMEManager->SetUser(remoteFile.GetUser());
-            m_VMEManager->SetPassword(remoteFile.GetPassword());
-          }
-        }
-      }
-      else      
-      {
-        wxString wildc    = _("MAF Storage Format file (*." + m_Extension + ")|*." + m_Extension +"|Compressed file (*.z" + m_Extension + ")|*.z" + m_Extension + "");
-        if (file_to_open != NULL)
-        {
-          file = file_to_open;
-        }
-        else
-        {
-          file = mafGetOpenFile("", wildc).GetCStr();
-        }
-      }
-
-      if(file.IsEmpty() && m_WizardManager && m_WizardRunning)
-        m_WizardManager->WizardContinue(false);
-      else if(file.IsEmpty())
-        return;
-        
-
-      int opened=m_VMEManager->MSFOpen(file);
       //If there is a wizzard running we need to continue it after open operation
       if (m_WizardManager && m_WizardRunning)
-        m_WizardManager->WizardContinue(opened!=MAF_ERROR);
-    }
+        m_WizardManager->WizardContinue(res);
   }
+  return res;
 }
 
 
 //----------------------------------------------------------------------------
-void medLogicWithManagers::OnFileSave()
+bool medLogicWithManagers::OnFileSave()
 //----------------------------------------------------------------------------
 {
+  bool res = mafLogicWithManagers::OnFileSave();
   if(m_VMEManager)
   {
-	mafString save_default_folder = m_StorageSettings->GetDefaultSaveFolder();
-	save_default_folder.ParsePathName();
-	m_VMEManager->SetDirName(save_default_folder);
-    int saved=m_VMEManager->MSFSave();
     //If there is a wizard running we need to continue it after save operation
     if (m_WizardManager && m_WizardRunning)
-      m_WizardManager->WizardContinue(saved!=MAF_ERROR);
-    UpdateFrameTitle();
+      m_WizardManager->WizardContinue(res);
   }
+  return res;
 }
 
 //----------------------------------------------------------------------------
-void medLogicWithManagers::OnFileSaveAs()
+bool medLogicWithManagers::OnFileSaveAs()
 //----------------------------------------------------------------------------
 {
+  bool res = mafLogicWithManagers::OnFileSaveAs();
   if(m_VMEManager) 
   {
-	mafString save_default_folder = m_StorageSettings->GetDefaultSaveFolder();
-	save_default_folder.ParsePathName();
-	m_VMEManager->SetDirName(save_default_folder);
-    int saved=m_VMEManager->MSFSaveAs();
     //If there is a wizard running we need to continue it after save operation
     if (m_WizardManager && m_WizardRunning)
-      m_WizardManager->WizardContinue(saved!=MAF_ERROR);
-    UpdateFrameTitle();
+      m_WizardManager->WizardContinue(res);
   }
+  return res;
 }
 
 //----------------------------------------------------------------------------

@@ -99,13 +99,13 @@ protected:
   /** FILE OPEN evt. handler. 
   By default (file_to_open = NULL) it ask the user to choose a file to open,
   otherwise it open the given one.*/
-	virtual void OnFileOpen(const char *file_to_open = NULL);
+	virtual bool OnFileOpen(const mafString& file_to_open = "");
  
   /** FILE SAVE evt. handler */
-  virtual void OnFileSave();
+  virtual bool OnFileSave();
   
   /** FILE SAVEAS evt. handler */
-  virtual void OnFileSaveAs();
+  virtual bool OnFileSaveAs();
 
   virtual void ConfigureWizardManager();
 
