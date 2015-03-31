@@ -208,6 +208,8 @@ int medVMEComputeWrapping::DeepCopy(mafNode *a)
 		this->m_ViaPointName = meter->m_ViaPointName;
 		this->m_AbCurve = meter->m_AbCurve;
 
+    m_OrderMiddlePointsVMEList = meter->m_OrderMiddlePointsVMEList;
+    m_OrderMiddlePointsNameVMEList = meter->m_OrderMiddlePointsNameVMEList;
 		this->m_Idx = meter->m_Idx;
 		this->m_PathNum = meter->m_PathNum;
 
@@ -237,9 +239,14 @@ bool medVMEComputeWrapping::Equals(mafVME *vme)
 	if (Superclass::Equals(vme))
 	{
 		ret = m_Transform->GetMatrix() == ((medVMEComputeWrapping *)vme)->m_Transform->GetMatrix();
-    medVMEComputeWrapping *meter = medVMEComputeWrapping::SafeDownCast(vme);
-    m_WrappedMode1 == meter->m_WrappedMode1;
-    m_WrappedMode2 == meter->m_WrappedMode2;
+    if(medVMEComputeWrapping *meter = medVMEComputeWrapping::SafeDownCast(vme))
+    {
+      ret = ret && m_WrappedClass == meter->m_WrappedClass && m_WrappedMode1 == meter->m_WrappedMode1 && m_WrappedMode2 == meter->m_WrappedMode2;
+    }
+    else
+    {
+      ret = false;
+    }
 	}
 	return ret;
 }
@@ -5754,14 +5761,20 @@ void medVMEComputeWrapping::OnEvent(mafEventBase *maf_event)
 void medVMEComputeWrapping::SetMeterLink(const char *link_name, mafNode *n)
 //-------------------------------------------------------------------------
 {
+  int idx = 0;
+  mafID nid = n->GetId();
+  bool lm = false;
 	if (n->IsMAFType(mafVMELandmark))
 	{
-		SetLink(link_name,n->GetParent(),((mafVMELandmarkCloud *)n->GetParent())->FindLandmarkIndex(n->GetName()));
+    nid = n->GetParent()->GetId();
+    idx = ((mafVMELandmarkCloud *)n->GetParent())->FindLandmarkIndex(n->GetName());
+    lm = true;
+		SetLink(link_name,n->GetParent(),idx);
 	}
-	else
-	{
-		SetLink(link_name, n);
-	}
+  else
+  {
+    SetLink(link_name, n);
+  }
 
 	if( mafString(link_name) != mafString("StartVME") &&
 		mafString(link_name) != mafString("EndVME1")  &&
@@ -5771,6 +5784,9 @@ void medVMEComputeWrapping::SetMeterLink(const char *link_name, mafNode *n)
 		mafString(link_name) != mafString("WrappedVME2"))
 	{
 		m_OrderMiddlePointsNameVMEList.push_back(n->GetName());
+    m_OrderMiddlePointsVMEList.push_back(nid);
+    if(lm)
+      m_OrderMiddlePointsVMEList.push_back(idx);
 		m_TestList.push_back(n->GetName());
 	}
 }
