@@ -397,6 +397,7 @@ protected:
 	/** called to prepare the update of the output */
 	virtual void InternalPreUpdate();
 
+  virtual void UpdateLinks(std::vector<std::pair<mafNode*, mafNode*> >& nodes);
 
 
 	/** update the output data structure for manual wrapped mode */
@@ -621,6 +622,9 @@ protected:
 	std::vector<mafString> m_OrderMiddlePointsNameVMEList; //order list of VME Name
 	std::vector<mafString> m_TestList;
 	
+  bool m_usenodepatch;
+  std::vector<bool> m_lmcs;
+  std::vector<std::pair<mafNode*, mafNode*> > m_nodesPatch;
 
 	int              m_OrderMiddlePointsVMEListNumberOfElements;
 

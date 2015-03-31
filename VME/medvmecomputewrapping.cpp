@@ -96,6 +96,7 @@ medVMEComputeWrapping::medVMEComputeWrapping()
 	m_ListBox = NULL;
 	m_Idx = 0;
 	m_PathNum = 36;
+  m_usenodepatch = false;
 
 	//m_Tolerance = GetCylinderRadius()/4.0;
 
@@ -258,6 +259,25 @@ int medVMEComputeWrapping::InternalInitialize()
 	{
 		// force material allocation
 		GetMaterial();
+    if(m_usenodepatch)
+    {
+      int k = 0;
+      for(int j=0; j<m_OrderMiddlePointsVMEList.size();j++, k++)
+      {
+        for(unsigned i = 0; i < m_nodesPatch.size(); i++)
+        {
+          if(m_nodesPatch[i].first->GetId() == m_OrderMiddlePointsVMEList[j])
+          {
+            m_OrderMiddlePointsVMEList[j] = m_nodesPatch[i].second->GetId();
+            break;
+          }
+        }
+        if(m_lmcs[k])
+          j++;
+      }
+      m_lmcs.clear();
+      m_usenodepatch = false;
+    }
 
 		return MAF_OK;
 	}
@@ -5238,6 +5258,38 @@ mafGUI* medVMEComputeWrapping::CreateGuiForNewMeter( mafGUI *gui ){
 
 	return gui;
 }
+//----------------------------------------------------------------------------
+void medVMEComputeWrapping::UpdateLinks(std::vector<std::pair<mafNode*, mafNode*> >& nodes)
+//----------------------------------------------------------------------------
+{
+  m_lmcs.resize(m_OrderMiddlePointsVMEList.size());
+
+  int k = 0;
+  for(int j=0; j<m_OrderMiddlePointsVMEList.size();j++, k++)
+  {
+    mafLinksMap::iterator lnk_it;
+    mafNode *nd = NULL;
+    m_lmcs[k] = false;
+    for (lnk_it = GetLinks()->begin(); lnk_it != GetLinks()->end(); ++lnk_it)
+    {
+      if(lnk_it->second.m_Node->GetId() == m_OrderMiddlePointsVMEList[j])
+      {
+        nd = lnk_it->second.m_Node;
+        break;
+      }
+    }
+    if(mafVMELandmarkCloud *lc = mafVMELandmarkCloud::SafeDownCast(nd))
+    {
+      m_lmcs[k] = true;
+      j++;
+    }
+  }
+  m_usenodepatch = true;
+  m_nodesPatch = nodes;
+  Superclass::UpdateLinks(nodes);
+}
+
+
 mafGUI* medVMEComputeWrapping::CreateGuiForOldMeter( mafGUI *gui ){
 
 	mafID sub_id = -1;
