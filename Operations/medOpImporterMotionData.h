@@ -100,11 +100,11 @@ public:
     m_File = "";
     m_Dict = "";
 
-    mafString f = mafGetOpenFile(m_FileDir,m_PgdWildc).c_str(); 
+    mafString f = mafGetOpenFile(m_FileDir,m_PgdWildc); 
     if(f != "")
     {
       m_File = f;
-      f = mafGetOpenFile(m_DictDir,m_DicWildc,"Open Dictionary").c_str(); 
+      f = mafGetOpenFile(m_DictDir,m_DicWildc,"Open Dictionary"); 
       if(f != "")
       {
         m_Dict = f;

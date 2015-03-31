@@ -80,7 +80,7 @@ void medOpImporterLandmarkWS::OpRun()
   wxString f;
   if (!m_TestMode)
     {
-      f = mafGetOpenFile(m_FileDir,pgd_wildc).c_str(); 
+      f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
     }
 	if(!f.IsEmpty() && wxFileExists(f))
 	 {

@@ -71,7 +71,7 @@ mafOpImporterRAWVolume_BES::mafOpImporterRAWVolume_BES(const wxString &label) : 
 {
 	m_OpType			= OPTYPE_IMPORTER;
 	m_Canundo			= true;
-	m_RawFile			= mafGetApplicationDirectory().c_str();
+	m_RawFile			= mafGetApplicationDirectory();
 #ifdef VME_VOLUME_LARGE
 	m_OutputFileName = m_RawFile;
 #endif // VME_VOLUME_LARGE
@@ -444,10 +444,10 @@ void mafOpImporterRAWVolume_BES::	OnEvent(mafEventBase *maf_event)
 
 		case ID_COORD:
 			{
-				wxString dir = mafGetApplicationDirectory().c_str();
+				wxString dir = mafGetApplicationDirectory().GetCStr();
 				dir += _("/Data/External");
 				wxString wildc =_("Z_coordinates (*.txt)|*.txt");
-				wxString file = mafGetOpenFile(dir,wildc,_("Open Z coordinates file")).c_str();
+				wxString file = mafGetOpenFile(dir,wildc,_("Open Z coordinates file")).GetCStr();
 				if(!file.IsEmpty())
 				{
 					m_CoordFile = file;

@@ -537,7 +537,7 @@ void medOpImporterRAWImages::OnEvent(mafEventBase *maf_event)
         m_Gui->Enable(ID_SPC_Z, true);
         wxString rect_dir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
         wxString rect_wildc = _("Z_coordinates (*.txt)|*.txt");
-        wxString file = mafGetOpenFile(rect_dir,rect_wildc,_("Open Z coordinates file")).c_str();
+        wxString file = mafGetOpenFile(rect_dir,rect_wildc,_("Open Z coordinates file")).GetCStr();
         if (file != "")
         {
           m_CoordFile = file;

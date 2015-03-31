@@ -194,14 +194,14 @@ void medOpExporterGRFWS::OpDo()
   // INPUT is a VECTOR:
   if (m_Input->IsA("mafVMEVector"))
   {
-    wxString proposed = mafGetApplicationDirectory().c_str();
+    mafString proposed = mafGetApplicationDirectory();
     proposed += "/Data/External/";
     proposed += m_Input->GetName();
     proposed += "_VECTOR";
     proposed += ".csv";
 
-    wxString wildc = "ASCII CSV file (*.csv)|*.csv";
-    wxString f = mafGetSaveFile(proposed,wildc).c_str(); 
+    mafString wildc = "ASCII CSV file (*.csv)|*.csv";
+    wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
 
     if(!f.IsEmpty())
     {
@@ -220,14 +220,14 @@ void medOpExporterGRFWS::OpDo()
   // INPUT is a FORCE PLATE: Load and Execute 
   else if (m_ForceLeft && m_ForceRight && m_MomentLeft && m_MomentRight)
   {
-    wxString proposed = mafGetApplicationDirectory().c_str();
+    mafString proposed = mafGetApplicationDirectory();
     proposed += "/Data/External/";
     proposed += m_Input->GetName();
     proposed += "_FORCEPLATES";
     proposed += ".csv";
 
-    wxString wildc = "ASCII CSV file (*.csv)|*.csv";
-    wxString f = mafGetSaveFile(proposed,wildc).c_str(); 
+    mafString wildc = "ASCII CSV file (*.csv)|*.csv";
+    wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
 
     if(!f.IsEmpty())
     {

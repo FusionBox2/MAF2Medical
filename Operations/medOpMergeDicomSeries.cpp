@@ -94,7 +94,8 @@ void medOpMergeDicomSeries::OpRun()
 
 			if (lastDicomDir == "UNEDFINED_m_LastDicomDir")
 			{
-				wxString defaultPath = (mafGetApplicationDirectory()+"/data/external/").c_str();
+				mafString defaultPath = mafGetApplicationDirectory();
+        defaultPath += "/data/external/";
 				lastDicomDir = defaultPath;		
 			};
 			wxDirDialog dialog(NULL,"", lastDicomDir,wxRESIZE_BORDER,wxDefaultPosition);

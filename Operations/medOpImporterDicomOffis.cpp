@@ -410,7 +410,8 @@ void medOpImporterDicomOffis::OpRun()
 			}
 			else if (lastDicomDir == "UNEDFINED_m_LastDicomDir")
 			{
-				wxString defaultPath = (mafGetApplicationDirectory()+"/data/external/").c_str();
+				wxString defaultPath = mafGetApplicationDirectory().GetCStr();
+				defaultPath += "/data/external/";
 				lastDicomDir = defaultPath;		
 			};
 

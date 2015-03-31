@@ -120,7 +120,7 @@ void medOpExporterLandmark::OnEvent(mafEventBase *maf_event)
           proposed += ".txt";
           wxString wildc = "ascii file (*.txt)|*.txt";
 
-          wxString f = mafGetSaveFile(proposed,wildc).c_str(); 
+          wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
 
           if(f != "") 
           {
@@ -150,7 +150,7 @@ void medOpExporterLandmark::OnEvent(mafEventBase *maf_event)
           }
           else*/
           {
-            wxString f = mafGetDirName(proposed).c_str();
+            wxString f = mafGetDirName(proposed).GetCStr();
 
             if(f != "") 
             {

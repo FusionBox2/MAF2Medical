@@ -41,9 +41,9 @@ mafOp(label)
 	m_Vme			= NULL;
 	this->m_DictionaryAvailable = 0;
 
-	m_FileDir = mafGetApplicationDirectory().c_str(); 
+	m_FileDir = mafGetApplicationDirectory().GetCStr(); 
   m_FileDir +=  "/Data/External/";
-	m_DictDir = mafGetApplicationDirectory().c_str();
+	m_DictDir = mafGetApplicationDirectory().GetCStr();
   m_DictDir += "/Config/Dictionary/";
 }
 //----------------------------------------------------------------------------
@@ -77,11 +77,11 @@ void medOpImporterC3D::OpRun()
 	wxString c3d_wildc	= "C3D Data (*.c3d)|*.c3d";
 	wxString dict_wildc = "Dictionary (*.txt)|*.txt";
 
-	wxString f = mafGetOpenFile(m_FileDir,c3d_wildc).c_str(); 
+	wxString f = mafGetOpenFile(m_FileDir,c3d_wildc).GetCStr(); 
 	if(f != "")
 	{
 		m_File = f;
-		f = mafGetOpenFile(m_DictDir,dict_wildc,"Open Dictionary").c_str(); 
+		f = mafGetOpenFile(m_DictDir,dict_wildc,"Open Dictionary").GetCStr(); 
 		if(f != "")
 		{
 			m_Dict = f;

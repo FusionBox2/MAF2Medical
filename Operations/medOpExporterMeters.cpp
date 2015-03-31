@@ -170,11 +170,11 @@ void medOpExporterMeters::OpDo()
 //----------------------------------------------------------------------------
 {
   mafString initialFileName;
-  initialFileName = mafGetApplicationDirectory().c_str();
+  initialFileName = mafGetApplicationDirectory();
   initialFileName.Append("\\Meter.txt");
 
   mafString wildc = "configuration file (*.txt)|*.txt";
-  m_File = mafGetSaveFile(initialFileName.GetCStr(), wildc).c_str();
+  m_File = mafGetSaveFile(initialFileName.GetCStr(), wildc);
 
   if (m_File == "") return;
 

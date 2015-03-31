@@ -106,7 +106,7 @@ void medOpImporterGRFWS::OpRun()
   int result = OP_RUN_CANCEL;
   wxString pgd_wildc	= "GRF File (*.*)|*.*";
   wxString f;
-  f = mafGetOpenFile(m_FileDir,pgd_wildc).c_str(); 
+  f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
   if(!f.IsEmpty() && wxFileExists(f))
   {
     m_File = f;

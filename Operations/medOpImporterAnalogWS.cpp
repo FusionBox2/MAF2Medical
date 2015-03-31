@@ -69,7 +69,7 @@ void medOpImporterAnalogWS::OpRun()
 	m_File = "";
 	wxString pgd_wildc	= "EMG File (*.*)|*.*";
   wxString f;
-  f = mafGetOpenFile(m_FileDir,pgd_wildc).c_str(); 
+  f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
 	if(!f.IsEmpty() && wxFileExists(f))
 	{
 	  m_File = f;

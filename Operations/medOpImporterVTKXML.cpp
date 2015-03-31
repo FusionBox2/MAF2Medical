@@ -124,7 +124,7 @@ void medOpImporterVTKXML::OpRun()
   mafString f;
   if (m_File.IsEmpty())
   {
-    f = mafGetOpenFile(m_FileDir, wildc, _("Choose VTK XML file")).c_str();
+    f = mafGetOpenFile(m_FileDir, wildc, _("Choose VTK XML file"));
     m_File = f;
   }
 

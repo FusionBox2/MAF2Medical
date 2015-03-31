@@ -47,7 +47,7 @@ mafOp(label)
 	m_Canundo = true;
 	m_File    = "";
   m_VmeLarge = NULL;
-  m_FileDir = mafGetApplicationDirectory().c_str();
+  m_FileDir = mafGetApplicationDirectory().GetCStr();
 }
 //----------------------------------------------------------------------------
 mafOpImporterBBF::~mafOpImporterBBF()
@@ -71,7 +71,7 @@ void mafOpImporterBBF::OpRun()
   mafString f;
   if (m_File.IsEmpty())
   {
-    f = mafGetOpenFile(m_FileDir, wildc, _("Choose .bbf file")).c_str();
+    f = mafGetOpenFile(m_FileDir, wildc, _("Choose .bbf file"));
     m_File = f;
   }
 

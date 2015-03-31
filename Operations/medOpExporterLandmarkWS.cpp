@@ -70,14 +70,14 @@ mafOp* medOpExporterLandmarkWS::Copy()
 void medOpExporterLandmarkWS::OpRun()   
 //----------------------------------------------------------------------------
 {
-	wxString proposed = mafGetApplicationDirectory().c_str();
+	wxString proposed = mafGetApplicationDirectory().GetCStr();
   proposed += "/Data/External/";
 	proposed += m_Input->GetName();
   proposed += "_TRAJECTORIES";
 	proposed += ".csv";
 	
   wxString wildc = "ASCII CSV file (*.csv)|*.csv";
-	wxString f = mafGetSaveFile(proposed,wildc).c_str(); 
+	wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
 
 	int result = OP_RUN_CANCEL;
 	if(!f.IsEmpty())

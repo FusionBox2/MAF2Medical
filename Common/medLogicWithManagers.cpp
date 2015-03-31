@@ -106,7 +106,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 				  mafString msfFilename = m_VMEManager->GetFileName();
 				  if (msfFilename.IsEmpty())
 				  {
-					  mafString dirName = mafGetApplicationDirectory().c_str();
+					  mafString dirName = mafGetApplicationDirectory();
 					  dirName << "\\data\\msf\\";
 
 					  m_VMEManager->SetDirName(dirName);
@@ -626,7 +626,7 @@ void medLogicWithManagers::OnFileOpen(const char *file_to_open)
         }
         else
         {
-          file = mafGetOpenFile("", wildc).c_str();
+          file = mafGetOpenFile("", wildc).GetCStr();
         }
       }
 
