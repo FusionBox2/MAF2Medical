@@ -695,6 +695,8 @@ double medOpRegisterClusters::RegisterPoints(double currTime)
 		}
 	}
 
+  if(currTime < 0)
+    currTime = m_Target->GetTimeStamp();
 	
 	switch (m_RegistrationMode)						
 	{
@@ -775,9 +777,11 @@ double medOpRegisterClusters::RegisterPoints(double currTime)
     temp->SetVTKMatrix(t_matrix);
     temp->SetTimeStamp(currTime);
     temp->Modified();
-    mafMatrix *regMatrix = m_Registered->GetOutput()->GetMatrix();
-    regMatrix->DeepCopy(temp->GetVTKMatrix());
-    m_Registered->SetMatrix(*regMatrix);
+    m_Registered->GetOutput()->Update();
+    //mafMatrix *regMatrix = m_Registered->GetOutput()->GetMatrix();
+    //regMatrix->DeepCopy(temp->GetVTKMatrix());
+    //m_Registered->SetMatrix(*regMatrix);
+    m_Registered->SetMatrix(*temp);
     m_Registered->Modified();
     m_Registered->Update();
     
@@ -800,9 +804,10 @@ double medOpRegisterClusters::RegisterPoints(double currTime)
       temp->Modified();
 
       m_Follower->SetTimeStamp(currTime); //SetCurrentTime(currTime);
-      mafMatrix *folMatrix = m_Follower->GetOutput()->GetMatrix();
-      folMatrix->DeepCopy(temp->GetVTKMatrix());
-			m_Follower->SetMatrix(*folMatrix);
+      //mafMatrix *folMatrix = m_Follower->GetOutput()->GetMatrix();
+      m_Follower->GetOutput()->Update();
+      //folMatrix->DeepCopy(temp->GetVTKMatrix());
+			m_Follower->SetMatrix(*temp);
       m_Follower->Modified();
       m_Follower->Update();
       vtkDEL(t_matrix1);
