@@ -71,7 +71,6 @@ protected:
   std::vector< PAGE_GROUP > m_PageGroups; ///<registered groups of pages
   std::vector< int > m_PagesGroupIndex;   ///<group associated with the the page
 
-  mafSceneNode* m_SceneNode;  ///<current scene node to be used  
   wxBoxSizer* m_SbMainSizer;  ///<gui main container, can include either m_Notebook or m_FirstPage
   wxNotebook* m_Notebook;     ///<gui container for pages
   medGUIDynamicVP* m_FirstPage; ///<reference to the only one page (if not included in the notebook)
@@ -85,7 +84,7 @@ public:
 
 public:
   /** Creates the VTK rendering pipeline */
-  /*virtual*/ void Create(mafSceneNode *n);
+  /*virtual*/ void Create(mafNode *node, mafView *view);
 
 	/** Processes events coming from GUI */
 	/*virtual*/ void OnEvent(mafEventBase *maf_event);

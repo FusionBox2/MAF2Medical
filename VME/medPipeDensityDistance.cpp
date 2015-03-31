@@ -101,10 +101,10 @@ medPipeDensityDistance::medPipeDensityDistance()
   m_EnableMAPSFilter = true;
 }
 //----------------------------------------------------------------------------
-void medPipeDensityDistance::Create(mafSceneNode *n/*, bool use_axes*/)
+void medPipeDensityDistance::Create(mafNode *node, mafView *view/*, bool use_axes*/)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   vtkNEW(m_Normals);
 	vtkNEW(m_DistanceFilter);

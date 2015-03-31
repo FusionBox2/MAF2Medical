@@ -210,7 +210,7 @@ void medViewSliceBlend::VmeCreatePipe(mafNode *vme)
         }
         ((medPipeVolumeSliceBlend *)pipe)->SetSliceOpacity(m_Opacity);
       }
-      pipe->Create(n);
+      pipe->Create(vme, this);
       n->m_Pipe = (mafPipe*)pipe;
     }
     else

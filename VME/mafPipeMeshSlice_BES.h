@@ -64,7 +64,7 @@ public:
 	virtual void OnEvent(mafEventBase *maf_event);
 
   /** creation of the pipe */
-	virtual void Create(mafSceneNode *n /*,bool use_axes = true*/ ); //Can't add parameters - is Virtual
+	virtual void Create(mafNode *node, mafView *view /*,bool use_axes = true*/ ); //Can't add parameters - is Virtual
   /** called when a vme is selected by user */
 	virtual void Select(bool select); 
 

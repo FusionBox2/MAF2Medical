@@ -61,7 +61,7 @@ public:
   virtual void OnEvent(mafEventBase * event);
 
   /** The real setup must be performed here - not in the ctor */
-  virtual void Create(mafSceneNode * node);
+  virtual void Create(mafNode *node, mafView *view);
 
   /** Set slice with the specified parameters */
   void SetSlice(double origin[3], int sliceAxis);

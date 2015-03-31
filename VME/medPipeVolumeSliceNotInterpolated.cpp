@@ -171,10 +171,10 @@ void medPipeVolumeSliceNotInterpolated::OnEvent(mafEventBase * event)
 }
 
 //----------------------------------------------------------------------------
-void medPipeVolumeSliceNotInterpolated::Create(mafSceneNode * node)
+void medPipeVolumeSliceNotInterpolated::Create(mafNode * node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(node);
+  Superclass::Create(node, view);
   m_Vme->AddObserver(this);
   CreateSlice();
 }

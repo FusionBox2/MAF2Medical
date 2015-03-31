@@ -49,7 +49,8 @@ medGUIDynamicVP::medGUIDynamicVP( wxWindow* parent, wxWindowID id, long GUIstyle
   mafGUIPanel(parent, id, pos, size, style), m_NotifyId(id)
 //----------------------------------------------------------------------------
 {
-  m_SceneNode = NULL;
+  m_Node = NULL;
+  m_View = NULL;
   m_VPipes = NULL;
   m_VPipe = NULL;    
   m_ComboVP = NULL;
@@ -188,13 +189,14 @@ void medGUIDynamicVP::SetVPipesList(const SUPPORTED_VP_ENTRY* pList)
 //------------------------------------------------------------------------
 //Sets a new scene node for visual pipes. 
 //N.B. currently constructed visual pipe is recreated, if needed.
-void medGUIDynamicVP::SetSceneNode(mafSceneNode* node)
+void medGUIDynamicVP::SetNodeView(mafNode* node, mafView *view)
 //------------------------------------------------------------------------
 {
-  if (m_SceneNode != node)
+  if (m_Node != node || m_View != view)
   {
-    m_SceneNode = node;
-    if (m_SceneNode != NULL)
+    m_Node = node;
+    m_View = view;
+    if (m_Node != NULL && m_View != NULL)
       OnCreateVP(); //recreate the current visual pipe
   }
 }
@@ -207,7 +209,7 @@ void medGUIDynamicVP::SetVPipeIndex(int nNewIndex)
   if (m_VPipeIndex != nNewIndex)
   {
     m_VPipeIndex = nNewIndex;
-    if (m_SceneNode != NULL)
+    if (m_Node != NULL && m_View != NULL)
       OnCreateVP();
   }
 }
@@ -381,16 +383,15 @@ void medGUIDynamicVP::SetName(const char* szNewName)
   if (pipe != NULL)
   {
     pipe->SetListener(this->GetListener());
-    pipe->Create(m_SceneNode);
+    pipe->Create(m_Node, m_View);
 
     //if the view associated with this pipe contains only one VME
     //and one pipe, we will need to reset camera, so it is visible
-    mafView* view = m_SceneNode->m_Sg->m_View;
-    int nRefCount = medPipeRegister::RegisterPipe(pipe, view);
-    if (nRefCount == 1 && view->GetNumberOfVisibleVME() == 1)
-      view->CameraReset(m_SceneNode->m_Vme);    
+    int nRefCount = medPipeRegister::RegisterPipe(pipe, m_View);
+    if (nRefCount == 1 && m_View->GetNumberOfVisibleVME() == 1)
+      m_View->CameraReset(m_Node);    
     else
-      view->CameraUpdate();
+      m_View->CameraUpdate();
   }
 
   m_VPipe = pipe;

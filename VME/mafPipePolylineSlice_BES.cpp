@@ -107,10 +107,10 @@ mafPipePolylineSlice_BES::mafPipePolylineSlice_BES()
   m_AppendPolyData = NULL;
 }
 //----------------------------------------------------------------------------
-void mafPipePolylineSlice_BES::Create(mafSceneNode *n)
+void mafPipePolylineSlice_BES::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   m_Selected = false;
   m_Mapper          = NULL;

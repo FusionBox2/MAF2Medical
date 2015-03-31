@@ -328,7 +328,7 @@ void mafView3D::VmeCreatePipe(mafNode *vme)
 			{
 				((medPipeVolumeMIP *)pipe)->SetResampleFactor(m_ResampleFactor);
 			}
-      pipe->Create(n);
+      pipe->Create(vme, this);
       n->m_Pipe = (mafPipe*)pipe;
       if (m_NumberOfVisibleVme == 1)
       {

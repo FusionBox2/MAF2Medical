@@ -64,7 +64,7 @@ public:
   };
 
   /** Create. */
-  virtual void Create(mafSceneNode *n);
+  virtual void Create(mafNode *node, mafView *view);
 
   /** Show. */
   void Show(bool show); 

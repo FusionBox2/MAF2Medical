@@ -405,7 +405,7 @@ void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
         ((mafPipeMeshSlice *)pipe)->SetSlice(positionSlice);
         ((mafPipeMeshSlice *)pipe)->SetNormal(DoubleNormal);
       }
-      pipe->Create(n);
+      pipe->Create(node, this);
 			n->m_Pipe = (mafPipe*)pipe;
 
 			if (pipe_name.Equals("mafPipeVolumeSlice"))

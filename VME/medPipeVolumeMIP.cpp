@@ -84,10 +84,10 @@ medPipeVolumeMIP::medPipeVolumeMIP()
   m_Actor =  NULL;
 }
 //----------------------------------------------------------------------------
-void medPipeVolumeMIP::Create(mafSceneNode *n)
+void medPipeVolumeMIP::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   m_Selected = false;
 

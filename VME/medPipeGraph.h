@@ -54,7 +54,7 @@ public:
   void medPipeGraph::OnEvent(mafEventBase *maf_event); 
 
   /** visual pipe creation */
-  /*virtual*/ void Create(mafSceneNode *n);
+  /*virtual*/ void Create(mafNode *node, mafView *view);
 
   /** Create plots of scalar data*/
   void UpdateGraph();

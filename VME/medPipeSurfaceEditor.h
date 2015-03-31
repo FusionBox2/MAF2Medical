@@ -55,7 +55,7 @@ public:
 	virtual void OnEvent(mafEventBase *maf_event);
 
   /** function that create the pipeline instancing vtk graphic pipe. */
-	virtual void Create(mafSceneNode *n);
+	virtual void Create(mafNode *node, mafView *view);
   /** Show can be used for hide or show elements (actually empty) */
 	void Show(bool show); 
   /** During selection of vme, it can visualize graphic element (actually empty)*/

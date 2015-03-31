@@ -86,10 +86,10 @@ medPipeVolumeDRR::medPipeVolumeDRR()
 	m_ResampleFactor = 1.0;
 }
 //----------------------------------------------------------------------------
-void medPipeVolumeDRR::Create(mafSceneNode *n)
+void medPipeVolumeDRR::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   m_Selected = false;
 
@@ -239,7 +239,7 @@ mafGUI *medPipeVolumeDRR::CreateGui()
 */
 	this->m_Gui->Divider(0);
 	this->m_Gui->Label("Camera settings:", true);
-	vtkCamera *camera = this->m_Sg->m_RenFront->GetActiveCamera();
+	vtkCamera *camera = m_RenFront->GetActiveCamera();
 	this->m_CameraAngle = camera->GetViewAngle();
 	m_Gui->FloatSlider(ID_CAMERA_ANGLE, "View angle", &m_CameraAngle, 0.5, 45.0);
 	camera->GetPosition(this->m_CameraPosition);
@@ -265,7 +265,7 @@ void medPipeVolumeDRR::OnEvent(mafEventBase *maf_event)
   if (mafEvent *e = mafEvent::SafeDownCast(maf_event))
   {
 		mafSceneNode *node = NULL;
-		vtkCamera *camera = this->m_Sg->m_RenFront->GetActiveCamera();
+		vtkCamera *camera = m_RenFront->GetActiveCamera();
 
     switch(e->GetId()) 
     {

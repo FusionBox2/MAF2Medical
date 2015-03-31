@@ -44,7 +44,7 @@ public:
   Calls ComputeDefaultParameters, CreateVTKPipe and UpdateVTKPipe
   in this order. CreateVTKPipe and UpdateVTKPipe is called only,
   if there is any vector field in the input VME. */
-  /*virtual*/ void Create(mafSceneNode *n);  
+  /*virtual*/ void Create(mafNode *node, mafView *view);  
 
   /** Gets the current status of m_bCreateVTKPipeAlways. */
   inline bool GetCreateVTKPipeAlways() {

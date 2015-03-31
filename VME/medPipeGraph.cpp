@@ -116,12 +116,12 @@ medPipeGraph::~medPipeGraph()
   vtkDEL(m_PlotTimeLineActor);
   }
 //----------------------------------------------------------------------------
-void medPipeGraph::Create(mafSceneNode *n)
+void medPipeGraph::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
   double timeData;
   int counter = 0;
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   m_Vme->AddObserver(this);
 

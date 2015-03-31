@@ -52,7 +52,7 @@ public:
   /*virtual*/ void OnEvent(mafEventBase *maf_event);
 
   /** function that create the pipeline instancing vtk graphic pipe. */
-  /*virtual*/ void Create(mafSceneNode *n /*,bool use_axes = true*/ ); //Can't add parameters - is Virtual
+  /*virtual*/ void Create(mafNode *n, mafView *v /*,bool use_axes = true*/ ); //Can't add parameters - is Virtual
   
   /** During selection of vme, it can visualize graphic element (actually empty)*/
   /*virtual*/ void Select(bool select); 

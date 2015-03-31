@@ -52,7 +52,7 @@ public:
   /** process events coming from gui */
   virtual void OnEvent(mafEventBase *maf_event);
 
-  virtual void Create(mafSceneNode *n);
+  virtual void Create(mafNode *node, mafView *view);
   virtual void Select(bool select); 
 
   /** Set trajectories interval */

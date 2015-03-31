@@ -92,10 +92,10 @@ mafPipeSurfaceSlice_BES::mafPipeSurfaceSlice_BES()
 	m_VTKTransform = NULL;
 }
 //----------------------------------------------------------------------------
-void mafPipeSurfaceSlice_BES::Create(mafSceneNode *n/*, bool use_axes*/)
+void mafPipeSurfaceSlice_BES::Create(mafNode *node, mafView *view/*, bool use_axes*/)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
   
   m_Selected = false;
   m_Texture         = NULL;

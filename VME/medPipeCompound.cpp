@@ -62,7 +62,6 @@ mafCxxAbstractTypeMacro(medPipeCompound);
 medPipeCompound::medPipeCompound()
 //----------------------------------------------------------------------------
 {
-  m_SceneNode = NULL;
   m_Notebook = NULL;
   m_FirstPage = NULL; //no page available
 }
@@ -77,13 +76,12 @@ medPipeCompound::~medPipeCompound()
 }
 
 //----------------------------------------------------------------------------
-void medPipeCompound::Create(mafSceneNode *n)
+void medPipeCompound::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
   wxCursor busy;
 
-	Superclass::Create(n);
-  m_SceneNode = n; 
+	Superclass::Create(node, view);
   
   GetGui(); //force construction of Notebook
 
@@ -290,7 +288,7 @@ void medPipeCompound::OnEvent(mafEventBase *maf_event)
 
   medGUIDynamicVP* newpage = new medGUIDynamicVP(m_Notebook, ID_TABCTRL, GUIStyle);
   newpage->SetListener(this);
-  newpage->SetSceneNode(m_SceneNode);    
+  newpage->SetNodeView(m_Vme, m_View);    
   newpage->SetVPipesList(group.pPipes);    
   newpage->SetVPipeIndex(group.nDefaultPipeIndex);
   

@@ -398,7 +398,7 @@ void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
 				((mafPipePolylineSlice *)pipe)->SetSlice(m_Slice);
 				((mafPipePolylineSlice *)pipe)->SetNormal(normal);
 			}
-			pipe->Create(n);
+			pipe->Create(vme, this);
 
       n->m_Pipe = (mafPipe*)pipe;
       if (m_NumberOfVisibleVme == 1)

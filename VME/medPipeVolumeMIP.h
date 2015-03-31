@@ -69,7 +69,7 @@ public:
   };
  
   /** pipe creation */
-  virtual void Create(mafSceneNode *n);
+  virtual void Create(mafNode *node, mafView *view);
   /** called when vme associated with the pipe is selected */
   virtual void Select(bool select); 
 

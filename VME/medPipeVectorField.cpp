@@ -44,10 +44,10 @@ medPipeVectorField::medPipeVectorField()
 }
 
 //----------------------------------------------------------------------------
-void medPipeVectorField::Create(mafSceneNode *n)
+void medPipeVectorField::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n); 
+  Superclass::Create(node, view); 
   _VERIFY_RET(m_Vme != NULL);    
 
   ComputeDefaultParameters();

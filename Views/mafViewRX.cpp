@@ -243,7 +243,7 @@ void mafViewRX::VmeCreatePipe(mafNode *vme)
         
 
       }
-      pipe->Create(n);
+      pipe->Create(vme, this);
       n->m_Pipe = (mafPipe*)pipe;
     }
     else

@@ -94,13 +94,10 @@ medVisualPipePolylineGraph::medVisualPipePolylineGraph()
 
 }
 //----------------------------------------------------------------------------
-void medVisualPipePolylineGraph::Create(mafSceneNode *n)
+void medVisualPipePolylineGraph::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  if (n != NULL)
-  {
-    Superclass::Create(n);
-  }
+  Superclass::Create(node, view);
 
   m_Selected = false;
   m_Mapper          = NULL;

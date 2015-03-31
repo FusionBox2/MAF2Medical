@@ -27,7 +27,6 @@
 // forward references :
 //----------------------------------------------------------------------------
 class mafPipe;
-class mafSceneNode;
 
 class mafView;
 class mafGUI;
@@ -115,7 +114,8 @@ protected:
 
   int m_VPipeIndex;             ///<index of the selected visual pipe
   mafPipe* m_VPipe;             ///<this is the current visual pipe  
-  mafSceneNode* m_SceneNode;    ///<reference to the scene node associated with this pipe
+  mafNode* m_Node;    ///<reference to the scene node associated with this pipe
+  mafView *m_View;
   mafString m_Name;             ///<user name associated with this panel
 
 #pragma region GUI
@@ -173,13 +173,13 @@ public:
   void SetGUIStyle(long newtyle);
 
   /** Gets the current scene node. */
-  inline mafSceneNode* GetSceneNode() {
-    return m_SceneNode;
-  }
+  inline mafNode* GetNode() {return m_Node;}
+  /** Gets the current scene node. */
+  inline mafView* GetView() {return m_View;}
 
   /** Sets a new scene node for visual pipes. 
   N.B. currently constructed visual pipe is recreated, if needed. */
-  void SetSceneNode(mafSceneNode* node);  
+  void SetNodeView(mafNode* node, mafView* view);  
 
   /** Gets the currently constructed visual pipe. */
   inline mafPipe* GetCurrentVisualPipe() {

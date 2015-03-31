@@ -69,7 +69,7 @@ public:
   void InitializeSliceParameters(int direction, bool show_vol_bbox, bool show_bounds=false);
   void InitializeSliceParameters(int direction, double slice_origin0[3],double slice_origin1[3], bool show_vol_bbox,bool show_bounds=false);
   void InitializeSliceParameters(int direction, double slice_origin0[3],double slice_origin1[3], float slice_xVect[3], float slice_yVect[3], bool show_vol_bbox,bool show_bounds=false);
-  virtual void Create(mafSceneNode *n);
+  virtual void Create(mafNode *node, mafView *view);
 
   /** Set the range to the lookup table for the slice. */
   void SetLutRange(double low, double high);

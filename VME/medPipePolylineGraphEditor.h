@@ -64,7 +64,7 @@ public:
 		ID_PERSPECTIVE,
 	};
 
-	virtual void Create(mafSceneNode *n);
+	virtual void Create(mafNode *node, mafView *view);
 	void Show(bool show); 
 	virtual void Select(bool select);
 

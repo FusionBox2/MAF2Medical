@@ -87,10 +87,10 @@ medPipeVolumeVR::medPipeVolumeVR()
   m_ResampleFactor	= 1.0;
 }
 //----------------------------------------------------------------------------
-void medPipeVolumeVR::Create(mafSceneNode *n)
+void medPipeVolumeVR::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   m_NumberOfSlices = 64; //<< was parameter
 

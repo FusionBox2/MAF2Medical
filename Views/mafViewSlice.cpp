@@ -509,7 +509,7 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
         }
       } //end else [it is not volume slicing]                     
 
-      pipe->Create(n);
+      pipe->Create(vme, this);
       n->m_Pipe = (mafPipe*)pipe;
     }
     else

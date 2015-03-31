@@ -103,10 +103,10 @@ medPipeRayCast::medPipeRayCast(double skinOpacity,double fatMassOpacity,double m
   m_TestMode=false;
 }
 //----------------------------------------------------------------------------
-void medPipeRayCast::Create(mafSceneNode *n)
+void medPipeRayCast::Create(mafNode *n, mafView *v)
 //----------------------------------------------------------------------------
 {
-	Superclass::Create(n);
+	Superclass::Create(n, v);
 
 	assert(m_Vme->GetOutput()->IsA("mafVMEOutputVolume"));
 

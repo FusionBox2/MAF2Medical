@@ -44,10 +44,10 @@ medPipeTensorField::medPipeTensorField()
 }
 
 //----------------------------------------------------------------------------
-void medPipeTensorField::Create(mafSceneNode *n)
+void medPipeTensorField::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n); 
+  Superclass::Create(node, view); 
   _VERIFY_RET(m_Vme != NULL);    
 
   ComputeDefaultParameters();

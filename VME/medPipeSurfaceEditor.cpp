@@ -57,10 +57,10 @@ medPipeSurfaceEditor::medPipeSurfaceEditor()
 	m_Mapper = NULL;
 }
 //----------------------------------------------------------------------------
-void medPipeSurfaceEditor::Create(mafSceneNode *n)
+void medPipeSurfaceEditor::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-	Superclass::Create(n);
+	Superclass::Create(node, view);
 
 	m_Selected = false;
 

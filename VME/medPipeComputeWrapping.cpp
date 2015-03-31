@@ -73,10 +73,10 @@ medPipeComputeWrapping::medPipeComputeWrapping()
   m_MaterialButton    = NULL;
 }
 //----------------------------------------------------------------------------
-void medPipeComputeWrapping::Create(mafSceneNode *n/*, bool use_axes*/)
+void medPipeComputeWrapping::Create(mafNode *node, mafView *view/*, bool use_axes*/)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
   
   m_Selected          = false;
   m_DataMapper        = NULL;

@@ -58,7 +58,7 @@ public:
 	virtual void OnEvent(mafEventBase *maf_event);
 
   /** Create the VTK rendering pipeline*/
-	virtual void Create(mafSceneNode *n);
+	virtual void Create(mafNode *n, mafView *v);
 
   /** Manage the actor selection by showing the corner box around the actor when the corresponding VME is selected.*/
 	virtual void Select(bool select);

@@ -173,10 +173,10 @@ void medPipeVolumeSliceBlend::InitializeSliceParameters(int direction, double sl
   }
 }
 //----------------------------------------------------------------------------
-void medPipeVolumeSliceBlend::Create(mafSceneNode *n)
+void medPipeVolumeSliceBlend::Create(mafNode *node, mafView *view)
   //----------------------------------------------------------------------------
 {
-  Superclass::Create(n); // Always call this to initialize m_Vme, m_AssemblyFront, ... vars
+  Superclass::Create(node, view); // Always call this to initialize m_Vme, m_AssemblyFront, ... vars
 
   m_AssemblyUsed = m_AssemblyBack ? m_AssemblyBack : m_AssemblyFront;
 

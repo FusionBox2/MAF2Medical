@@ -104,10 +104,10 @@ medVisualPipeSlicerSlice::medVisualPipeSlicerSlice()
 	m_ShowSelection = false;
 }
 //----------------------------------------------------------------------------
-void medVisualPipeSlicerSlice::Create(mafSceneNode *n/*, bool use_axes*/)
+void medVisualPipeSlicerSlice::Create(mafNode *node, mafView *view/*, bool use_axes*/)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
   
   m_Selected = false;
   

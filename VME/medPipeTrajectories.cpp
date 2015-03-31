@@ -69,10 +69,10 @@ medPipeTrajectories::medPipeTrajectories()
   m_Interval = 0;
 }
 //----------------------------------------------------------------------------
-void medPipeTrajectories::Create(mafSceneNode *n)
+void medPipeTrajectories::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(node, view);
 
   m_Selected = false;
   m_Landmark  = mafVMELandmark::SafeDownCast(m_Vme);

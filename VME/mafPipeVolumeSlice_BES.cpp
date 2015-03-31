@@ -187,10 +187,10 @@ void mafPipeVolumeSlice_BES::InitializeSliceParameters(int direction, double sli
   }
 }
 //----------------------------------------------------------------------------
-void mafPipeVolumeSlice_BES::Create(mafSceneNode *n)
+void mafPipeVolumeSlice_BES::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n); // Always call this to initialize m_Vme, m_AssemblyFront, ... vars
+  Superclass::Create(node, view); // Always call this to initialize m_Vme, m_AssemblyFront, ... vars
 
   m_Vme->AddObserver(this);
 

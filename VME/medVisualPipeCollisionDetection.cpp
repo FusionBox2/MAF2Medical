@@ -67,10 +67,10 @@ medVisualPipeCollisionDetection::medVisualPipeCollisionDetection()
   m_ColorNotCollisionCells[2] = 0.0;
  }
 //----------------------------------------------------------------------------
-void medVisualPipeCollisionDetection::Create(mafSceneNode *n/*, bool use_axes*/)
+void medVisualPipeCollisionDetection::Create(mafNode *n, mafView *v/*, bool use_axes*/)
 //----------------------------------------------------------------------------
 {
-  Superclass::Create(n);
+  Superclass::Create(n, v);
 
   assert(m_Vme->GetOutput()->IsMAFType(mafVMEOutputSurface));
   //To capture matrix changes events

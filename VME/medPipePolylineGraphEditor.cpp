@@ -73,10 +73,10 @@ medPipePolylineGraphEditor::medPipePolylineGraphEditor()
 	m_Modality = ID_PERSPECTIVE;
 }
 //----------------------------------------------------------------------------
-void medPipePolylineGraphEditor::Create(mafSceneNode *n)
+void medPipePolylineGraphEditor::Create(mafNode *node, mafView *view)
 //----------------------------------------------------------------------------
 {
-	Superclass::Create(n);
+	Superclass::Create(node, view);
 
 	m_Selected = false;
 

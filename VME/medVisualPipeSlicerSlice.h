@@ -60,7 +60,7 @@ public:
   /** process events coming from gui */
   virtual void OnEvent(mafEventBase *maf_event);
 
-  virtual void Create(mafSceneNode *n /*,bool use_axes = true*/ ); //Can't add parameters - is Virtual
+  virtual void Create(mafNode *node, mafView *view /*,bool use_axes = true*/ ); //Can't add parameters - is Virtual
   virtual void Select(bool select); 
 
   /** Set the origin of the slice*/

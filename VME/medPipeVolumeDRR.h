@@ -73,7 +73,7 @@ public:
 		ID_LAST
   };
   /** create pipe*/
-  virtual void Create(mafSceneNode *n);
+  virtual void Create(mafNode *node, mafView *view);
   /** called when the vme has been selected*/
   virtual void Select(bool select); 
         /** set color used by the mapper*/
