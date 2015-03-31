@@ -91,8 +91,8 @@ public:
   
   /** 
   Specify input as dicom slices abs file names vector: they must be from a single dicom series */
-  void SetInputDicomSlicesABSFileNamesVector(vector<string> &inputDicomSlicesABSFileNamesVector) {m_InputDicomSlicesABSFileNamesVector = inputDicomSlicesABSFileNamesVector;};
-  vector<string> GetInputDicomSlicesABSFileNamesVector() {return m_InputDicomSlicesABSFileNamesVector;};
+  void SetInputDicomSlicesABSFileNamesVector(vector<std::string> &inputDicomSlicesABSFileNamesVector) {m_InputDicomSlicesABSFileNamesVector = inputDicomSlicesABSFileNamesVector;};
+  vector<std::string> GetInputDicomSlicesABSFileNamesVector() {return m_InputDicomSlicesABSFileNamesVector;};
 
   /** 
   Perform dicom directory parsing: works on a single dicom series only*/
@@ -104,7 +104,7 @@ public:
   some rotated dicom stuff....
 
   /** DicomLocalFileNamesVector[FileNumberForPlaneIFrameJ] == fileName for plane I frame J*/
-  vector<string> GetDicomLocalFileNamesVector() {return m_DicomLocalFileNamesVector;};
+  vector<std::string> GetDicomLocalFileNamesVector() {return m_DicomLocalFileNamesVector;};
 
   long int GetTimeFrames() {return m_TimeFrames;};
   int GetPlanesPerFrame() {return m_PlanesPerFrame;};
@@ -158,7 +158,7 @@ private:
 
   mafString m_InputDicomDirectoryABSPath;
 
-  vector<string> m_DicomLocalFileNamesVector;
+  vector<std::string> m_DicomLocalFileNamesVector;
   long int m_TimeFrames;
   int m_PlanesPerFrame;
 
@@ -182,7 +182,7 @@ private:
 
   bool m_TestMode;
 
-  vector<string> m_InputDicomSlicesABSFileNamesVector;
+  vector<std::string> m_InputDicomSlicesABSFileNamesVector;
   
   
   int m_Mode; ///< register the importer input modality

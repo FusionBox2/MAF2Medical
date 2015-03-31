@@ -3526,7 +3526,7 @@ bool medOpImporterDicomOffis::BuildDicomFileList(const char *dicomDirABSPath)
 
 			if (isCardiacMRI)
 			{
-				vector<string> absFileNames;
+				vector<std::string> absFileNames;
 				for (int i = 0; i < currentSeries->size(); i++) 
 				{
 					medDicomSlice* slice = NULL;

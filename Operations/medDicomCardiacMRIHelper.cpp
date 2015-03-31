@@ -77,7 +77,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
   DcmDataset *dicomDataset = NULL;
   wxString dicomDir = "UNDEFINED";
   DcmFileFormat dicomFileHandler;
-  vector<string> dicomABSFileNamesVector;
+  vector<std::string> dicomABSFileNamesVector;
   vtkDirectory *directoryReader = NULL;
   int planesPerFrame = -1;
   vector<int> seriesNumbers;

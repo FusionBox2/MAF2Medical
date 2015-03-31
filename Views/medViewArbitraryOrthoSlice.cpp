@@ -527,7 +527,7 @@ void medViewArbitraryOrthoSlice::OnEvent(mafEventBase *maf_event)
 
 		using namespace::std;
 
-		string pickedSliceName;
+		std::string pickedSliceName;
 		if (event->GetSender() == m_XSlicerPicker)
 		{
 			pickedSliceName = m_XSlicerPicker->GetName();
@@ -2914,7 +2914,7 @@ void medViewArbitraryOrthoSlice::GetLeftRightLettersFromCamera( double viewUp[3]
 
 	int maxIndex = -1;
 
-	string leftRight;
+	std::string leftRight;
 
 	if (max == absXDot)
 	{
