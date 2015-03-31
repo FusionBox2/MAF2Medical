@@ -302,7 +302,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
         //Running an op required from the wizard
         m_CancelledBeforeOpStarting=true;
         UpdateFrameTitle();
-        m_OpManager->OpRun(OP_DELETE);
+        m_OpManager->OpRun(MENU_USER_START + 2);//OP_DELETE
         m_WizardManager->WizardContinue(true);
       }
     break;
