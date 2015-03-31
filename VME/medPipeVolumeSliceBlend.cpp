@@ -62,7 +62,6 @@ mafCxxTypeMacro(medPipeVolumeSliceBlend);
 
 //----------------------------------------------------------------------------
 medPipeVolumeSliceBlend::medPipeVolumeSliceBlend()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   //Initialize values

@@ -50,7 +50,6 @@ mafCxxTypeMacro(medPipeSurfaceEditor);
 
 //----------------------------------------------------------------------------
 medPipeSurfaceEditor::medPipeSurfaceEditor()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
 	m_LUT = NULL;

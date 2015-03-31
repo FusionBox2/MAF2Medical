@@ -67,7 +67,6 @@ mafCxxTypeMacro(medPipeRayCast);
 
 //----------------------------------------------------------------------------
 medPipeRayCast::medPipeRayCast(double skinOpacity,double fatMassOpacity,double muscleOpacity,double bloodOpacity,double boneOpacity) 
-: mafPipe()
 //----------------------------------------------------------------------------
 {
 

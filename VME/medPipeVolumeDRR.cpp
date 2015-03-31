@@ -66,7 +66,6 @@ mafCxxTypeMacro(medPipeVolumeDRR);
 
 //----------------------------------------------------------------------------
 medPipeVolumeDRR::medPipeVolumeDRR()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_OpacityTransferFunction = NULL;

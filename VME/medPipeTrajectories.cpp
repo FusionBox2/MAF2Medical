@@ -56,7 +56,6 @@ mafCxxTypeMacro(medPipeTrajectories);
 
 //----------------------------------------------------------------------------
 medPipeTrajectories::medPipeTrajectories()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_Traj            = NULL;

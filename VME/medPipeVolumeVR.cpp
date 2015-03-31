@@ -58,7 +58,6 @@ mafCxxTypeMacro(medPipeVolumeVR);
 
 //----------------------------------------------------------------------------
 medPipeVolumeVR::medPipeVolumeVR()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_PiecewiseFunction			= NULL;

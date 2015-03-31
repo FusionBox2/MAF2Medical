@@ -30,7 +30,7 @@ mafCxxTypeMacro(mafPipeSlice);
 #include "mafMemDbg.h"
 
 //----------------------------------------------------------------------------
-mafPipeSlice::mafPipeSlice() :mafPipe()
+mafPipeSlice::mafPipeSlice()
 //----------------------------------------------------------------------------
 {  
   m_Origin[0] = m_Origin[1] = m_Origin[2] = 0.0;

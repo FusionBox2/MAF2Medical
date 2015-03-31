@@ -35,7 +35,7 @@ mafCxxAbstractTypeMacro(medPipeTensorField);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medPipeTensorField::medPipeTensorField() : mafPipe()
+medPipeTensorField::medPipeTensorField()
 //----------------------------------------------------------------------------
 {  
   m_TensorFieldIndex = 0;  

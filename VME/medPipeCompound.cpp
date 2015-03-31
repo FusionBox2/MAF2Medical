@@ -59,7 +59,7 @@ mafCxxAbstractTypeMacro(medPipeCompound);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medPipeCompound::medPipeCompound() : mafPipe()
+medPipeCompound::medPipeCompound()
 //----------------------------------------------------------------------------
 {
   m_SceneNode = NULL;

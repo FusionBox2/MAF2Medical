@@ -64,7 +64,6 @@ mafCxxTypeMacro(medVisualPipePolylineGraph);
 
 //----------------------------------------------------------------------------
 medVisualPipePolylineGraph::medVisualPipePolylineGraph()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_Mapper          = NULL;

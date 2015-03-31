@@ -65,7 +65,6 @@ mafCxxTypeMacro(medPipeVolumeMIP);
 
 //----------------------------------------------------------------------------
 medPipeVolumeMIP::medPipeVolumeMIP()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   //m_ColorTransferFunction = NULL;

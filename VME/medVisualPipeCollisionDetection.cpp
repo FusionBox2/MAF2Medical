@@ -53,7 +53,6 @@ mafCxxTypeMacro(medVisualPipeCollisionDetection);
 
 //----------------------------------------------------------------------------
 medVisualPipeCollisionDetection::medVisualPipeCollisionDetection()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_CollisionFilter = NULL;

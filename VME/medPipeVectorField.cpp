@@ -35,7 +35,7 @@ mafCxxAbstractTypeMacro(medPipeVectorField);
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-medPipeVectorField::medPipeVectorField() : mafPipe()
+medPipeVectorField::medPipeVectorField()
 //----------------------------------------------------------------------------
 {  
   m_VectorFieldIndex = 0;  

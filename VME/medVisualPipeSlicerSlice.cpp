@@ -64,7 +64,6 @@ mafCxxTypeMacro(medVisualPipeSlicerSlice);
 
 //----------------------------------------------------------------------------
 medVisualPipeSlicerSlice::medVisualPipeSlicerSlice()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_Mapper1          = NULL;

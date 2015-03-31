@@ -71,7 +71,6 @@ mafCxxTypeMacro(medPipeDensityDistance);
 
 //----------------------------------------------------------------------------
 medPipeDensityDistance::medPipeDensityDistance()
-:mafPipe()
 //----------------------------------------------------------------------------
 {
   m_Mapper          = NULL;
