@@ -492,7 +492,7 @@ void medOpExporterWrappedMeter::Test()
 	//wrappedMeter->PushIdVector(2); //this is for the vector syncronized with the gui widget, that is not used in gui test
 
 
-	wrappedMeter->SetParent(cloud);
+	wrappedMeter->ReparentTo(cloud);
 	wrappedMeter->GetOutput()->GetVTKData()->Update();
 	wrappedMeter->Modified();
 	wrappedMeter->Update();
@@ -546,7 +546,7 @@ void medOpExporterWrappedMeter::Test()
 	}
 	control.close();
 
-	wrappedMeter->SetParent(NULL);
+	wrappedMeter->ReparentTo(NULL);
 
 	mafDEL(exporter);
 	mafDEL(wrappedMeter);

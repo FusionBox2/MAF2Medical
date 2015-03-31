@@ -353,7 +353,7 @@ void medOpSegmentation::OpRun()
   InitGui();
 
   m_OldVolumeParent = m_Volume->GetParent();
-  m_Volume->SetParent(m_Volume->GetRoot());
+  m_Volume->ReparentTo(m_Volume->GetRoot());
 
   m_View->VmeAdd(m_Volume);
   m_View->VmeShow(m_Volume, true);
