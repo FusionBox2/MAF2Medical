@@ -21,7 +21,7 @@
 // Include :
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // forward refs :
@@ -42,10 +42,10 @@ class vtkActor2D;
 //----------------------------------------------------------------------------
 // medVisualPipePolylineGraph :
 //----------------------------------------------------------------------------
-class MED_VME_EXPORT medVisualPipePolylineGraph : public mafPipe
+class MED_VME_EXPORT medVisualPipePolylineGraph : public mafPipeVTK
 {
 public:
-  mafTypeMacro(medVisualPipePolylineGraph,mafPipe);
+  mafTypeMacro(medVisualPipePolylineGraph,mafPipeVTK);
 
   medVisualPipePolylineGraph();
   virtual     ~medVisualPipePolylineGraph();
@@ -92,11 +92,6 @@ public:
   /** Set the visual representation of the polyline.
   Acceptable values are 0 (POLYLINE), 1 (TUBE) or 2 (SPHERE GLYPHED).*/
   void SetRepresentation(int representation);
-
-  /** Get assembly front/back */
-  virtual vtkMAFAssembly *GetAssemblyFront(){return m_AssemblyFront;};
-  virtual vtkMAFAssembly *GetAssemblyBack(){return m_AssemblyBack;};
-
 
   /** Core of the pipe */
   virtual void ExecutePipe();

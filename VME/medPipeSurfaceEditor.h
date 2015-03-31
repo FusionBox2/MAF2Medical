@@ -21,7 +21,7 @@
 // Include :
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // forward refs :
@@ -40,11 +40,11 @@ class vtkPlane;
   Class Name: medPipeSurfaceEditor.
   Default pipe of the medVMESurfaceEditor, that is a vme that permit the editing of topology.
 */
-class MED_VME_EXPORT medPipeSurfaceEditor : public mafPipe
+class MED_VME_EXPORT medPipeSurfaceEditor : public mafPipeVTK
 {
 public:
   /** RTTI Macro */
-	mafTypeMacro(medPipeSurfaceEditor,mafPipe);
+	mafTypeMacro(medPipeSurfaceEditor,mafPipeVTK);
 
   /** constructor. */
 	medPipeSurfaceEditor();

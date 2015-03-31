@@ -21,7 +21,7 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // forward refs :
@@ -40,11 +40,11 @@ class mafGUIMaterialButton;
 className: medPipeWrappedMeter
 Pipe for visualizing wrapped meters. Gives the possibility to change representation just like classical meter pipe.
 */
-class MED_VME_EXPORT medPipeWrappedMeter : public mafPipe
+class MED_VME_EXPORT medPipeWrappedMeter : public mafPipeVTK
 {
 public:
   /** RTTI macro */
-  mafTypeMacro(medPipeWrappedMeter,mafPipe);
+  mafTypeMacro(medPipeWrappedMeter,mafPipeVTK);
   /** constructor */
                medPipeWrappedMeter();
   /** destructor */

@@ -21,7 +21,7 @@
 // Include :
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // forward refs :
@@ -43,10 +43,10 @@ class vtkSphereSource;
 //----------------------------------------------------------------------------
 // medVisualPipeSlicerSlice :
 //----------------------------------------------------------------------------
-class MED_VME_EXPORT medVisualPipeSlicerSlice : public mafPipe
+class MED_VME_EXPORT medVisualPipeSlicerSlice : public mafPipeVTK
 {
 public:
-  mafTypeMacro(medVisualPipeSlicerSlice,mafPipe);
+  mafTypeMacro(medVisualPipeSlicerSlice,mafPipeVTK);
 
                medVisualPipeSlicerSlice();
   virtual     ~medVisualPipeSlicerSlice ();

@@ -17,7 +17,7 @@
 #ifndef __medPipeComputeWrapping_H__
 #define __medPipeComputeWrapping_H__
 
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 #include "medVMEDefines.h"
 //----------------------------------------------------------------------------
 // forward refs :
@@ -35,10 +35,10 @@ class mafGUIMaterialButton;
 //----------------------------------------------------------------------------
 // medPipeComputeWrapping :
 //----------------------------------------------------------------------------
-class MED_VME_EXPORT medPipeComputeWrapping : public mafPipe
+class MED_VME_EXPORT medPipeComputeWrapping : public mafPipeVTK
 {
 public:
-  mafTypeMacro(medPipeComputeWrapping,mafPipe);
+  mafTypeMacro(medPipeComputeWrapping,mafPipeVTK);
 
                medPipeComputeWrapping();
   virtual     ~medPipeComputeWrapping ();

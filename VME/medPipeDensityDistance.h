@@ -21,7 +21,7 @@
 // Include :
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 #include "mafVMEImage.h"
 #include "mafVMEVolume.h"
 #include "vtkPolyDataNormals.h"
@@ -47,10 +47,10 @@ class mafVMEVolume;
 //----------------------------------------------------------------------------
 // mafPipeSurface :
 //----------------------------------------------------------------------------
-class MED_VME_EXPORT medPipeDensityDistance : public mafPipe
+class MED_VME_EXPORT medPipeDensityDistance : public mafPipeVTK
 {
 public:
-  mafTypeMacro(medPipeDensityDistance,mafPipe);
+  mafTypeMacro(medPipeDensityDistance,mafPipeVTK);
 
                medPipeDensityDistance();
   virtual     ~medPipeDensityDistance ();

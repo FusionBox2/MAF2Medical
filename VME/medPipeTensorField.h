@@ -17,7 +17,7 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // Forward declarations:
@@ -29,11 +29,11 @@ class mafGUI;
 class name:  medPipeTensorField
 General class for tensor fields, contains useful stuff 
  */
-class MED_VME_EXPORT medPipeTensorField : public mafPipe
+class MED_VME_EXPORT medPipeTensorField : public mafPipeVTK
 {
 public:
   /** RTTI macro*/
-  mafAbstractTypeMacro(medPipeTensorField, mafPipe);
+  mafAbstractTypeMacro(medPipeTensorField, mafPipeVTK);
 
 protected:
   bool m_BCreateVTKPipeAlways;      ///<true, if the VTK pipe should be created always, no matter, if VME contains tensor

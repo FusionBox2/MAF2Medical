@@ -89,13 +89,6 @@ public:
   };
 
   
-  
-  /** Get assembly front */
-  virtual vtkMAFAssembly *GetAssemblyFront(){return m_AssemblyFront;};
-  /** Get assembly back */
-  virtual vtkMAFAssembly *GetAssemblyBack(){return m_AssemblyBack;};
-
-	
   /** Core of the pipe */
   virtual void ExecutePipe();
   

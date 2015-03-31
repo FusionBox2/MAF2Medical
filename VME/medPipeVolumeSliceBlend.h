@@ -21,7 +21,7 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // forward refs :
@@ -44,10 +44,10 @@ class mafLODActor;
 //----------------------------------------------------------------------------
 // medPipeVolumeSliceBlend :
 //----------------------------------------------------------------------------
-class MED_VME_EXPORT medPipeVolumeSliceBlend : public mafPipe
+class MED_VME_EXPORT medPipeVolumeSliceBlend : public mafPipeVTK
 {
 public:
-  mafTypeMacro(medPipeVolumeSliceBlend,mafPipe);
+  mafTypeMacro(medPipeVolumeSliceBlend,mafPipeVTK);
 
   medPipeVolumeSliceBlend();
   virtual ~medPipeVolumeSliceBlend();

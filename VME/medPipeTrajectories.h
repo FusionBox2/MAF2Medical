@@ -21,7 +21,7 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 #include "mafEvent.h"
 
 //----------------------------------------------------------------------------
@@ -41,10 +41,10 @@ class mafMatrixVector;
 //----------------------------------------------------------------------------
 // medPipeTrajectories :
 //----------------------------------------------------------------------------
-class MED_VME_EXPORT medPipeTrajectories : public mafPipe
+class MED_VME_EXPORT medPipeTrajectories : public mafPipeVTK
 {
 public:
-  mafTypeMacro(medPipeTrajectories,mafPipe);
+  mafTypeMacro(medPipeTrajectories,mafPipeVTK);
 
   medPipeTrajectories();
   virtual     ~medPipeTrajectories ();

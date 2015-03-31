@@ -22,7 +22,7 @@
 // Include :
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // forward refs :
@@ -33,11 +33,11 @@ class vtkActor;
 /**
 class name : mafPipeSlice
 */
-class MED_VME_EXPORT mafPipeSlice : public mafPipe
+class MED_VME_EXPORT mafPipeSlice : public mafPipeVTK
 {
 public:
   /** RTTI macro */
-  mafTypeMacro(mafPipeSlice, mafPipe);
+  mafTypeMacro(mafPipeSlice, mafPipeVTK);
 
   /** constructor. */
   mafPipeSlice();

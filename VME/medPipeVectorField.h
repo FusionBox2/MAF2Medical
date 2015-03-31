@@ -17,7 +17,7 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "medVMEDefines.h"
-#include "mafPipe.h"
+#include "mafPipeVTK.h"
 
 //----------------------------------------------------------------------------
 // Forward declarations:
@@ -26,10 +26,10 @@ class mafGUI;
 
 
 /** General class for vector fields, contains useful stuff  */
-class MED_VME_EXPORT medPipeVectorField : public mafPipe
+class MED_VME_EXPORT medPipeVectorField : public mafPipeVTK
 {
 public:
-  mafAbstractTypeMacro(medPipeVectorField, mafPipe);
+  mafAbstractTypeMacro(medPipeVectorField, mafPipeVTK);
 
 protected:
   bool m_BCreateVTKPipeAlways;      ///<true, if the VTK pipe should be created always, no matter, if VME contains vector
