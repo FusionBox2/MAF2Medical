@@ -25,14 +25,14 @@ MedFL_SUBPROJECT (MedFL_MODULES modules)
 # Offis Library
 #
 IF (MED_USE_Offis)
-  MedFL_SUBPROJECT(Offis Offis)
+#  SET(Offis_USE_FILE "${Offis_DIR}/UseOffis.cmake")
+#  INCLUDE(${Offis_USE_FILE})
 ENDIF(MED_USE_Offis)
 
 #
 # BTK Library
 #
 IF (MED_USE_BTK)
-  find_package(BTK REQUIRED)
 ENDIF(MED_USE_BTK)
 
 

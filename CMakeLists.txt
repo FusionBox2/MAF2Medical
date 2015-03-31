@@ -61,12 +61,15 @@ ENDIF (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 #-----------------------------------------------------------------------------
 # Options for MAF building
 #-----------------------------------------------------------------------------
-# OPTION(BUILD_SHARED_LIBS "Build with shared libraries." OFF )
+OPTION(BUILD_SHARED_LIBS "Build with shared libraries." OFF )
 OPTION(BUILD_EXAMPLES "Build examples." ON )
 OPTION(BUILD_TESTING "Build the testing tree." OFF)
 OPTION(BUILD_IPOSE "Build iPose application." OFF)
 OPTION(MED_QA "Generate QA" OFF)
 
+MARK_AS_ADVANCED (
+  BUILD_SHARED_LIBS 
+)
 
 SET (CONFIGURE_ERROR 0)
 
