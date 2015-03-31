@@ -167,10 +167,7 @@ bool medVMEWrappedMeter::Equals(mafVME *vme)
   bool ret = false;
   if (Superclass::Equals(vme))
   {
-    ret = m_Transform->GetMatrix() == ((medVMEWrappedMeter *)vme)->m_Transform->GetMatrix() && \
-          GetLink("StartVME") == ((medVMEWrappedMeter *)vme)->GetLink("StartVME") && \
-          GetLink("EndVME1") == ((medVMEWrappedMeter *)vme)->GetLink("EndVME1") && \
-          GetLink("EndVME2") == ((medVMEWrappedMeter *)vme)->GetLink("EndVME2");
+    ret = m_Transform->GetMatrix() == ((medVMEWrappedMeter *)vme)->m_Transform->GetMatrix();
   }
   return ret;
 }

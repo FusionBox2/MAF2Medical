@@ -236,10 +236,7 @@ bool medVMEComputeWrapping::Equals(mafVME *vme)
 	bool ret = false;
 	if (Superclass::Equals(vme))
 	{
-		ret = m_Transform->GetMatrix() == ((medVMEComputeWrapping *)vme)->m_Transform->GetMatrix() && \
-			GetLink("StartVME") == ((medVMEComputeWrapping *)vme)->GetLink("StartVME") && \
-			GetLink("EndVME1") == ((medVMEComputeWrapping *)vme)->GetLink("EndVME1") && \
-			GetLink("EndVME2") == ((medVMEComputeWrapping *)vme)->GetLink("EndVME2");
+		ret = m_Transform->GetMatrix() == ((medVMEComputeWrapping *)vme)->m_Transform->GetMatrix();
 	}
 	return ret;
 }
