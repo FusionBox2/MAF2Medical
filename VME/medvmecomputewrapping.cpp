@@ -5313,7 +5313,7 @@ mafGUI* medVMEComputeWrapping::CreateGuiForOldMeter( mafGUI *gui ){
 				}
 				else
 				{
-					m_ListBox->Append(i->second.m_Node->GetName());
+					m_ListBox->Append(i->second.m_Node->GetName().GetCStr());
 					m_OrderMiddlePointsNameVMEList.push_back(i->second.m_Node->GetName());
 				}
 			}
@@ -5620,7 +5620,7 @@ void medVMEComputeWrapping::OnEvent(mafEventBase *maf_event)
 				//mafString idNumber = wxString::Format(_("%d"),id);
 				nameProfile = n->GetName();
 
-				if(wxNOT_FOUND != m_ListBox->FindString(n->GetName()))
+				if(wxNOT_FOUND != m_ListBox->FindString(n->GetName().GetCStr()))
 				{
 					wxMessageBox(_("Can't introduce vme with the same name"));
 					return;

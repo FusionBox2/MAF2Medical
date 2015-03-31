@@ -847,7 +847,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   {
     m_OCToAdd = vme;
 
-    m_OCNameCtrl->SetLabel(m_OCToAdd->GetName());
+    m_OCNameCtrl->SetLabel(m_OCToAdd->GetName().GetCStr());
     m_BttnSelDC->Enable(true);  
     m_BttnAddCurve->Enable(true);
   }      
@@ -863,7 +863,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   {
     m_DCToAdd = vme;
 
-    m_DCNameCtrl->SetLabel(m_DCToAdd->GetName());
+    m_DCNameCtrl->SetLabel(m_DCToAdd->GetName().GetCStr());
     m_CCCtrl->Enable(true);  
   } 
 }

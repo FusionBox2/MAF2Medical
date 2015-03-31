@@ -2153,13 +2153,13 @@ mafGUI* medVMEWrappedMeter::CreateGui()
 					mafVMELandmark *landmark  = lc->GetLandmark(idx);
 					if(landmark)
 					{
-				    m_ListBox->Append(landmark->GetName());
+				    m_ListBox->Append(landmark->GetName().GetCStr());
 						m_OrderMiddlePointsNameVMEList.push_back(landmark->GetName());
 					}
 				}
 				else
 				{
-				  m_ListBox->Append(i->second.m_Node->GetName());
+				  m_ListBox->Append(i->second.m_Node->GetName().GetCStr());
 					m_OrderMiddlePointsNameVMEList.push_back(i->second.m_Node->GetName());
 				}
 			}
@@ -2298,7 +2298,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
         //mafString idNumber = wxString::Format(_("%d"),id);
         nameProfile = n->GetName();
 
-        if(wxNOT_FOUND != m_ListBox->FindString(n->GetName()))
+        if(wxNOT_FOUND != m_ListBox->FindString(n->GetName().GetCStr()))
         {
           wxMessageBox(_("Can't introduce vme with the same name"));
           return;
