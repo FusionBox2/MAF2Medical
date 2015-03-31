@@ -5460,36 +5460,43 @@ void medVMEComputeWrapping::OnEvent(mafEventBase *maf_event)
 //-------------------------------------------------------------------------
 {
 
+
+	// events to be sent up or down in the tree are simply forwarded
+	if (mafEvent *e = mafEvent::SafeDownCast(maf_event))
+  {
+    if (e->GetId() == ID_ROLLOUT_NEW) // from this operation gui
+    {
+      mafEvent *e = mafEvent::SafeDownCast(maf_event);
+      if  (e->GetBool())//new meter
+      {
+        m_WrappedClass = NEW_METER;     
+        m_RollOutOldMeter->RollOut(false);
+      }
+      else//old meter
+      {
+        m_WrappedClass =OLD_METER;   
+        m_RollOutOldMeter->RollOut(true);
+      }
+    }else if  (e->GetId() == ID_ROLLOUT_OLD) // from this operation gui
+    {
+      mafEvent *e = mafEvent::SafeDownCast(maf_event);
+      if  (e->GetBool())//old meter
+      {
+        m_WrappedClass = OLD_METER;     
+        m_RollOutNewMeter->RollOut(false);
+      }
+      else//new meter
+      {
+        m_WrappedClass = NEW_METER;   
+        m_RollOutNewMeter->RollOut(true);
+      }
+    }
+  }
 	// events to be sent up or down in the tree are simply forwarded
 	if (mafEvent *e = mafEvent::SafeDownCast(maf_event))
 	{
-	    
-
 		switch(e->GetId())
 		{
-
-		case ID_ROLLOUT_NEW:
-		case ID_ROLLOUT_OLD:
-			{
-				// if I'm using the old meter
-				if (m_WrappedClass == OLD_METER)
-				{
-
-					m_WrappedClass = NEW_METER;  // switch to the new one
-					m_RollOutNewMeter->RollOut(true); // show the new one
-					
-					m_RollOutOldMeter->RollOut(false); // hide the old one
-				}
-				else // if I'm using the new meter
-				{
-					m_WrappedClass = OLD_METER;  // switch to the old one
-					m_RollOutOldMeter->RollOut(true); // show the old one
-
-					m_RollOutNewMeter->RollOut(false); // hide the new one
-				}
-			}
-		break;
-
 		case ID_START_METER_LINK:
 		case ID_END1_METER_LINK:
 		case ID_WRAPPED_METER_LINK1:
