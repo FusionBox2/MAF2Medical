@@ -70,6 +70,7 @@ medPipeTrajectories::medPipeTrajectories()
   m_OutlineActor    = NULL;
   m_Caption         = NULL;
   m_Interval = 0;
+  m_Labels   = 1;
 }
 //----------------------------------------------------------------------------
 void medPipeTrajectories::Create(mafNode *node, mafView *view)
@@ -114,7 +115,7 @@ void medPipeTrajectories::Create(mafNode *node, mafView *view)
   dis = wxString::Format("%s",m_Landmark->GetName().GetCStr());
   m_Caption->SetCaption(dis.c_str());
 
-  if(m_Landmark->GetLandmarkVisibility())
+  if(m_Labels && m_Landmark->GetLandmarkVisibility())
     m_Caption->SetVisibility(1);
   else
     m_Caption->SetVisibility(0);
@@ -201,8 +202,12 @@ mafGUI *medPipeTrajectories::CreateGui()
   
   m_Gui = new mafGUI(this);
   m_Gui->Integer(ID_INTERVAL,"Interval:",&m_Interval,0,(m_TimeVector.size()),"Interval of frames to visualize");
- 
-  m_Gui->Divider();
+
+  if(m_Vme && m_Vme->IsMAFType(mafVMELandmark))
+  {
+      m_Gui->Bool(ID_LABELS, _("label"), &m_Labels);
+  }
+   m_Gui->Divider();
 
   return m_Gui;
 }
@@ -215,6 +220,10 @@ void medPipeTrajectories::OnEvent(mafEventBase *maf_event)
     switch(e->GetId())
     {
       case ID_INTERVAL:
+        UpdateProperty();
+        mafEventMacro(mafEvent(this,CAMERA_UPDATE));
+        break;
+      case ID_LABELS:
         UpdateProperty();
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
         break;
@@ -237,7 +246,7 @@ void medPipeTrajectories::UpdateProperty(bool fromTag)
   double xyzTransform[3];
   mafTimeStamp t0;
 
-  if(m_Landmark->GetLandmarkVisibility())
+  if(m_Labels && m_Landmark->GetLandmarkVisibility())
     m_Caption->SetVisibility(1);
   else
     m_Caption->SetVisibility(0);

@@ -67,6 +67,7 @@ public:
   enum PIPE_POLYLINE_WIDGET_ID
   {
     ID_INTERVAL = Superclass::ID_LAST,
+    ID_LABELS,
         ID_LAST
   };
 
@@ -87,6 +88,7 @@ protected:
   mafMatrixVector *m_MatrixVector;
 
   int m_Interval;
+  int m_Labels;
   
   virtual mafGUI  *CreateGui();
 
