@@ -146,7 +146,7 @@ medPipeTrajectories::~medPipeTrajectories()
 {
   m_Landmark->RemoveObserver(this);
   m_AssemblyFront->RemovePart(m_Actor);
-  m_AssemblyFront->AddPart(m_OutlineActor);
+  m_AssemblyFront->RemovePart(m_OutlineActor);
 
   vtkDEL(m_Traj);
   vtkDEL(m_Sphere);
