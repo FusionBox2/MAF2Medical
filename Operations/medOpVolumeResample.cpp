@@ -536,7 +536,7 @@ void medOpVolumeResample::OpUndo()
 //----------------------------------------------------------------------------
 {   
 	assert(m_ResampledVme);
-	mafEventMacro(mafEvent(this,VME_REMOVE,m_ResampledVme));
+	m_ResampledVme->ReparentTo(NULL);
 }
 //----------------------------------------------------------------------------
 // Constants :

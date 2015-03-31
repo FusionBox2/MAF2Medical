@@ -512,7 +512,7 @@ void medOpSplitSurface::OpStop(int result)
   if(m_ImplicitPlaneGizmo)
   {
     m_ImplicitPlaneGizmo->SetBehavior(NULL);
-    mafEventMacro(mafEvent(this, VME_REMOVE, m_ImplicitPlaneGizmo));
+    m_ImplicitPlaneGizmo->ReparentTo(NULL);
   }
   mafDEL(m_ImplicitPlaneGizmo);
 	vtkDEL(m_Gizmo);
