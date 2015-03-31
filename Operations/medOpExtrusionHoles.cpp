@@ -408,7 +408,7 @@ void medOpExtrusionHoles::OpStop(int result)
 void medOpExtrusionHoles::DeleteOpDialog()
 //----------------------------------------------------------------------------
 {
-	m_Mouse->RemoveObserver(m_Picker);
+	GetGlobalMouse()->RemoveObserver(m_Picker);
 
 	if(m_SurfaceActor)
 		m_Rwi->m_RenFront->RemoveActor(m_SurfaceActor);
@@ -446,11 +446,10 @@ void medOpExtrusionHoles::CreateOpDialog()
 	m_Rwi->m_RenderWindow->SetDesiredUpdateRate(0.0001f);
 	m_Rwi->SetSize(0,0,500,500);
 	m_Rwi->Show(true);
-	m_Rwi->m_RwiBase->SetMouse(m_Mouse);
 
 	mafNEW(m_Picker);
 	m_Picker->SetListener(this);
-	m_Mouse->AddObserver(m_Picker, MCH_INPUT);
+	GetGlobalMouse()->AddObserver(m_Picker, MCH_INPUT);
 
 	wxPoint p = wxDefaultPosition;
 

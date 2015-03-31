@@ -4189,8 +4189,6 @@ void medOpSegmentation::InitializeInteractors()
   m_SegmentationPicker->SetRenderer(m_View->GetFrontRenderer());
   m_SegmentationPicker->SetListener(this);
 
-  m_View->GetRWI()->SetMouse(m_DialogMouse);
-  m_View->SetMouse(m_DialogMouse);
   m_OldBehavior=m_Volume->GetBehavior();
   m_DialogMouse->SetView(m_View);
 

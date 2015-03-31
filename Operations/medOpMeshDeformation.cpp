@@ -267,7 +267,6 @@ void medOpMeshDeformation::CreateOpDialog()
   m_Rwi->m_RenderWindow->SetDesiredUpdateRate(0.0001f);
   m_Rwi->SetSize(0,0,400,400);
   m_Rwi->Show(true);
-  m_Rwi->m_RwiBase->SetMouse(m_Mouse);
 
 
   //The following code was originally generated using wxFormBuilder
@@ -633,7 +632,7 @@ void medOpMeshDeformation::CreateOpDialog()
   //create the picker
   mafNEW(m_Picker);
   m_Picker->SetListener(this);
-  m_Mouse->AddObserver(m_Picker, MCH_INPUT);
+  GetGlobalMouse()->AddObserver(m_Picker, MCH_INPUT);
 
   //and initialize the renderer window
   double bounds[6];	
@@ -650,7 +649,7 @@ void medOpMeshDeformation::CreateOpDialog()
 void medOpMeshDeformation::DeleteOpDialog()
 //----------------------------------------------------------------------------
 {
-  m_Mouse->RemoveObserver(m_Picker);
+  GetGlobalMouse()->RemoveObserver(m_Picker);
   mafDEL(m_Picker);
 
   //remove all actors

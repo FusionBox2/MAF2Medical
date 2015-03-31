@@ -606,7 +606,7 @@ void medOpImporterDicomOffis::Destroy()
 	//----------------------------------------------------------------------------
 {
 	if(m_DicomInteractor)
-		m_Mouse->RemoveObserver(m_DicomInteractor);
+		GetGlobalMouse()->RemoveObserver(m_DicomInteractor);
 
 	if(!this->m_TestMode) {
 		//		m_SeriesListbox->Clear();
@@ -2217,7 +2217,6 @@ void medOpImporterDicomOffis::CreateLoadPage()
 	m_LoadPage->AddGuiLowerUnderCenter(m_LoadGuiUnderCenter);
 	m_LoadPage->AddGuiLowerCenter(m_LoadGuiCenter);
 
-	m_LoadPage->GetRWI()->m_RwiBase->SetMouse(m_Mouse);
 	m_LoadPage->GetRWI()->m_RenFront->AddActor(m_SliceActor);
 	if(((medGUIDicomSettings*)GetSetting())->EnableVisualizationPosition())
 	{
@@ -2266,7 +2265,6 @@ void medOpImporterDicomOffis::CreateCropPage()
 	m_CropPage->AddGuiLowerLeft(m_CropGuiLeft);
 	m_CropPage->AddGuiLowerCenter(m_CropGuiCenter);
 
-	m_CropPage->GetRWI()->m_RwiBase->SetMouse(m_Mouse);
 	m_CropPage->GetRWI()->m_RenFront->AddActor(m_SliceActor);
 	m_CropPage->GetRWI()->m_RenFront->AddActor(m_CropActor);
 	if(((medGUIDicomSettings*)GetSetting())->EnableVisualizationPosition())
@@ -2365,7 +2363,6 @@ void medOpImporterDicomOffis::CreateBuildPage()
 	m_BuildPage->AddGuiLowerLeft(m_BuildGuiLeft);
 	m_BuildPage->AddGuiLowerCenter(m_BuildGuiUnderLeft);
 
-	m_BuildPage->GetRWI()->m_RwiBase->SetMouse(m_Mouse);
 	m_BuildPage->GetRWI()->m_RenFront->AddActor(m_SliceActor);
 	if(((medGUIDicomSettings*)GetSetting())->EnableVisualizationPosition())
 	{
@@ -2402,7 +2399,6 @@ void medOpImporterDicomOffis::CreateReferenceSystemPage()
 	m_ReferenceSystemPage->AddGuiLowerLeft(m_ReferenceSystemGuiLeft);
 	m_ReferenceSystemPage->AddGuiLowerCenter(m_ReferenceSystemGuiUnderLeft);
 
-	m_ReferenceSystemPage->GetRWI()->m_RwiBase->SetMouse(m_Mouse);
 	m_ReferenceSystemPage->GetRWI()->m_RenFront->AddActor(m_SliceActor);
 	if(((medGUIDicomSettings*)GetSetting())->EnableVisualizationPosition())
 	{
@@ -3243,7 +3239,7 @@ void medOpImporterDicomOffis::CreateSliceVTKPipeline()
 	{
 		mafNEW(m_DicomInteractor);
 		m_DicomInteractor->SetListener(this);
-		m_Mouse->AddObserver(m_DicomInteractor, MCH_INPUT);
+		GetGlobalMouse()->AddObserver(m_DicomInteractor, MCH_INPUT);
 	}
 }
 

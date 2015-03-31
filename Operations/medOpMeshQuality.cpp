@@ -150,7 +150,7 @@ void medOpMeshQuality::OpStop(int result)
 void medOpMeshQuality::DeleteOpDialog()
 //----------------------------------------------------------------------------
 {
-	m_Mouse->RemoveObserver(m_Picker);
+	GetGlobalMouse()->RemoveObserver(m_Picker);
 
 	m_Rwi->m_RenFront->RemoveActor(m_Actor);
 	m_Rwi->m_RenFront->RemoveActor(m_BarActor);
@@ -186,10 +186,9 @@ void medOpMeshQuality::CreateOpDialog()
 	m_Rwi->SetSize(0,0,500,500);
 	//m_Rwi->m_RenderWindow->AddRenderer(m_PIPRen);
 	m_Rwi->Show(true);
-	m_Rwi->m_RwiBase->SetMouse(m_Mouse);
 	mafNEW(m_Picker);
 	m_Picker->SetListener(this);
-	m_Mouse->AddObserver(m_Picker, MCH_INPUT);
+	GetGlobalMouse()->AddObserver(m_Picker, MCH_INPUT);
 
 	wxPoint p = wxDefaultPosition;
 

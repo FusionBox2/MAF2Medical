@@ -1074,7 +1074,7 @@ void mafViewRXCT::ResetSlicesPosition( mafNode *node )
 bool mafViewRXCT::IsPickedSliceView()
 //----------------------------------------------------------------------------
 {
-  mafRWIBase *rwi = m_Mouse->GetRWI();
+  mafRWIBase *rwi = GetGlobalMouse()->GetRWI();
   if (rwi)
   {
     for(int i=0; i<m_NumOfChildView; i++)

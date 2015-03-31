@@ -251,7 +251,7 @@ void medOpImporterRAWImages::CreatePipeline()
   {
     mafNEW(m_DicomInteractor);
     m_DicomInteractor->SetListener(this);
-    m_Mouse->AddObserver(m_DicomInteractor, MCH_INPUT);
+    GetGlobalMouse()->AddObserver(m_DicomInteractor, MCH_INPUT);
   }
 }
 //----------------------------------------------------------------------------
@@ -381,7 +381,6 @@ void medOpImporterRAWImages::CreateGui()
     m_Dialog->GetRWI()->CameraSet(CAMERA_CT);
     m_Dialog->GetRWI()->m_RenFront->AddActor(m_Actor);
     m_Dialog->GetRWI()->m_RenFront->AddActor(m_GizmoActor);
-    m_Dialog->GetRWI()->m_RwiBase->SetMouse(m_Mouse);
 
     int w,h;
     m_Dialog->GetSize(&w,&h);
@@ -432,7 +431,7 @@ void medOpImporterRAWImages::OpStop(int result)
 //----------------------------------------------------------------------------
 {
   if(m_DicomInteractor)
-    m_Mouse->RemoveObserver(m_DicomInteractor);
+    GetGlobalMouse()->RemoveObserver(m_DicomInteractor);
 
   //cleanup +++++++++++++++++++++++++++++++++
   if(!this->m_TestMode)
