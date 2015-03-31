@@ -29,6 +29,7 @@
 #include "medVMEPolylineGraph.h"
 
 #include "mafTagArray.h"
+#include "mafFilesDirs.h"
 
 #include "vtkDataSet.h"
 #include "vtkDataSetReader.h"
@@ -88,8 +89,8 @@ int medOpImporterVTK::ImportVTK()
 
   if (preader->GetNumberOfOutputs()>0)
   {
-    wxString path, name, ext;
-    wxSplitPath(m_File.c_str(),&path,&name,&ext);
+    mafString path, name, ext;
+    mafSplitPath(m_File,&path,&name,&ext);
 
     vtkDataSet *data = vtkDataSet::SafeDownCast(preader->GetOutputs()[0]);
     if (data)
@@ -109,7 +110,7 @@ int medOpImporterVTK::ImportVTK()
       tag_Nature.SetName("VME_NATURE");
       tag_Nature.SetValue("NATURAL");
       m_Output->GetTagArray()->SetTag(tag_Nature);
-      m_Output->SetName(name.c_str());
+      m_Output->SetName(name);
 
       success = true;
     }

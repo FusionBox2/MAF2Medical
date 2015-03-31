@@ -50,9 +50,6 @@ public:
   /** Import vtk data. */
   virtual int ImportVTK();
 
-  /** retrieve the file name*/
-  wxString GetFileName(){return m_File;};
-
 protected:
 
   medVMEPolylineGraph   *m_VmePolyLine;
