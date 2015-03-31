@@ -36,6 +36,7 @@ class vtkSphereSource;
 class mafVMELandmark;
 class vtkAppendPolyData;
 class mafMatrixVector;
+class vtkCaptionActor2D;
 
 
 //----------------------------------------------------------------------------
@@ -71,6 +72,7 @@ public:
 
   
 protected:
+  vtkCaptionActor2D      *m_Caption;
   vtkAppendPolyData      *m_Traj;
   vtkSphereSource        *m_Sphere;
   vtkPolyDataMapper	     *m_Mapper;

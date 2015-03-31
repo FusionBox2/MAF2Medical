@@ -49,6 +49,8 @@
 #include "vtkActor.h"
 #include "vtkProperty.h"
 #include "vtkMAFSmartPointer.h"
+#include "vtkProperty2D.h"
+#include "vtkCaptionActor2D.h"
 
 //----------------------------------------------------------------------------
 mafCxxTypeMacro(medPipeTrajectories);
@@ -66,6 +68,7 @@ medPipeTrajectories::medPipeTrajectories()
   m_OutlineMapper   = NULL;
   m_OutlineProperty = NULL;
   m_OutlineActor    = NULL;
+  m_Caption         = NULL;
   m_Interval = 0;
 }
 //----------------------------------------------------------------------------
@@ -98,6 +101,24 @@ void medPipeTrajectories::Create(mafNode *node, mafView *view)
   m_Sphere->SetRadius(radius);
   m_Sphere->SetPhiResolution(20);
   m_Sphere->SetThetaResolution(20);
+
+ 
+  vtkNEW(m_Caption);
+  m_Caption->SetPosition(25,10);
+  m_Caption->ThreeDimensionalLeaderOff();
+  m_Caption->GetProperty()->SetColor(m_Landmark->GetMaterial()->m_Diffuse);
+  m_Caption->SetHeight(0.05);
+  m_Caption->SetWidth(0.35);
+  m_Caption->BorderOff();
+  wxString dis;
+  dis = wxString::Format("%s",m_Landmark->GetName().GetCStr());
+  m_Caption->SetCaption(dis.c_str());
+
+  m_Caption->SetVisibility(1);
+  double pos[3], rot[3];
+  m_Landmark->GetOutput()->GetAbsPose(pos, rot);
+  m_Caption->SetAttachmentPoint(pos[0],pos[1],pos[2]);
+  m_RenFront->AddActor2D(m_Caption);
 
   vtkNEW(m_Traj);
   
@@ -144,6 +165,8 @@ void medPipeTrajectories::Create(mafNode *node, mafView *view)
 medPipeTrajectories::~medPipeTrajectories()
 //----------------------------------------------------------------------------
 {
+  m_RenFront->RemoveActor2D(m_Caption);
+  vtkDEL(m_Caption);
   m_Landmark->RemoveObserver(this);
   m_AssemblyFront->RemovePart(m_Actor);
   m_AssemblyFront->RemovePart(m_OutlineActor);
@@ -210,6 +233,11 @@ void medPipeTrajectories::UpdateProperty(bool fromTag)
   double xyz[3];
   double xyzTransform[3];
   mafTimeStamp t0;
+
+  double pos[3], rot[3];
+  m_Landmark->GetOutput()->GetAbsPose(pos, rot);
+  m_Caption->SetAttachmentPoint(pos[0],pos[1],pos[2]);
+
   t0 = m_Landmark->GetTimeStamp();
 
   m_Traj->RemoveAllInputs();
