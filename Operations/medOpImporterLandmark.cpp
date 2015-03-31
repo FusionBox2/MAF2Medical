@@ -59,6 +59,8 @@ medOpImporterLandmark::medOpImporterLandmark(const mafString& label) : Superclas
 	m_TagFileFlag        = true;
 	m_DictionaryFileName = "";
   m_LMRenameFileName = "";
+
+  m_DefaultRadius = 5;
 }
 //----------------------------------------------------------------------------
 medOpImporterLandmark::~medOpImporterLandmark( ) 
@@ -337,6 +339,7 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
     mafNEW(specCloud);
     if(specCloud == NULL)
       return NULL;
+	specCloud->SetRadius(m_DefaultRadius);
     result = specCloud;
   }
   else//with dictionary just prepare name, creation only if needed
@@ -436,6 +439,7 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
               {
                 cldName.Append(nmIt->second);
                 cld->SetName(cldName);
+				cld->SetRadius(m_DefaultRadius);
                 clouds[nmIt->second] = cld;
                 addTo = cld;
               }
@@ -479,6 +483,7 @@ mafVME *medOpImporterLandmark::ReadFile(mafString& fname)
               }
               //select this cloud for using
               specCloud->SetName(specCloudName);
+			  specCloud->SetRadius(m_DefaultRadius);
               addTo = specCloud;
               specCloud->ReparentTo(group);
               addTo->UnRegister(this);
@@ -514,6 +519,7 @@ mafVME *medOpImporterLandmark::ReadFileWithoutTag(mafString& fname)
 {
   mafVMELandmarkCloud *cloud;
    mafNEW(cloud);
+   cloud->SetRadius(m_DefaultRadius);
   //cloud->Open();
 
   // need the number of landmarks for the progress bar

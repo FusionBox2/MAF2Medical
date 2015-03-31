@@ -54,6 +54,7 @@ mafVMERawMotionData::mafVMERawMotionData()
 //----------------------------------------------------------------------------
 { 
 	this->m_Dictionary = 0;
+	m_DefaultRadius = 15;
 }
 //----------------------------------------------------------------------------
 mafVMERawMotionData::~mafVMERawMotionData()
@@ -130,7 +131,7 @@ int mafVMERawMotionData::Read()
 			  {
 			    //Create the new cloud
 			    mafNEW(currentDlc);
-			    currentDlc->SetRadius(15);
+			    currentDlc->SetRadius(m_DefaultRadius);
 			    currentDlc->SetName(v_segment_name.c_str());
 
 			    //Add new cloud to vme tree
@@ -180,7 +181,7 @@ int mafVMERawMotionData::Read()
     mafVMELandmarkCloud *dlc;
 		mafNEW(dlc);
     dlc->SetName("dummy segment");
-		dlc->SetRadius(15);
+		dlc->SetRadius(m_DefaultRadius);
     		
 	  //Create (M.columns() / 3) landmarks
 		for (int j = 0; j < M.columns(); j += 3)

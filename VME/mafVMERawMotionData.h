@@ -73,6 +73,7 @@ protected:
   mafString m_DictionaryFileName; 
   mafString m_FileName; 
   int m_Dictionary;
+  double     m_DefaultRadius;
 
 private:
   mafVMERawMotionData(const mafVMERawMotionData&);  // Not implemented.

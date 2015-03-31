@@ -119,6 +119,6 @@ protected:
   mafString                         m_LMRenameFileName;
   std::map<mafString, mafString>    m_LMRenameStruct;
 
-
+  double m_DefaultRadius;
 };
 #endif
