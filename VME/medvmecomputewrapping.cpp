@@ -237,6 +237,9 @@ bool medVMEComputeWrapping::Equals(mafVME *vme)
 	if (Superclass::Equals(vme))
 	{
 		ret = m_Transform->GetMatrix() == ((medVMEComputeWrapping *)vme)->m_Transform->GetMatrix();
+    medVMEComputeWrapping *meter = medVMEComputeWrapping::SafeDownCast(vme);
+    m_WrappedMode1 == meter->m_WrappedMode1;
+    m_WrappedMode2 == meter->m_WrappedMode2;
 	}
 	return ret;
 }
