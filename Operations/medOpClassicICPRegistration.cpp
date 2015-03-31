@@ -219,7 +219,7 @@ void medOpClassicICPRegistration::OpDo()
 
 	target_matrix->Multiply4x4(*target_matrix, *icp_matrix, *final_matrix);
 
-  wxString name = wxString::Format(_("%s registered on %s"),m_Input->GetName(), m_Target->GetName());
+  wxString name = wxString::Format(_("%s registered on %s"),m_Input->GetName().GetCStr(), m_Target->GetName().GetCStr());
 
   mafNEW(m_Registered);
 
