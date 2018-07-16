@@ -773,7 +773,7 @@ vtkMEDPolyDataDeformation::~vtkMEDPolyDataDeformation()
       scalar->SetTuple1(i, -1);
     }
     else 
-      scalar->SetTuple1(i, pVert[0].m_pEdge->m_Id);  
+      scalar->SetTuple1(i, pVert[0].PEdge->Id);  
     //else
     //  scalar->SetTuple1(i, 1);
   }
@@ -2164,10 +2164,10 @@ void vtkMEDPolyDataDeformation::ComputeMeshParametrization()
       for (int k = 0; k < 3; k++)
       {
         //pSkelVert->coords + a*LF.u + b*LF.v + c*LF.w
-        backprj[k] = pSkelVert->m_Coords[k] + 
-          pParams->PCoords[0]*pSkelVert->m_LF.u[k] + 
-          pParams->PCoords[1]*pSkelVert->m_LF.v[k] + 
-          pParams->PCoords[2]*pSkelVert->m_LF.w[k];
+        backprj[k] = pSkelVert->Coords[k] + 
+          pParams->PCoords[0]*pSkelVert->LF.u[k] + 
+          pParams->PCoords[1]*pSkelVert->LF.v[k] + 
+          pParams->PCoords[2]*pSkelVert->LF.w[k];
 
         _ASSERT(fabs(backprj[k] - pcoords[k]) <= 1e-5);
       }
@@ -2210,6 +2210,10 @@ void vtkMEDPolyDataDeformation::ComputeMeshParametrization()
         //closest point lies on the edge
         lw = 0.0;
         pParams->DblRm = w / EdgeLengths[i];
+
+#ifdef DEBUG_vtkMEDPolyDataDeformation
+		_ASSERT(w - pParams->PCoords[0] <= 1e-5);
+#endif
       }        
           
       //weight decreases with the square (typical physical behavior)
@@ -2246,14 +2250,12 @@ void vtkMEDPolyDataDeformation::DeformMesh(vtkPolyData* output)
   for (int i = 0; i < nCount; i++)
   {
     EdgeLengths[i] = SuperSkeleton->PDCSkel->Edges[i]->GetLength();
-    if (this->PreserveVolume)
-    {
-      EdgeElongations[i] = SuperSkeleton->POCSkel->Edges[i]->GetLength();
-      if (EdgeElongations[i] == 0.0)
-        EdgeElongations[i] = 1.0;
-      else
-        EdgeElongations[i] = sqrt(EdgeElongations[i] / EdgeLengths[i]);
-    }
+    
+	EdgeElongations[i] = SuperSkeleton->POCSkel->Edges[i]->GetLength();
+	if (EdgeElongations[i] == 0.0)
+		EdgeElongations[i] = 1.0;
+	else
+		EdgeElongations[i] = sqrt(EdgeElongations[i] / EdgeLengths[i]);
   }
 
   for (int i = 0; i < nPoints; i++)
@@ -2263,75 +2265,63 @@ void vtkMEDPolyDataDeformation::DeformMesh(vtkPolyData* output)
     const double* oldCoords = points->GetPoint(i); 
     double newCoords[3] = {0.0, 0.0, 0.0};
 
-    for (int j = 0; j < nCount; j++)
-    {
-      CMeshVertexParametrization* pParam = &(MeshVertices[i][j]);    
-      CSkeletonVertex* pSkelVert = pParam->PEdge->PMatch->
-        Verts[pParam->NOriginPos];
+	for (int j = 0; j < nCount; j++)
+	{
+		CMeshVertexParametrization* pParam = &(MeshVertices[i][j]);
+		CSkeletonVertex* pSkelVert = pParam->PEdge->PMatch->
+			Verts[pParam->NOriginPos];
 
-      double thisCoords[3];
-      if (pParam->DblRm <= 0.0 || 
-        pParam->PEdge->PMatch->Verts[0] == NULL ||
-        pParam->PEdge->PMatch->Verts[1] == NULL
-        //pParam->m_dblRm >= 1.0)
-        )
-      {
-        //no elongation factor to be applied (it is either an infinite edge
-        //or point is outside the edge domain
-        for (int k = 0; k < 3; k++) 
-        {
-          thisCoords[k] = (pSkelVert->Coords[k] + 
-            pParam->PCoords[0]*pSkelVert->LF.u[k] + 
-            pParam->PCoords[1]*pSkelVert->LF.v[k] + 
-            pParam->PCoords[2]*pSkelVert->LF.w[k]);            
-        }
-      }
-      else
-      {     
-        //the control edge is well defined => we need to incorporate elongation of edge                    
-        double w = pParam->DblRm * EdgeLengths[j];
-        for (int k = 0; k < 3; k++)
-        {
-          //vmo = Pk1 + b*v1 + c*w1
-          thisCoords[k] = (pSkelVert->Coords[k] + 
-            pSkelVert->LF.u[k]*w + 
-            pParam->PCoords[1]*pSkelVert->LF.v[k] + 
-            pParam->PCoords[2]*pSkelVert->LF.w[k]);            
-        }
+		double thisCoords[3];
+		double w = (pParam->DblRm <= 0.0 ||
+			pParam->PEdge->PMatch->Verts[0] == NULL ||
+			pParam->PEdge->PMatch->Verts[1] == NULL
+			//pParam->DblRm >= 1.0
+			) ?
+			1 //no elongation factor to be applied (it is either an infinite edge or point is outside the edge domain)
+			:
+			EdgeElongations[j]; //the control edge is well defined => we need to incorporate elongation of edge
 
-        if (this->PreserveVolume)
-        {
-          //if Volume is to be preserved than the position of point will
-          //be scaled so the point is farer (or closer) to the skeleton
-          //NB. may not work well, if skeleton edge is not lie in the center of mesh
-          //compute the point closest to the current one that lies on the line
-          //supported by the current edge and then compute the distance      
-          //The algorithm is based on the paper: 
-          //Aubel A., Thalmann D. Efficient Muscle Shape Deformation
-          //http://vrlab.epfl.ch/Publications/pdf/Aubel_Thalmann_Derformable_Avatars_01.pdf
+		for (int k = 0; k < 3; k++)
+		{
+			//vmo = Pk1 + b*v1 + c*w1
+			thisCoords[k] = (pSkelVert->Coords[k] +
+				pParam->PCoords[0] * pSkelVert->LF.u[k] * w +
+				pParam->PCoords[1] * pSkelVert->LF.v[k] +
+				pParam->PCoords[2] * pSkelVert->LF.w[k]);
+		}
 
-          //the closest point on the edge can be computed as: 
-          //Pk + (u*(P - Pk))*u, where u is normalized
-          double ptEnd[3];
-          for (int k = 0; k < 3; k++) {                  
-            ptEnd[k] = thisCoords[k] - pSkelVert->Coords[k];
-          }
+		if (this->PreserveVolume && w != 1.0)
+		{
+			//if Volume is to be preserved than the position of point will
+			//be scaled so the point is farer (or closer) to the skeleton
+			//NB. may not work well, if skeleton edge is not lie in the center of mesh
+			//compute the point closest to the current one that lies on the line
+			//supported by the current edge and then compute the distance      
+			//The algorithm is based on the paper: 
+			//Aubel A., Thalmann D. Efficient Muscle Shape Deformation
+			//http://vrlab.epfl.ch/Publications/pdf/Aubel_Thalmann_Derformable_Avatars_01.pdf
 
-          double w = vtkMath::Dot(pSkelVert->LF.u, ptEnd);
-          for (int k = 0; k < 3; k++) {
-            ptEnd[k] = pSkelVert->Coords[k] + w*pSkelVert->LF.u[k];
-          }
+			//the closest point on the edge can be computed as: 
+			//Pk + (u*(P - Pk))*u, where u is normalized
+			double ptEnd[3];
+			for (int k = 0; k < 3; k++) {
+				ptEnd[k] = thisCoords[k] - pSkelVert->Coords[k];
+			}
 
-          for (int k = 0; k < 3; k++) {
-            thisCoords[k] = ptEnd[k] + (thisCoords[k] - ptEnd[k])*EdgeElongations[j];
-          }
-        }
-      } //end else both vertices exist
+			double w = vtkMath::Dot(pSkelVert->LF.u, ptEnd);
+			for (int k = 0; k < 3; k++) {
+				ptEnd[k] = pSkelVert->Coords[k] + w * pSkelVert->LF.u[k];
+			}
 
-      for (int k = 0; k < 3; k++){
-        newCoords[k] += thisCoords[k]*pParam->DblWeight;
-      }
-    }
+			for (int k = 0; k < 3; k++) {
+				thisCoords[k] = ptEnd[k] + (thisCoords[k] - ptEnd[k])*w;
+			}
+		}
+
+		for (int k = 0; k < 3; k++) {
+			newCoords[k] += thisCoords[k] * pParam->DblWeight;
+		}
+	}
 
     points->SetPoint(i, newCoords);   
   } //for i
@@ -2485,8 +2475,8 @@ void vtkMEDPolyDataDeformation::CreatePolyDataFromSuperskeleton()
   m_MATCHED_POLYS[0] = vtkPolyData::New();
   m_MATCHED_POLYS[1] = vtkPolyData::New();
 
-  CreatePolyDataFromSkeleton(SuperSkeleton->m_pOC_Skel, m_MATCHED_POLYS[0]);
-  CreatePolyDataFromSkeleton(SuperSkeleton->m_pDC_Skel, m_MATCHED_POLYS[1]);
+  CreatePolyDataFromSkeleton(SuperSkeleton->POCSkel, m_MATCHED_POLYS[0]);
+  CreatePolyDataFromSkeleton(SuperSkeleton->PDCSkel, m_MATCHED_POLYS[1]);
   
   int nCount = m_MATCHED_POLYS[0]->GetNumberOfPoints();
   for (int i = 0; i < nCount; i++)
