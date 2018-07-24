@@ -840,48 +840,6 @@ bool vtkMEDPolyDataDeformation::CreateSuperSkeleton()
     return false;
   }
 
-  //now we will extend the superskeleton by adding infinite
-  //edges connected to end-points of the skeleton
-  int nEdgeId = (int)SuperSkeleton->POCSkel->Edges.size();
-  for (int i = 0; i < nCount; i++)
-  {
-    CSkeletonVertex* pVertex = SuperSkeleton->POCSkel->Vertices[i];
-    if (pVertex->WT == 0) //terminal nodes
-    {
-      CSkeletonEdge *pNewEdge, *pDNewEdge;
-
-      //this is either the first or the last vertex of curve
-      if (GetNextCurveVertex(pVertex) != NULL)
-      {
-        //OK, it is first vertex
-        pNewEdge = new CSkeletonEdge(NULL, pVertex);
-        pVertex->OneRingEdges.push_back(pNewEdge);            
-
-        pDNewEdge = new CSkeletonEdge(NULL, pVertex->PMatch);
-        pVertex->PMatch->OneRingEdges.push_back(pDNewEdge);
-      }
-      else
-      {
-        //the last one => it will be slightly more complex
-        pNewEdge = new CSkeletonEdge(pVertex, NULL);
-        pVertex->OneRingEdges.insert(pVertex->OneRingEdges.begin(), pNewEdge);            
-
-        pDNewEdge = new CSkeletonEdge(pVertex->PMatch, NULL);
-        pVertex->PMatch->OneRingEdges.insert(pVertex->PMatch->
-          OneRingEdges.begin(), pDNewEdge);
-      }      
-
-      pNewEdge->Id = nEdgeId;
-      pDNewEdge->Id = nEdgeId++;
-
-      pNewEdge->PMatch = pDNewEdge;
-      pDNewEdge->PMatch = pNewEdge;
-
-      SuperSkeleton->POCSkel->Edges.push_back(pNewEdge);
-      SuperSkeleton->PDCSkel->Edges.push_back(pDNewEdge);      
-    } //end if (pVertex->m_WT == 0)
-  }
-
   return true;
 }
 
@@ -2319,21 +2277,10 @@ void vtkMEDPolyDataDeformation::ComputeParametrizationWeights(int nPtId, const d
 		double px = fabs(pParams->DblRm);
 		double pyInv = 1 / sqrt(rw + eps);	//eps is here to avoid infinite if the point lies on the edge
 			
-		if (EdgeLengths[i] > 0)
-		{
-			//w(x) = 1 / (eps + dist(p, x)^2) = 1 / (eps + (py^2 + (px - x)^2))
-			//w = integral(w(x), 0, eLen)
-			pParams->DblWeight = pyInv * (atan(pyInv * px) + atan(pyInv * (EdgeLengths[i] - px)));
-		}
-		else
-		{
-			//this edge is an infinite half-edge, thus its length is px, unless we are before the edge
-			if (pParams->DblRm * (1 - 2*pParams->NOriginPos) > 0)
-				pParams->DblWeight = pyInv * (atan(pyInv * px));
-			else //in which case, there must be the other edge to support it
-				pParams->DblWeight = 0.0;			
-		}
-
+		
+		//w(x) = 1 / (eps + dist(p, x)^2) = 1 / (eps + (py^2 + (px - x)^2))
+		//w = integral(w(x), 0, eLen)
+		pParams->DblWeight = pyInv * (atan(pyInv * px) + atan(pyInv * (EdgeLengths[i] - px)));		
 		dblWSum += pParams->DblWeight;
 	}
 
@@ -2390,183 +2337,6 @@ void vtkMEDPolyDataDeformation::FilterParametrizationWeights(CMeshVertex& Vertex
 		VertexParams[i].DblWeight = 0.0;
 		++i; //move to next
 	}
-
-
-#if 0
-	/*
-	Algorithm:
-	1) Start from the supportive edge with the maximum weight 
-	2) Process the edges in BFS manner, i.e., there is always a pair of edges EO and EN
-		- If EN does influence only the part of EO without the point, diminish its weight 
-	3) Normalize weights
-	*/	
-	
-	bool* pbVisited = new bool[nCount];
-	memset(pbVisited, 0, sizeof(bool)*nCount);
-
-	//queue of the edges to process
-	//first is the one to process, second is the previous one
-	std::queue<std::pair<int, int>> queue;
-
-	int iMaxW = -1;
-	double dblMaxW = 0.0;
-	for (int i = 0; i < nCount; i++)
-	{
-		CMeshVertexParametrization* pParams = &VertexParams[i];
-		if (pParams->DblWeight > dblMaxW)
-		{
-			dblMaxW = pParams->DblWeight;
-			iMaxW = i;
-		}
-	}
-
-	queue.push(std::make_pair(iMaxW, -1));	
-
-	//process all the edges
-	while (!queue.empty())
-	{
-		auto it = queue.front();
-		if (pbVisited[it.first]) {
-			queue.pop();	//this edge has been already processed
-			continue;
-		}
-
-		CMeshVertexParametrization* pParams = &VertexParams[it.first];
-		if (it.second >= 0)
-		{
-			CMeshVertexParametrization* pParamsPrev = &VertexParams[it.second];
-
-			//pParams is the current edge, pParamsPrev is an already processed edge connected to the current one
-			//detect, if the pParams is connected to pParamsPrev by the first or the other vertex 
-			int iVertPos = (pParams->PEdge->Verts[0] == pParamsPrev->PEdge->Verts[0] ||
-				pParams->PEdge->Verts[0] == pParamsPrev->PEdge->Verts[1]) ? 0 : 1;
-
-			double minEdgeLen = std::min(EdgeLengths[pParams->PEdge->Id], EdgeLengths[pParamsPrev->PEdge->Id]);
-			if (minEdgeLen == 0.0) //an infinite half-edge was involved
-				minEdgeLen = std::max(EdgeLengths[pParams->PEdge->Id], EdgeLengths[pParamsPrev->PEdge->Id]);
-
-
-
-			if (pParams)
-
-			if (pParams->DblRm < -minEdgeLen)
-				pParams->DblWeight = 0.0;	//we are before the edge
-
-			if (pParams->DblRm > 0.0 && pParams->DblRm < 1.0)
-			{
-				//the current edge is also supportive
-			}
-			else
-			{
-
-			}
-		}
-		
-		//enqueue all the adjacent edges
-		for (int i = 0; i < 2; i++)		
-		{
-			if (pParams->PEdge->Verts[i] == NULL)
-				continue;	//this is the infinite half-edge
-
-			int nDegree = (int)pParams->PEdge->Verts[i]->OneRingEdges.size();
-			for (int j = 0; j < nDegree; j++) 
-			{
-				const auto pSkelEdge = pParams->PEdge->Verts[i]->OneRingEdges[j];
-				if (!pbVisited[pSkelEdge->Id])
-					queue.push(std::make_pair(pSkelEdge->Id, pParams->PEdge->Id));
-			}			
-		}
-
-		//mark the edge as processed and continue
-		pbVisited[it.first] = true;
-		queue.pop();
-	}
-
-	delete[] pbVisited;
-
-#endif
-
-#if 0
-
-
-
-
-
-	//normalize weights
-	double dblWSum = 0.0;
-	dblWSum += pParams->DblWeight;
-	for (int i = 0; i < nCount; i++)
-	{
-		CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
-		pParams->DblWeight /= dblWSum;
-	}
-
-
-
-	/*
-	//we want only two edges with the largest weights
-	int iMax = 0, iSecondMax = -1;
-	for (int i = 1; i < nCount; i++)
-	{
-	int iRemove = -1;
-
-	CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
-	if (pParams->DblWeight > MeshVertices[nPtId][iMax].DblWeight)
-	{
-	if (iSecondMax >= 0)
-	iRemove = iSecondMax;
-
-	iSecondMax = iMax;
-	iMax = i;
-	}
-	else if (iSecondMax >= 0)
-	{
-	if (pParams->DblWeight > MeshVertices[nPtId][iSecondMax].DblWeight)
-	{
-	iRemove = iSecondMax;
-	iSecondMax = i;
-	}
-	else
-	iRemove = i;
-	}
-	else
-	iSecondMax = i;
-
-	if (iRemove >= 0)
-	{
-	pParams = &(MeshVertices[nPtId][iRemove]);
-	dblWSum -= pParams->DblWeight;
-	pParams->DblWeight = 0.0;
-	}
-	}
-	*/
-
-#ifdef DEBUG_vtkMEDPolyDataDeformation
-	
-
-	double dblWSum = 0.0;
-
-	_RPT1(_CRT_WARN, "%d\t", nPtId);
-	for (int i = nCount - 1; i >= 0; i--)
-	{
-		_RPT1(_CRT_WARN, "%f\t", ordered_weights[i].first);
-
-		if (dblWSum > 0.9)
-			MeshVertices[nPtId][ordered_weights[i].second].DblWeight = 0.0;
-		else
-			dblWSum += ordered_weights[i].first;
-	}
-
-	for (int i = nCount - 1; i >= 0; i--)
-	{
-		CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
-		pParams->DblWeight /= dblWSum;
-
-		_RPT1(_CRT_WARN, "%d\t", ordered_weights[i].second);
-	}
-	_RPT0(_CRT_WARN, "\n");
-#endif
-#endif
 }
 
 //------------------------------------------------------------------------
@@ -2668,12 +2438,8 @@ void vtkMEDPolyDataDeformation::ComputeMeshParametrization()
   for (int i = 0; i < nCount; i++)
   {
     CSkeletonEdge* pEdge = SuperSkeleton->POCSkel->Edges[i];
-    
-    if (pEdge->Verts[0] == NULL || pEdge->Verts[1] == NULL)
-      EdgeLengths[i] = 0.0; //this is special edge
-    else
-      EdgeLengths[i] = sqrt(vtkMath::Distance2BetweenPoints(
-        pEdge->Verts[0]->Coords, pEdge->Verts[1]->Coords));    
+    EdgeLengths[i] = sqrt(vtkMath::Distance2BetweenPoints(
+       pEdge->Verts[0]->Coords, pEdge->Verts[1]->Coords));    
   }
 
   for (int nPtId = 0; nPtId < nPoints; nPtId++)
@@ -2730,12 +2496,10 @@ void vtkMEDPolyDataDeformation::DeformMesh(vtkPolyData* output)
 			Verts[pParam->NOriginPos];
 
 		double thisCoords[3];
-		double elongation = (pParam->DblRm <= 0.0 ||
-			pParam->PEdge->PMatch->Verts[0] == NULL ||
-			pParam->PEdge->PMatch->Verts[1] == NULL
+		double elongation = (pParam->DblRm <= 0.0
 			//pParam->DblRm >= 1.0
 			) ?
-			1 //no elongation factor to be applied (it is either an infinite edge or point is outside the edge domain)
+			1 //no elongation factor to be applied (the point is outside the edge domain)
 			:
 			EdgeElongations[pParam->PEdge->PMatch->Id]; //the control edge is well defined => we need to incorporate elongation of edge
 
