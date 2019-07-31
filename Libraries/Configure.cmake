@@ -13,7 +13,7 @@ INCLUDE (${MedFL_SOURCE_DIR}/modules/MedFLConfigMacro.cmake)
 SET (DEBUG FALSE)
 
 # options for configuring MedFL libraries
-#OPTION(MED_USE_Offis "Find and Link the Offis library." ON)
+OPTION(MED_USE_Offis "Find and Link the Offis library." ON)
 #IF (${CMAKE_GENERATOR} STREQUAL "Visual Studio 9 2008" OR ${CMAKE_GENERATOR} STREQUAL "Visual Studio 10")
   OPTION(MED_USE_BTK "Find and Link the BTK library." ON)
 #ELSE (${CMAKE_GENERATOR} STREQUAL "Visual Studio 9 2008" OR ${CMAKE_GENERATOR} STREQUAL "Visual Studio 10")
