@@ -99,6 +99,8 @@ void medOpScaleDataset::OpRun()
   if (!m_TestMode)
   {
     wxBusyInfo wait("creating gui...");
+
+
   }
 
   assert(m_Input);
@@ -141,7 +143,7 @@ void medOpScaleDataset::OnEvent(mafEventBase *maf_event)
 void medOpScaleDataset::OpDo()
 //----------------------------------------------------------------------------
 {
-  mafOpTransformInterface::OpDo();
+	;// mafOpTransformInterface::OpDo();
 }
 //----------------------------------------------------------------------------
 void medOpScaleDataset::OpUndo()
@@ -190,6 +192,7 @@ void medOpScaleDataset::OnEventThis(mafEventBase *maf_event)
  
     case wxOK:
     {
+		    
 			this->OpStop(OP_RUN_OK);
       return;
     }

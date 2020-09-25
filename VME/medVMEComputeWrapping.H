@@ -35,6 +35,7 @@ CINECA - Interuniversity Consortium (www.cineca.it)
 #include "medVMEOutputComputeWrapping.h"
 #include "mafEvent.h"
 #include "mafVMESurfaceParametric.h"
+//#include "mafVMEMuscleWrapping.h"
 #include "vtkMAFSmartPointer.h"
 #include "vtkPlane.h"
 #include "vtkPlaneSource.h"
@@ -168,7 +169,7 @@ public:
 	};
 
 	static bool VMEAccept(mafNode *node) {return(node != NULL && node->IsMAFType(mafVME));};
-	static bool VMESurfaceParametricAccept(mafNode *node) {return(node != NULL && node->IsMAFType(mafVMESurfaceParametric));};
+	static bool VMESurfaceParametricAccept(mafNode *node) { return(node != NULL && (node->IsMAFType(mafVMESurfaceParametric) )); };
 
 	/** Precess events coming from other objects */ 
 	virtual void OnEvent(mafEventBase *maf_event);

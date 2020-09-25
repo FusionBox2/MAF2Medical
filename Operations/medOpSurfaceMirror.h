@@ -29,7 +29,7 @@
 class vtkPolyData;
 class mafEvent;
 class vtkMEDPolyDataMirror;
-
+class mafVMEGroup;
 //----------------------------------------------------------------------------
 // medOpSurfaceMirror :
 //----------------------------------------------------------------------------
@@ -70,12 +70,15 @@ protected:
 
 	/** Makes the Preview for the mirror. */
 	void Preview();  
+	void PreviewGroup();
 
   vtkMEDPolyDataMirror *m_MirrorFilter;
 
 	vtkPolyData	*m_OutputPolydata;
 	vtkPolyData	*m_InputPolydata;
 
+//	mafVMEGroup* m_InputGroup;
+//	mafVMEGroup* m_OutputGroup;
 	
 
 	int		m_MirrorX;
