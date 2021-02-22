@@ -589,8 +589,11 @@ void medOpMeshDeformation::CreateOpDialog()
   bSizer19->Add( bSizer211, 0, wxEXPAND|wxALIGN_RIGHT, 5 );
   bSizer1->Add( bSizer19, 0, wxEXPAND, 5 );
 #pragma endregion //wxFormBuilder
-
-  helpButton->SetValidator(mafGUIValidator(this, ID_HELP_BUTTON, helpButton));
+  
+  if (helpButton != NULL)
+  {
+	  helpButton->SetValidator(mafGUIValidator(this, ID_HELP_BUTTON, helpButton));
+  }
 
   //validators for Create Control Curves
   m_BttnGenCurves->SetValidator(mafGUIValidator(this, ID_CREATE_CURVES, m_BttnGenCurves));

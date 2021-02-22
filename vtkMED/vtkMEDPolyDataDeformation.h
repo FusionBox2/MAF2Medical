@@ -456,7 +456,7 @@ protected:
   }
 
   //this structure is used in MatchCurves
-  typedef struct CURVE_VERTEX;
+  struct CURVE_VERTEX;
 
   /** Compute the best match for skeleton vertices.
   Only junctions and terminal nodes are matched. The caller can optionally 
@@ -487,6 +487,23 @@ protected:
   objects when they are no longer needed.
   N.B. the original vertices are not destroyed, the routine damages buffers only*/
   int MatchCurves(CSkeletonVertex** pOC, int nOCVerts, CSkeletonVertex** pDC, int nDCVerts);
+
+  /** Detects the matching segments on both curves.  
+  The method assumes that the matching segments have the minimal difference in their lengths.
+  It returns false, if no valid match was detected, otherwise true, 
+  in which case the indices of the vertices denoting the segment on OC and DC
+  curve are returned together with the error in lengths of both curves. 
+  N.B. This method is supposed to be called from MarchCurvesSegments. */
+  bool MarchCurvesSegment(const CURVE_VERTEX* pOC, int nOCVerts, const CURVE_VERTEX* pDC, int nDCVerts, 
+	  std::pair<int, int>& OC_segment, std::pair<int, int>& DC_segment, double& error);
+
+  /** Detects all the matching segments on both curves.
+  The parameter dblLimit defines the maximal matching error in lengths of segments.
+  N.B. This method is supposed to be called from MatchCurves.*/
+  void MarchCurvesSegments(const CURVE_VERTEX* pOC, int nOCVerts,
+	  const CURVE_VERTEX* pDC, int nDCVerts, double dblLimit,
+	  std::vector<std::pair<int, int>>& OC_segments,
+	  std::vector<std::pair<int, int>>& DC_segments);
 
   /** Create edges for the given array of vertices. */
   void CreateCurveEdges(CSkeletonVertex** pVerts, int nVerts);  
@@ -544,12 +561,19 @@ protected:
   N.B. both curves must be compatible with curves constructed by CreateCurveEdges
   and the links must be established between them
 
-  The algorithm is based on the paper: Blanco FR, Oliveira MM: Instant mesh deformation.
-  In: Proceedings of the 2008 symposium on Interactive 3D graphics and games,
-  Redwood City, California, 2008, pp. 71-78 
-  
   ROS_OC and ROS_DC defines the plane to compute the first LF - see SetNthSkeleton*/
   void ComputeLFS(CSkeletonVertex* pOC, double* ROS_OC = NULL, double* ROS_DC = NULL);  
+
+  /** Computes the local frame system of the curve having valid reference OS.
+  N.B. This method is supposed to be called from ComputeLFS. */
+  void ComputeLFS_WithROS(CSkeletonVertex* pCurve, double* ROS);
+
+  /** Computes the local frame system of the curve without having valid reference OS.
+  N.B. This method is supposed to be called from ComputeLFS.
+  The algorithm is based on the paper: Blanco FR, Oliveira MM: Instant mesh deformation.
+  In: Proceedings of the 2008 symposium on Interactive 3D graphics and games,
+  Redwood City, California, 2008, pp. 71-78 */
+  void ComputeLFS_WithoutROS(CSkeletonVertex* pCurve, const CSkeletonVertex::LOCAL_FRAME* lf_OC_Ref = NULL);
 
   /** Computes an approximate geodesic distance between two points.
   If the straight line between both points does not intersect the input mesh,
@@ -565,7 +589,7 @@ protected:
     vtkCellLocator* cellLocator, double dblMaxDist);
 
   //this structure is used in GetPathLength
-  typedef struct DIJKSTRA_ITEM;
+  struct DIJKSTRA_ITEM;
 
   /** Computes the length of the path between nPtFrom to nPtTo vertices.
   The computation is not precise (because of speed). If there is no path, or the
@@ -585,9 +609,18 @@ protected:
   /** Parametrize the input mesh using the super-skeleton.
   N.B. edges ROI must be build and refined before this routine may be called. */
   void ComputeMeshParametrization();
+
+  /** Computes the weights of the skeleton edges for the given point.
+  N.B. This method is supposed to be called from ComputeMeshParametrization.*/
+  void ComputeParametrizationWeights(int nPtId, const double* pcoords, const double* EdgeLengths);
   
-  //void ComputeParametrization(CSkeletonEdge* pNextEdge, 
-  //   CSkeletonEdge* pEdge, int iWSkelEdge);
+  /** Reduces the number of edges having any impact on the given point. 
+  N.B. This method is supposed to be called from ComputeParametrizationWeights. */
+  void FilterParametrizationWeights(CMeshVertex& VertexParams, const double* EdgeLengths);
+  
+  /** Computes the parametrization for the given point. 
+  N.B.This method is supposed to be called from ComputeMeshParametrization.*/
+  void ComputeParametrization(int nPtId, const double* pcoords);
 
   /** Computes new position of vertices in the output mesh.
   In this last step, positions of vertices are modified according to their

@@ -27,12 +27,15 @@ See the COPYINGS file for license details
 #include "vtkCell3D.h"
 #include "vtkExtractEdges.h"
 #include "vtkConvexPointSet.h"
+#include "vtkDoubleArray.h"
 #include <float.h>
+#include <algorithm>
+#include <utility>
+#include <queue>
 
 #ifdef DEBUG_vtkMEDPolyDataDeformation
 #include "vtkCharArray.h"
 #endif
-
 
 
 vtkCxxRevisionMacro(vtkMEDPolyDataDeformation, "$Revision: 1.1.2.6 $");
@@ -729,6 +732,11 @@ vtkMEDPolyDataDeformation::~vtkMEDPolyDataDeformation()
       );
   }  
 
+#ifdef DEBUG_vtkMEDPolyDataDeformation  
+  DestroyMATCHEDData();
+  CreatePolyDataFromSuperskeleton();
+#endif
+
   //let us parametrize the mesh
   ComputeMeshParametrization();
 
@@ -773,7 +781,7 @@ vtkMEDPolyDataDeformation::~vtkMEDPolyDataDeformation()
       scalar->SetTuple1(i, -1);
     }
     else 
-      scalar->SetTuple1(i, pVert[0].m_pEdge->m_Id);  
+      scalar->SetTuple1(i, pVert[0].PEdge->Id);  
     //else
     //  scalar->SetTuple1(i, 1);
   }
@@ -830,53 +838,6 @@ bool vtkMEDPolyDataDeformation::CreateSuperSkeleton()
   {
     DestroySuperSkeleton();
     return false;
-  }
-  
-#ifdef DEBUG_vtkMEDPolyDataDeformation  
-  DestroyMATCHEDData();    
-  CreatePolyDataFromSuperskeleton();
-#endif
-
-  //now we will extend the superskeleton by adding infinite
-  //edges connected to end-points of the skeleton
-  int nEdgeId = (int)SuperSkeleton->POCSkel->Edges.size();
-  for (int i = 0; i < nCount; i++)
-  {
-    CSkeletonVertex* pVertex = SuperSkeleton->POCSkel->Vertices[i];
-    if (pVertex->WT == 0) //terminal nodes
-    {
-      CSkeletonEdge *pNewEdge, *pDNewEdge;
-
-      //this is either the first or the last vertex of curve
-      if (GetNextCurveVertex(pVertex) != NULL)
-      {
-        //OK, it is first vertex
-        pNewEdge = new CSkeletonEdge(NULL, pVertex);
-        pVertex->OneRingEdges.push_back(pNewEdge);            
-
-        pDNewEdge = new CSkeletonEdge(NULL, pVertex->PMatch);
-        pVertex->PMatch->OneRingEdges.push_back(pDNewEdge);
-      }
-      else
-      {
-        //the last one => it will be slightly more complex
-        pNewEdge = new CSkeletonEdge(pVertex, NULL);
-        pVertex->OneRingEdges.insert(pVertex->OneRingEdges.begin(), pNewEdge);            
-
-        pDNewEdge = new CSkeletonEdge(pVertex->PMatch, NULL);
-        pVertex->PMatch->OneRingEdges.insert(pVertex->PMatch->
-          OneRingEdges.begin(), pDNewEdge);
-      }      
-
-      pNewEdge->Id = nEdgeId;
-      pDNewEdge->Id = nEdgeId++;
-
-      pNewEdge->PMatch = pDNewEdge;
-      pDNewEdge->PMatch = pNewEdge;
-
-      SuperSkeleton->POCSkel->Edges.push_back(pNewEdge);
-      SuperSkeleton->PDCSkel->Edges.push_back(pDNewEdge);      
-    } //end if (pVertex->m_WT == 0)
   }
 
   return true;
@@ -1232,12 +1193,174 @@ void vtkMEDPolyDataDeformation::MarkCurveEdges(CSkeletonVertex** pCurve, int nCo
 //this structure is used in MatchCurves
 typedef struct vtkMEDPolyDataDeformation::CURVE_VERTEX
 {
-  double t;             //<time parameter
+  double t;						//<time parameter
   CSkeletonVertex* pVertex;     //<skeleton vertex
 
   CURVE_VERTEX* pLast;  //<last vertex on the curve
   CURVE_VERTEX* pNext;  //<next vertex on the curve    
 } CURVE_VERTEX;
+
+
+//------------------------------------------------------------------------
+//Detects the matching segments on both curves.
+//The method assumes that the matching segments have the minimal difference in their lengths.
+//It returns false, if no valid match was detected, otherwise true,
+//in which case the indices of the vertices denoting the segment on OC and DC
+//curve are returned together with the error in lengths of both curves.
+//N.B. This method is supposed to be called from MarchCurvesSegments.
+bool vtkMEDPolyDataDeformation::MarchCurvesSegment(const CURVE_VERTEX* pOC, int nOCVerts, const CURVE_VERTEX* pDC, int nDCVerts,
+	std::pair<int, int>& OC_segment, std::pair<int, int>& DC_segment, double& error)
+//------------------------------------------------------------------------
+{
+	error = DBL_MAX;
+	double OCLenInv = 1 / (pOC[nOCVerts - 1].t - pOC[0].t);
+	double DCLenInv = 1 / (pDC[nDCVerts - 1].t - pDC[0].t);
+
+	//now, we need to find the common segments on the curves
+	for (int iOCStart = 0; iOCStart < nOCVerts; iOCStart++)
+	{
+		//a candidate segment starts at vertex iOCStart of OC curve
+		//and ends at iOCEnd of this curve
+		for (int iOCEnd = iOCStart + 1; iOCEnd < nOCVerts; iOCEnd++)
+		{
+			double segOCLength = pOC[iOCEnd].t - pOC[iOCStart].t;
+
+			//and we want to find its matching segment on DC curve with the minimal difference
+			for (int iDCStart = (iOCStart == 0) ? 0 : 1;
+				iOCStart == 0 ? iDCStart < 1 : iDCStart < nDCVerts; iDCStart++)
+			{
+				for (int iDCEnd = (iOCEnd == nOCVerts - 1) ? nDCVerts - 1 : iDCStart + 1;
+					(iOCEnd == nOCVerts - 1) ? iDCEnd < nDCVerts : iDCEnd < nDCVerts - 1; iDCEnd++)
+				{
+					double segDCLenght = pDC[iDCEnd].t - pDC[iDCStart].t;
+					double diff = fabs(segDCLenght - segOCLength);
+
+					if (diff > error)
+						continue;
+
+					//OK, we have the better solution
+					//but the OC and DC segments may be totally unrelated						
+					double OCt1 = (pOC[iOCStart].t - pOC[0].t) * OCLenInv;
+					double OCt2 = (pOC[iOCEnd].t - pOC[0].t) * OCLenInv;
+
+					double DCt1 = (pDC[iDCStart].t - pDC[0].t) * DCLenInv;
+					double DCt2 = (pDC[iDCEnd].t - pDC[0].t) * DCLenInv;
+
+					//the segments must overlap
+					if (DCt2 <= OCt1 || DCt1 >= OCt2)
+						continue;
+
+					//and we want at least 50% overlapping
+					double As = std::min(OCt1, DCt1);
+					double Ae = std::max(OCt2, DCt2);
+
+					double Bs = std::max(OCt1, DCt1);
+					double Be = std::min(OCt2, DCt2);
+
+					if ((Be - Bs) / (Ae - As) >= 0.5)
+					{
+						OC_segment.first = iOCStart;
+						OC_segment.second = iOCEnd;
+
+						DC_segment.first = iDCStart;
+						DC_segment.second = iDCEnd;
+
+						error = diff;
+					}
+				}
+			}
+		}
+	}
+
+	return error != DBL_MAX;
+}
+
+//------------------------------------------------------------------------
+//Detects all the matching segments on both curves.
+//The parameter dblLimit defines the maximal matching error in lengths of segments.
+//N.B. This method is supposed to be called from MatchCurves.
+void vtkMEDPolyDataDeformation::MarchCurvesSegments(const CURVE_VERTEX* pOC, int nOCVerts,
+	const CURVE_VERTEX* pDC, int nDCVerts, double dblLimit,
+	std::vector<std::pair<int, int>>& OC_segments,
+	std::vector<std::pair<int, int>>& DC_segments)
+//------------------------------------------------------------------------
+{
+	std::queue < std::pair<std::pair<int, int>, std::pair<int, int>> > queue;
+	queue.push(std::make_pair(std::make_pair(0, nOCVerts - 1), std::make_pair(0, nDCVerts - 1)));
+
+	while (!queue.empty())
+	{
+		auto OC_iSeg = queue.front().first;
+		auto DC_iSeg = queue.front().second;
+
+		double error;
+		std::pair<int, int> OC_oSeg, DC_oSeg;
+		if (MarchCurvesSegment(pOC + OC_iSeg.first, OC_iSeg.second - OC_iSeg.first + 1,
+			pDC + DC_iSeg.first, DC_iSeg.second - DC_iSeg.first + 1, OC_oSeg, DC_oSeg, error) && error <= dblLimit)
+		{
+			//we have here a new segment detected on the given interval
+			//but its indices are relative to the start of the interval, thus make it global
+			OC_oSeg.first += OC_iSeg.first;
+			OC_oSeg.second += OC_iSeg.first;
+			DC_oSeg.first += DC_iSeg.first;
+			DC_oSeg.second += DC_iSeg.first;
+
+			//if there are some still unoccupied intervals, add them for the future search
+			if (OC_iSeg.first < OC_oSeg.first)
+				queue.push(std::make_pair(std::make_pair(OC_iSeg.first, OC_oSeg.first), std::make_pair(DC_iSeg.first, DC_oSeg.first)));
+
+			if (OC_oSeg.second < OC_iSeg.second)
+				queue.push(std::make_pair(std::make_pair(OC_oSeg.second, OC_iSeg.second), std::make_pair(DC_oSeg.second, DC_iSeg.second)));
+
+			OC_segments.push_back(OC_oSeg);
+			DC_segments.push_back(DC_oSeg);
+		}		
+
+		queue.pop();
+	}
+
+	if (OC_segments.empty())
+	{
+		OC_segments.push_back(std::make_pair(0, nOCVerts - 1));
+		DC_segments.push_back(std::make_pair(0, nDCVerts - 1));
+		return;
+	}
+
+	//O[CD]_segments now contains all the segments that could be matched by the given common length criterion
+	//but there might be some gaps in the interval that should be filled
+	//first, sort the segments
+	std::sort(OC_segments.begin(), OC_segments.end());
+	std::sort(DC_segments.begin(), DC_segments.end());
+
+	//insert the head, if missing
+	if (OC_segments[0].first != 0)
+	{
+		OC_segments.insert(OC_segments.cbegin(), std::make_pair(0, OC_segments[0].first));
+		DC_segments.insert(DC_segments.cbegin(), std::make_pair(0, DC_segments[0].first));
+	}
+
+	//insert the tail, if missing
+	int dummy = OC_segments[OC_segments.size() - 1].second;
+	if (dummy != nOCVerts - 1)
+	{
+		OC_segments.push_back(std::make_pair(dummy, nOCVerts - 1));
+		DC_segments.push_back(std::make_pair(DC_segments[DC_segments.size() - 1].second, nDCVerts - 1));
+	}
+
+	//and finally process gaps
+	size_t index = 1;
+	while (index < OC_segments.size())
+	{
+		if (OC_segments[index - 1].second != OC_segments[index].first)
+		{
+			OC_segments.insert(OC_segments.cbegin() + index, std::make_pair(OC_segments[index - 1].second, OC_segments[index].first));
+			DC_segments.insert(DC_segments.cbegin() + index, std::make_pair(DC_segments[index - 1].second, DC_segments[index].first));
+		}
+
+		index++;
+	}
+}
+
 
 //------------------------------------------------------------------------
 //Matches two curves defined by two arrays of vertices.
@@ -1257,57 +1380,74 @@ int vtkMEDPolyDataDeformation::MatchCurves(CSkeletonVertex** pOC, int nOCVerts,
   int nOC_DCVerts[2] = { nOCVerts, nDCVerts };
   
   CURVE_VERTEX* pVertexPool = new CURVE_VERTEX[2*(nOCVerts + nDCVerts)];
-  int nNextVertex = 0;
+  
+  CURVE_VERTEX* pCurves[2];
+  pCurves[0] = &pVertexPool[0];
+  pCurves[1] = &pVertexPool[nOCVerts]; 
+
+  double minEdgeLengs[2] = { DBL_MAX, DBL_MAX };
 
   //create internal structures and parametrize both curves
   for (int i = 0; i < 2; i++)
-  {    
-    pVertexPool[nNextVertex].t = 0.0;
-    pVertexPool[nNextVertex].pVertex = new CSkeletonVertex(pOC_DC[i][0]->Coords);    
-    pVertexPool[nNextVertex].pVertex->WT = pOC_DC[i][0]->GetDegree() - 1;
+  {
+	  pCurves[i][0].t = 0.0;
+	  pCurves[i][0].pVertex = new CSkeletonVertex(pOC_DC[i][0]->Coords);
+	  pCurves[i][0].pVertex->WT = pOC_DC[i][0]->GetDegree() - 1;
 
-    pVertexPool[nNextVertex].pLast = NULL;
-    pVertexPool[nNextVertex].pNext = NULL;    
-    nNextVertex++;
+	  pCurves[i][0].pLast = NULL;
+	  pCurves[i][0].pNext = NULL;
 
-    int nOldNextVertex = nNextVertex;
-    for (int j = 1; j < nOC_DCVerts[i]; j++)
-    {
-      pVertexPool[nNextVertex].t = pVertexPool[nNextVertex - 1].t + 
-        sqrt(vtkMath::Distance2BetweenPoints(pOC_DC[i][j - 1]->Coords, 
-        pOC_DC[i][j]->Coords));
+	  for (int j = 1; j < nOC_DCVerts[i]; j++)
+	  {
+		  double len = sqrt(vtkMath::Distance2BetweenPoints(pOC_DC[i][j - 1]->Coords, pOC_DC[i][j]->Coords));
+		  if (len < minEdgeLengs[i])
+			  minEdgeLengs[i] = len;
 
-      pVertexPool[nNextVertex].pVertex = new CSkeletonVertex(pOC_DC[i][j]->Coords);
-      pVertexPool[nNextVertex].pVertex->WT = pOC_DC[i][j]->GetDegree() - 1;
-      
-      pVertexPool[nNextVertex].pLast = &pVertexPool[nNextVertex - 1];
-      pVertexPool[nNextVertex - 1].pNext = &pVertexPool[nNextVertex];
-      pVertexPool[nNextVertex].pNext = NULL;
-      
-      nNextVertex++;
-    }
+		  pCurves[i][j].t = pCurves[i][j - 1].t + len;
 
-    double dblTotalLength = pVertexPool[nNextVertex - 1].t;
-    for (int j = 1; j < nOC_DCVerts[i] - 1; j++) 
-    {
-      pVertexPool[nOldNextVertex].t /= dblTotalLength;
-      nOldNextVertex++;
-    }
+		  pCurves[i][j].pVertex = new CSkeletonVertex(pOC_DC[i][j]->Coords);
+		  pCurves[i][j].pVertex->WT = pOC_DC[i][j]->GetDegree() - 1;
 
-    pVertexPool[nNextVertex - 1].t = 1.0;
+		  pCurves[i][j].pLast = &pCurves[i][j - 1];
+		  pCurves[i][j - 1].pNext = &pCurves[i][j];
+		  pCurves[i][j].pNext = NULL;
+	  }
   }
 
-  //match end-points of both curves
-  CURVE_VERTEX* pCurves[2];
-  pCurves[0] = &pVertexPool[0];
-  pCurves[1] = &pVertexPool[nOCVerts];
-  pCurves[0]->pVertex->PMatch = pCurves[1]->pVertex;
-  pCurves[1]->pVertex->PMatch = pCurves[0]->pVertex;
-  (pCurves[1] - 1)->pVertex->PMatch = pVertexPool[nNextVertex - 1].pVertex;
-  pVertexPool[nNextVertex - 1].pVertex->PMatch = (pCurves[1] - 1)->pVertex;
+  //try to detect matching segments where uniformity will be induced
+  double dblLimit = std::max(minEdgeLengs[0], minEdgeLengs[1]) * MatchTolerance;
+  std::vector<std::pair<int, int>> OCD_segments[2];
+
+  MarchCurvesSegments(pCurves[0], nOCVerts, pCurves[1], nDCVerts, dblLimit, OCD_segments[0], OCD_segments[1]);
   
+  //OCD_segments contain an ordered full decomposition of the whole OC and DC curves
+  int nSegments = (int)OCD_segments[0].size();
+  for (int i = 0; i < 2; i++)
+  {	  	  
+	  for (int iSegment = 0; iSegment < nSegments; iSegment++)
+	  {
+		  int iSegStart = OCD_segments[i][iSegment].first;
+		  int iSegEnd = OCD_segments[i][iSegment].second;
+		  
+		  double dblAdjust = -pCurves[i][iSegStart].t;
+		  double dblTotalLengthInv = 1 / (pCurves[i][iSegEnd].t + dblAdjust);
+
+		  pCurves[i][iSegStart].t = iSegment;
+		  for (int j = iSegStart + 1; j < iSegEnd; j++) {
+			  pCurves[i][j].t = iSegment + (pCurves[i][j].t + dblAdjust) * dblTotalLengthInv;
+		  }
+		  
+		  //and math the end-points of both curves
+		  pCurves[i][iSegStart].pVertex->PMatch = pCurves[1 - i][OCD_segments[1 - i][iSegment].first].pVertex;
+		  pCurves[i][iSegEnd].pVertex->PMatch = pCurves[1 - i][OCD_segments[1 - i][iSegment].second].pVertex;
+	  }	  
+  }
+  
+  pCurves[0][nOCVerts - 1].t = nSegments;
+  pCurves[1][nDCVerts - 1].t = nSegments;
+
   //compute the matching limit
-  double dblLimit = 1.0;
+  dblLimit = 1.0;
   for (int i = 0; i < 2; i++)
   {
     CURVE_VERTEX* pVertA = pCurves[i];
@@ -1326,6 +1466,7 @@ int vtkMEDPolyDataDeformation::MatchCurves(CSkeletonVertex** pOC, int nOCVerts,
   dblLimit *= MatchTolerance;
   
   //now match also inner vertices of curves
+  int nNextVertex = nOCVerts + nDCVerts;
   for (int i = 0; i < 2; i++)
   {
     CURVE_VERTEX* pVert = pCurves[i];
@@ -1587,192 +1728,226 @@ void vtkMEDPolyDataDeformation::AddCurveToSuperSkeleton(CSkeletonVertex* pOCCurv
 }
 
 //------------------------------------------------------------------------
+//Computes the local frame system of the curve having valid reference OS.
+//N.B.This method is supposed to be called from ComputeLFS.
+void vtkMEDPolyDataDeformation::ComputeLFS_WithROS(CSkeletonVertex* pCurve, double* ROS)
+//------------------------------------------------------------------------
+{
+	while (pCurve != NULL)
+	{
+		CSkeletonVertex::LOCAL_FRAME& lf = pCurve->LF;
+
+		//Ref.Sys. point for OC is specified => together with u, it defines
+		//the optimal plane for the vector v
+		for (int i = 0; i < 3; i++) {
+			lf.v[i] = ROS[i] - pCurve->Coords[i];
+		}
+
+		//w is perpendicular to both vectors
+		vtkMath::Cross(lf.u, lf.v, lf.w);
+		vtkMath::Cross(lf.w, lf.u, lf.v);
+
+		vtkMath::Normalize(lf.v);
+		vtkMath::Normalize(lf.w);
+
+		pCurve = GetNextCurveVertex(pCurve);
+	}
+}
+
+//------------------------------------------------------------------------
+//Computes the local frame system of the curve without having valid reference OS.
+//N.B.This method is supposed to be called from ComputeLFS.
+//The algorithm is based on the paper: Blanco FR, Oliveira MM: Instant mesh deformation.
+//In: Proceedings of the 2008 symposium on Interactive 3D graphics and games,
+//Redwood City, California, 2008, pp. 71-78
+void vtkMEDPolyDataDeformation::ComputeLFS_WithoutROS(CSkeletonVertex* pCurve, const CSkeletonVertex::LOCAL_FRAME* lf_OC_Ref)
+//------------------------------------------------------------------------
+{	
+	if (lf_OC_Ref == NULL)
+	{
+		CSkeletonVertex::LOCAL_FRAME& lf = pCurve->LF;
+
+		//v is a projection into one of of XZ, XY or YZ plane + 90 degrees rotation
+		//the optimal plane is the one closest to the plane where u lies
+		int iPlane = 0;
+		for (int i = 1; i < 3; i++) {
+			if (fabs(lf.u[i]) < fabs(lf.u[iPlane]))
+				iPlane = i; //new minimum
+		}
+
+		int i1 = (iPlane + 1) % 3;
+		int i2 = (iPlane + 2) % 3;
+		lf.v[i1] = lf.u[i2];
+		lf.v[i2] = -lf.u[i1];
+		lf.v[iPlane] = 0.0;
+
+		//w is perpendicular to both vectors
+		lf.w[i1] = 0.0;
+		lf.w[i2] = 0.0;
+		lf.w[iPlane] = lf.u[i1] * lf.u[i1] + lf.u[i2] * lf.u[i2];
+
+		vtkMath::Normalize(lf.v);
+		vtkMath::Normalize(lf.w);
+	}
+	else
+	{
+		CSkeletonVertex::LOCAL_FRAME& dlf = pCurve->LF;
+		const CSkeletonVertex::LOCAL_FRAME& lf = *lf_OC_Ref;
+
+		//get the LF from lf_OC_Ref by minimizing rotation
+		double dblMaxR = 0.0;
+		for (int i = 0; i < 3; i++)
+		{
+			double dblR = fabs(dlf.u[i] - lf.u[i]);
+			if (dblMaxR < dblR)
+				dblMaxR = dblR;
+		}
+
+
+		if (dblMaxR < 1e-5)
+		{
+			//lf.u and dlf.u are colinear vectors => use the same system
+			dlf = lf;
+		}
+		else
+		{
+			//vectors v' and w' of the deformed curve are obtained 
+			//from v and w of the original curve by rotating them around 
+			//the vector r = u x u' by angle between u and u'    
+			double r[3], M[3][3];
+			vtkMath::Cross(dlf.u, lf.u, r);
+			vtkMath::Normalize(r);
+			BuildGeneralRotationMatrix(r, vtkMath::Dot(lf.u, dlf.u), M);
+
+			for (int i = 0; i < 3; i++)
+			{
+				dlf.w[i] = dlf.v[i] = 0.0;
+				for (int j = 0; j < 3; j++)
+				{
+					dlf.v[i] += lf.v[j] * M[j][i];
+					dlf.w[i] += lf.w[j] * M[j][i];
+				}
+			}
+
+			vtkMath::Normalize(dlf.v);
+			vtkMath::Normalize(dlf.w);
+		}
+	}
+
+	//and now compute LF for every other vertex of the curve
+
+	CSkeletonVertex* pPrevCurve = pCurve;
+	pCurve = GetNextCurveVertex(pPrevCurve);
+	while (pCurve != NULL)
+	{
+		CSkeletonVertex* pNextVertex = GetNextCurveVertex(pCurve);
+
+		//compute the tangent vector at pCurve[i]
+		//if this is the last vertex of curve, then the previous edge
+		//is parallel with this vector
+		//N.B. tangent vector must be parallel with the direction of edge pCurve, pNextVertex
+		//otherwise we will have sudden jumps in the deformed mesh!
+		const CSkeletonVertex::LOCAL_FRAME& prev_lf = pPrevCurve->LF;
+		CSkeletonVertex::LOCAL_FRAME& lf = pCurve->LF;
+
+		//compute v(i) by the projection of the previous v(i-1) onto the plane that is defined by
+		//the normal u(i) and the current point pCurve(i)
+		//according to P.Schneider: Geometric Tools for Computer Graphics, pg. 665
+		//projection of vector v onto plane P*n + d = 0 can be computed as
+		//v - (v*n)*n assuming that vector n is normalized
+		double dblVal = vtkMath::Dot(prev_lf.v, lf.u);
+		for (int j = 0; j < 3; j++) {
+			lf.v[j] = prev_lf.v[j] - dblVal * lf.u[j];
+		}
+
+		vtkMath::Normalize(lf.v);
+
+		//compute w = u x v
+		vtkMath::Cross(lf.u, lf.v, lf.w);
+		vtkMath::Normalize(lf.w);
+
+		//if the angle between w(i-1) and w(i) is greater than 90 degrees
+		//change the sign of w(i)
+		if (vtkMath::Dot(lf.w, prev_lf.w) < 0)
+		{
+			for (int j = 0; j < 3; j++) {
+				lf.w[j] = -lf.w[j];
+			}
+		}
+
+		pPrevCurve = pCurve;
+		pCurve = pNextVertex;
+	} //end while
+}
+
+//------------------------------------------------------------------------
 //Computes the local frame systems for both curves.
 //N.B. both curves must be compatible with curves constructed by CreateCurveEdges
 //and the links must be established between them
-//
-//The algorithm is based on the paper: Blanco FR, Oliveira MM: Instant mesh deformation.
-//In: Proceedings of the 2008 symposium on Interactive 3D graphics and games,
-//Redwood City, California, 2008, ptEnd. 71-78
 //
 //ROS_OC and ROS_DC defines the plane to compute the first LF - see SetNthSkeleton
 void vtkMEDPolyDataDeformation::ComputeLFS(CSkeletonVertex* pOC, double* ROS_OC, double* ROS_DC)
 //------------------------------------------------------------------------
 {
-  CSkeletonVertex* pDC = pOC->PMatch;
+	CSkeletonVertex* pDC = pOC->PMatch;
 
-  //compute the LFS for the first point
-  //u is the tangent vector
-  CSkeletonVertex::LOCAL_FRAME& lf = pOC->LF;  
-  CSkeletonVertex* pNextVertex = GetNextCurveVertex(pOC);
-  for (int i = 0; i < 3; i++) {  
-    lf.u[i] = pNextVertex->Coords[i] - pOC->Coords[i];    
-  }
+	//Compute LF.u for every other vertex of both curves
+	for (int iCurve = 0; iCurve < 2; iCurve++)
+	{
+		CSkeletonVertex* pPrevCurve = iCurve == 0 ? pOC : pDC;
 
-  if (ROS_OC != NULL)
-  {
-    //Ref.Sys. point for OC is specified => together with u, it defines
-    //the optimal plane for the vector v
-    for (int i = 0; i < 3; i++){
-      lf.v[i] = ROS_OC[i] - pOC->Coords[i]; 
-    }
+		//compute the LFS.u for the first point
+		//u is the tangent vector
+		CSkeletonVertex::LOCAL_FRAME& lf = pPrevCurve->LF;
+		CSkeletonVertex* pCurve = GetNextCurveVertex(pPrevCurve);
+		for (int i = 0; i < 3; i++) {
+			lf.u[i] = pCurve->Coords[i] - pPrevCurve->Coords[i];
+		}
 
-    //w is perpendicular to both vectors
-    vtkMath::Cross(lf.u, lf.v, lf.w);
-    vtkMath::Cross(lf.w, lf.u, lf.v);
-  }
-  else
-  {
-    //v is a projection into one of of XZ, XY or YZ plane + 90 degrees rotation
-    //the optimal plane is the one closest to the plane where u lies
-    int iPlane = 0;
-    for (int i = 1; i < 3; i++) {
-      if (fabs(lf.u[i]) < fabs(lf.u[iPlane]))
-        iPlane = i; //new minimum
-    }
-      
-    int i1 = (iPlane + 1) % 3;
-    int i2 = (iPlane + 2) % 3;
-    lf.v[i1] = lf.u[i2];
-    lf.v[i2] = -lf.u[i1];
-    lf.v[iPlane] = 0.0;
+		vtkMath::Normalize(lf.u);
+				
+		while (pCurve != NULL)
+		{
+			CSkeletonVertex* pNextVertex = GetNextCurveVertex(pCurve);
 
-    //w is perpendicular to both vectors
-    lf.w[i1] = 0.0;
-    lf.w[i2] = 0.0;
-    lf.w[iPlane] = lf.u[i1]*lf.u[i1] + lf.u[i2]*lf.u[i2];
-  } 
+			//compute the tangent vector at pCurve[i]
+			//if this is the last vertex of curve, then the previous edge
+			//is parallel with this vector
+			//N.B. tangent vector must be parallel with the direction of edge pCurve, pNextVertex
+			//otherwise we will have sudden jumps in the deformed mesh!
+			const CSkeletonVertex::LOCAL_FRAME& prev_lf = pPrevCurve->LF;
+			CSkeletonVertex::LOCAL_FRAME& lf = pCurve->LF;
 
-  vtkMath::Normalize(lf.u);
-  vtkMath::Normalize(lf.v);
-  vtkMath::Normalize(lf.w);
+			if (pNextVertex == NULL)
+			{
+				for (int j = 0; j < 3; j++) {
+					lf.u[j] = pCurve->Coords[j] - pPrevCurve->Coords[j];
+				}
+			}
+			else
+			{
+				for (int j = 0; j < 3; j++) {
+					lf.u[j] = pNextVertex->Coords[j] - pCurve->Coords[j];
+				}
+			}
 
-  //compute the local frame system for the first point
-  //of the deformed curve; it will be a bit different
-  CSkeletonVertex::LOCAL_FRAME& dlf = pDC->LF;
-  pNextVertex = GetNextCurveVertex(pDC);
-  for (int i = 0; i < 3; i++) {  
-    dlf.u[i] = pNextVertex->Coords[i] - pDC->Coords[i];  
-  }
+			vtkMath::Normalize(lf.u);
 
-  vtkMath::Normalize(dlf.u);  
-  if (ROS_DC != NULL)
-  {
-    //Ref.Sys. point for OC is specified => together with u, it defines
-    //the optimal plane for the vector v
-    for (int i = 0; i < 3; i++){
-      dlf.v[i] = ROS_DC[i] - pDC->Coords[i]; 
-    }
+			pPrevCurve = pCurve;
+			pCurve = pNextVertex;
+		} //end while		  
+	} //end for	
 
-    //w is perpendicular to both vectors
-    vtkMath::Cross(dlf.u, dlf.v, dlf.w);
-    vtkMath::Cross(dlf.w, dlf.u, dlf.v);
-    vtkMath::Normalize(dlf.v);
-    vtkMath::Normalize(dlf.w);
-  }
-  else
-  {
-    //Ref. Sys. point not specified => get the DLF from LF by minimizing rotation
-    double dblMaxR = 0.0;
-    for (int i = 0; i < 3; i++) 
-    {
-      double dblR = fabs(dlf.u[i] - lf.u[i]);
-      if (dblMaxR < dblR)
-        dblMaxR = dblR;
-    }
+    //and compute LFS.v and LFS.w
+	if (ROS_OC != NULL)
+		ComputeLFS_WithROS(pOC, ROS_OC);
+	else
+		ComputeLFS_WithoutROS(pOC);
 
-
-    if (dblMaxR < 1e-5)
-    {
-      //lf.u and dlf.u are colinear vectors => use the same system
-      pDC->LF = pOC->LF;
-    }
-    else
-    {  
-      //vectors v' and w' of the deformed curve are obtained 
-      //from v and w of the original curve by rotating them around 
-      //the vector r = u x u' by angle between u and u'    
-      double r[3], M[3][3];
-      vtkMath::Cross(dlf.u, lf.u, r); 
-      vtkMath::Normalize(r);
-      BuildGeneralRotationMatrix(r, vtkMath::Dot(lf.u, dlf.u), M);    
-
-      for (int i = 0; i < 3; i++) 
-      {  
-        dlf.w[i] = dlf.v[i] = 0.0;
-        for (int j = 0; j < 3; j++)
-        {
-          dlf.v[i] += lf.v[j]*M[j][i];
-          dlf.w[i] += lf.w[j]*M[j][i];
-        }
-      }
-
-      vtkMath::Normalize(dlf.v);
-      vtkMath::Normalize(dlf.w);
-    }
-  }
-
-  //and now compute LF for every other vertex of both curves
-  for (int iCurve = 0; iCurve < 2; iCurve++)
-  {
-    CSkeletonVertex* pPrevCurve = iCurve == 0 ? pOC : pDC;    
-    CSkeletonVertex* pCurve = GetNextCurveVertex(pPrevCurve);
-    while (pCurve != NULL)    
-    {
-      pNextVertex = GetNextCurveVertex(pCurve);
-
-      //compute the tangent vector at pCurve[i]
-      //if this is the last vertex of curve, then the previous edge
-      //is parallel with this vector
-      //N.B. tangent vector must be parallel with the direction of edge pCurve, pNextVertex
-      //otherwise we will have sudden jumps in the deformed mesh!
-      const CSkeletonVertex::LOCAL_FRAME& prev_lf = pPrevCurve->LF;
-      CSkeletonVertex::LOCAL_FRAME& lf = pCurve->LF;      
-
-      if (pNextVertex == NULL)
-      {
-        for (int j = 0; j < 3; j++)  { 
-          lf.u[j] = pCurve->Coords[j] - pPrevCurve->Coords[j];
-        }
-      }
-      else
-      {
-        for (int j = 0; j < 3; j++)  { 
-          lf.u[j] = pNextVertex->Coords[j] - pCurve->Coords[j];
-        }
-      }
-
-      vtkMath::Normalize(lf.u);
-
-      //compute v(i) by the projection of the previous v(i-1) onto the plane that is defined by
-      //the normal u(i) and the current point pCurve(i)
-      //according to P.Schneider: Geometric Tools for Computer Graphics, pg. 665
-      //projection of vector v onto plane P*n + d = 0 can be computed as
-      //v - (v*n)*n assuming that vector n is normalized
-      double dblVal = vtkMath::Dot(prev_lf.v, lf.u);
-      for (int j = 0; j < 3; j++) {
-        lf.v[j] = prev_lf.v[j] - dblVal*lf.u[j];
-      }
-
-      vtkMath::Normalize(lf.v);
-
-      //compute w = u x v
-      vtkMath::Cross(lf.u, lf.v, lf.w);
-      vtkMath::Normalize(lf.w);
-
-      //if the angle between w(i-1) and w(i) is greater than 90 degrees
-      //change the sign of w(i)
-      if (vtkMath::Dot(lf.w, prev_lf.w) < 0)
-      {
-        for (int j = 0; j < 3; j++) {
-          lf.w[j] = -lf.w[j];
-        }
-      }
-
-      pPrevCurve = pCurve;
-      pCurve = pNextVertex;
-    } //end while
-  } //end for
+	if (ROS_DC != NULL)
+		ComputeLFS_WithROS(pDC, ROS_DC);
+	else
+		ComputeLFS_WithoutROS(pDC, &pOC->LF);
 }
 
 //------------------------------------------------------------------------
@@ -2052,6 +2227,203 @@ void vtkMEDPolyDataDeformation
 }
 
 //------------------------------------------------------------------------
+//Computes the weights of the skeleton edges for the given point.
+//N.B. This method is supposed to be called from ComputeMeshParametrization.
+void vtkMEDPolyDataDeformation::ComputeParametrizationWeights(int nPtId, const double* pcoords, const double* EdgeLengths)
+//------------------------------------------------------------------------
+{
+	const double eps = 1e-8;
+
+	int nCount = (int)SuperSkeleton->POCSkel->Edges.size();
+	MeshVertices[nPtId].resize(nCount);   //every edge parametrize it
+	
+	double dblWSum = 0.0;
+	for (int i = 0; i < nCount; i++)
+	{
+		CSkeletonEdge* pEdge = SuperSkeleton->POCSkel->Edges[i];
+		CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
+
+		//since the lengths of weights differ, the weight of the edge 
+		//should be a function of its length and its distance to the point,
+		//which can be turned into an integral of a distance function 
+		//between the given point and a point on this edge
+
+		pParams->PEdge = pEdge;
+		pParams->NOriginPos = pEdge->Verts[0] != NULL ? 0 : 1;
+
+		CSkeletonVertex* pSkelVert = pEdge->Verts[pParams->NOriginPos];		
+
+		//compute the point closest to the current one that lies on the line
+		//supported by the current edge and then compute the distance      
+
+		//the closest point on the edge can be computed as: 
+		//Pk + (u*(P - Pk))*u, where u is normalized
+		double ptEnd[3];
+		for (int k = 0; k < 3; k++) {
+			ptEnd[k] = pcoords[k] - pSkelVert->Coords[k];
+		}
+
+		pParams->DblRm = vtkMath::Dot(pSkelVert->LF.u, ptEnd);
+		for (int k = 0; k < 3; k++) {
+			ptEnd[k] = pSkelVert->Coords[k] + pParams->DblRm * pSkelVert->LF.u[k];
+		}
+
+		double rw = vtkMath::Distance2BetweenPoints(ptEnd, pcoords);
+
+		//transforming the coordinate system so that its origin is at pSkelVert,
+		//its x-axis is aligned with the edge and its XY plane passes
+		//through the point P, we have the transformed coordinates of P being
+		//(px = |pParams->DblRm|, py = sqrt(rw))
+		double px = fabs(pParams->DblRm);
+		double pyInv = 1 / sqrt(rw + eps);	//eps is here to avoid infinite if the point lies on the edge
+			
+		
+		//w(x) = 1 / (eps + dist(p, x)^2) = 1 / (eps + (py^2 + (px - x)^2))
+		//w = integral(w(x), 0, eLen)
+		pParams->DblWeight = pyInv * (atan(pyInv * px) + atan(pyInv * (EdgeLengths[i] - px)));		
+		dblWSum += pParams->DblWeight;
+	}
+
+	//normalize weights		
+	for (int i = 0; i < nCount; i++)
+	{
+		CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
+		pParams->DblWeight /= dblWSum;
+	}
+
+	FilterParametrizationWeights(MeshVertices[nPtId], EdgeLengths);
+}
+
+//------------------------------------------------------------------------
+//Reduces the number of edges having any impact on the given point.
+//N.B. This method is supposed to be called from ComputeParametrizationWeights.
+void vtkMEDPolyDataDeformation::FilterParametrizationWeights(CMeshVertex& VertexParams, const double* EdgeLengths)
+//------------------------------------------------------------------------
+{
+	int nCount = (int)SuperSkeleton->POCSkel->Edges.size();
+
+	std::stable_sort(VertexParams.begin(), VertexParams.end(), 
+		[](const CMeshVertexParametrization& _Left, const CMeshVertexParametrization& _Right)
+	{
+		return _Left.DblWeight > _Right.DblWeight;
+	}
+	);
+		
+	double dblThrs = VertexParams[0].DblWeight * 1e-3;
+	double dblWSum = VertexParams[0].DblWeight;
+	
+	int i = 1;	
+	while (i < nCount)
+	{
+		double dblCoeff = VertexParams[i].DblWeight / VertexParams[0].DblWeight;
+		dblCoeff = 1.0 / (exp(10 - 20 * dblCoeff) + 1);	//s shape curve		
+		
+		VertexParams[i].DblWeight *= dblCoeff;
+		if (VertexParams[i].DblWeight < dblThrs)
+			break;	//all others will be zero
+		
+		dblWSum += VertexParams[i].DblWeight;
+		++i; //move to next
+	}
+
+	//normalize the weights
+	for (int j = 0; j < i; j++){
+		VertexParams[j].DblWeight /= dblWSum;
+	}
+
+	//and set the rest to zero
+	while (i < nCount)
+	{
+		VertexParams[i].DblWeight = 0.0;
+		++i; //move to next
+	}
+}
+
+//------------------------------------------------------------------------
+//Computes the parametrization for the given point.
+//N.B.This method is supposed to be called from ComputeMeshParametrization.
+void vtkMEDPolyDataDeformation::ComputeParametrization(int nPtId, const double* pcoords)
+//------------------------------------------------------------------------
+{
+	int nCount = (int)SuperSkeleton->POCSkel->Edges.size();
+	for (int i = 0; i < nCount; i++)
+	{
+		CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
+		if (pParams->DblWeight == 0.0)
+			break;	//there is no need to calculate anything anymore
+					//since the parametrization is ordered by weights desc
+
+		CSkeletonVertex* pSkelVert = pParams->PEdge->Verts[pParams->NOriginPos];
+
+		//compute a, b, c parametrization for pVertex such that
+		//pcoords = pSkelVert->coords + a*LF.u + b*LF.v + c*LF.w
+		double M[3][4];
+		for (int k = 0; k < 3; k++)
+		{
+			M[k][0] = pSkelVert->LF.u[k];
+			M[k][1] = pSkelVert->LF.v[k];
+			M[k][2] = pSkelVert->LF.w[k];
+			M[k][3] = pcoords[k] - pSkelVert->Coords[k];
+		}
+
+		//Gauss-Seidel elimination method      
+		for (int k = 0; k < 2; k++)
+		{
+			//find pivot, i.e., the line with the largest value in k-th column
+			int iPivot = k;
+			for (int m = k + 1; m < 3; m++) {
+				if (fabs(M[m][k]) > fabs(M[iPivot][k]))
+					iPivot = m;
+			}
+
+			//now swap iPivot line with k-th line
+			if (iPivot != k)
+			{
+				for (int m = 0; m < 4; m++)
+				{
+					double dblTmp = M[iPivot][m];
+					M[iPivot][m] = M[k][m];
+					M[k][m] = dblTmp;
+				}
+			}
+
+			//eliminate all values in the current column starting from k+1 line        
+			for (int m = k + 1; m < 3; m++)
+			{
+				if (fabs(M[m][k]) == 0.0)
+					continue; //0.0 is safe as we know that all values are in range 0..1
+
+							  //all previous columns are zeros now
+				for (int n = k + 1; n < 4; n++) {
+					M[m][n] = M[m][k] * M[k][n] - M[k][k] * M[m][n];
+				}
+
+				M[m][k] = 0.0;
+			}
+		}
+
+		pParams->PCoords[2] = M[2][3] / M[2][2];
+		pParams->PCoords[1] = (M[1][3] - pParams->PCoords[2] * M[1][2]) / M[1][1];
+		pParams->PCoords[0] = (M[0][3] - pParams->PCoords[2] * M[0][2] -
+			pParams->PCoords[1] * M[0][1]) / M[0][0];
+
+#ifdef DEBUG_vtkMEDPolyDataDeformation
+		double backprj[3];
+		for (int k = 0; k < 3; k++)
+		{
+			//pSkelVert->coords + a*LF.u + b*LF.v + c*LF.w
+			backprj[k] = pSkelVert->Coords[k] +
+				pParams->PCoords[0] * pSkelVert->LF.u[k] +
+				pParams->PCoords[1] * pSkelVert->LF.v[k] +
+				pParams->PCoords[2] * pSkelVert->LF.w[k];
+
+			_ASSERT(fabs(backprj[k] - pcoords[k]) <= 1e-5);
+		}
+#endif // _DEBUG      
+	} //end for i (edges)
+}
+
+//------------------------------------------------------------------------
 //Parametrize the input mesh using the super-skeleton.
 //N.B. edges ROI must be build and refined before this routine may be called.
 void vtkMEDPolyDataDeformation::ComputeMeshParametrization()
@@ -2066,162 +2438,15 @@ void vtkMEDPolyDataDeformation::ComputeMeshParametrization()
   for (int i = 0; i < nCount; i++)
   {
     CSkeletonEdge* pEdge = SuperSkeleton->POCSkel->Edges[i];
-    
-    if (pEdge->Verts[0] == NULL || pEdge->Verts[1] == NULL)
-      EdgeLengths[i] = 0.0; //this is special edge
-    else
-      EdgeLengths[i] = sqrt(vtkMath::Distance2BetweenPoints(
-        pEdge->Verts[0]->Coords, pEdge->Verts[1]->Coords));    
+    EdgeLengths[i] = sqrt(vtkMath::Distance2BetweenPoints(
+       pEdge->Verts[0]->Coords, pEdge->Verts[1]->Coords));    
   }
 
   for (int nPtId = 0; nPtId < nPoints; nPtId++)
   {
-    double* pcoords = input->GetPoint(nPtId);
-    MeshVertices[nPtId].resize(nCount);   //every edge parametrize it
-
-    double dblWSum = 0.0;
-    for (int i = 0; i < nCount; i++)
-    {
-      CSkeletonEdge* pEdge = SuperSkeleton->POCSkel->Edges[i];        
-      CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
-      
-      pParams->PEdge = pEdge;
-      pParams->NOriginPos = 0;
-
-      //detect the edge configuration        
-      bool bInfEdge = true;
-      CSkeletonVertex* pSkelVerts[2];
-      if (pEdge->Verts[1] == NULL)
-        pSkelVerts[0] = pSkelVerts[1] = pEdge->Verts[0];
-      else if (pEdge->Verts[0] == NULL)
-      {
-        pSkelVerts[0] = pSkelVerts[1] = pEdge->Verts[1];
-        pParams->NOriginPos = 1;
-      }
-      else
-      {      
-        pSkelVerts[0] = pEdge->Verts[0];
-        pSkelVerts[1] = pEdge->Verts[1];
-        bInfEdge = false;
-      }           
-
-      CSkeletonVertex* pSkelVert = pSkelVerts[pParams->NOriginPos];
-
-      //compute a, b, c parametrization for pVertex such that
-      //pcoords = pSkelVert->coords + a*LF.u + b*LF.v + c*LF.w
-      double M[3][4];      
-      for (int k = 0; k < 3; k++) 
-      {
-        M[k][0] = pSkelVert->LF.u[k];
-        M[k][1] = pSkelVert->LF.v[k];
-        M[k][2] = pSkelVert->LF.w[k];
-        M[k][3] = pcoords[k] - pSkelVert->Coords[k]; 
-      }
-
-      //Gauss-Seidel elimination method      
-      for (int k = 0; k < 2; k++)
-      {
-        //find pivot, i.e., the line with the largest value in k-th column
-        int iPivot = k;
-        for (int m = k + 1; m < 3; m++) {
-          if (fabs(M[m][k]) > fabs(M[iPivot][k]))
-            iPivot = m;
-        }
-
-        //now swap iPivot line with k-th line
-        if (iPivot != k)
-        {          
-          for (int m = 0; m < 4; m++) 
-          {
-            double dblTmp = M[iPivot][m];
-            M[iPivot][m] = M[k][m];
-            M[k][m] = dblTmp;
-          }
-        }
-
-        //eliminate all values in the current column starting from k+1 line        
-        for (int m = k + 1; m < 3; m++) 
-        {
-          if (fabs(M[m][k]) == 0.0)
-            continue; //0.0 is safe as we know that all values are in range 0..1
-
-          //all previous columns are zeros now
-          for (int n = k + 1; n < 4; n++) {
-            M[m][n] = M[m][k]*M[k][n] - M[k][k]*M[m][n];
-          }
-
-          M[m][k] = 0.0;
-        }
-      }
-
-      pParams->PCoords[2] = M[2][3] / M[2][2];
-      pParams->PCoords[1] = (M[1][3] - pParams->PCoords[2]*M[1][2]) / M[1][1];
-      pParams->PCoords[0] = (M[0][3] - pParams->PCoords[2]*M[0][2] - 
-        pParams->PCoords[1]*M[0][1]) / M[0][0];
-
-#ifdef DEBUG_vtkMEDPolyDataDeformation
-      double backprj[3];
-      for (int k = 0; k < 3; k++)
-      {
-        //pSkelVert->coords + a*LF.u + b*LF.v + c*LF.w
-        backprj[k] = pSkelVert->m_Coords[k] + 
-          pParams->PCoords[0]*pSkelVert->m_LF.u[k] + 
-          pParams->PCoords[1]*pSkelVert->m_LF.v[k] + 
-          pParams->PCoords[2]*pSkelVert->m_LF.w[k];
-
-        _ASSERT(fabs(backprj[k] - pcoords[k]) <= 1e-5);
-      }
-#endif // _DEBUG
-
-      //compute the point closest to the current one that lies on the line
-      //supported by the current edge and then compute the distance      
-
-      //the closest point on the edge can be computed as: 
-      //Pk + (u*(P - Pk))*u, where u is normalized
-      double ptEnd[3];
-      for (int k = 0; k < 3; k++) {                  
-        ptEnd[k] = pcoords[k] - pSkelVert->Coords[k];
-      }
-
-      double w = vtkMath::Dot(pSkelVert->LF.u, ptEnd);
-      for (int k = 0; k < 3; k++) {
-        ptEnd[k] = pSkelVert->Coords[k] + w*pSkelVert->LF.u[k];
-      }
-      
-      double lw, rw = vtkMath::Distance2BetweenPoints(ptEnd, pcoords);      
-
-      //ptEnd might be outside the edge
-      if (w <= 0.0)  
-      { //we are before the edge => the first node is the closest one
-        lw = /*dblDiag +*/ vtkMath::Distance2BetweenPoints(ptEnd, 
-          pSkelVerts[pParams->NOriginPos]->Coords);
-        pParams->DblRm = 0.0;          
-      }
-      else if (w >= EdgeLengths[i]) 
-      {
-        //we are after the edge => the other node is the closest one
-        lw = /*dblDiag +*/ vtkMath::Distance2BetweenPoints(ptEnd, 
-          pSkelVerts[1 - pParams->NOriginPos]->Coords);
-        
-        pParams->DblRm = 1.0;          
-      }
-      else
-      {
-        //closest point lies on the edge
-        lw = 0.0;
-        pParams->DblRm = w / EdgeLengths[i];
-      }        
-          
-      //weight decreases with the square (typical physical behavior)
-      pParams->DblWeight = 1.0 / (0.0001 + lw + rw/*((1.0 + lw)*rw)*/);  //0.0001 is here if any point lies on the edge
-      dblWSum += pParams->DblWeight;
-    } //end for i (edges)
-
-    for (int i = 0; i < nCount; i++)
-    {
-      CMeshVertexParametrization* pParams = &(MeshVertices[nPtId][i]);
-      pParams->DblWeight /= dblWSum;
-    }
+    double* pcoords = input->GetPoint(nPtId);    
+	ComputeParametrizationWeights(nPtId, pcoords, EdgeLengths);
+	ComputeParametrization(nPtId, pcoords);
   } //end for (points)
 
   delete[] EdgeLengths;
@@ -2246,14 +2471,12 @@ void vtkMEDPolyDataDeformation::DeformMesh(vtkPolyData* output)
   for (int i = 0; i < nCount; i++)
   {
     EdgeLengths[i] = SuperSkeleton->PDCSkel->Edges[i]->GetLength();
-    if (this->PreserveVolume)
-    {
-      EdgeElongations[i] = SuperSkeleton->POCSkel->Edges[i]->GetLength();
-      if (EdgeElongations[i] == 0.0)
-        EdgeElongations[i] = 1.0;
-      else
-        EdgeElongations[i] = sqrt(EdgeElongations[i] / EdgeLengths[i]);
-    }
+    
+	EdgeElongations[i] = SuperSkeleton->POCSkel->Edges[i]->GetLength();
+	if (EdgeElongations[i] == 0.0)
+		EdgeElongations[i] = 1.0;
+	else
+		EdgeElongations[i] = sqrt(EdgeLengths[i] / EdgeElongations[i]);
   }
 
   for (int i = 0; i < nPoints; i++)
@@ -2263,75 +2486,64 @@ void vtkMEDPolyDataDeformation::DeformMesh(vtkPolyData* output)
     const double* oldCoords = points->GetPoint(i); 
     double newCoords[3] = {0.0, 0.0, 0.0};
 
-    for (int j = 0; j < nCount; j++)
-    {
-      CMeshVertexParametrization* pParam = &(MeshVertices[i][j]);    
-      CSkeletonVertex* pSkelVert = pParam->PEdge->PMatch->
-        Verts[pParam->NOriginPos];
+	for (int j = 0; j < nCount; j++)
+	{
+		CMeshVertexParametrization* pParam = &(MeshVertices[i][j]);
+		if (pParam->DblWeight == 0.0)
+			break;	//parametrization is ordered by weights desc
 
-      double thisCoords[3];
-      if (pParam->DblRm <= 0.0 || 
-        pParam->PEdge->PMatch->Verts[0] == NULL ||
-        pParam->PEdge->PMatch->Verts[1] == NULL
-        //pParam->m_dblRm >= 1.0)
-        )
-      {
-        //no elongation factor to be applied (it is either an infinite edge
-        //or point is outside the edge domain
-        for (int k = 0; k < 3; k++) 
-        {
-          thisCoords[k] = (pSkelVert->Coords[k] + 
-            pParam->PCoords[0]*pSkelVert->LF.u[k] + 
-            pParam->PCoords[1]*pSkelVert->LF.v[k] + 
-            pParam->PCoords[2]*pSkelVert->LF.w[k]);            
-        }
-      }
-      else
-      {     
-        //the control edge is well defined => we need to incorporate elongation of edge                    
-        double w = pParam->DblRm * EdgeLengths[j];
-        for (int k = 0; k < 3; k++)
-        {
-          //vmo = Pk1 + b*v1 + c*w1
-          thisCoords[k] = (pSkelVert->Coords[k] + 
-            pSkelVert->LF.u[k]*w + 
-            pParam->PCoords[1]*pSkelVert->LF.v[k] + 
-            pParam->PCoords[2]*pSkelVert->LF.w[k]);            
-        }
+		CSkeletonVertex* pSkelVert = pParam->PEdge->PMatch->
+			Verts[pParam->NOriginPos];
 
-        if (this->PreserveVolume)
-        {
-          //if Volume is to be preserved than the position of point will
-          //be scaled so the point is farer (or closer) to the skeleton
-          //NB. may not work well, if skeleton edge is not lie in the center of mesh
-          //compute the point closest to the current one that lies on the line
-          //supported by the current edge and then compute the distance      
-          //The algorithm is based on the paper: 
-          //Aubel A., Thalmann D. Efficient Muscle Shape Deformation
-          //http://vrlab.epfl.ch/Publications/pdf/Aubel_Thalmann_Derformable_Avatars_01.pdf
+		double thisCoords[3];
+		double elongation = (pParam->DblRm <= 0.0
+			//pParam->DblRm >= 1.0
+			) ?
+			1 //no elongation factor to be applied (the point is outside the edge domain)
+			:
+			EdgeElongations[pParam->PEdge->PMatch->Id]; //the control edge is well defined => we need to incorporate elongation of edge
 
-          //the closest point on the edge can be computed as: 
-          //Pk + (u*(P - Pk))*u, where u is normalized
-          double ptEnd[3];
-          for (int k = 0; k < 3; k++) {                  
-            ptEnd[k] = thisCoords[k] - pSkelVert->Coords[k];
-          }
+		for (int k = 0; k < 3; k++)
+		{
+			//vmo = Pk1 + b*v1 + c*w1
+			thisCoords[k] = (pSkelVert->Coords[k] +
+				pParam->PCoords[0] * pSkelVert->LF.u[k] * elongation +
+				pParam->PCoords[1] * pSkelVert->LF.v[k] +
+				pParam->PCoords[2] * pSkelVert->LF.w[k]);
+		}
 
-          double w = vtkMath::Dot(pSkelVert->LF.u, ptEnd);
-          for (int k = 0; k < 3; k++) {
-            ptEnd[k] = pSkelVert->Coords[k] + w*pSkelVert->LF.u[k];
-          }
+		if (this->PreserveVolume && elongation != 1.0)
+		{
+			//if Volume is to be preserved than the position of point will
+			//be scaled so the point is farer (or closer) to the skeleton
+			//NB. may not work well, if skeleton edge is not lie in the center of mesh
+			//compute the point closest to the current one that lies on the line
+			//supported by the current edge and then compute the distance      
+			//The algorithm is based on the paper: 
+			//Aubel A., Thalmann D. Efficient Muscle Shape Deformation
+			//http://vrlab.epfl.ch/Publications/pdf/Aubel_Thalmann_Derformable_Avatars_01.pdf
 
-          for (int k = 0; k < 3; k++) {
-            thisCoords[k] = ptEnd[k] + (thisCoords[k] - ptEnd[k])*EdgeElongations[j];
-          }
-        }
-      } //end else both vertices exist
+			//the closest point on the edge can be computed as: 
+			//Pk + (u*(P - Pk))*u, where u is normalized
+			double ptEnd[3];
+			for (int k = 0; k < 3; k++) {
+				ptEnd[k] = thisCoords[k] - pSkelVert->Coords[k];
+			}
 
-      for (int k = 0; k < 3; k++){
-        newCoords[k] += thisCoords[k]*pParam->DblWeight;
-      }
-    }
+			double w = vtkMath::Dot(pSkelVert->LF.u, ptEnd);
+			for (int k = 0; k < 3; k++) {
+				ptEnd[k] = pSkelVert->Coords[k] + w * pSkelVert->LF.u[k];
+			}
+
+			for (int k = 0; k < 3; k++) {
+				thisCoords[k] = ptEnd[k] + (thisCoords[k] - ptEnd[k])*elongation;
+			}
+		}
+
+		for (int k = 0; k < 3; k++) {
+			newCoords[k] += thisCoords[k] * pParam->DblWeight;
+		}
+	}
 
     points->SetPoint(i, newCoords);   
   } //for i
@@ -2405,6 +2617,11 @@ void vtkMEDPolyDataDeformation::CreatePolyDataFromSkeleton(
   vtkPoints* points = vtkPoints::New();         //points
   vtkCellArray* cells = vtkCellArray::New();    //cells    
   
+  vtkDoubleArray* lfArray = vtkDoubleArray::New();
+  lfArray->SetName("LF");
+  lfArray->SetNumberOfComponents(9);
+  lfArray->SetNumberOfTuples(nPoints);
+
   for (int i = 0; i < nEdges; i++)
   {
     CSkeletonEdge* pEdge = pSkel->Edges[i];
@@ -2425,6 +2642,19 @@ void vtkMEDPolyDataDeformation::CreatePolyDataFromSkeleton(
         for (int k = 0; k < nJoints; k++) { 
           pVertMap[pVert->JoinedVertices[k]->Id] = pVertMap[pVert->Id];
         }
+
+		double* pLFPtr = lfArray->WritePointer(9*pVertMap[pVert->Id], 9);
+		for (int k = 0; k < 3; k++) {
+			*pLFPtr++ = pVert->LF.u[k];
+		}
+
+		for (int k = 0; k < 3; k++) {
+			*pLFPtr++ = pVert->LF.v[k];
+		}
+
+		for (int k = 0; k < 3; k++) {
+			*pLFPtr++ = pVert->LF.w[k];
+		}
       } //end if
 
       cellIds[j] = pVertMap[pVert->Id];
@@ -2438,6 +2668,9 @@ void vtkMEDPolyDataDeformation::CreatePolyDataFromSkeleton(
 
   points->Delete();
   cells->Delete();
+
+  output->GetPointData()->SetTensors(lfArray);
+  lfArray->Delete();
 
   delete[] pVertMap;
 }
@@ -2485,8 +2718,8 @@ void vtkMEDPolyDataDeformation::CreatePolyDataFromSuperskeleton()
   m_MATCHED_POLYS[0] = vtkPolyData::New();
   m_MATCHED_POLYS[1] = vtkPolyData::New();
 
-  CreatePolyDataFromSkeleton(SuperSkeleton->m_pOC_Skel, m_MATCHED_POLYS[0]);
-  CreatePolyDataFromSkeleton(SuperSkeleton->m_pDC_Skel, m_MATCHED_POLYS[1]);
+  CreatePolyDataFromSkeleton(SuperSkeleton->POCSkel, m_MATCHED_POLYS[0]);
+  CreatePolyDataFromSkeleton(SuperSkeleton->PDCSkel, m_MATCHED_POLYS[1]);
   
   int nCount = m_MATCHED_POLYS[0]->GetNumberOfPoints();
   for (int i = 0; i < nCount; i++)
