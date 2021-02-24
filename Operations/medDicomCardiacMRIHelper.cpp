@@ -26,6 +26,14 @@ const bool DEBUG_MODE = true;
 
 #include "medDicomCardiacMRIHelper.h"
 
+//BES: 4.7.2009 - VS 2008 cannot compile it due to the following error
+//C:\MAF\Medical\Libraries\Offis\Sources\dcmtk-3.5.4\config\include\dcmtk/config/cfwin32.h(362) : error C2371: 'ssize_t' : redefinition; different basic types
+//  C:\MAF\openMAF\Libraries\wxWin\Sources\include\wx/defs.h(1018) : see declaration of 'ssize_t'
+//this here is to patch it
+#if _MSC_VER >= 1500
+#define ssize_t VS2008_ssize_t_HACK 
+#endif
+
 #include "dcmtk/config/osconfig.h"    /* make sure OS specific configuration is included first */
 
 #if _MSC_VER >= 1500
@@ -35,7 +43,6 @@ const bool DEBUG_MODE = true;
 #include "dcmtk/ofstd/ofstream.h"
 #include "dcmtk/ofstd/ofstring.h"
 #include "dcmtk/dcmdata/dctk.h"
-#include "dcmtk/dcmdata/dcdebug.h"
 #include "dcmtk/dcmdata/cmdlnarg.h"
 #include "dcmtk/ofstd/ofconapp.h"
 #include "dcmtk/dcmdata/dcuid.h"       /* for dcmtk version name */
@@ -127,7 +134,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
 
   assert(wxFileExists(file1ABSFileName));
 
-  OFCondition status = dicomFileHandler.loadFile(file1ABSFileName);
+  OFCondition status = dicomFileHandler.loadFile(file1ABSFileName.c_str());
 
   assert(status.good());
 
@@ -211,7 +218,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
 
     assert(wxFileExists(currentSliceABSFileName));
 
-    OFCondition status = dicomFileHandler.loadFile(currentSliceABSFileName);
+    OFCondition status = dicomFileHandler.loadFile(currentSliceABSFileName.c_str());
     
     DcmDataset *dicomDataset = dicomFileHandler.getDataset();
 

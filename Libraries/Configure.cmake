@@ -25,7 +25,7 @@ MedFL_SUBPROJECT (MedFL_MODULES modules)
 # Offis Library
 #
 IF (MED_USE_Offis)
-  MedFL_SUBPROJECT(Offis Offis)
+  SET(MED_DCMTK_DIR "${DCMTK_DIR}")
 ENDIF(MED_USE_Offis)
 
 #

@@ -18,12 +18,10 @@ SET(MED_USE_Offis @MED_USE_Offis@)
 # Offis library
 #
 IF (MED_USE_Offis)
-  SET (Offis_POSSIBLE_ROOT_PATHS @MedFL_BINARY_DIR@/Offis/Build @MedFL_SOURCE_DIR@/Offis/Sources)
-  FIND_FILE(Offis_USE_FILE UseOffis.cmake ${Offis_POSSIBLE_ROOT_PATHS})
-  FIND_PATH(Offis_BINARY_PATH UseOffis.cmake ${Offis_POSSIBLE_ROOT_PATHS})
-  IF (Offis_USE_FILE)
-    INCLUDE (${Offis_USE_FILE}) # currently only local library is supported
-  ENDIF (Offis_USE_FILE)
+  SET(DCMTK_DIR @MED_DCMTK_DIR@)
+  find_package(DCMTK REQUIRED)
+  INCLUDE(${DCMTK_CONFIG})
+  LINK_DIRECTORIES(${DCMTK_DIR}/lib)
 ENDIF (MED_USE_Offis)
 
 #
