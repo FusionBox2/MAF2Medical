@@ -31,6 +31,7 @@ class vtkVolume;
 class vtkLookupTable;
 class vtkImageResample;
 class mafGUIFloatSlider;
+class wxNotebook;
 
 /**
     class name: medPipeCompound

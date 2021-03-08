@@ -372,7 +372,7 @@ void medOpImporterDicomOffis::OpRun()
 	CreateCropPage();
 	CreateBuildPage();
 	CreateReferenceSystemPage();
-	m_Wizard->SetButtonString("Crop >");
+	m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Crop >");
 	EnableSliceSlider(false);
 	EnableTimeSlider(false);
 
@@ -2872,13 +2872,13 @@ void medOpImporterDicomOffis::OnEvent(mafEventBase *maf_event)
 				OnVmeTypeSelected();
 				if (m_Wizard->GetCurrentPage()==m_BuildPage && m_OutputType == medGUIDicomSettings::ID_IMAGE)//Check the type to determine the next step
 				{
-					m_Wizard->SetButtonString("Reference >");
+					m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Reference >");
 					m_ReferenceSystemPage->UpdateActor();
 					m_Wizard->Update();
 				}
 				else
 				{
-					m_Wizard->SetButtonString("Finish");
+					m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Finish");
 					m_Wizard->Update();
 				}
 			}
@@ -5623,7 +5623,7 @@ void medOpImporterDicomOffis::OnWizardChangePage( mafEvent * e )
 		}
 		else
 		{
-			m_Wizard->SetButtonString("Build >");
+			m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Build >");
 			m_Wizard->EnableChangePageOn();
 			m_CropPage->UpdateActor();
 		}
@@ -5659,19 +5659,19 @@ void medOpImporterDicomOffis::OnWizardChangePage( mafEvent * e )
 
 			if (/*m_Wizard->GetCurrentPage()==m_BuildPage &&*/ m_OutputType == medGUIDicomSettings::ID_IMAGE)//Check the type to determine the next step
 			{
-				m_Wizard->SetButtonString("Reference >");
+				m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Reference >");
 				m_ReferenceSystemPage->UpdateActor();
 				m_Wizard->Update();
 			}
 			else
 			{
-				m_Wizard->SetButtonString("Finish");
+				m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Finish");
 				m_Wizard->Update();
 			}
 		} 
 		else
 		{
-			m_Wizard->SetButtonString("Crop >"); 
+			m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Crop >"); 
 			m_LoadPage->UpdateActor();
 		}
 	}
@@ -5684,7 +5684,7 @@ void medOpImporterDicomOffis::OnWizardChangePage( mafEvent * e )
 		m_BuildPage->GetWindowing(m_TotalDicomRange,m_TotalDicomSubRange);
 
 		OnUndoCrop();
-		m_Wizard->SetButtonString("Build >");
+		m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Build >");
 		m_BuildPage->RemoveGuiLowerUnderLeft(m_BuildGuiCenter);
 		m_CropPage->UpdateActor();
 	}
@@ -5703,13 +5703,13 @@ void medOpImporterDicomOffis::OnWizardChangePage( mafEvent * e )
 
 	if (m_Wizard->GetCurrentPage()==m_BuildPage && e->GetBool())//From build page to reference system page
 	{
-		//m_Wizard->SetButtonString("Reference >");
+		//m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Reference >");
 		m_ReferenceSystemPage->UpdateActor();
 		m_ReferenceSystemPage->GetRWI()->CameraReset();
 	}
 	if (m_Wizard->GetCurrentPage()==m_ReferenceSystemPage && (!e->GetBool()))//From reference system page to build page
 	{
-		m_Wizard->SetButtonString("Reference >");
+		m_Wizard->FindWindowById(wxID_FORWARD)->SetLabel("Reference >");
 		m_BuildPage->UpdateActor();
 		m_BuildPage->GetRWI()->CameraReset();
 	}
