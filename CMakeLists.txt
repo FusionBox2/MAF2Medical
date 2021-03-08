@@ -131,7 +131,7 @@ IF(MAF_FOUND)
                  "${MED_BINARY_DIR}/vtkMED")
 
   #other inclusions
-  INCLUDE_DIRECTORIES(${MAF_BINARY_PATH}/Libraries/ITK/Sources/InsightToolkit-3.0.1/Wrapping/WrapITK/ExternalProjects/ItkVtkGlue/src)
+  INCLUDE_DIRECTORIES(${ITK_SOURCE_DIR}/Wrapping/WrapITK/ExternalProjects/ItkVtkGlue/src)
 
   # Configuring MED kits
   MESSAGE(STATUS "MAF: Configuring MAF Kits")
