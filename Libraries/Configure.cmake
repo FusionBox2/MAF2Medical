@@ -32,7 +32,7 @@ ENDIF(MED_USE_Offis)
 # BTK Library
 #
 IF (MED_USE_BTK)
-  MedFL_SUBPROJECT(BTK BTK)
+  find_package(BTK REQUIRED)
 ENDIF(MED_USE_BTK)
 
 
