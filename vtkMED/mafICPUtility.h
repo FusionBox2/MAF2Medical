@@ -29,8 +29,8 @@
 
 //vnl include
 #include <algorithm>
-#include <vcl_utility.h>
-#include <vcl_map.h>
+#include <utility>
+#include <map>
 #include <vnl/vnl_matrix.h>
 #include <vnl/vnl_vector.h>
 #include <vnl/vnl_matrix_fixed.h>
@@ -75,8 +75,8 @@ public:
   inline vnl_matrix_fixed<double,4,4> R_t_2_Tr(const vnl_matrix_fixed<double,3,3>& R,const vnl_vector_fixed<double,3>& t);
   inline void FindPointLocator(vtkPoints *MS_vtkpoints, vtkPointLocator *pointLocator, double* DS_data, int DScols, vnl_matrix<double> &closest_pts);
   inline RegResult ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, int cycle_lim);
-  inline RegResult ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, vcl_ifstream& ml_read_file, float var_threshold, int cycle_lim);
-  inline RegResult ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, vcl_multimap<double,int>& mm, const char* ml_filepath, float var_threshold, int cycle_lim);
+  inline RegResult ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, std::ifstream& ml_read_file, float var_threshold, int cycle_lim);
+  inline RegResult ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, std::multimap<double,int>& mm, const char* ml_filepath, float var_threshold, int cycle_lim);
   inline vnl_matrix_fixed<double,3,3> Rpy2R(const vnl_vector_fixed<double,3> v);
   inline vnl_matrix_fixed<double,3,3> Rpy2R(const double* row);
   inline vnl_matrix<double> RpyOnShape(const vnl_matrix<double>& Shape, const double* row);
@@ -84,7 +84,7 @@ public:
   inline vnl_vector<double> Center(const vnl_matrix<double>& S);
   inline void Neg_translation(vnl_matrix<double>& S, const vnl_vector<double> c);
   inline void Pos_translation(vnl_matrix<double>& S, const vnl_vector<double> c);
-  inline void Rotation_classif(vcl_multimap<double,int>& mm,const vnl_matrix<double>& DS, vnl_matrix<double>& MS);
+  inline void Rotation_classif(std::multimap<double,int>& mm,const vnl_matrix<double>& DS, vnl_matrix<double>& MS);
   inline RegResult FFRegistration( vnl_matrix<double>& MS, vnl_matrix<double>& DS, const char* knownMinLocalFile, float VarianceThrshold, int MaximumNumberOfIterations);
   inline void Target_on_Source(vnl_matrix_fixed<double,3,3>& R, vnl_vector_fixed<double,3>& p);
 
@@ -455,7 +455,7 @@ inline vnl_matrix<double> mafICPUtility::RpyOnShape(const vnl_matrix<double>& Sh
 	return Shape_move;
 }
 //----------------------------------------------------------------------------
-inline mafICPUtility::RegResult mafICPUtility::ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, vcl_ifstream& ml_read_file, float var_threshold, int cycle_lim)
+inline mafICPUtility::RegResult mafICPUtility::ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, std::ifstream& ml_read_file, float var_threshold, int cycle_lim)
 //----------------------------------------------------------------------------
 {
 	//-----------Contruzione Point Locator----------------------
@@ -690,7 +690,7 @@ inline void mafICPUtility::Pos_translation(vnl_matrix<double>& S, const vnl_vect
 	S += aux;
 }
 //----------------------------------------------------------------------------
-inline void mafICPUtility::Rotation_classif(vcl_multimap<double,int>& mm,const vnl_matrix<double>& DS, vnl_matrix<double>& MS)
+inline void mafICPUtility::Rotation_classif(std::multimap<double,int>& mm,const vnl_matrix<double>& DS, vnl_matrix<double>& MS)
 //----------------------------------------------------------------------------
 {
 	//-----------Contruzione Point Locator----------------------
@@ -717,7 +717,7 @@ inline void mafICPUtility::Rotation_classif(vcl_multimap<double,int>& mm,const v
 	const int DS_temp_cols=DS_temp.columns();
 
 	vnl_vector<int> index;
-	vcl_ifstream ml_rot_fixed(this->RotationFixedIndexFile.c_str(), std::ios::in);//Changed from "Rot_fixed_index.txt"
+	std::ifstream ml_rot_fixed(this->RotationFixedIndexFile.c_str(), std::ios::in);//Changed from "Rot_fixed_index.txt"
 	index.read_ascii(ml_rot_fixed);
 	//vcl_cout << "There are  " << index.size() << "  to be tested\n";
 
@@ -777,7 +777,7 @@ inline void mafICPUtility::Rotation_classif(vcl_multimap<double,int>& mm,const v
 	p_locator->Delete();
 }
 //----------------------------------------------------------------------------
-inline mafICPUtility::RegResult mafICPUtility::ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, vcl_multimap<double,int>& mm, const char* ml_filepath, float var_threshold, int cycle_lim)
+inline mafICPUtility::RegResult mafICPUtility::ICP_vtkPointLocator(vnl_matrix<double>& MS, vnl_matrix<double> & DS, std::multimap<double,int>& mm, const char* ml_filepath, float var_threshold, int cycle_lim)
 //----------------------------------------------------------------------------
 {
 	//-----------Contruzione Point Locator----------------------
@@ -803,12 +803,12 @@ inline mafICPUtility::RegResult mafICPUtility::ICP_vtkPointLocator(vnl_matrix<do
 	
 	//------------------------------------------------
 		
-	vcl_multimap<double, int>::iterator mm_it;
+	std::multimap<double, int>::iterator mm_it;
 	
 	vnl_matrix<double> Min;
 	vnl_matrix<double> DS_R(DS.rows(),DS.columns());//3xn
 	
-	vcl_ifstream ml_rot_fixed(this->RotationFixedFile.c_str(), std::ios::in); //Changed from Rotation_fixed.txt
+	std::ifstream ml_rot_fixed(this->RotationFixedFile.c_str(), std::ios::in); //Changed from Rotation_fixed.txt
 	if(ml_rot_fixed.is_open() == 0) 
 	{
 		//vcl_cout << "File rotazioni RAR2 inesistente: impossibile proseguire" <<'\n';
@@ -865,7 +865,7 @@ inline mafICPUtility::RegResult mafICPUtility::ICP_vtkPointLocator(vnl_matrix<do
 	vnl_vector<double> e(DSrows*DScols);		
 	vnl_vector_fixed<double,6> dv;
 	//----------
-	vcl_ofstream ml_write_file(ml_filepath, std::ios::app);
+	std::ofstream ml_write_file(ml_filepath, std::ios::app);
 //	vcl_ofstream ver_index("verifica_indici.txt", std::ios::out);	
 
 	//-----------------------------------------------------------------
@@ -1007,7 +1007,7 @@ inline mafICPUtility::RegResult mafICPUtility::FFRegistration( vnl_matrix<double
 
 		vnl_matrix<double> DS_ml(DS);
 		
-		vcl_ifstream ml_read_file(knownMinLocalFile, std::ios::in);
+		std::ifstream ml_read_file(knownMinLocalFile, std::ios::in);
 		//if(ml_read_file.is_open() != 0)
 		if(KnownMinLocalFlag)
 		{	
@@ -1020,7 +1020,7 @@ inline mafICPUtility::RegResult mafICPUtility::FFRegistration( vnl_matrix<double
 		if (res2.var > VarianceThrshold && 	RotationFixedFlag)
 		{
 			//vcl_cout << res2.var <<'\n';
-			vcl_multimap<double, int> mm;
+			std::multimap<double, int> mm;
 			Rotation_classif(mm,DS_ml,MS);
 			res2 = ICP_vtkPointLocator(MS, DS_ml, mm, knownMinLocalFile, VarianceThrshold, MaximumNumberOfIterations);
 			DS=DS_ml;	

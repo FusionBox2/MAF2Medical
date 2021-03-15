@@ -9,13 +9,13 @@
 =========================================================================*/
 #include "itkRawMotionImporterUtility.h"
 
-#include <vcl_fstream.h>
+#include <fstream>
 
 //----------------------------------------------------------------------------
 int itkRawMotionImporterUtility::ReadMatrix(vnl_matrix<double> &M, const char *fname)
 {
   //Read raw motion data
-  vcl_ifstream v_raw_matrix(fname, std::ios::in);
+	std::ifstream v_raw_matrix(fname, std::ios::in);
 
 	
 	if(v_raw_matrix.is_open() != 0)

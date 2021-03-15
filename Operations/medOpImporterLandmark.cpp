@@ -36,8 +36,7 @@
 #include "mafTagArray.h"
 #include "mafSmartPointer.h"
 
-#include <vcl_fstream.h>
-#include <vcl_string.h>
+#include <string>
 
 #include <fstream>
 
@@ -628,8 +627,8 @@ mafVME *medOpImporterLandmark::ReadFileWithoutTag(mafString& fname)
 bool medOpImporterLandmark::LoadDictionary()
 //----------------------------------------------------------------------------
 {
-  vcl_string landmarkName, segmentName;
-  vcl_ifstream dictionaryInputStream(m_DictionaryFileName, std::ios::in);
+  std::string landmarkName, segmentName;
+  std::ifstream dictionaryInputStream(m_DictionaryFileName, std::ios::in);
 
   if(dictionaryInputStream.is_open() == 0)
     return false;
@@ -677,8 +676,8 @@ void medOpImporterLandmark::DictionaryUpdate()
 bool medOpImporterLandmark::LoadLMRename()
 //----------------------------------------------------------------------------
 {
-  vcl_string landmarkName, segmentName;
-  vcl_ifstream LMRenameInputStream(m_LMRenameFileName, std::ios::in);
+  std::string landmarkName, segmentName;
+  std::ifstream LMRenameInputStream(m_LMRenameFileName, std::ios::in);
 
   if(LMRenameInputStream.is_open() == 0)
     return false;

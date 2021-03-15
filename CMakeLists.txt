@@ -132,6 +132,7 @@ IF(MAF_FOUND)
 
   #other inclusions
   INCLUDE_DIRECTORIES(${ITK_SOURCE_DIR}/Wrapping/WrapITK/ExternalProjects/ItkVtkGlue/src)
+  INCLUDE_DIRECTORIES(${ITK_CMAKE_DIR}/../Modules/Bridge/VtkGlue/include)
 
   # Configuring MED kits
   MESSAGE(STATUS "MAF: Configuring MAF Kits")

@@ -389,11 +389,11 @@ namespace itk
       LinkLengthForce = this->ComputeLinkLengthForce(data,dataIt.Index());
 
       // calculate the displacement, equal to the total force
-      displacement.Set_vnl_vector( 
-        m_Alpha * ( data->internalForce).Get_vnl_vector()
-        +  m_DistanceCoefficient * (data->externalForce).Get_vnl_vector() 
-        +  StrutLengthForce.Get_vnl_vector()
-        +  LinkLengthForce.Get_vnl_vector());
+      displacement.SetVnlVector( 
+        m_Alpha * ( data->internalForce).GetVnlVector()
+        +  m_DistanceCoefficient * (data->externalForce).GetVnlVector()
+        +  StrutLengthForce.GetVnlVector()
+        +  LinkLengthForce.GetVnlVector());
 
       int changeFlag = inFlag*(1-constrained[i]) ;
       if(changeFlag){
