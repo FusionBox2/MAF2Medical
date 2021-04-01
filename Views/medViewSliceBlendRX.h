@@ -45,7 +45,7 @@ class MED_VIEWS_EXPORT medViewSliceBlendRX: public mafViewCompound
 public:
   
   /** constructor */
-  medViewSliceBlendRX(const mafString&  label = "View Blend RX");
+  medViewSliceBlendRX(const mafString&  label = _R("View Blend RX"));
   /** destructor */
   virtual ~medViewSliceBlendRX(); 
   /** RTTI macro */

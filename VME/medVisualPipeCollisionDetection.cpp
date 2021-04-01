@@ -207,8 +207,8 @@ mafGUI *medVisualPipeCollisionDetection::CreateGui()
   //create gui
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
-  m_Gui->Button(ID_SELECT_SURFACE,_("Select Surface:"),"",_("Select a surface to compute collisions"));
-  m_Gui->Button(ID_ADD_SURFACE,_("Add Surface:"),"",_("Add a surface to compute collisions"));
+  m_Gui->Button(ID_SELECT_SURFACE,_L("Select Surface:"), _R(""),_L("Select a surface to compute collisions"));
+  m_Gui->Button(ID_ADD_SURFACE,_L("Add Surface:"), _R(""),_L("Add a surface to compute collisions"));
   return m_Gui;
 }
 //----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ void medVisualPipeCollisionDetection::OnEvent(mafEventBase *maf_event)
     case ID_ADD_SURFACE:
       {
         //if user add a surface to compute collision
-        mafString title = _("Choose Surface");
+        mafString title = _L("Choose Surface");
         e->SetArg((long)&medVisualPipeCollisionDetection::SurfaceAccept);
         e->SetString(&title);
         e->SetId(VME_CHOOSE);
@@ -240,7 +240,7 @@ void medVisualPipeCollisionDetection::OnEvent(mafEventBase *maf_event)
     case ID_SELECT_SURFACE:
       {
         //if the user select a single surface for collision detection
-        mafString title = _("Choose Surface");
+        mafString title = _L("Choose Surface");
         e->SetArg((long)&medVisualPipeCollisionDetection::SurfaceAccept);
         e->SetString(&title);
         e->SetId(VME_CHOOSE);

@@ -40,7 +40,7 @@ class MED_OPERATION_EXPORT medOpImporterGRFWS : public mafOp
 public:
   mafTypeMacro(medOpImporterGRFWS, public mafOp)
   /** constructor */
-	medOpImporterGRFWS(const mafString& label = "GRF Importer");
+	medOpImporterGRFWS(const mafString& label = _R("GRF Importer"));
   /** destructor */
 	~medOpImporterGRFWS(); 
 
@@ -71,7 +71,7 @@ public:
   void Read();
 
   /** Set the filename for the file to import */
-  void SetFileName(const char *file_name){m_File = file_name;};
+  void SetFileName(const char *file_name){m_File = _R(file_name);};
 
 protected:
 

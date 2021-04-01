@@ -43,7 +43,7 @@ initialize the visual pipe according to the camera position that is passed throu
 class MED_VIEWS_EXPORT mafViewSingleSlice: public mafViewVTK
 {
 public:
-  mafViewSingleSlice(const mafString& label = "Slice", int camera_position = CAMERA_CT, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0, bool show_orientation = false);
+  mafViewSingleSlice(const mafString& label = _R("Slice"), int camera_position = CAMERA_CT, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0, bool show_orientation = false);
   virtual ~mafViewSingleSlice(); 
 
   mafTypeMacro(mafViewSingleSlice, mafViewVTK);

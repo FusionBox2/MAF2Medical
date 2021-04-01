@@ -56,7 +56,7 @@ medViewSliceNotInterpolated::~medViewSliceNotInterpolated()
 void medViewSliceNotInterpolated::PackageView()
 //----------------------------------------------------------------------------
 {
-  PlugVisualPipe("mafVMEVolumeGray", "medPipeVolumeSliceNotInterpolated");
+  PlugVisualPipe(_R("mafVMEVolumeGray"), _R("medPipeVolumeSliceNotInterpolated"));
 }
 
 //----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ mafView *medViewSliceNotInterpolated::Copy(mafBaseEventHandler *Listener, bool l
   medViewSliceNotInterpolated *v = new medViewSliceNotInterpolated(GetLabel());
  SetListener(Listener);
   v->m_Id = m_Id;
-  v->PlugVisualPipe("mafVMEVolumeGray", "medPipeVolumeSliceNotInterpolated");
+  v->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("medPipeVolumeSliceNotInterpolated"));
   v->Create();
   return v;
 }
@@ -79,10 +79,10 @@ mafGUI *medViewSliceNotInterpolated::CreateGui()
 {
   // Create the view gui
   m_Gui = new mafGUI(this);
-  m_LutSwatch = m_Gui->Lut(ID_LUT,"LUT",m_ColorLUT); // Lut widget
-  mafString choices[3] = {"X","Y","Z"};
-  m_Gui->Combo(ID_AXIS,"Axis",&m_SliceAxis,3,choices); // Slice Axis
-  m_SliceSlider = m_Gui->FloatSlider(ID_SLICE,"Slice",&m_CurrentSlice,MINDOUBLE,MAXDOUBLE); // Current slice coordinate
+  m_LutSwatch = m_Gui->Lut(ID_LUT,_R("LUT"),m_ColorLUT); // Lut widget
+  mafString choices[3] = {_R("X"),_R("Y"),_R("Z")};
+  m_Gui->Combo(ID_AXIS,_R("Axis"),&m_SliceAxis,3,choices); // Slice Axis
+  m_SliceSlider = m_Gui->FloatSlider(ID_SLICE,_R("Slice"),&m_CurrentSlice,MINDOUBLE,MAXDOUBLE); // Current slice coordinate
   m_Gui->Divider();
   EnableGuiWidgets(false);
   return m_Gui;

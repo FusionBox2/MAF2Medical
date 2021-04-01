@@ -335,9 +335,9 @@ mafGUI *medPipeDensityDistance::CreateGui()
   m_Gui = new mafGUI(this);
   
   mafString m_Choices[2];
-  m_Choices[0]="Distance";
-  m_Choices[1]="Density";
-  m_Gui->Radio(ID_DENSITY_DISTANCE,"",&m_DensityDistance,2,m_Choices);
+  m_Choices[0]=_R("Distance");
+  m_Choices[1]=_R("Density");
+  m_Gui->Radio(ID_DENSITY_DISTANCE, _R(""),&m_DensityDistance,2,m_Choices);
 
   double range[2];
   range[0]=m_SecondThreshold;
@@ -346,15 +346,16 @@ mafGUI *medPipeDensityDistance::CreateGui()
     ((mafVME*)m_Volume)->GetOutput()->GetVTKData()->GetScalarRange(range);
 
 	m_Gui->Divider(1);
-  m_Gui->Integer(ID_FIRST_THRESHOLD,"1° Threshold",&m_FirstThreshold,range[0],range[1]);
-  m_Gui->Integer(ID_SECOND_THRESHOLD,"2° Threshold",&m_SecondThreshold,range[0],range[1]);
+#pragma message("degree signs")
+  m_Gui->Integer(ID_FIRST_THRESHOLD,_R("1° Threshold"),&m_FirstThreshold,range[0],range[1]);
+  m_Gui->Integer(ID_SECOND_THRESHOLD,_R("2° Threshold"),&m_SecondThreshold,range[0],range[1]);
   m_Gui->Divider(1);
-  m_Gui->Integer(ID_MAX_DISTANCE,"Max Dist.",&m_MaxDistance,1,100);
+  m_Gui->Integer(ID_MAX_DISTANCE,_R("Max Dist."),&m_MaxDistance,1,100);
   //m_Gui->Integer(ID_NUM_SECTIONS,"Intervals",&m_NumSections,2,100);
 	m_Gui->Divider(1);
-	m_Choices[0]=_("Discrete");
-  m_Choices[1]=_("Continuos");
-	m_Gui->Radio(ID_BAR_TIPOLOGY,_("Bar Tipology"),&m_BarTipology,2,m_Choices);
+	m_Choices[0]=_L("Discrete");
+  m_Choices[1]=_L("Continuos");
+	m_Gui->Radio(ID_BAR_TIPOLOGY,_L("Bar Tipology"),&m_BarTipology,2,m_Choices);
   m_Gui->Divider(1);
 
 	wxString tip(_("Threshold value for density maps."));
@@ -396,7 +397,7 @@ mafGUI *medPipeDensityDistance::CreateGui()
 	m_Gui->Add(sizer_distance,0,wxALL,1);
 
 	m_Gui->Divider(1);
-  m_Gui->Button(ID_SELECT_VOLUME,_("Select Volume"));
+  m_Gui->Button(ID_SELECT_VOLUME,_L("Select Volume"));
   if(!m_Volume)
   {
     m_Gui->Enable(ID_DENSITY_DISTANCE,false);
@@ -464,7 +465,7 @@ void medPipeDensityDistance::OnEvent(mafEventBase *maf_event)
           if(m_FirstThreshold>=m_SecondThreshold)
             UpdatePipeline();
           else
-            mafMessage(_("Invalid Thresholds"));
+            mafMessage(_M(mafString(_L("Invalid Thresholds"))));
         }
         else
         {
@@ -479,7 +480,7 @@ void medPipeDensityDistance::OnEvent(mafEventBase *maf_event)
 					if(m_FirstThreshold>=m_SecondThreshold)
 						UpdatePipeline();
 					else
-						mafMessage(_("Invalid Thresholds"));
+						mafMessage(_M(mafString(_L("Invalid Thresholds"))));
 				}
 				else
 				{
@@ -489,7 +490,7 @@ void medPipeDensityDistance::OnEvent(mafEventBase *maf_event)
       break;
     case ID_SELECT_VOLUME:
       {
-        mafString title = _("Choose Volume");
+        mafString title = _L("Choose Volume");
         e->SetArg((long)&medPipeDensityDistance::VolumeAccept);
         e->SetString(&title);
         e->SetId(VME_CHOOSE);

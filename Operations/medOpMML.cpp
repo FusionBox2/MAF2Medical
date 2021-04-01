@@ -129,7 +129,7 @@ medOpMML::medOpMML(const mafString& label) : Superclass(label)
   m_PatientMSFSectionName = "Patient";
 
   // initial inputs
-  m_SurfaceName = "none";
+  m_SurfaceName = _R("none");
   m_L1Name      = "none";
   m_L2Name      = "none";
   m_L3Name      = "none";
@@ -191,7 +191,7 @@ medOpMML::medOpMML(const mafString& label) : Superclass(label)
   m_Widget = NULL;
 
   //
-  m_VolName     = "none";
+  m_VolName     = _R("none");
   m_ChooseOk = NULL;
 
   // Stefano
@@ -402,18 +402,18 @@ void medOpMML::OnRegistrationOK()
 
   // tag 1: status
   mafTagItem status;
-  status.SetName("STATUS_TAG");
+  status.SetName(_R("STATUS_TAG"));
   vme->GetTagArray()->SetTag(status);
 
   // tag 2: number of slices
   mafTagItem noofslices;
-  noofslices.SetName("NUMBER_OF_SLICES_TAG");
+  noofslices.SetName(_R("NUMBER_OF_SLICES_TAG"));
   noofslices.SetValue(m_Model->GetTotalNumberOfSyntheticScans());
   vme->GetTagArray()->SetTag(noofslices);
 
   // tag 3: xy scaling factors
   mafTagItem xyscalingfactors;
-  xyscalingfactors.SetName("XY_SCALING_FACTORS_TAG");
+  xyscalingfactors.SetName(_R("XY_SCALING_FACTORS_TAG"));
   xyscalingfactors.SetNumberOfComponents(2);
   double x, y;
   m_Model->GetXYScalingFactorsOfMuscle(&x, &y);
@@ -429,11 +429,11 @@ void medOpMML::OnRegistrationOK()
   mafTagItem Parameter2_StackTag;
 
   // names
-  SliceId_StackTag.SetName("SLICE_ID_STACK_TAG");
-  ZValue_StackTag.SetName("Z_VALUE_STACK_TAG");
-  OperationType_StackTag.SetName("OPERATION_TYPE_STACK_TAG");
-  Parameter1_StackTag.SetName("PARAMETER_1_STACK_TAG");
-  Parameter2_StackTag.SetName("PARAMETER_2_STACK_TAG");
+  SliceId_StackTag.SetName(_R("SLICE_ID_STACK_TAG"));
+  ZValue_StackTag.SetName(_R("Z_VALUE_STACK_TAG"));
+  OperationType_StackTag.SetName(_R("OPERATION_TYPE_STACK_TAG"));
+  Parameter1_StackTag.SetName(_R("PARAMETER_1_STACK_TAG"));
+  Parameter2_StackTag.SetName(_R("PARAMETER_2_STACK_TAG"));
 
   // size
   SliceId_StackTag.SetNumberOfComponents(m_Widget->GetNextOperationId());
@@ -464,7 +464,7 @@ void medOpMML::OnRegistrationOK()
 
   // tag 5: type of muscle
   mafTagItem typeofmuscle;
-  typeofmuscle.SetName("TYPE_OF_MUSCLE_TAG");
+  typeofmuscle.SetName(_R("TYPE_OF_MUSCLE_TAG"));
   typeofmuscle.SetValue(m_Model->GetTypeOfMuscles());
   vme->GetTagArray()->SetTag(typeofmuscle);
 
@@ -521,7 +521,7 @@ void medOpMML::OnRegistrationOK()
   //	ext.Printf("%d", num + 1);
 
   //
-  vme->SetName(m_SurfaceName + " registered");
+  vme->SetName(m_SurfaceName + _R(" registered"));
 
   // add to tree (save now)
   //OurMuscleVME->AddChild(vme);
@@ -628,7 +628,7 @@ void medOpMML::OnMuscleSelection()
 //----------------------------------------------------------------------------
 {
   // raise event to request a VME selection dialog
-  mafString title = "Select Muscle (Atlas)";
+  mafString title = _R("Select Muscle (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
   mafEventMacro(e);
@@ -650,20 +650,20 @@ void medOpMML::OnMuscleSelection()
 
   // if muscle registered previously
   // read in relevant tags stored in
-  if(vme->GetTagArray()->GetTag("STATUS_TAG"))
+  if(vme->GetTagArray()->GetTag(_R("STATUS_TAG")))
   {
     // flag (active)
     m_RegistrationStatus = 1;
 
     // tag 2: number of slices
     mafTagItem *NumberOfSlicesTag;
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("NUMBER_OF_SLICES_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("NUMBER_OF_SLICES_TAG")))
     {
       NumberOfSlicesTag = ti;
     }
     else
     {
-      wxMessageBox("Number of slices tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Number of slices tag in already registered muscle vme is missing!"));
       return;
     }
     m_ScansNumber = NumberOfSlicesTag->GetComponentAsDouble(0);
@@ -674,13 +674,13 @@ void medOpMML::OnMuscleSelection()
 
     // tag 3: xy scaling factors
     mafTagItem *XYScalingFactorsTag;
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("XY_SCALING_FACTORS_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("XY_SCALING_FACTORS_TAG")))
     {
       XYScalingFactorsTag = ti;
     }
     else
     {
-      wxMessageBox("XY scaling factors tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("XY scaling factors tag in already registered muscle vme is missing!"));
       return;
     }
     m_RegistrationXYScalingFactor = XYScalingFactorsTag->GetValueAsDouble(0);
@@ -692,69 +692,69 @@ void medOpMML::OnMuscleSelection()
     // tag 4: operation stack
     //
     // slice id
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("SLICE_ID_STACK_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("SLICE_ID_STACK_TAG")))
     {
       m_SliceIdStackTag = ti;
     }
     else
     {
-      wxMessageBox("Slice id tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Slice id tag in already registered muscle vme is missing!"));
       return;
     }
 
     // z value
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("Z_VALUE_STACK_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("Z_VALUE_STACK_TAG")))
     {
       m_ZValueStackTag = ti;
     }
     else
     {
-      wxMessageBox("Z value tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Z value tag in already registered muscle vme is missing!"));
       return;
     }
 
     // operation type
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("OPERATION_TYPE_STACK_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("OPERATION_TYPE_STACK_TAG")))
     {
       m_OperationTypeStackTag = ti;
     }
     else
     {
-      wxMessageBox("Operation type tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Operation type tag in already registered muscle vme is missing!"));
       return;
     }
 
     // parameter 1
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("PARAMETER_1_STACK_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("PARAMETER_1_STACK_TAG")))
     {
       m_Parameter1StackTag = ti;
     }
     else
     {
-      wxMessageBox("Parameter 1 tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Parameter 1 tag in already registered muscle vme is missing!"));
       return;
     }
 
     // parameter 2
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("PARAMETER_2_STACK_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("PARAMETER_2_STACK_TAG")))
     {
       m_Parameter2StackTag = ti;
     }
     else
     {
-      wxMessageBox("Parameter 2 tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Parameter 2 tag in already registered muscle vme is missing!"));
       return;
     }
 
     // tag 5: type of muscle
     mafTagItem *TypeOfMuscleTag;
-    if(mafTagItem *ti = vme->GetTagArray()->GetTag("TYPE_OF_MUSCLE_TAG"))
+    if(mafTagItem *ti = vme->GetTagArray()->GetTag(_R("TYPE_OF_MUSCLE_TAG")))
     {
       TypeOfMuscleTag = ti;
     }
     else
     {
-      wxMessageBox("Type of muscle tag in already registered muscle vme is missing!","alert",wxICON_WARNING);
+      mafWarningMessage(_M("Type of muscle tag in already registered muscle vme is missing!"));
       return;
     }
     m_MuscleType = TypeOfMuscleTag->GetComponentAsDouble(0);
@@ -762,8 +762,8 @@ void medOpMML::OnMuscleSelection()
     // set m_Surface to parent vme (original non-registered muscle)
     // to identify landmarks correctly
     wxString ParentVMEName;
-    ParentVMEName = m_SurfaceName.BeforeFirst('.');
-    m_SurfaceName = ParentVMEName;
+    ParentVMEName = m_SurfaceName.toWx().BeforeFirst('.');
+    m_SurfaceName = mafWxToString(ParentVMEName);
   }
 
   // set up landmarks (parameters are .msf section names)
@@ -780,7 +780,7 @@ void medOpMML::OnMuscleSelection()
     RootVME = mafVME::SafeDownCast(m_Input->GetRoot());
 
     // atlas section vme
-    AtlasSectionVME = (mafVME*)(RootVME->FindInTreeByName(m_AtlasMSFSectionName));
+    AtlasSectionVME = (mafVME*)(RootVME->FindInTreeByName(mafWxToString(m_AtlasMSFSectionName)));
     assert (!(AtlasSectionVME == NULL));
 
     MuscleInAtlasSectionVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(m_SurfaceName));
@@ -1499,7 +1499,7 @@ void medOpMML::OnLandmark1AtlasPatientSelection()
     return;
   }
 
-  mafString title = "Select Landmark 1 (Atlas)";
+  mafString title = _R("Select Landmark 1 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
   mafEventMacro(e);
@@ -1509,7 +1509,7 @@ void medOpMML::OnLandmark1AtlasPatientSelection()
   mafVMELandmark *lm = mafVMELandmark::SafeDownCast(vme);
   if(lm == NULL)
   {
-    wxMessageBox("wrong type of vme, a Landmark VME is required","alert",wxICON_WARNING);
+    mafWarningMessage(_M("wrong type of vme, a Landmark VME is required"));
     return;
   }
 
@@ -1526,7 +1526,7 @@ void medOpMML::OnLandmark1AtlasPatientSelection()
   while (parentvme != root)
   {
     parentvme = parentvme->GetParent();
-    parentvmename = parentvme->GetName();
+    parentvmename = parentvme->GetName().toWx();
 
     if (parentvmename.compare(m_AtlasMSFSectionName) == 0)
     {
@@ -1543,7 +1543,7 @@ void medOpMML::OnLandmark1AtlasPatientSelection()
 
   // patient - landmark 1
   // get parent node
-  mafVME *L1PatientParentVME = (mafVME*)(root->FindInTreeByName(m_PatientMSFSectionName));
+  mafVME *L1PatientParentVME = (mafVME*)(root->FindInTreeByName(mafWxToString(m_PatientMSFSectionName)));
   if(L1PatientParentVME == NULL)
   {
     wxMessageBox("No " + m_PatientMSFSectionName + " section", "alert", wxICON_WARNING);
@@ -1551,7 +1551,7 @@ void medOpMML::OnLandmark1AtlasPatientSelection()
   }
 
   // if identical to L2 or L3
-  wxString   Name = vme->GetName();
+  wxString   Name = vme->GetName().toWx();
   if (Name.compare(m_L2Name) == 0 || Name.compare(m_L3Name) == 0)
   {
     wxMessageBox("landmarks must be distinct", "alert", wxICON_WARNING);
@@ -1578,8 +1578,8 @@ void medOpMML::OnLandmark1AtlasPatientSelection()
   L1PatientVMELandmark->GetPoint(m_P1);
 
   // set name
-  m_L1Name = vme->GetName();
-  m_P1Name = L1PatientVME->GetName();
+  m_L1Name = vme->GetName().toWx();
+  m_P1Name = L1PatientVME->GetName().toWx();
 
   // if all landmarks chosen
   if (m_L1Name.compare("none") != 0 &&
@@ -1609,7 +1609,7 @@ void medOpMML::OnLandmark2AtlasPatientSelection()
     return;
   }
 
-  mafString title = "Select Landmark 2 (Atlas)";
+  mafString title = _R("Select Landmark 2 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
   mafEventMacro(e);
@@ -1619,7 +1619,7 @@ void medOpMML::OnLandmark2AtlasPatientSelection()
   mafVMELandmark *lm = mafVMELandmark::SafeDownCast(vme);
   if(lm == NULL)
   {
-    wxMessageBox("wrong type of vme, a Landmark VME is required","alert",wxICON_WARNING);
+    mafWarningMessage(_M("wrong type of vme, a Landmark VME is required"));
     return;
   }
 
@@ -1636,7 +1636,7 @@ void medOpMML::OnLandmark2AtlasPatientSelection()
   while (parentvme != root)
   {
     parentvme = parentvme->GetParent();
-    parentvmename = parentvme->GetName();
+    parentvmename = parentvme->GetName().toWx();
 
     if (parentvmename.compare(m_AtlasMSFSectionName) == 0)
     {
@@ -1653,7 +1653,7 @@ void medOpMML::OnLandmark2AtlasPatientSelection()
 
   // patient - landmark 2
   // get parent node
-  mafVME *L2PatientParentVME = (mafVME*)(root->FindInTreeByName(m_PatientMSFSectionName));
+  mafVME *L2PatientParentVME = (mafVME*)(root->FindInTreeByName(mafWxToString(m_PatientMSFSectionName)));
   if(L2PatientParentVME == NULL)
   {
     wxMessageBox("No " + m_PatientMSFSectionName + " section", "alert", wxICON_WARNING);
@@ -1661,7 +1661,7 @@ void medOpMML::OnLandmark2AtlasPatientSelection()
   }
 
   // if identical to L1 or L3
-  wxString   Name = vme->GetName();
+  wxString   Name = vme->GetName().toWx();
   if (Name.compare(m_L1Name) == 0 || Name.compare(m_L3Name) == 0)
   {
     wxMessageBox("landmarks must be distinct", "alert", wxICON_WARNING);
@@ -1688,8 +1688,8 @@ void medOpMML::OnLandmark2AtlasPatientSelection()
   L2PatientVMELandmark->GetPoint(m_P2);
 
   // set name
-  m_L2Name = vme->GetName();
-  m_P2Name = L2PatientVME->GetName();
+  m_L2Name = vme->GetName().toWx();
+  m_P2Name = L2PatientVME->GetName().toWx();
 
   // if all landmarks chosen
   if (m_L1Name.compare("none") != 0 &&
@@ -1719,7 +1719,7 @@ void medOpMML::OnLandmark3AtlasPatientSelection()
     return;
   }
 
-  mafString title = "Select Landmark 3 (Atlas)";
+  mafString title = _R("Select Landmark 3 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
   mafEventMacro(e);
@@ -1729,7 +1729,7 @@ void medOpMML::OnLandmark3AtlasPatientSelection()
   mafVMELandmark *lm = mafVMELandmark::SafeDownCast(vme);
   if(lm == NULL)
   {
-    wxMessageBox("wrong type of vme, a Landmark VME is required","alert",wxICON_WARNING);
+    mafWarningMessage(_M("wrong type of vme, a Landmark VME is required"));
     return;
   }
 
@@ -1746,7 +1746,7 @@ void medOpMML::OnLandmark3AtlasPatientSelection()
   while (parentvme != root)
   {
     parentvme = parentvme->GetParent();
-    parentvmename = parentvme->GetName();
+    parentvmename = parentvme->GetName().toWx();
 
     if (parentvmename.compare(m_AtlasMSFSectionName) == 0)
     {
@@ -1763,7 +1763,7 @@ void medOpMML::OnLandmark3AtlasPatientSelection()
 
   // patient - landmark 3
   // get parent node
-  mafVME *L3PatientParentVME = (mafVME*)(root->FindInTreeByName(m_PatientMSFSectionName));
+  mafVME *L3PatientParentVME = (mafVME*)(root->FindInTreeByName(mafWxToString(m_PatientMSFSectionName)));
   if(L3PatientParentVME == NULL)
   {
     wxMessageBox("No " + m_PatientMSFSectionName + " section", "alert", wxICON_WARNING);
@@ -1771,7 +1771,7 @@ void medOpMML::OnLandmark3AtlasPatientSelection()
   }
 
   // if identical to L1 or L2
-  wxString   Name = vme->GetName();
+  wxString   Name = vme->GetName().toWx();
   if (Name.compare(m_L1Name) == 0 || Name.compare(m_L2Name) == 0)
   {
     wxMessageBox("landmarks must be distinct", "alert", wxICON_WARNING);
@@ -1798,8 +1798,8 @@ void medOpMML::OnLandmark3AtlasPatientSelection()
   L3PatientVMELandmark->GetPoint(m_P3);
 
   // set name
-  m_L3Name = vme->GetName();
-  m_P3Name = L3PatientVME->GetName();
+  m_L3Name = vme->GetName().toWx();
+  m_P3Name = L3PatientVME->GetName().toWx();
 
   // if all landmarks chosen
   if (m_L1Name.compare("none") != 0 &&
@@ -1829,7 +1829,7 @@ void medOpMML::OnLandmark4AtlasPatientSelection()
     return;
   }
 
-  mafString title = "Select Landmark 3 (Atlas)";
+  mafString title = _R("Select Landmark 3 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
   mafEventMacro(e);
@@ -1839,7 +1839,7 @@ void medOpMML::OnLandmark4AtlasPatientSelection()
   mafVMELandmark *lm = mafVMELandmark::SafeDownCast(vme);
   if(lm == NULL)
   {
-    wxMessageBox("wrong type of vme, a Landmark VME is required","alert",wxICON_WARNING);
+    mafWarningMessage(_M("wrong type of vme, a Landmark VME is required"));
     return;
   }
 
@@ -1856,7 +1856,7 @@ void medOpMML::OnLandmark4AtlasPatientSelection()
   while (parentvme != root)
   {
     parentvme = parentvme->GetParent();
-    parentvmename = parentvme->GetName();
+    parentvmename = parentvme->GetName().toWx();
 
     if (parentvmename.compare(m_AtlasMSFSectionName) == 0)
     {
@@ -1873,7 +1873,7 @@ void medOpMML::OnLandmark4AtlasPatientSelection()
 
   // patient - landmark 3
   // get parent node
-  mafVME *L3PatientParentVME = (mafVME*)(root->FindInTreeByName(m_PatientMSFSectionName));
+  mafVME *L3PatientParentVME = (mafVME*)(root->FindInTreeByName(mafWxToString(m_PatientMSFSectionName)));
   if(L3PatientParentVME == NULL)
   {
     wxMessageBox("No " + m_PatientMSFSectionName + " section", "alert", wxICON_WARNING);
@@ -1881,7 +1881,7 @@ void medOpMML::OnLandmark4AtlasPatientSelection()
   }
 
   // if identical to L1 or L2
-  wxString   Name = vme->GetName();
+  wxString   Name = vme->GetName().toWx();
   if (Name.compare(m_L1Name) == 0 || Name.compare(m_L2Name) == 0)
   {
     wxMessageBox("landmarks must be distinct", "alert", wxICON_WARNING);
@@ -1908,8 +1908,8 @@ void medOpMML::OnLandmark4AtlasPatientSelection()
   L3PatientVMELandmark->GetPoint(m_P3);
 
   // set name
-  m_L3Name = vme->GetName();
-  m_P3Name = L3PatientVME->GetName();
+  m_L3Name = vme->GetName().toWx();
+  m_P3Name = L3PatientVME->GetName().toWx();
 
   // if all landmarks chosen
   if (m_L1Name.compare("none") != 0 &&
@@ -1935,7 +1935,7 @@ bool medOpMML::CreateInputsDlg()
 //----------------------------------------------------------------------------
 {
   // create the dialog
-  m_ChooseDlg = new mafGUIDialog("SetUp"); 
+  m_ChooseDlg = new mafGUIDialog(_R("SetUp")); 
 
   // vertical stacker for the rows of widgets
   wxBoxSizer *vs1 = new wxBoxSizer(wxVERTICAL);
@@ -1945,7 +1945,7 @@ bool medOpMML::CreateInputsDlg()
   wxStaticText *lab_1  = new wxStaticText(m_ChooseDlg, -1, "Surface", wxPoint(0,0), wxSize(150,20));
   wxTextCtrl   *text_1 = new wxTextCtrl(m_ChooseDlg ,  -1, "",        wxPoint(0,0), wxSize(150,20), wxNO_BORDER |wxTE_READONLY );
   text_1->SetValidator(mafGUIValidator(this, ID_CHOOSE_SURFACE, text_1, &m_SurfaceName));
-  mafGUIButton    *b_1    = new mafGUIButton(m_ChooseDlg , ID_CHOOSE_SURFACE, "select", wxPoint(0,0), wxSize(50,20));
+  mafGUIButton    *b_1    = new mafGUIButton(m_ChooseDlg , ID_CHOOSE_SURFACE, _R("select"), wxPoint(0,0), wxSize(50,20));
   b_1->SetListener(this);
 
   wxBoxSizer *hs_1 = new wxBoxSizer(wxHORIZONTAL);
@@ -2098,10 +2098,10 @@ bool medOpMML::CreateInputsDlg()
   */
 
   // ok/cancel button
-  m_ChooseOk = new mafGUIButton(m_ChooseDlg, ID_CHOOSE_OK, "OK", wxPoint(0,0), wxSize(50,20));
+  m_ChooseOk = new mafGUIButton(m_ChooseDlg, ID_CHOOSE_OK, _R("OK"), wxPoint(0,0), wxSize(50,20));
   m_ChooseOk->SetListener(this);
   m_ChooseOk->Enable(false);
-  mafGUIButton *b_cancel = new mafGUIButton(m_ChooseDlg, ID_CHOOSE_CANCEL, "CANCEL", wxPoint(0,0), wxSize(50,20));
+  mafGUIButton *b_cancel = new mafGUIButton(m_ChooseDlg, ID_CHOOSE_CANCEL, _R("CANCEL"), wxPoint(0,0), wxSize(50,20));
   wxBoxSizer *hs_b = new wxBoxSizer(wxHORIZONTAL);
   b_cancel->SetListener(this);
   hs_b->Add(m_ChooseOk,0);
@@ -2149,8 +2149,8 @@ void medOpMML::CreateRegistrationDlg()
 { 
 
   // create dialog
-  wxString Title;
-  Title = "registration of " + m_SurfaceName;
+  mafString Title;
+  Title = _R("registration of ") + m_SurfaceName;
   m_OpDlg = new mafGUIDialog(Title); 
 
 
@@ -2169,27 +2169,27 @@ void medOpMML::CreateRegistrationDlg()
   LeftVerticalBoxSizer->Add(TopHorizontalBoxSizer);
 
   // axes on/off button
-  m_AxesOnOffButton = new mafGUIButton(m_OpDlg, ID_SHOW_AXES, "Axes Off", wxPoint(0,0), wxSize(75,20));
+  m_AxesOnOffButton = new mafGUIButton(m_OpDlg, ID_SHOW_AXES, _R("Axes Off"), wxPoint(0,0), wxSize(75,20));
   m_AxesOnOffButton->SetListener(this);
   TopHorizontalBoxSizer->Add(m_AxesOnOffButton,0,wxALL, 5);
 
   // contour on/off buton
-  m_ContourOnOffButton = new mafGUIButton(m_OpDlg, ID_SHOW_CONTOUR, "Contour Off", wxPoint(0,0), wxSize(75,20));
+  m_ContourOnOffButton = new mafGUIButton(m_OpDlg, ID_SHOW_CONTOUR, _R("Contour Off"), wxPoint(0,0), wxSize(75,20));
   m_ContourOnOffButton->SetListener(this);
   TopHorizontalBoxSizer->Add(m_ContourOnOffButton,0,wxALL, 5);
 
   // reset view button
-  m_ResetViewButton = new mafGUIButton(m_OpDlg, ID_RESET_VIEW, "Reset View", wxPoint(0,0), wxSize(75,20));
+  m_ResetViewButton = new mafGUIButton(m_OpDlg, ID_RESET_VIEW, _R("Reset View"), wxPoint(0,0), wxSize(75,20));
   m_ResetViewButton->SetListener(this);
   TopHorizontalBoxSizer->Add(m_ResetViewButton,0,wxALL, 5);
 
   // ok button
-  m_OkButton = new mafGUIButton(m_OpDlg, ID_OK, "OK", wxPoint(0,0), wxSize(75,20));
+  m_OkButton = new mafGUIButton(m_OpDlg, ID_OK, _R("OK"), wxPoint(0,0), wxSize(75,20));
   m_OkButton->SetListener(this);
   TopHorizontalBoxSizer->Add(m_OkButton,0,wxALL, 5);
 
   // cancel button
-  m_CancelButton = new mafGUIButton(m_OpDlg, ID_CANCEL, "CANCEL", wxPoint(0,0), wxSize(75,20));
+  m_CancelButton = new mafGUIButton(m_OpDlg, ID_CANCEL, _R("CANCEL"), wxPoint(0,0), wxSize(75,20));
   m_CancelButton->SetListener(this);
   TopHorizontalBoxSizer->Add(m_CancelButton,0, wxALL, 5);
 
@@ -2212,24 +2212,24 @@ void medOpMML::CreateRegistrationDlg()
   LeftVerticalBoxSizer->Add(OperationHorizontalBoxSizer);
 
   // create p/t/r/s operation buttons
-  m_PlaceOpButton = new mafGUIButton(m_OpDlg, ID_P_OPERATION, "P", wxPoint(0,0), wxSize(75,20));
+  m_PlaceOpButton = new mafGUIButton(m_OpDlg, ID_P_OPERATION, _R("P"), wxPoint(0,0), wxSize(75,20));
   m_PlaceOpButton->SetListener(this);
   OperationHorizontalBoxSizer->Add(m_PlaceOpButton,0,wxALL, 5);
 
-  m_TranslateOpButton = new mafGUIButton(m_OpDlg, ID_T_OPERATION,"T", wxPoint(0,0), wxSize(75,20));
+  m_TranslateOpButton = new mafGUIButton(m_OpDlg, ID_T_OPERATION,_R("T"), wxPoint(0,0), wxSize(75,20));
   m_TranslateOpButton->SetListener(this);
   OperationHorizontalBoxSizer->Add(m_TranslateOpButton,0,wxALL, 5);
 
-  m_RotateOpButton = new mafGUIButton(m_OpDlg, ID_R_OPERATION, "R", wxPoint(0,0), wxSize(75,20));
+  m_RotateOpButton = new mafGUIButton(m_OpDlg, ID_R_OPERATION, _R("R"), wxPoint(0,0), wxSize(75,20));
   m_RotateOpButton->SetListener(this);
   OperationHorizontalBoxSizer->Add(m_RotateOpButton,0,wxALL, 5);
 
-  m_ScaleOpButton = new mafGUIButton(m_OpDlg, ID_S_OPERATION, "S", wxPoint(0,0), wxSize(75,20));
+  m_ScaleOpButton = new mafGUIButton(m_OpDlg, ID_S_OPERATION, _R("S"), wxPoint(0,0), wxSize(75,20));
   m_ScaleOpButton->SetListener(this);
   OperationHorizontalBoxSizer->Add(m_ScaleOpButton,0,wxALL, 5);
 
   // undo button
-  m_UndoButton = new mafGUIButton(m_OpDlg, ID_UNDO, "Undo", wxPoint(0,0), wxSize(75,20));
+  m_UndoButton = new mafGUIButton(m_OpDlg, ID_UNDO, _R("Undo"), wxPoint(0,0), wxSize(75,20));
   m_UndoButton->SetListener(this);
   OperationHorizontalBoxSizer->Add(m_UndoButton,0,wxALL, 5);
 
@@ -2831,7 +2831,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
   m_P4Name      = "none";
 
   // select strings
-  if (m_SurfaceName.compare("obturator externus") == 0)
+  if (m_SurfaceName.Compare(_R("obturator externus")) == 0)
   {
     // landmarks
     Landmark1VMEName = "Superior edge of lateral surface of the Right ischial ramus at juncture with inferior pubic ramus ";
@@ -2843,7 +2843,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
     m_MuscleType = 1;
   }
   else
-    if (m_SurfaceName.compare("gamellus inferior") == 0)
+    if (m_SurfaceName.Compare(_R("gamellus inferior")) == 0)
     {
       // landmarks
       Landmark1VMEName = "Most superior point on posterior surface of Right ischial tuberosity at height of lesser sciatic notch ";
@@ -2855,7 +2855,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
       m_MuscleType = 1;
     }
     else
-      if (m_SurfaceName.compare("gamellus superior") == 0)
+      if (m_SurfaceName.Compare(_R("gamellus superior")) == 0)
       {
         // landmarks
         Landmark1VMEName = "Most superior point on posterior surface of Right ischial tuberosity at height of lesser sciatic notch ";
@@ -2867,7 +2867,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
         m_MuscleType = 1;
       }
       else
-        if (m_SurfaceName.compare("piriformis") == 0)
+        if (m_SurfaceName.Compare(_R("piriformis")) == 0)
         {
           // landmarks
           Landmark1VMEName = "Anterior surface of the Right sacrum between second and third foramen midway between line of foramen and lateral border (first sacral foramen is most superior)";
@@ -2879,7 +2879,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
           m_MuscleType = 1;
         }
         else
-          if (m_SurfaceName.compare("gluteus minimus") == 0)
+          if (m_SurfaceName.Compare(_R("gluteus minimus")) == 0)
           {
             // landmarks
             Landmark1VMEName = "Top of ridge on lateral surface of the Right ilium between superior tubercle of iliac crest (pt. 39) and acetabulum (pt. 5) along a line from anterior superior iliac spine ASIS (pt. 1) to posterior superior iliac spine PSIS (pt. 3) ";
@@ -2891,7 +2891,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
             m_MuscleType = 1;
           }
           else
-            if (m_SurfaceName.compare("tensor fasciae latae") == 0)
+            if (m_SurfaceName.Compare(_R("tensor fasciae latae")) == 0)
             {
               // landmarks
               Landmark1VMEName = "Midpoint along Right lateral superior ridge of iliac crest between the anterior superior iliac spine ASIS and most lateral point on superior tubercle of the iliac crest ";
@@ -2903,7 +2903,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
               m_MuscleType = 1;
             }
             else
-              if (m_SurfaceName.compare("adductor longus") == 0)
+              if (m_SurfaceName.Compare(_R("adductor longus")) == 0)
               {
                 // landmarks
                 Landmark1VMEName = "Anterior corner of inferior surface of the Right pubic tubercle ";
@@ -2915,7 +2915,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                 m_MuscleType = 1;
               }
               else
-                if (m_SurfaceName.compare("adductor brevis") == 0)
+                if (m_SurfaceName.Compare(_R("adductor brevis")) == 0)
                 {
                   // landmarks
                   Landmark1VMEName = "Midpoint of lateral surface of the Right inferior pubic ramus ";
@@ -2927,7 +2927,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                   m_MuscleType = 1;
                 }
                 else
-                  if (m_SurfaceName.compare("rectus femoris") == 0)
+                  if (m_SurfaceName.Compare(_R("rectus femoris")) == 0)
                   {
                     // landmarks
                     Landmark1VMEName = "Right Anterior Inferior Iliac Spine ";
@@ -2939,7 +2939,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                     m_MuscleType = 1;
                   }
                   else
-                    if (m_SurfaceName.compare("semitendinous") == 0)
+                    if (m_SurfaceName.Compare(_R("semitendinous")) == 0)
                     {
                       // landmarks
                       Landmark1VMEName = "Posterior most point on medial border of posterior surface of the Right ischial tuberosity";
@@ -2951,7 +2951,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                       m_MuscleType = 1;
                     }
                     else
-                      if (m_SurfaceName.compare("gluteus maximus") == 0)
+                      if (m_SurfaceName.Compare(_R("gluteus maximus")) == 0)
                       {
                         // landmarks
                         Landmark1VMEName = "Lateral corner of Right sacral-coccygeal facet  ";
@@ -2963,7 +2963,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                         m_MuscleType = 1;
                       }
                       else
-                        if (m_SurfaceName.compare("gluteus medius") == 0)
+                        if (m_SurfaceName.Compare(_R("gluteus medius")) == 0)
                         {
                           // landmarks
                           Landmark1VMEName = "Lateral surface of the Right ilium at midpoint between most lateral point on superior tubercle of iliac crest (pt. 39) and origin of Gluteus Medius posterior fibers (pt. 41).   ";
@@ -2975,7 +2975,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                           m_MuscleType = 1;
                         }
                         else
-                          if (m_SurfaceName.compare("pectineus") == 0)
+                          if (m_SurfaceName.Compare(_R("pectineus")) == 0)
                           {
                             // landmarks
                             Landmark1VMEName = "Base of the Right superior pubic ramus on superior surface lateral to pectineal line ";
@@ -2987,7 +2987,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                             m_MuscleType = 1;
                           }
                           else
-                            if (m_SurfaceName.compare("adductor magnus") == 0)
+                            if (m_SurfaceName.Compare(_R("adductor magnus")) == 0)
                             {
                               // landmarks
                               Landmark1VMEName = "Most lateral aspect at posterior corner of lateral surface of Right ischial tuberosity ";
@@ -2999,7 +2999,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                               m_MuscleType = 1;
                             }
                             else
-                              if (m_SurfaceName.compare("quadratus femoris") == 0)
+                              if (m_SurfaceName.Compare(_R("quadratus femoris")) == 0)
                               {
                                 // landmarks
                                 Landmark1VMEName = "On lateral surface of Right ischial tuberosity at midpoint between obturator foramen and lateral posterior corner ";
@@ -3011,7 +3011,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                 m_MuscleType = 1;
                               }
                               else
-                                if (m_SurfaceName.compare("sartorius") == 0)
+                                if (m_SurfaceName.Compare(_R("sartorius")) == 0)
                                 {
                                   // landmarks
                                   Landmark1VMEName = "Right Anterior Superior Iliac Spine (repeat of pt. 1) ";
@@ -3023,7 +3023,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                   m_MuscleType = 1;
                                 }
                                 else
-                                  if (m_SurfaceName.compare("vastus medialis") == 0)
+                                  if (m_SurfaceName.Compare(_R("vastus medialis")) == 0)
                                   {
                                     // landmarks
                                     Landmark1VMEName = "most medial corner of femoral shaft cross-section at height of midpoint between juncture of pectineal/gluteal lines and juncture of medial/lateral supracondylar lines";
@@ -3035,7 +3035,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                     m_MuscleType = 1;
                                   }
                                   else
-                                    if (m_SurfaceName.compare("semimembranous") == 0)
+                                    if (m_SurfaceName.Compare(_R("semimembranous")) == 0)
                                     {
                                       // landmarks
                                       Landmark1VMEName = "Bottom of superior depression on posterior surface of Right ischial tuberosity ";
@@ -3047,7 +3047,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                       m_MuscleType = 1;
                                     }
                                     else
-                                      if (m_SurfaceName.compare("obturator internal") == 0)
+                                      if (m_SurfaceName.Compare(_R("obturator internal")) == 0)
                                       {
                                         // DAVID P. 19-01-2005: This is not the permanent solution.
                                         // landmarks
@@ -3069,7 +3069,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                         m_MuscleType = 2;
                                       }
                                       else
-                                        if (m_SurfaceName.compare("long head of the biceps") == 0)
+                                        if (m_SurfaceName.Compare(_R("long head of the biceps")) == 0)
                                         {
                                           // landmarks
                                           Landmark1VMEName = "Posterior most point on medial border of posterior surface of the Right ischial tuberosity";
@@ -3081,7 +3081,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                           m_MuscleType = 1;
                                         }
                                         else
-                                          if (m_SurfaceName.compare("short head of the biceps") == 0)
+                                          if (m_SurfaceName.Compare(_R("short head of the biceps")) == 0)
                                           {
                                             // landmarks
                                             Landmark1VMEName = "on linea aspera at midpoint between juncture of pectineal/gluteal lines and juncture of medial/lateral supracondylar lines";
@@ -3093,7 +3093,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                             m_MuscleType = 1;
                                           }
                                           else
-                                            if (m_SurfaceName.compare("gracilis") == 0)
+                                            if (m_SurfaceName.Compare(_R("gracilis")) == 0)
                                             {
                                               // landmarks
                                               Landmark1VMEName = "Inferior margin of lateral surface of right inferior pubic ramus ";
@@ -3105,7 +3105,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                               m_MuscleType = 1;
                                             }
                                             else
-                                              if (m_SurfaceName.compare("vastus lateralis and intermedius") == 0)
+                                              if (m_SurfaceName.Compare(_R("vastus lateralis and intermedius")) == 0)
                                               {
                                                 // landmarks
                                                 Landmark1VMEName = "most anterior point on anterior surface of femoral shaft at height of juncture of pectineal/gluteal lines";
@@ -3118,7 +3118,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                               }
                                               else
                                               {
-                                                wxMessageBox("Muscle not in built in dictionary!","alert",wxICON_WARNING);
+                                                mafWarningMessage(_M("Muscle not in built in dictionary!"));
                                                 return;
                                               }
 
@@ -3126,7 +3126,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                               mafVME *RootVME = mafVME::SafeDownCast(m_Input->GetRoot());
 
                                               // get atlas section node
-                                              mafVME *AtlasSectionVME = (mafVME*)(RootVME->FindInTreeByName(AtlasSectionVMEName));
+                                              mafVME *AtlasSectionVME = (mafVME*)(RootVME->FindInTreeByName(mafWxToString(AtlasSectionVMEName)));
                                               if(AtlasSectionVME == NULL)
                                               {
                                                 wxMessageBox("No section" + AtlasSectionVMEName,"alert",wxICON_WARNING);
@@ -3134,7 +3134,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                               }
 
                                               // get patient section node
-                                              mafVME *PatientSectionVME = (mafVME*)(RootVME->FindInTreeByName(PatientSectionVMEName));
+                                              mafVME *PatientSectionVME = (mafVME*)(RootVME->FindInTreeByName(mafWxToString(PatientSectionVMEName)));
                                               if(PatientSectionVME == NULL)
                                               {
                                                 wxMessageBox("No section" + PatientSectionVMEName,"alert",wxICON_WARNING);
@@ -3143,7 +3143,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
 
                                               // atlas - landmark 1
                                               // get landmark node
-                                              mafVME *Landmark1AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(Landmark1VMEName));
+                                              mafVME *Landmark1AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(mafWxToString(Landmark1VMEName)));
                                               if(Landmark1AtlasVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark1VMEName + " in section " + AtlasSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3157,12 +3157,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark1AtlasVMELandmark->GetPoint(a1);
 
                                                 // set name
-                                                m_L1Name = Landmark1AtlasVMELandmark->GetName();
+                                                m_L1Name = Landmark1AtlasVMELandmark->GetName().toWx();
                                               }
 
                                               // atlas - landmark 2
                                               // get landmark node
-                                              mafVME *Landmark2AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(Landmark2VMEName));
+                                              mafVME *Landmark2AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(mafWxToString(Landmark2VMEName)));
                                               if(Landmark2AtlasVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark2VMEName + " in section " + AtlasSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3176,12 +3176,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark2AtlasVMELandmark->GetPoint(a2);
 
                                                 // set name
-                                                m_L2Name = Landmark2AtlasVMELandmark->GetName();
+                                                m_L2Name = Landmark2AtlasVMELandmark->GetName().toWx();
                                               }
 
                                               // atlas - landmark 3
                                               // get landmark node
-                                              mafVME *Landmark3AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(Landmark3VMEName));
+                                              mafVME *Landmark3AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(mafWxToString(Landmark3VMEName)));
                                               if(Landmark3AtlasVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark3VMEName + " in section " + AtlasSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3195,12 +3195,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark3AtlasVMELandmark->GetPoint(a3);
 
                                                 // set name
-                                                m_L3Name = Landmark3AtlasVMELandmark->GetName();
+                                                m_L3Name = Landmark3AtlasVMELandmark->GetName().toWx();
                                               }
 
                                               // atlas - landmark 4
                                               // get landmark node
-                                              mafVME *Landmark4AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(Landmark4VMEName));
+                                              mafVME *Landmark4AtlasVME = (mafVME*)(AtlasSectionVME->FindInTreeByName(mafWxToString(Landmark4VMEName)));
                                               if(Landmark4AtlasVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark4VMEName + " in section " + AtlasSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3214,12 +3214,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark4AtlasVMELandmark->GetPoint(a4);
 
                                                 // set name
-                                                m_L4Name = Landmark4AtlasVMELandmark->GetName();
+                                                m_L4Name = Landmark4AtlasVMELandmark->GetName().toWx();
                                               }
 
                                               // patient - landmark 1
                                               // get landmark node
-                                              mafVME *Landmark1PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(Landmark1VMEName));
+                                              mafVME *Landmark1PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(mafWxToString(Landmark1VMEName)));
                                               if(Landmark1PatientVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark1VMEName + " in section " + PatientSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3233,12 +3233,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark1PatientVMELandmark->GetPoint(p1);
 
                                                 // set name
-                                                m_P1Name = Landmark1PatientVMELandmark->GetName();
+                                                m_P1Name = Landmark1PatientVMELandmark->GetName().toWx();
                                               }
 
                                               // patient - landmark 2
                                               // get landmark node
-                                              mafVME *Landmark2PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(Landmark2VMEName));
+                                              mafVME *Landmark2PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(mafWxToString(Landmark2VMEName)));
                                               if(Landmark2PatientVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark2VMEName + " in section " + PatientSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3252,12 +3252,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark2PatientVMELandmark->GetPoint(p2);
 
                                                 // set name
-                                                m_P2Name = Landmark2PatientVMELandmark->GetName();
+                                                m_P2Name = Landmark2PatientVMELandmark->GetName().toWx();
                                               }
 
                                               // patient - landmark 3
                                               // get landmark node
-                                              mafVME *Landmark3PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(Landmark3VMEName));
+                                              mafVME *Landmark3PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(mafWxToString(Landmark3VMEName)));
                                               if(Landmark3PatientVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark3VMEName + " in section " + PatientSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3271,12 +3271,12 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark3PatientVMELandmark->GetPoint(p3);
 
                                                 // set name
-                                                m_P3Name = Landmark3PatientVMELandmark->GetName();
+                                                m_P3Name = Landmark3PatientVMELandmark->GetName().toWx();
                                               }
 
                                               // patient - landmark 4
                                               // get landmark node
-                                              mafVME *Landmark4PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(Landmark4VMEName));
+                                              mafVME *Landmark4PatientVME = (mafVME*)(PatientSectionVME->FindInTreeByName(mafWxToString(Landmark4VMEName)));
                                               if(Landmark4PatientVME == NULL)
                                               {
                                                 wxMessageBox("Expected " + Landmark4VMEName + " in section " + PatientSectionVMEName + " is missing!","alert",wxICON_WARNING);
@@ -3290,7 +3290,7 @@ void medOpMML::SetUpLandmarks(wxString AtlasSectionVMEName, wxString PatientSect
                                                 Landmark4PatientVMELandmark->GetPoint(p4);
 
                                                 // set name
-                                                m_P4Name = Landmark4PatientVMELandmark->GetName();
+                                                m_P4Name = Landmark4PatientVMELandmark->GetName().toWx();
                                               }
 
                                               // use weights to relocate landmarks 1, 2

@@ -104,10 +104,10 @@ medOpSegmentationRegionGrowingLocalAndGlobalThreshold::medOpSegmentationRegionGr
 
   m_ComputedMedianFilter = false;
 
-  m_Point1 = _("Bone Peak ");
-  m_Point2 = _("Soft Peak ");
-  m_Point3 = _("Bone Base ");
-  m_Point4 = _("Soft Base ");
+  m_Point1 = _L("Bone Peak ");
+  m_Point2 = _L("Soft Peak ");
+  m_Point3 = _L("Bone Base ");
+  m_Point4 = _L("Soft Base ");
 
   m_CurrentPoint = 0;
 
@@ -199,7 +199,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::OpRun()
     double sr[2];
     d->GetPointData()->GetScalars()->GetRange(sr);
     mafString name = m_Input->GetName();
-    name<<" - Applied Median Filter";
+    name+=_R(" - Applied Median Filter");
     volMediano->SetName(name);
     vtkMAFSmartPointer<vtkImageToStructuredPoints> f;
     f->SetInput(median->GetOutput());
@@ -337,39 +337,39 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::CreateGui()
 //   sizer3->Add(m_Histogram,wxALIGN_CENTER|wxRIGHT);
 //   m_Gui->Add(sizer3,1);
 
-  m_Gui->Button(ID_DIALOG_HISTOGRAM,_("Select points"));
+  m_Gui->Button(ID_DIALOG_HISTOGRAM,_L("Select points"));
   m_Gui->Label(&m_Point1,false,true);
   m_Gui->Label(&m_Point2,false,true);
   m_Gui->Label(&m_Point3,false,true);
   m_Gui->Label(&m_Point4,false,true);
-  m_BoneParam1 = "";
-  m_BoneParam2 = "";
-  m_BoneParam3 = "";
+  m_BoneParam1 = _R("");
+  m_BoneParam2 = _R("");
+  m_BoneParam3 = _R("");
   m_Gui->Label(&m_BoneParam1,false,true);
   m_Gui->Label(&m_BoneParam2,false,true);
   m_Gui->Label(&m_BoneParam3,false,true);
-  m_SoftParam1 = "";
-  m_SoftParam2 = "";
-  m_SoftParam3 = "";
+  m_SoftParam1 = _R("");
+  m_SoftParam2 = _R("");
+  m_SoftParam3 = _R("");
   m_Gui->Label(&m_SoftParam1,false,true);
   m_Gui->Label(&m_SoftParam2,false,true);
   m_Gui->Label(&m_SoftParam3,false,true);
-  m_Gui->Bool(ID_ELIMINATE_HISTOGRAM_VALUES,_("Eliminate Values"),&m_EliminateHistogramValues,1);
-  m_Gui->Double(ID_VALUES_TO_ELIMINATE,_(""),&m_ValuesToEliminate);
+  m_Gui->Bool(ID_ELIMINATE_HISTOGRAM_VALUES,_L("Eliminate Values"),&m_EliminateHistogramValues,1);
+  m_Gui->Double(ID_VALUES_TO_ELIMINATE,_L(""),&m_ValuesToEliminate);
   m_Gui->Enable(ID_VALUES_TO_ELIMINATE,m_EliminateHistogramValues == TRUE);
   //m_Gui->Button(ID_FITTING,_("Fitting"));
   m_Gui->Divider(1);
 
-  m_Gui->Double(ID_THRESHOLD,_("Threshold"),&m_Threshold);
+  m_Gui->Double(ID_THRESHOLD,_L("Threshold"),&m_Threshold);
 
   m_GuiLabels = new mafGUI(this);
-  m_Gui->RollOut(ID_ROLLOUT_LABELS, _("Labels"), m_GuiLabels, false);
+  m_Gui->RollOut(ID_ROLLOUT_LABELS, _L("Labels"), m_GuiLabels, false);
 
   m_LowerLabel = VTK_UNSIGNED_CHAR_MIN;
   m_UpperLabel = VTK_UNSIGNED_CHAR_MAX;
 
   wxBoxSizer *sizer2 = new wxBoxSizer(wxHORIZONTAL);
-  m_SliderLabels = new mafGUILutSlider(m_GuiLabels,ID_SLIDER_LABELS ,wxPoint(0,0),wxSize(10,24), 0, "Label");
+  m_SliderLabels = new mafGUILutSlider(m_GuiLabels,ID_SLIDER_LABELS ,wxPoint(0,0),wxSize(10,24), 0, _R("Label"));
   m_SliderLabels->SetListener(this);
   m_SliderLabels->SetSize(5,24);
   m_SliderLabels->SetMinSize(wxSize(5,24));
@@ -382,14 +382,14 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::CreateGui()
   m_GuiLabels->FitGui();
 
   m_Gui->Divider(1);
-  m_Gui->Integer(ID_SPHERE_RADIUS,_("Radius"),&m_SphereRadius);
+  m_Gui->Integer(ID_SPHERE_RADIUS,_L("Radius"),&m_SphereRadius);
   m_Gui->Enable(ID_SPHERE_RADIUS,false);
   m_Gui->Divider(1);
-  m_Gui->Bool(ID_APPLY_CONNECTIVITY_FILTER,_("Extract biggest region"),&m_ApplyConnectivityFilter,1);
+  m_Gui->Bool(ID_APPLY_CONNECTIVITY_FILTER,_L("Extract biggest region"),&m_ApplyConnectivityFilter,1);
   m_Gui->Enable(ID_APPLY_CONNECTIVITY_FILTER,false);
   m_Gui->Divider(1);
-  m_Gui->Button(ID_REGION_GROWING,_("Region growing"));
-  m_Gui->Button(ID_MORPHOLOGICAL,_("Morphological closing"));
+  m_Gui->Button(ID_REGION_GROWING,_L("Region growing"));
+  m_Gui->Button(ID_MORPHOLOGICAL,_L("Morphological closing"));
   m_Gui->Enable(ID_MORPHOLOGICAL,false);
   m_Gui->OkCancel();
   m_Gui->Enable(wxOK,false);
@@ -456,7 +456,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::HistogramEqualizatio
 void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::CreateHistogramDialog()
 //----------------------------------------------------------------------------
 {
-  m_Dialog = new mafGUIDialog("Histogram", mafCLOSEWINDOW | mafRESIZABLE);
+  m_Dialog = new mafGUIDialog(_R("Histogram"), mafCLOSEWINDOW | mafRESIZABLE);
 
   m_Histogram = new mafGUIHistogramWidget(m_Gui,-1,wxPoint(0,0),wxSize(400,500),wxTAB_TRAVERSAL);
   m_Histogram->SetListener(this);
@@ -468,7 +468,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::CreateHistogramDialo
   mafGUI *gui = new mafGUI(this);
   gui->Add(m_Histogram,1);
   gui->AddGui(m_Histogram->GetGui());
-  gui->Button(ID_DIALOG_OK,_("OK"));
+  gui->Button(ID_DIALOG_OK,_L("OK"));
   gui->FitGui();
   gui->Update();
 
@@ -494,13 +494,13 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::ComputeParam()
   softIssueParameters[1] = (double)softIssueMean;
   softIssueParameters[2] = (double)abs(m_Point4Value-softIssueMean)/3;
 
-  m_BoneParam1 = "bone " + mafString(boneParameters[0]);
-  m_BoneParam2 = "bone " + mafString(boneParameters[1]);
-  m_BoneParam3 = "bone " + mafString(boneParameters[2]);
+  m_BoneParam1 = _R("bone ") + mafToString(boneParameters[0]);
+  m_BoneParam2 = _R("bone ") + mafToString(boneParameters[1]);
+  m_BoneParam3 = _R("bone ") + mafToString(boneParameters[2]);
 
-  m_SoftParam1 = "soft " + mafString(softIssueParameters[0]);
-  m_SoftParam2 = "soft " + mafString(softIssueParameters[1]);
-  m_SoftParam3 = "soft " + mafString(softIssueParameters[2]);
+  m_SoftParam1 = _R("soft ") + mafToString(softIssueParameters[0]);
+  m_SoftParam2 = _R("soft ") + mafToString(softIssueParameters[1]);
+  m_SoftParam3 = _R("soft ") + mafToString(softIssueParameters[2]);
 
   m_Gui->Update();
 }
@@ -632,32 +632,32 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::FittingLM()
   accumulate->SetComponentSpacing(1,0,0); // bins maps all the Scalars Range
   accumulate->Update();
 
-  wxString newDir = (mafGetApplicationDirectory()).GetCStr();
+  mafString newDir = mafGetApplicationDirectory();
   wxString oldDir = wxGetCwd();
-  wxSetWorkingDirectory(newDir);
+  wxSetWorkingDirectory(newDir.toWx());
 
-  wxString command = "python.exe lm.py";
-  command.Append(" ");
-  command.Append(wxString::Format("%.3f",boneParameters[0]));
-  command.Append(" ");
-  command.Append(wxString::Format("%.3f",boneParameters[1]));
-  command.Append(" ");
-  command.Append(wxString::Format("%.3f",boneParameters[2]));
+  mafString command = _R("python.exe lm.py");
+  command.Append(_R(" "));
+  command.Append(mafString::Format(_R("%.3f"),boneParameters[0]));
+  command.Append(_R(" "));
+  command.Append(mafString::Format(_R("%.3f"),boneParameters[1]));
+  command.Append(_R(" "));
+  command.Append(mafString::Format(_R("%.3f"),boneParameters[2]));
   
   WriteHistogramFiles();
 
-  mafLogMessage(command.c_str());
-  wxExecute(command,wxEXEC_SYNC);
+  mafLogMessage(_M(command));
+  wxExecute(command.toWx(),wxEXEC_SYNC);
 
-  command = "python.exe lm.py";
-  command.Append(" ");
-  command.Append(wxString::Format("%.3f",softIssueParameters[0]));
-  command.Append(" ");
-  command.Append(wxString::Format("%.3f",softIssueParameters[1]));
-  command.Append(" ");
-  command.Append(wxString::Format("%.3f",softIssueParameters[2]));
+  command = _R("python.exe lm.py");
+  command.Append(_R(" "));
+  command.Append(mafString::Format(_R("%.3f"),softIssueParameters[0]));
+  command.Append(_R(" "));
+  command.Append(mafString::Format(_R("%.3f"),softIssueParameters[1]));
+  command.Append(_R(" "));
+  command.Append(mafString::Format(_R("%.3f"),softIssueParameters[2]));
 
-  mafLogMessage(command.c_str());
+  mafLogMessage(_M(command));
   //wxExecute(command,wxEXEC_SYNC);
 
   wxSetWorkingDirectory(oldDir);
@@ -678,13 +678,13 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::OnEvent(mafEventBase
 
       if (m_CurrentPoint % 4 == 0)
       {
-        m_Point1 = wxString::Format("Bone Peak : %d",hisctogramValue);
+        m_Point1 = mafString::Format(_R("Bone Peak : %d"),hisctogramValue);
         m_Point1Value = scalar;
         m_Point1HistogramValue = hisctogramValue;
       }
       if (m_CurrentPoint % 4 == 1)
       {
-        m_Point2 = wxString::Format("Soft Peak : %d",hisctogramValue);
+        m_Point2 = mafString::Format(_R("Soft Peak : %d"),hisctogramValue);
         m_Point2Value = scalar;
         m_Point2HistogramValue = hisctogramValue;
         //ComputeParam();
@@ -692,12 +692,12 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::OnEvent(mafEventBase
       }
       if (m_CurrentPoint % 4 == 2)
       {
-        m_Point3 = wxString::Format("Bone Base : %.2f",scalar);
+        m_Point3 = mafString::Format(_R("Bone Base : %.2f"),scalar);
         m_Point3Value = scalar;
       }
       if (m_CurrentPoint % 4 == 3)
       {
-        m_Point4 = wxString::Format("Soft Base : %.2f",scalar);
+        m_Point4 = mafString::Format(_R("Soft Base : %.2f"),scalar);
         m_Point4Value = scalar;
 
         ComputeParam();
@@ -747,7 +747,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::OnEvent(mafEventBase
 
         //Generate the vme output of the region growing
         m_VolumeOutputRegionGrowing->SetData(filter->GetOutput(),m_VolumeInput->GetTimeStamp());
-        m_VolumeOutputRegionGrowing->SetName(_("Segmentation Output - first step"));
+        m_VolumeOutputRegionGrowing->SetName(_L("Segmentation Output - first step"));
         m_VolumeOutputRegionGrowing->ReparentTo(m_VolumeInput);
         m_VolumeOutputRegionGrowing->Update();
 
@@ -773,7 +773,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::OnEvent(mafEventBase
 
         //Generate the vme output of the morphological closing
         m_VolumeOutputMorpho->SetData(filter->GetOutput(),m_VolumeInput->GetTimeStamp());
-        m_VolumeOutputMorpho->SetName(_("Segmentation Output - second step"));
+        m_VolumeOutputMorpho->SetName(_L("Segmentation Output - second step"));
         m_VolumeOutputMorpho->ReparentTo(m_VolumeInput);
         m_VolumeOutputMorpho->Update();
 
@@ -804,7 +804,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::OnEvent(mafEventBase
         }
         else
         {
-        	m_SurfaceOutput->SetName(_("Segmentation Output - extract isosurface"));
+        	m_SurfaceOutput->SetName(_L("Segmentation Output - extract isosurface"));
         	m_SurfaceOutput->ReparentTo(m_VolumeInput);
         	m_SurfaceOutput->Update();
   

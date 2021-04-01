@@ -56,7 +56,7 @@ medOpExporterGRFWS::medOpExporterGRFWS(const mafString& label) : Superclass(labe
 {
 	m_OpType	= OPTYPE_EXPORTER;
 	m_Canundo	= true;
-	m_File		= "";
+	m_File		= _R("");
 
   m_AdvanceSettings = NULL;
   m_PlatformLeft = NULL;
@@ -147,41 +147,41 @@ void medOpExporterGRFWS::CreateGui()
 {
   m_Gui = new mafGUI(this);
   m_Gui->SetOwnForegroundColour(wxColour(255,0,0));
-  m_Gui->Label("This Operation may take seconds or hours,", false);
-  m_Gui->Label("depending on your input MSF file size.", false);
-  m_Gui->Label("Consider running this Op after an Importer", false);
-  m_Gui->Label("(C3D or Force Plates); it will always take", false);
-  m_Gui->Label("just few seconds!", false);
+  m_Gui->Label(_R("This Operation may take seconds or hours,"), false);
+  m_Gui->Label(_R("depending on your input MSF file size."), false);
+  m_Gui->Label(_R("Consider running this Op after an Importer"), false);
+  m_Gui->Label(_R("(C3D or Force Plates); it will always take"), false);
+  m_Gui->Label(_R("just few seconds!"), false);
   m_Gui->Divider(0);
-  m_Gui->Label("In any case, you can try the fast method which", false);
-  m_Gui->Label("guesses the vector position time by time.", false);
-  m_Gui->Label("This will reduce the time required by the Op,", false);
-  m_Gui->Label("but works well only if the input vectors", false);
-  m_Gui->Label("DO NOT FLIP DIRECTIONS TOO", true);
-  m_Gui->Label("QUICKLY!", true);
+  m_Gui->Label(_R("In any case, you can try the fast method which"), false);
+  m_Gui->Label(_R("guesses the vector position time by time."), false);
+  m_Gui->Label(_R("This will reduce the time required by the Op,"), false);
+  m_Gui->Label(_R("but works well only if the input vectors"), false);
+  m_Gui->Label(_R("DO NOT FLIP DIRECTIONS TOO"), true);
+  m_Gui->Label(_R("QUICKLY!"), true);
 
   m_Gui->Divider(0);
-  m_Gui->Bool(ID_FAST,"Try fast method",&m_FastMethod,1,"Fast method");
+  m_Gui->Bool(ID_FAST,_R("Try fast method"),&m_FastMethod,1,_R("Fast method"));
   m_Gui->Divider(0);
   m_Gui->Divider(1);
   m_Gui->Divider(0);
 
   m_AdvanceSettings = new mafGUI(this);
   m_AdvanceSettings->Divider(0);
-  m_AdvanceSettings->Integer(ID_RES,"Resolution",&m_Resolution,0,1000,2,"Resolution");
+  m_AdvanceSettings->Integer(ID_RES,_R("Resolution"),&m_Resolution,0,1000,_R("Resolution"));
   m_AdvanceSettings->Divider(0);
-  m_AdvanceSettings->Label(" Tresholds");
-  m_AdvanceSettings->Double(ID_FL,"Tr. FL",&(m_Treshold.at(0)),0,1.0e10,2,"Treshold");
-  m_AdvanceSettings->Double(ID_ML,"Tr. ML",&(m_Treshold.at(1)),0,1.0e10,2,"Treshold");
-  m_AdvanceSettings->Double(ID_FR,"Tr. FR",&(m_Treshold.at(2)),0,1.0e10,2,"Treshold");
-  m_AdvanceSettings->Double(ID_MR,"Tr. MR",&(m_Treshold.at(3)),0,1.0e10,2,"Treshold");
+  m_AdvanceSettings->Label(_R(" Tresholds"));
+  m_AdvanceSettings->Double(ID_FL,_R("Tr. FL"),&(m_Treshold.at(0)),0,1.0e10,2,_R("Treshold"));
+  m_AdvanceSettings->Double(ID_ML,_R("Tr. ML"),&(m_Treshold.at(1)),0,1.0e10,2,_R("Treshold"));
+  m_AdvanceSettings->Double(ID_FR,_R("Tr. FR"),&(m_Treshold.at(2)),0,1.0e10,2,_R("Treshold"));
+  m_AdvanceSettings->Double(ID_MR,_R("Tr. MR"),&(m_Treshold.at(3)),0,1.0e10,2,_R("Treshold"));
   m_AdvanceSettings->Enable(ID_RES,false);
   m_AdvanceSettings->Enable(ID_FL,false);
   m_AdvanceSettings->Enable(ID_ML,false);
   m_AdvanceSettings->Enable(ID_FR,false);
   m_AdvanceSettings->Enable(ID_MR,false);
   m_AdvanceSettings->Update();
-  mafGUIRollOut* roll = new mafGUIRollOut(m_Gui,"Advance Settings",m_AdvanceSettings,-1,false); // set an id
+  mafGUIRollOut* roll = new mafGUIRollOut(m_Gui,_R("Advance Settings"),m_AdvanceSettings,-1,false); // set an id
 
   m_Gui->Divider(0);
   m_Gui->OkCancel();
@@ -195,17 +195,17 @@ void medOpExporterGRFWS::OpDo()
   if (m_Input->IsA("mafVMEVector"))
   {
     mafString proposed = mafGetApplicationDirectory();
-    proposed += "/Data/External/";
+    proposed += _R("/Data/External/");
     proposed += m_Input->GetName();
-    proposed += "_VECTOR";
-    proposed += ".csv";
+    proposed += _R("_VECTOR");
+    proposed += _R(".csv");
 
-    mafString wildc = "ASCII CSV file (*.csv)|*.csv";
-    wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
+    mafString wildc = _R("ASCII CSV file (*.csv)|*.csv");
+    mafString f = mafGetSaveFile(proposed,wildc); 
 
     if(!f.IsEmpty())
     {
-      SetFileName(f.c_str());
+      SetFileName(f.GetCStr());
       if (!m_FastMethod)
       {
         WriteSingleVector();
@@ -221,17 +221,17 @@ void medOpExporterGRFWS::OpDo()
   else if (m_ForceLeft && m_ForceRight && m_MomentLeft && m_MomentRight)
   {
     mafString proposed = mafGetApplicationDirectory();
-    proposed += "/Data/External/";
+    proposed += _R("/Data/External/");
     proposed += m_Input->GetName();
-    proposed += "_FORCEPLATES";
-    proposed += ".csv";
+    proposed += _R("_FORCEPLATES");
+    proposed += _R(".csv");
 
-    mafString wildc = "ASCII CSV file (*.csv)|*.csv";
-    wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
+    mafString wildc = _R("ASCII CSV file (*.csv)|*.csv");
+    mafString f = mafGetSaveFile(proposed,wildc); 
 
     if(!f.IsEmpty())
     {
-      SetFileName(f.c_str());
+      SetFileName(f.GetCStr());
       if (!m_FastMethod)
       {
         Write();
@@ -244,7 +244,7 @@ void medOpExporterGRFWS::OpDo()
   }
   else
   {
-    wxMessageBox("Need 2 PLATFORMS, each with a FORCE vector and a MOMENT vector!","GRF Exporter Warning",wxOK | wxICON_ERROR);
+    mafErrorMessage(_M("Need 2 PLATFORMS, each with a FORCE vector and a MOMENT vector!"));
     mafEventMacro(mafEvent(this,OP_RUN_CANCEL));
   }
   RemoveTempFiles();
@@ -366,7 +366,7 @@ void medOpExporterGRFWS::Write()
 //----------------------------------------------------------------------------
 {
   wxBusyInfo *wait = NULL;
-  mafString info = "Loading data from files";
+  mafString info = _R("Loading data from files");
   if (!m_TestMode)
   {
     wxSetCursor(wxCursor(wxCURSOR_WAIT));
@@ -398,16 +398,16 @@ void medOpExporterGRFWS::Write()
   m_PlatformRight->GetOutput()->GetVTKData()->GetBounds(bounds2);
   bounds2[4] = bounds2[4] + DELTA;
 
-  wxString file1 = m_File + "_tmp1";
-  wxString file2 = m_File + "_tmp2";
-  wxString file3 = m_File + "_tmp3";
-  wxString file4 = m_File + "_tmp4";
+  mafString file1 = m_File + _R("_tmp1");
+  mafString file2 = m_File + _R("_tmp2");
+  mafString file3 = m_File + _R("_tmp3");
+  mafString file4 = m_File + _R("_tmp4");
 
-  std::ofstream f_Out(m_File);
-  std::ofstream f_Out1(file1);
-  std::ofstream f_Out2(file2);
-  std::ofstream f_Out3(file3);
-  std::ofstream f_Out4(file4);
+  std::ofstream f_Out(m_File.toStd());
+  std::ofstream f_Out1(file1.toStd());
+  std::ofstream f_Out2(file2.toStd());
+  std::ofstream f_Out3(file3.toStd());
+  std::ofstream f_Out4(file4.toStd());
 
   std::vector<mafTimeStamp> kframes1;
   std::vector<mafTimeStamp> kframes2;
@@ -537,13 +537,13 @@ void medOpExporterGRFWS::Write()
   f_Out3.close();
   f_Out4.close();
 
-  wxFileInputStream inputFile1( file1 );
+  wxFileInputStream inputFile1( file1.toWx() );
   wxTextInputStream text1( inputFile1 );
-  wxFileInputStream inputFile2( file2 );
+  wxFileInputStream inputFile2( file2.toWx() );
   wxTextInputStream text2( inputFile2 );
-  wxFileInputStream inputFile3( file3 );
+  wxFileInputStream inputFile3( file3.toWx() );
   wxTextInputStream text3( inputFile3 );
-  wxFileInputStream inputFile4( file4 );
+  wxFileInputStream inputFile4( file4.toWx() );
   wxTextInputStream text4( inputFile4 );
 
   wxString line;
@@ -637,7 +637,7 @@ void medOpExporterGRFWS::Write()
     f_Out.close();
   }  
 
-  info = "";
+  info = _R("");
   if (!m_TestMode)
   {
     mafEventMacro(mafEvent(this,PROGRESSBAR_SET_TEXT,&info));
@@ -673,16 +673,16 @@ void medOpExporterGRFWS::WriteFast()
   m_PlatformRight->GetOutput()->GetVTKData()->GetBounds(bounds2);
   bounds2[4] = bounds2[4] + DELTA;
 
-  wxString file1 = m_File + "_tmp1";
-  wxString file2 = m_File + "_tmp2";
-  wxString file3 = m_File + "_tmp3";
-  wxString file4 = m_File + "_tmp4";
+  mafString file1 = m_File + _R("_tmp1");
+  mafString file2 = m_File + _R("_tmp2");
+  mafString file3 = m_File + _R("_tmp3");
+  mafString file4 = m_File + _R("_tmp4");
 
-  std::ofstream f_Out(m_File);
-  std::ofstream f_Out1(file1);
-  std::ofstream f_Out2(file2);
-  std::ofstream f_Out3(file3);
-  std::ofstream f_Out4(file4);
+  std::ofstream f_Out(m_File.toStd());
+  std::ofstream f_Out1(file1.toStd());
+  std::ofstream f_Out2(file2.toStd());
+  std::ofstream f_Out3(file3.toStd());
+  std::ofstream f_Out4(file4.toStd());
 
   std::vector<mafTimeStamp> kframes1;
   std::vector<mafTimeStamp> kframes2;
@@ -905,13 +905,13 @@ void medOpExporterGRFWS::WriteFast()
   f_Out3.close();
   f_Out4.close();
 
-  wxFileInputStream inputFile1( file1 );
+  wxFileInputStream inputFile1( file1.toWx() );
   wxTextInputStream text1( inputFile1 );
-  wxFileInputStream inputFile2( file2 );
+  wxFileInputStream inputFile2( file2.toWx() );
   wxTextInputStream text2( inputFile2 );
-  wxFileInputStream inputFile3( file3 );
+  wxFileInputStream inputFile3( file3.toWx() );
   wxTextInputStream text3( inputFile3 );
-  wxFileInputStream inputFile4( file4 );
+  wxFileInputStream inputFile4( file4.toWx() );
   wxTextInputStream text4( inputFile4 );
 
   wxString line;
@@ -1029,7 +1029,7 @@ void medOpExporterGRFWS::WriteSingleVector()
     wait = new wxBusyInfo("This may take several minutes, please be patient...");
   }
   
-  std::ofstream f_Out(m_File);
+  std::ofstream f_Out(m_File.toStd());
 
   std::vector<mafTimeStamp> kframes;
   m_ForceLeft->GetTimeStamps(kframes);
@@ -1117,7 +1117,7 @@ void medOpExporterGRFWS::WriteSingleVectorFast()
     wait = new wxBusyInfo("This may take several minutes, please be patient...");
   }
 
-  std::ofstream f_Out(m_File);
+  std::ofstream f_Out(m_File.toStd());
 
   std::vector<mafTimeStamp> kframes;
   m_ForceLeft->GetTimeStamps(kframes);
@@ -1474,19 +1474,19 @@ std::vector<mafTimeStamp> medOpExporterGRFWS::MergeTimeStamps(std::vector<mafTim
 void medOpExporterGRFWS::SetFileName(const char *file_name)   
 //----------------------------------------------------------------------------
 {
-  m_File = file_name;
+  m_File = _R(file_name);
 
-  m_File_temp1 = m_File + "_tmp1";
-  m_File_temp2 = m_File + "_tmp2";
-  m_File_temp3 = m_File + "_tmp3";
-  m_File_temp4 = m_File + "_tmp4";
+  m_File_temp1 = m_File + _R("_tmp1");
+  m_File_temp2 = m_File + _R("_tmp2");
+  m_File_temp3 = m_File + _R("_tmp3");
+  m_File_temp4 = m_File + _R("_tmp4");
 }
 //----------------------------------------------------------------------------
 void medOpExporterGRFWS::RemoveTempFiles()   
 //----------------------------------------------------------------------------
 {
-  remove(m_File_temp1);
-  remove(m_File_temp2);
-  remove(m_File_temp3);
-  remove(m_File_temp4);
+  remove(m_File_temp1.toStd().c_str());
+  remove(m_File_temp2.toStd().c_str());
+  remove(m_File_temp3.toStd().c_str());
+  remove(m_File_temp4.toStd().c_str());
 }

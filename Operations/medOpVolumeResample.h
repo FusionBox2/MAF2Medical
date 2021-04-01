@@ -43,7 +43,7 @@ class MED_OPERATION_EXPORT medOpVolumeResample: public mafOp
 {
 public:
              
-            	 medOpVolumeResample(const mafString& label = "VolumeResample",bool showShadingPlane = false);
+            	 medOpVolumeResample(const mafString& label = _R("VolumeResample"),bool showShadingPlane = false);
 	virtual     ~medOpVolumeResample();
 	virtual void OnEvent(mafEventBase *maf_event);
 	

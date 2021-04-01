@@ -294,10 +294,10 @@ mafGUI *mafPipePolylineSlice_BES::CreateGui()
 {
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
-  m_Gui->FloatSlider(ID_BORDER_CHANGE,_("Border"),&m_Border,1.0,5.0);
-  m_Gui->FloatSlider(ID_RADIUS_CHANGE,_("Radius"),&m_Radius,0.1,2.5);
-  m_Gui->Bool(ID_SPLINE,_("spline"),&m_SplineMode);
-  m_Gui->Bool(ID_FILL,_("Fill"),&m_Fill);
+  m_Gui->FloatSlider(ID_BORDER_CHANGE,_L("Border"),&m_Border,1.0,5.0);
+  m_Gui->FloatSlider(ID_RADIUS_CHANGE,_L("Radius"),&m_Radius,0.1,2.5);
+  m_Gui->Bool(ID_SPLINE,_L("spline"),&m_SplineMode);
+  m_Gui->Bool(ID_FILL,_L("Fill"),&m_Fill);
   return m_Gui;
 }
 //----------------------------------------------------------------------------

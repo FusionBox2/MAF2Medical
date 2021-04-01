@@ -41,7 +41,7 @@ medWizardBlockInformation::medWizardBlockInformation(const char *name):medWizard
 {
   //setting image on top by default
   m_HorizontalImage=true;
-  m_ImagesPath=(mafGetApplicationDirectory() + "\\WizardImages\\").c_str();
+  m_ImagesPath=(mafGetApplicationDirectory() + _R("\\WizardImages\\")).toWx();
 }
 
 //----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ void medWizardBlockInformation::ExcutionBegin()
     mafGUIPicButton *previewImageButton;
 
     wxBoxSizer *mainVertSizer = new wxBoxSizer(wxVERTICAL);
-    mafGUIDialog *dialog=new mafGUIDialog(m_Title,mafRESIZABLE);
+    mafGUIDialog *dialog=new mafGUIDialog(mafWxToString(m_Title),mafRESIZABLE);
 	wxColour col(232, 249, 253);
 	dialog->SetBackgroundColour(col);
     wxBoxSizer * mainInfoSizer;
@@ -172,7 +172,7 @@ void medWizardBlockInformation::ExcutionBegin()
     //Creating button stuff to disable information box 
     //and ok button
     mafGUI *checkGUI=new mafGUI(this);
-    checkGUI->Bool(WIZARD_INFO_SHOW_ID,"Show information boxes",&m_ShowBoxes,true);
+    checkGUI->Bool(WIZARD_INFO_SHOW_ID,_R("Show information boxes"),&m_ShowBoxes,true);
     checkGUI->Reparent(dialog);
     buttonSizer->Add(checkGUI,0,wxLEFT,5);
 

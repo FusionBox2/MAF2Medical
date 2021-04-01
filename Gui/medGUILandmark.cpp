@@ -57,10 +57,10 @@ medGUILandmark::medGUILandmark(mafNode *inputVME, mafBaseEventHandler *listener,
   SetListener(listener);
   
   m_LMCloud = NULL;
-  m_LMCloudName = "lm_cloud";
+  m_LMCloudName = _R("lm_cloud");
 
   m_InputVME = mafVME::SafeDownCast(inputVME);
-  m_RefSysVMEName = ""; 
+  m_RefSysVMEName = _R("");
   m_Landmark = NULL;
   
   m_LandmarkName = "lm_";
@@ -159,12 +159,12 @@ void medGUILandmark::CreateGui()
   m_Gui->Label("ctrl: toggle snap on surface during translate");
   */ 
 
-  m_Gui->Double(ID_TRANSLATE_X, "Translate X", &m_Position[0]);
-  m_Gui->Double(ID_TRANSLATE_Y, "Translate Y", &m_Position[1]);
-  m_Gui->Double(ID_TRANSLATE_Z, "Translate Z", &m_Position[2]);
+  m_Gui->Double(ID_TRANSLATE_X, _R("Translate X"), &m_Position[0]);
+  m_Gui->Double(ID_TRANSLATE_Y, _R("Translate Y"), &m_Position[1]);
+  m_Gui->Double(ID_TRANSLATE_Z, _R("Translate Z"), &m_Position[2]);
   m_Gui->Divider();
- 	m_Gui->Button(ID_REF_SYS,"choose refsys");
-  m_Gui->Label(mafString("refsys name: "),&m_RefSysVMEName);
+ 	m_Gui->Button(ID_REF_SYS,_R("choose refsys"));
+  m_Gui->Label(_R("refsys name: "),&m_RefSysVMEName);
 
 }
 
@@ -218,7 +218,7 @@ void medGUILandmark::OnEvent(mafEventBase *maf_event)
 
     case ID_REF_SYS:
       {
-        mafString title = _("Choose VME ref sys");
+        mafString title = _L("Choose VME ref sys");
         mafEvent e(this,VME_CHOOSE,&title,(long)&medGUILandmark::VmeAccept);
         mafEventMacro(e); 
         SetRefSysVME(mafVME::SafeDownCast(e.GetVme())); 			
@@ -353,12 +353,12 @@ void medGUILandmark::OnVmePicked(mafEvent& e)
   {  
     // create new landmark   
     int lmNumber = m_LMCloud->GetNumberOfLandmarks();
-    wxString  name(m_LandmarkName);
-    name << lmNumber; 
+    mafString  name(_R(m_LandmarkName));
+    name += mafToString(lmNumber); 
 
     //m_Landmark = mafVMELandmark::New();//we have a reference on the vme (we can call vtkDEL in the UNDO)
     mafNEW(m_Landmark);
-    m_Landmark->SetName(name.c_str());
+    m_Landmark->SetName(name);
     m_Landmark->ReparentTo(m_LMCloud);
 
     m_Landmark->Update(); 
@@ -559,15 +559,15 @@ void medGUILandmark::SpawnLandmark()
 {    
   // create new landmark   
   int lmNumber = m_LMCloud->GetNumberOfLandmarks();
-  wxString  name(m_LandmarkName);
-  name << lmNumber; 
+  mafString  name(_R(m_LandmarkName));
+  name += mafToString(lmNumber); 
 
   double position[3];
   GetSpawnPointCoordinates(position);
 
   //m_Landmark = mafVMELandmark::New();//we have a reference on the vme (we can call vtkDEL in the UNDO)
   mafNEW(m_Landmark);
-  m_Landmark->SetName(name.c_str());
+  m_Landmark->SetName(name);
   m_Landmark->ReparentTo(m_LMCloud);
   m_Landmark->Update(); 
 

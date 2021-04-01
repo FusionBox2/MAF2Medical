@@ -448,7 +448,7 @@ void mafViewRXCT::OnEventSortSlices()
   mafNode* node=GetSceneGraph()->GetSelectedVme();
   mafPipe *p=((mafViewRX *)m_ChildViewList[0])->GetNodePipe(node);
   if(((mafVME *)node)->GetOutput()->IsA("mafVMEOutputVolume"))
-    mafLogMessage("SURFACE NOT SELECTED");
+    mafLogMessage(_M("SURFACE NOT SELECTED"));
   else  if (node->IsMAFType(mafVMESurface))
   {
     double center[3],b[6],step;
@@ -748,24 +748,24 @@ mafGUI* mafViewRXCT::CreateGui()
 
   if (buildHelpGui.GetArg() == true)
   {
-	  m_Gui->Button(ID_HELP, "Help","");	
+	  m_Gui->Button(ID_HELP, _R("Help"), _R(""));
   }
 
   mafString m_Choices[2];
-  m_Choices[0]="Right";
-  m_Choices[1]="Left";
-  m_Gui->Radio(ID_RIGHT_OR_LEFT,"Side",&m_RightOrLeft,2,m_Choices);
+  m_Choices[0]=_R("Right");
+  m_Choices[1]=_R("Left");
+  m_Gui->Radio(ID_RIGHT_OR_LEFT,_R("Side"),&m_RightOrLeft,2,m_Choices);
 
-  m_Gui->Bool(ID_SNAP,"Snap on grid",&m_Snap,1);
+  m_Gui->Bool(ID_SNAP,_R("Snap on grid"),&m_Snap,1);
 
-  m_Gui->Bool(ID_MOVE_ALL_SLICES,"Move all",&m_MoveAllSlices);
+  m_Gui->Bool(ID_MOVE_ALL_SLICES,_R("Move all"),&m_MoveAllSlices);
 
-  m_Gui->Button(ID_ADJUST_SLICES,"Adjust Slices");
+  m_Gui->Button(ID_ADJUST_SLICES,_R("Adjust Slices"));
 
   m_Gui->Divider(1);
 
-  m_Gui->Bool(ID_ALL_SURFACE,"All Surface",&m_AllSurface);
-  m_Gui->FloatSlider(ID_BORDER_CHANGE,"Border",&m_Border,1.0,5.0);
+  m_Gui->Bool(ID_ALL_SURFACE,_R("All Surface"),&m_AllSurface);
+  m_Gui->FloatSlider(ID_BORDER_CHANGE,_R("Border"),&m_Border,1.0,5.0);
 
   mafNode* node=this->GetSceneGraph()->GetSelectedVme();
   if (node->IsA("mafVMESurface")||node->IsA("mafVMESurfaceParametric")||node->IsA("mafVMESlicer"))
@@ -787,7 +787,7 @@ mafGUI* mafViewRXCT::CreateGui()
 	for(int i=0;i<=CT_CHILD_VIEWS_NUMBER;i++)
 		(((mafViewSlice *)((mafViewCompound *)m_ChildViewList[CT_COMPOUND_VIEW])->GetSubView(i))->GetGui());
 
-  m_Gui->Button(ID_RESET_SLICES,"reset slices","");
+  m_Gui->Button(ID_RESET_SLICES,_R("reset slices"), _R(""));
 
   // Added by Losi 11.25.2009
   if (m_CurrentVolume)
@@ -805,7 +805,7 @@ mafGUI* mafViewRXCT::CreateGui()
   }
   m_Gui->Divider(1);
   //m_Gui->Bool(ID_ENABLE_GPU,"Enable GPU",&m_EnableGPU,1);
-  m_Gui->Bool(ID_TRILINEAR_INTERPOLATION,"Interpolation",&m_TrilinearInterpolationOn,1);
+  m_Gui->Bool(ID_TRILINEAR_INTERPOLATION,_R("Interpolation"),&m_TrilinearInterpolationOn,1);
 
   m_Gui->Divider();
   return m_Gui;
@@ -840,31 +840,31 @@ void mafViewRXCT::PackageView()
   for(int v=RX_FRONT_VIEW; v<CT_COMPOUND_VIEW; v++)
   {
     // create to the child view
-    m_ViewsRX[v] = new mafViewRX("RX child view", cam_pos[v]);
-    m_ViewsRX[v]->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeProjected",MUTEX);
-    m_ViewsRX[v]->PlugVisualPipe("medVMELabeledVolume", "mafPipeVolumeProjected",MUTEX);
-    m_ViewsRX[v]->PlugVisualPipe("mafVMESlicer", "medVisualPipeSlicerSlice",MUTEX);
-    m_ViewsRX[v]->PlugVisualPipe("mafVMEVolumeLarge", "mafPipeVolumeProjected",MUTEX);
-    m_ViewsRX[v]->PlugVisualPipe("medVMESegmentationVolume", "mafPipeVolumeProjected",MUTEX);
+    m_ViewsRX[v] = new mafViewRX(_R("RX child view"), cam_pos[v]);
+    m_ViewsRX[v]->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeProjected"),MUTEX);
+    m_ViewsRX[v]->PlugVisualPipe(_R("medVMELabeledVolume"), _R("mafPipeVolumeProjected"),MUTEX);
+    m_ViewsRX[v]->PlugVisualPipe(_R("mafVMESlicer"), _R("medVisualPipeSlicerSlice"),MUTEX);
+    m_ViewsRX[v]->PlugVisualPipe(_R("mafVMEVolumeLarge"), _R("mafPipeVolumeProjected"),MUTEX);
+    m_ViewsRX[v]->PlugVisualPipe(_R("medVMESegmentationVolume"), _R("mafPipeVolumeProjected"),MUTEX);
     
     PlugChildView(m_ViewsRX[v]);
   }
 
-  m_ViewCTCompound = new mafViewCompound("CT view",3,2);
-  mafViewSlice *vs = new mafViewSlice("Slice view", CAMERA_CT);
-  vs->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeSlice_BES",MUTEX);
-  vs->PlugVisualPipe("medVMELabeledVolume", "mafPipeVolumeSlice_BES",MUTEX);
-  vs->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMEPolyline", "mafPipePolylineSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMESlicer", "mafPipeSurfaceSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMEMeter", "mafPipePolylineSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMEWrappedMeter", "mafPipePolylineSlice",MUTEX);
-  vs->PlugVisualPipe("mafVMEVolumeLarge", "mafPipeVolumeSlice_BES",MUTEX);
-  vs->PlugVisualPipe("medVMESegmentationVolume", "mafPipeVolumeSlice_BES",MUTEX);
+  m_ViewCTCompound = new mafViewCompound(_R("CT view"),3,2);
+  mafViewSlice *vs = new mafViewSlice(_R("Slice view"), CAMERA_CT);
+  vs->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeSlice_BES"),MUTEX);
+  vs->PlugVisualPipe(_R("medVMELabeledVolume"), _R("mafPipeVolumeSlice_BES"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurfaceSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMEPolyline"), _R("mafPipePolylineSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMESurfaceParametric"), _R("mafPipeSurfaceSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMELandmark"), _R("mafPipeSurfaceSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMELandmarkCloud"), _R("mafPipeSurfaceSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMEMesh"), _R("mafPipeMeshSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMESlicer"), _R("mafPipeSurfaceSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMEMeter"), _R("mafPipePolylineSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMEWrappedMeter"), _R("mafPipePolylineSlice"),MUTEX);
+  vs->PlugVisualPipe(_R("mafVMEVolumeLarge"), _R("mafPipeVolumeSlice_BES"),MUTEX);
+  vs->PlugVisualPipe(_R("medVMESegmentationVolume"), _R("mafPipeVolumeSlice_BES"),MUTEX);
  
   m_ViewCTCompound->PlugChildView(vs);
   PlugChildView(m_ViewCTCompound);

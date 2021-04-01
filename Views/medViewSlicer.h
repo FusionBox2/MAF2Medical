@@ -47,7 +47,7 @@ class mafGUILutSwatch;
 class MED_VIEWS_EXPORT medViewSlicer: public medViewCompoundWindowing
 {
 public:
-  medViewSlicer(const mafString& label = "View Arbitrary Slice", bool show_ruler = false);
+  medViewSlicer(const mafString& label = _R("View Arbitrary Slice"), bool show_ruler = false);
   virtual ~medViewSlicer(); 
 
   mafTypeMacro(medViewSlicer, medViewCompoundWindowing);

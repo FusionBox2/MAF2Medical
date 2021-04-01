@@ -30,7 +30,6 @@
 #include "mafVME.h"
 #include "mafTagArray.h"
 #include "mafSmartPointer.h"
-#include "mafFilesDirs.h"
 
 //----------------------------------------------------------------------------
 // forward references :
@@ -50,10 +49,10 @@ public:
   {
     m_OpType	= OPTYPE_IMPORTER;
     m_Canundo	= true;
-    m_File		= "";
-    m_Dict		= "";
-    m_FileDir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
-    m_DictDir = (mafGetApplicationDirectory() + "/Config/Dictionary/").c_str();
+    m_File		= _R("");
+    m_Dict		= _R("");
+    m_FileDir = mafGetApplicationDirectory() + _R("/Data/External/");
+    m_DictDir = mafGetApplicationDirectory() + _R("/Config/Dictionary/");
 
     m_Vme		= NULL;
 
@@ -98,15 +97,15 @@ public:
     //----------------------------------------------------------------------------
   {
     int result = OP_RUN_CANCEL;
-    m_File = "";
-    m_Dict = "";
+    m_File = _R("");
+    m_Dict = _R("");
 
     mafString f = mafGetOpenFile(m_FileDir,m_PgdWildc); 
-    if(f != "")
+    if(!f.IsEmpty())
     {
       m_File = f;
-      f = mafGetOpenFile(m_DictDir,m_DicWildc,"Open Dictionary"); 
-      if(f != "")
+      f = mafGetOpenFile(m_DictDir,m_DicWildc,_R("Open Dictionary")); 
+      if(!f.IsEmpty())
       {
         m_Dict = f;
         SetDictionaryFlagOn();
@@ -134,8 +133,8 @@ public:
     }
 
     mafSmartPointer<MotionReader> reader; 
-    reader->SetFileName(m_File);
-    reader->SetDictionaryFileName(m_Dict);
+    reader->SetFileName(m_File.GetCStr());
+    reader->SetDictionaryFileName(m_Dict.GetCStr());
 
     if (GetDictionaryFlag()==1)
       reader->DictionaryOn();
@@ -151,8 +150,8 @@ public:
     m_Vme->SetName(name);
 
     mafTagItem tag_Nature;
-    tag_Nature.SetName("VME_NATURE");
-    tag_Nature.SetValue("NATURAL");
+    tag_Nature.SetName(_R("VME_NATURE"));
+    tag_Nature.SetValue(_R("NATURAL"));
 
     m_Vme->GetTagArray()->SetTag(tag_Nature); 
 

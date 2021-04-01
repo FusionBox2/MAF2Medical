@@ -38,9 +38,9 @@ mafCxxTypeMacro(medVMEPolylineEditor)
 medVMEPolylineEditor::medVMEPolylineEditor()
 //-------------------------------------------------------------------------
 {
-	m_VisualPipeName = "medPipePolylineGraphEditor";
+	m_VisualPipeName = _R("medPipePolylineGraphEditor");
 
-	GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+	GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 	SetVisibleToTraverse(false);
 }
 

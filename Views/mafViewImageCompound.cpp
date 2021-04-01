@@ -142,7 +142,7 @@ mafGUI* mafViewImageCompound::CreateGui()
 	assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
 	m_Gui->AddGui(((mafViewImage*)m_ChildViewList[ID_VIEW_IMAGE])->GetGui());
-	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
 	m_LutWidget->Enable(false);
 	m_Gui->Divider();
 	m_Gui->FitGui();
@@ -153,9 +153,9 @@ mafGUI* mafViewImageCompound::CreateGui()
 void mafViewImageCompound::PackageView()
 //-------------------------------------------------------------------------
 {
-	m_ViewImage = new mafViewImage("View Image",CAMERA_FRONT,false,false,false);
-	m_ViewImage->PlugVisualPipe("mafVMEVolumeGray","mafPipeBox",NON_VISIBLE);
-  m_ViewImage->PlugVisualPipe("mafVMESurface","mafPipeSurface",NON_VISIBLE);
+	m_ViewImage = new mafViewImage(_R("View Image"),CAMERA_FRONT,false,false,false);
+	m_ViewImage->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("mafPipeBox"),NON_VISIBLE);
+  m_ViewImage->PlugVisualPipe(_R("mafVMESurface"),_R("mafPipeSurface"),NON_VISIBLE);
 	
 	PlugChildView(m_ViewImage);
 }

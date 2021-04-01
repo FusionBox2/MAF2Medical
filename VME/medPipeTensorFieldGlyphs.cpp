@@ -384,7 +384,7 @@ mafGUI *medPipeTensorFieldGlyphs::CreateGui()
     bSizer4311->Add( m_GlyphMaterialButton, 0, wxALL, 0 );
 
     m_GlyphMaterialLabel = new wxStaticText( m_Gui, ID_GLYPH_MATERIAL_LABEL, 
-      m_GlyphMaterial->GetMaterial()->m_MaterialName.GetCStr(), wxDefaultPosition, wxDefaultSize, 0 );        
+      m_GlyphMaterial->GetMaterial()->m_MaterialName.toWx(), wxDefaultPosition, wxDefaultSize, 0 );        
     bSizer4311->Add( m_GlyphMaterialLabel, 1, wxALL, 5 );
     sbSizer65->Add( bSizer4311, 0, wxEXPAND, 5 );
 
@@ -464,16 +464,16 @@ void medPipeTensorFieldGlyphs::InitFilterList(int nScalars){
 	wxString itemName,itemValue1,itemValue2,displayValue;
 	double dValue1,dValue2;
 	int idx1 =0,idx2=0;
-	for (mafNode::mafLinksMap::iterator i = pLinks->begin(); i != pLinks->end(); i++)
+	for (auto i = pLinks->begin(); i != pLinks->end(); i++)
 	{
 		mafString linkName = i->first;
-		if (linkName.StartsWith(FILTER_LINK_NAME))
+		if (linkName.StartsWith(_R(FILTER_LINK_NAME)))
 		{
 			//------insert item----format--"filter-link0:aa:0.100:1.214"
 			FILTER_ITEM* pItem = new FILTER_ITEM;
 			memset(pItem, 0, sizeof(FILTER_ITEM));
 
-			wxStringTokenizer tkz(wxT(linkName.GetCStr()), wxT(":"));
+			wxStringTokenizer tkz(linkName.toWx(), wxT(":"));
 			int j=0;
 			while ( tkz.HasMoreTokens() )
 			{
@@ -503,13 +503,13 @@ void medPipeTensorFieldGlyphs::InitFilterList(int nScalars){
 			m_RangeCtrl->SetItemData(idx1 , (long)pItem);
 			idx1++;
 
-		}else if (linkName.StartsWith(FILTER_LINK_NAME2) &&  nScalars>0)
+		}else if (linkName.StartsWith(_R(FILTER_LINK_NAME2)) &&  nScalars>0)
 		{
 			//------insert item----format--"filter-link0:aa:0.100:1.214"
 			FILTER_ITEM* pItem = new FILTER_ITEM;
 			memset(pItem, 0, sizeof(FILTER_ITEM));
 
-			wxStringTokenizer tkz(wxT(linkName.GetCStr()), wxT(":"));
+			wxStringTokenizer tkz(linkName.toWx(), wxT(":"));
 			int j=0;
 			while ( tkz.HasMoreTokens() )
 			{
@@ -568,9 +568,9 @@ void medPipeTensorFieldGlyphs::StoreFilterLinks2(){
 	do
 	{
 		bNeedRestart = false;
-		for (mafNode::mafLinksMap::iterator i = pLinks->begin(); i != pLinks->end(); i++)
+		for (auto i = pLinks->begin(); i != pLinks->end(); i++)
 		{
-			if (i->first.StartsWith(FILTER_LINK_NAME2))
+			if (i->first.StartsWith(_R(FILTER_LINK_NAME2)))
 			{
 				m_Vme->RemoveLink(i->first);
 				bNeedRestart = true;
@@ -590,13 +590,13 @@ void medPipeTensorFieldGlyphs::StoreFilterLinks2(){
 			itemName = m_RangeCtrl2->GetItemText(i);
 			FILTER_ITEM* pItem = (FILTER_ITEM*)m_RangeCtrl2->GetItemData(i);
 			mafString szName;
-			szName = wxString::Format("%s%d",FILTER_LINK_NAME2,i);
-			szName += ":";
-			szName += itemName;
-			szName += ":";
-			szName +=   wxString::Format("%.4f",pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
-			szName += ":";
-			szName +=  wxString::Format("%.4f",pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
+			szName = _R(FILTER_LINK_NAME2) + mafToString(i);
+			szName += _R(":");
+			szName += mafWxToString(itemName);
+			szName += _R(":");
+			szName += mafString::Format(_R("%.4f"),pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
+			szName += _R(":");
+			szName += mafString::Format(_R("%.4f"),pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
 
 			m_Vme->SetLink(szName,m_Vme);
 		}
@@ -615,7 +615,7 @@ void medPipeTensorFieldGlyphs::StoreFilterLinks(){
 		bNeedRestart = false;
 		for (mafNode::mafLinksMap::iterator i = pLinks->begin(); i != pLinks->end(); i++)
 		{
-			if (i->first.StartsWith(FILTER_LINK_NAME))
+			if (i->first.StartsWith(_R(FILTER_LINK_NAME)))
 			{
 				m_Vme->RemoveLink(i->first);
 				bNeedRestart = true;
@@ -635,13 +635,13 @@ void medPipeTensorFieldGlyphs::StoreFilterLinks(){
 			itemName = m_RangeCtrl->GetItemText(i);
 			FILTER_ITEM* pItem = (FILTER_ITEM*)m_RangeCtrl->GetItemData(i);
 			mafString szName;
-			szName = wxString::Format("%s%d",FILTER_LINK_NAME,i);
-			szName += ":";
-			szName += itemName;
-			szName += ":";
-			szName +=   wxString::Format("%.4f",pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
-			szName += ":";
-			szName +=  wxString::Format("%.4f",pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
+			szName = _R(FILTER_LINK_NAME) + mafToString(i);
+			szName += _R(":");
+			szName += mafWxToString(itemName);
+			szName += _R(":");
+			szName += mafString::Format(_R("%.4f"),pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
+			szName += _R(":");
+			szName += mafString::Format(_R("%.4f"),pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
 
 			m_Vme->SetLink(szName,m_Vme);
 		}
@@ -775,7 +775,7 @@ bool medPipeTensorFieldGlyphs::AddItem2(){
 		m_RangeCtrl2->SetItemData(nListCount, (long)pItem);
 		rtn = true;
 	}else{
-		mafMessage("invalid value,please check");
+		mafMessage(_M("invalid value,please check"));
 		rtn = false;
 	}
 	return rtn;
@@ -826,7 +826,7 @@ bool medPipeTensorFieldGlyphs::AddItem(){
 		m_RangeCtrl->SetItemData(nListCount, (long)pItem);
 		rtn = true;
 	}else{
-		mafMessage("invalid value,please check");
+		mafMessage(_M("invalid value,please check"));
 		rtn = false;
 	}
 	return rtn;
@@ -869,7 +869,7 @@ void medPipeTensorFieldGlyphs::CreateAddItemDlg(int idx){
 		rValue2 = ID_RANGE_VALUE2_2;
 	}
 
-	m_AddItemDlg = new mafGUIDialog("filter editor",mafCLOSEWINDOW | mafRESIZABLE);
+	m_AddItemDlg = new mafGUIDialog(_R("filter editor"),mafCLOSEWINDOW | mafRESIZABLE);
 	// vertical stacker for the rows of widgets
 	wxBoxSizer *vs1 = new wxBoxSizer(wxVERTICAL);
 
@@ -902,11 +902,11 @@ void medPipeTensorFieldGlyphs::CreateAddItemDlg(int idx){
 	if (idx==1)
 	{
 		// ok/cancel buttons
-		m_ItemOK = new mafGUIButton(m_AddItemDlg, okBtn, "OK", wxPoint(0,0), wxSize(50,20));
+		m_ItemOK = new mafGUIButton(m_AddItemDlg, okBtn, _R("OK"), wxPoint(0,0), wxSize(50,20));
 		m_ItemOK->SetListener(this);
 		m_ItemOK->Enable(false);
 
-		mafGUIButton *b_cancel = new mafGUIButton(m_AddItemDlg, canBtn, "CANCEL", wxPoint(0,0), wxSize(50,20));
+		mafGUIButton *b_cancel = new mafGUIButton(m_AddItemDlg, canBtn, _R("CANCEL"), wxPoint(0,0), wxSize(50,20));
 		b_cancel->SetListener(this);
 
 		hs_b->Add(m_ItemOK,0);
@@ -915,11 +915,11 @@ void medPipeTensorFieldGlyphs::CreateAddItemDlg(int idx){
 	}else if (idx==2)
 	{
 		// ok/cancel buttons
-		m_ItemOK2 = new mafGUIButton(m_AddItemDlg, okBtn, "OK", wxPoint(0,0), wxSize(50,20));
+		m_ItemOK2 = new mafGUIButton(m_AddItemDlg, okBtn, _R("OK"), wxPoint(0,0), wxSize(50,20));
 		m_ItemOK2->SetListener(this);
 		m_ItemOK2->Enable(false);
 
-		mafGUIButton *b_cancel2 = new mafGUIButton(m_AddItemDlg, canBtn, "CANCEL", wxPoint(0,0), wxSize(50,20));
+		mafGUIButton *b_cancel2 = new mafGUIButton(m_AddItemDlg, canBtn, _R("CANCEL"), wxPoint(0,0), wxSize(50,20));
 		b_cancel2->SetListener(this);
 
 		hs_b->Add(m_ItemOK2,0);
@@ -1036,8 +1036,8 @@ void medPipeTensorFieldGlyphs::DoFilter(int mode ,double *rangeValue,double *ran
 		if(orgData->IsA("vtkRectilinearGrid")){
 			//vtkImageData* pImgData = GetImageData(orgDataR);
 
-			mafString logFname2 = "coordFile.txt";//if debug
-			std::ofstream outputFile2(logFname2, std::ios::out|std::ios::app);//if debug
+			mafString logFname2 = _R("coordFile.txt");//if debug
+			std::ofstream outputFile2(logFname2.GetCStr(), std::ios::out|std::ios::app);//if debug
 			outputFile2.clear();//if debug
 			outputFile2<<"---------------begin--------------------------------"<<std::endl;//if debug
 			int dim[3];
@@ -1421,7 +1421,7 @@ void medPipeTensorFieldGlyphs::OnEvent(mafEventBase *maf_event)
   {
     //set new material label
     mmaMaterial* mat = m_GlyphMaterial->GetMaterial();     
-    m_GlyphMaterialLabel->SetLabel(mat->m_MaterialName.GetCStr());
+    m_GlyphMaterialLabel->SetLabel(mat->m_MaterialName.toWx());
 
     //and set a new material icon
     cppDEL(mat->m_Icon); mat->MakeIcon();

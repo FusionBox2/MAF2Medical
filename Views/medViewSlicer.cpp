@@ -129,17 +129,17 @@ medViewSlicer::~medViewSlicer()
 void medViewSlicer::PackageView()
 //----------------------------------------------------------------------------
 {
-	m_ViewArbitrary = new mafViewVTK("",CAMERA_PERSPECTIVE);
+	m_ViewArbitrary = new mafViewVTK(_R(""),CAMERA_PERSPECTIVE);
 	//m_ViewArbitrary->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice");
-	m_ViewArbitrary->PlugVisualPipe("mafVMESurface","mafPipeSurfaceTextured");
-	m_ViewArbitrary->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", MUTEX);
-  m_ViewArbitrary->PlugVisualPipe("mafVMELabeledVolume", "mafPipeBox", MUTEX);
+	m_ViewArbitrary->PlugVisualPipe(_R("mafVMESurface"),_R("mafPipeSurfaceTextured"));
+	m_ViewArbitrary->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), MUTEX);
+  m_ViewArbitrary->PlugVisualPipe(_R("mafVMELabeledVolume"), _R("mafPipeBox"), MUTEX);
 	
-  m_ViewSlice = new mafViewVTK("",CAMERA_CT);
-	m_ViewSlice->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice");
-  m_ViewSlice->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice");
-	m_ViewSlice->PlugVisualPipe("mafVMEGizmo", "mafPipeGizmo", NON_VISIBLE);
-	m_ViewSlice->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", NON_VISIBLE);
+  m_ViewSlice = new mafViewVTK(_R(""),CAMERA_CT);
+	m_ViewSlice->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurfaceSlice"));
+  m_ViewSlice->PlugVisualPipe(_R("mafVMESurfaceParametric"), _R("mafPipeSurfaceSlice"));
+	m_ViewSlice->PlugVisualPipe(_R("mafVMEGizmo"), _R("mafPipeGizmo"), NON_VISIBLE);
+	m_ViewSlice->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), NON_VISIBLE);
 	
 	PlugChildView(m_ViewArbitrary);
 	PlugChildView(m_ViewSlice);
@@ -323,14 +323,14 @@ mafGUI* medViewSlicer::CreateGui()
 
   if (buildHelpGui.GetArg() == true)
   {
-	  m_Gui->Button(ID_HELP, "Help","");	
+	  m_Gui->Button(ID_HELP, _R("Help"), _R(""));
   }
 
 
 	//m_Gui->Button(ID_RESET,"Reset","");
 	m_Gui->Divider(2);
 
-	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
 
 	m_Gui->Divider();
 	m_Gui->Update();

@@ -29,7 +29,6 @@
 #include "medVMEPolylineGraph.h"
 
 #include "mafTagArray.h"
-#include "mafFilesDirs.h"
 
 #include "vtkDataSet.h"
 #include "vtkDataSetReader.h"
@@ -69,7 +68,7 @@ int medOpImporterVTK::ImportVTK()
     wxBusyInfo wait(_("Loading file: ..."));
 
   vtkMAFSmartPointer<vtkDataSetReader> reader;
-  reader->SetFileName(m_File);
+  reader->SetFileName(m_File.GetCStr());
 
   int canRead=TRUE;
   vtkDataReader *preader = NULL;
@@ -84,7 +83,7 @@ int medOpImporterVTK::ImportVTK()
   }
     
   mafEventMacro(mafEvent(this,BIND_TO_PROGRESSBAR,preader));
-  preader->SetFileName(m_File);
+  preader->SetFileName(m_File.GetCStr());
   preader->Update();
 
   if (preader->GetNumberOfOutputs()>0)
@@ -107,8 +106,8 @@ int medOpImporterVTK::ImportVTK()
       }
 
       mafTagItem tag_Nature;
-      tag_Nature.SetName("VME_NATURE");
-      tag_Nature.SetValue("NATURAL");
+      tag_Nature.SetName(_R("VME_NATURE"));
+      tag_Nature.SetValue(_R("NATURAL"));
       m_Output->GetTagArray()->SetTag(tag_Nature);
       m_Output->SetName(name);
 
@@ -117,7 +116,7 @@ int medOpImporterVTK::ImportVTK()
   }
   vtkDEL(preader);
   if(!success && !this->m_TestMode)
-    mafMessage(_("Error reading VTK file."), _("I/O Error"), wxICON_ERROR );
+    mafErrorMessage(_M(mafString(_L("Error reading VTK file."))));
 
   return MAF_OK;
 }

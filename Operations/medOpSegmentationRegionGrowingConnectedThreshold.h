@@ -41,7 +41,7 @@ class vtkSphereSource;
 class MED_OPERATION_EXPORT medOpSegmentationRegionGrowingConnectedThreshold: public mafOp
 {
 public:
-  medOpSegmentationRegionGrowingConnectedThreshold(const mafString& label = "Connected Threshold");
+  medOpSegmentationRegionGrowingConnectedThreshold(const mafString& label = _R("Connected Threshold"));
   ~medOpSegmentationRegionGrowingConnectedThreshold();
 
   mafTypeMacro(medOpSegmentationRegionGrowingConnectedThreshold, mafOp);

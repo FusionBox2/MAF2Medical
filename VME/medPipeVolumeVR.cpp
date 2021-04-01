@@ -104,8 +104,8 @@ void medPipeVolumeVR::Create(mafNode *node, mafView *view)
 
   m_Vme->Update();
 
-  mafString vmeControl = m_Vme->GetOutput()->GetVTKData()->GetClassName();
-  if(vmeControl == "vtkRectilinearGrid")
+  mafString vmeControl = _R(m_Vme->GetOutput()->GetVTKData()->GetClassName());
+  if(vmeControl == _R("vtkRectilinearGrid"))
   {
     m_IsStructured = false;
 
@@ -352,7 +352,7 @@ mafGUI *medPipeVolumeVR::CreateGui()
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
 
-  m_Gui->Double(ID_RESAMPLE_FACTOR,_("Resample"),&m_ResampleFactor,0.00001,1);
+  m_Gui->Double(ID_RESAMPLE_FACTOR,_L("Resample"),&m_ResampleFactor,0.00001,1);
 
   return m_Gui;
 }

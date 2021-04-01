@@ -257,7 +257,7 @@ void medOpMeshDeformation::CreateOpDialog()
   wxBusyCursor wait;
 
   //===== setup interface ====
-  m_Dialog = new mafGUIDialog("Mesh Deformation", mafCLOSEWINDOW | mafRESIZABLE);  
+  m_Dialog = new mafGUIDialog(_R("Mesh Deformation"), mafCLOSEWINDOW | mafRESIZABLE);  
   m_Dialog->SetWindowStyle(m_Dialog->GetWindowStyle() | wxMAXIMIZE_BOX);
 
   //rendering window
@@ -849,7 +849,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   {
     m_OCToAdd = vme;
 
-    m_OCNameCtrl->SetLabel(m_OCToAdd->GetName().GetCStr());
+    m_OCNameCtrl->SetLabel(m_OCToAdd->GetName().toWx());
     m_BttnSelDC->Enable(true);  
     m_BttnAddCurve->Enable(true);
   }      
@@ -865,7 +865,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   {
     m_DCToAdd = vme;
 
-    m_DCNameCtrl->SetLabel(m_DCToAdd->GetName().GetCStr());
+    m_DCNameCtrl->SetLabel(m_DCToAdd->GetName().toWx());
     m_CCCtrl->Enable(true);  
   } 
 }
@@ -876,7 +876,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
 /*virtual*/ mafVME* medOpMeshDeformation::SelectCurveVME()
 //------------------------------------------------------------------------
 {
-  mafString title = "Choose VME with control curve";
+  mafString title = _R("Choose VME with control curve");
   
   mafEvent ev(this, VME_CHOOSE);   
   ev.SetString(&title);
@@ -1444,14 +1444,11 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   double dblNewVolume = props->GetVolume();
   props->Delete();
 
-  wxString szMsg = wxString::Format(
-    wxT("Deformation done. Volume shrinkage: %.4f (Orig = %.2f, New = %.2f)\n"),
+  mafString szMsg = mafString::Format(
+    _R("Deformation done. Volume shrinkage: %.4f (Orig = %.2f, New = %.2f)\n"),
     dblNewVolume / dblOrigVolume, dblOrigVolume, dblNewVolume);
 
-  mafLogMessage(szMsg.c_str());
-#ifdef _RPT0
-  _RPT0(_CRT_WARN, szMsg.c_str());
-#endif
+  mafLogMessage(_M(szMsg));
 #endif
 
   this->m_Rwi->CameraUpdate(); 
@@ -1468,7 +1465,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   mafVMESurface* surface;
 
   mafNEW(surface);
-  surface->SetName(wxString::Format(wxT("Deformed %s"), m_Input->GetName()));
+  surface->SetName(mafString::Format(_R("Deformed ")) + m_Input->GetName());
   surface->SetData(m_Meshes[1]->pPoly, 0, mafVMEGeneric::MAF_VME_REFERENCE_DATA);
 
   mafDEL(m_Output);
@@ -1499,7 +1496,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
         else
         {
           //we have some curve
-          szOldName = pCVMEs[i][j]->GetName();
+          szOldName = pCVMEs[i][j]->GetName().toWx();
           if (
             szOldName.Matches(wxT("*_OC#?*")) || 
             szOldName.Matches(wxT("*_DC#?*"))
@@ -1510,7 +1507,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
           }
         }
 
-        vme->SetName(wxString::Format(wxT("%s_%cC#%d"), szOldName, chLabels[i], j));
+        vme->SetName(mafWxToString(szOldName) + mafString::Format(_R("_%cC#%d"), chLabels[i], j));
         vme->SetData(m_Curves[j]->pPolys[i], 0, mafVMEGeneric::MAF_VME_REFERENCE_DATA);
 
         mafDEL(pCVMEs[i][j]);    //remove the previous VME

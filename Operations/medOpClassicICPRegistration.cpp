@@ -57,9 +57,9 @@ medOpClassicICPRegistration::medOpClassicICPRegistration(const mafString& label)
 
 	m_Convergence				= 0.0001;
 
-	m_ReportFilename		= "";	
-	m_InputName					= "";
-	m_TargetName				= _("none");
+	m_ReportFilename		= _R("");
+	m_InputName					= _R("");
+	m_TargetName				= _L("none");
 }
 //----------------------------------------------------------------------------
 medOpClassicICPRegistration::~medOpClassicICPRegistration( ) 
@@ -96,10 +96,10 @@ enum
 void medOpClassicICPRegistration::CreateGui()
 //----------------------------------------------------------------------------
 {
-	wxString wildcard = _("Report log (*.log)|*.log");
-	wxString dir = (mafGetApplicationDirectory() + _("/data/reports/")).c_str();
-	if(!wxDirExists(dir)) dir = "";
-	m_ReportFilename = dir + _("report.log");
+	mafString wildcard = _L("Report log (*.log)|*.log");
+	mafString dir = mafGetApplicationDirectory() + _L("/data/reports/");
+	if(!mafDirExists(dir)) dir = _R("");
+	m_ReportFilename = dir + _L("report.log");
 	
 	m_InputName = m_Input->GetName();
 	
@@ -113,21 +113,21 @@ void medOpClassicICPRegistration::CreateGui()
 
 	if (buildHelpGui.GetArg() == true)
 	{
-		m_Gui->Button(ID_HELP, "Help","");	
+		m_Gui->Button(ID_HELP, _R("Help"), _R(""));
 	}
 
-	m_Gui->Label("");
-	m_Gui->Label(_("source:"),true);
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_L("source:"),true);
 	m_Gui->Label(&m_InputName);
-	m_Gui->Label("");
-	m_Gui->Label(_("target:"),true);
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_L("target:"),true);
 	m_Gui->Label(&m_TargetName);
-	m_Gui->Button(ID_CHOOSE,_("choose target"));
-	m_Gui->Label("");
-	m_Gui->Double(ID_CONVERGENCE,_("conv.step"),&m_Convergence,1.0e-20,1.0e+20,10);
-	m_Gui->Label("");
-	m_Gui->FileSave(ID_FILE,_("report log"),&m_ReportFilename,wildcard);
-	m_Gui->Label("");
+	m_Gui->Button(ID_CHOOSE,_L("choose target"));
+	m_Gui->Label(_R(""));
+	m_Gui->Double(ID_CONVERGENCE,_L("conv.step"),&m_Convergence,1.0e-20,1.0e+20,10);
+	m_Gui->Label(_R(""));
+	m_Gui->FileSave(ID_FILE,_L("report log"),&m_ReportFilename,wildcard);
+	m_Gui->Label(_R(""));
 	m_Gui->OkCancel();
 	m_Gui->Divider();
 
@@ -219,7 +219,7 @@ void medOpClassicICPRegistration::OpDo()
 
 	target_matrix->Multiply4x4(*target_matrix, *icp_matrix, *final_matrix);
 
-  wxString name = wxString::Format(_("%s registered on %s"),m_Input->GetName(), m_Target->GetName());
+  mafString name = m_Input->GetName() + mafString::Format(_L(" registered on ")) + m_Target->GetName();
 
   mafNEW(m_Registered);
 
@@ -280,10 +280,10 @@ void medOpClassicICPRegistration::OnChooseTarget()
 	if(!vme) return; // the user choosed cancel - keep previous target
   if(!Accept(vme)) // the user choosed ok     - check if it is a valid vme
 	{
-    wxString msg = _("target vme must be a non-empty LandmarkCloud or Surface\n please choose another vme \n");
-		wxMessageBox(msg,_("incorrect vme type"),wxOK|wxICON_ERROR);
+    mafString msg = _L("target vme must be a non-empty LandmarkCloud or Surface\n please choose another vme \n");
+	mafErrorMessage(_M(msg));
     m_Target				= NULL;
-  	m_TargetName		= _("none");
+  	m_TargetName		= _L("none");
 		m_Gui->Enable(wxOK,false);
 		m_Gui->Update();
 		return;

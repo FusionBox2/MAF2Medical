@@ -44,7 +44,7 @@ mafOpImporterBBF::mafOpImporterBBF(const mafString& label) : Superclass(label)
 {
   m_OpType  = OPTYPE_IMPORTER;
 	m_Canundo = true;
-	m_File    = "";
+	m_File    = _R("");
   m_VmeLarge = NULL;
   m_FileDir = mafGetApplicationDirectory();
 }
@@ -66,11 +66,11 @@ mafOp* mafOpImporterBBF::Copy()
 void mafOpImporterBBF::OpRun()   
 //----------------------------------------------------------------------------
 {
-	mafString wildc = "bbf Data (*.bbf)|*.bbf";
+	mafString wildc = _R("bbf Data (*.bbf)|*.bbf");
   mafString f;
   if (m_File.IsEmpty())
   {
-    f = mafGetOpenFile(m_FileDir, wildc, _("Choose .bbf file"));
+    f = mafGetOpenFile(m_FileDir, wildc, _L("Choose .bbf file"));
     m_File = f;
   }
 
@@ -84,7 +84,7 @@ void mafOpImporterBBF::OpRun()
     else
     {
       if(!this->m_TestMode)
-        mafMessage(_("Unsupported file format"), _("I/O Error"), wxICON_ERROR );
+        mafErrorMessage(_M(mafString(_L("Unsupported file format"))));
     }
 	}
 	mafEventMacro(mafEvent(this,result));
@@ -114,14 +114,13 @@ int mafOpImporterBBF::ImportBBF()
   {
 	  m_Output = m_VmeLarge;
     m_Output->ReparentTo(m_Input);
-    m_Output->SetName(showName);
+    m_Output->SetName(mafWxToString(showName));
     return MAF_OK;
   }
   else
   {
     if(!this->m_TestMode) {
-      mafMessage(_("Error reading VTK file."), 
-        _("I/O Error"), wxICON_ERROR );
+        mafErrorMessage(_M(mafString(_L("Error reading VTK file."))));
     }
     return MAF_ERROR;
   }  

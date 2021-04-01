@@ -43,7 +43,7 @@ class MED_OPERATION_EXPORT medOpImporterC3D: public mafOp
 public:
   mafTypeMacro(medOpImporterC3D, mafOp)
   /** constructor */
-  medOpImporterC3D(const mafString& label="");
+  medOpImporterC3D(const mafString& label=_R(""));
   /** destructor */
  ~medOpImporterC3D();
   /** retrieve the copy of the object */
@@ -63,10 +63,10 @@ public:
 
 protected:
   mafVME  *m_Vme; 
-	wxString m_File;
-	wxString m_FileDir;
-	wxString m_Dict; 
-	wxString m_DictDir;
+	mafString m_File;
+	mafString m_FileDir;
+	mafString m_Dict; 
+	mafString m_DictDir;
 	int m_DictionaryAvailable;
 };
 #endif

@@ -49,10 +49,10 @@ public:
 
   /**  Plug a new operation and its undo flag: if the operation does not support
   undo the undo flag has no effect */
-	virtual void Plug(mafOp *op, wxString menuPath = "", bool canUndo = true, mafGUISettings *setting = NULL);
+	virtual void Plug(mafOp *op, const mafString& menuPath = _R(""), bool canUndo = true, mafGUISettings *setting = NULL);
 	
   /**  Plug a new wizard */
-	virtual void Plug(medWizard *wizard, wxString menuPath = "");
+	virtual void Plug(medWizard *wizard, const mafString& menuPath = _R(""));
 	
   /** Must be called before Configure */
   void PlugWizardManager(bool b){m_UseWizardManager=b;};
@@ -99,7 +99,7 @@ protected:
   /** FILE OPEN evt. handler. 
   By default (file_to_open = NULL) it ask the user to choose a file to open,
   otherwise it open the given one.*/
-	virtual bool OnFileOpen(const mafString& file_to_open = "");
+	virtual bool OnFileOpen(const mafString& file_to_open = _R(""));
  
   /** FILE SAVE evt. handler */
   virtual bool OnFileSave();

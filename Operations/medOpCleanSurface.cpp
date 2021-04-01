@@ -105,14 +105,14 @@ void medOpCleanSurface::CreateGui()
   // interface:
   m_Gui = new mafGUI(this);
 
-  m_Gui->Label("");
-  m_Gui->Label(_("Clean Surface"),true);
-  m_Gui->Button(ID_SMOOTH,_("Apply Clean"));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_L("Clean Surface"),true);
+  m_Gui->Button(ID_SMOOTH,_L("Apply Clean"));
 
   m_Gui->Divider(2);
-  m_Gui->Label("");
-  m_Gui->Button(ID_PREVIEW,_("preview"));
-  m_Gui->Button(ID_CLEAR,_("clear"));
+  m_Gui->Label(_R(""));
+  m_Gui->Button(ID_PREVIEW,_L("preview"));
+  m_Gui->Button(ID_CLEAR,_L("clear"));
   m_Gui->OkCancel();
   m_Gui->Enable(wxOK,false);
 

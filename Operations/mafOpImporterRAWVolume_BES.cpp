@@ -102,7 +102,7 @@ mafOpImporterRAWVolume_BES::mafOpImporterRAWVolume_BES(const mafString& label) :
 	m_NumberOfByte = 0;
 
 	m_BuildRectilinearGrid = false;
-	m_CoordFile = "";
+	m_CoordFile = _R("");
 
 	m_Dialog = NULL;
 	m_Reader = NULL;
@@ -166,7 +166,7 @@ void mafOpImporterRAWVolume_BES::OpRun()
 	m_Gui = new mafGUI(this);
 
 	//dialog +++++++++++++++++++++++++++++++++++++++
-	m_Dialog = new mafGUIDialogPreview(_("raw importer"), mafCLOSEWINDOW | mafRESIZABLE | mafUSEGUI | mafUSERWI);
+	m_Dialog = new mafGUIDialogPreview(_L("raw importer"), mafCLOSEWINDOW | mafRESIZABLE | mafUSEGUI | mafUSERWI);
 
 	//Preview Pipeline ++++++++++++++++++++++++++++++
 	vtkNEW(m_Reader);
@@ -194,36 +194,36 @@ void mafOpImporterRAWVolume_BES::OpRun()
 	//GUI +++++++++++++++++++++++++++++++++++++++++++
 	m_Gui->Show(true);
 	m_Gui->Divider(0);
-	mafString wildc = _("Raw data (*.raw)|*.raw|All files (*.*)|*.*");
-	m_Gui->FileOpen(ID_FILE,_("file"),&m_RawFile,wildc);
+	mafString wildc = _L("Raw data (*.raw)|*.raw|All files (*.*)|*.*");
+	m_Gui->FileOpen(ID_FILE,_L("file"),&m_RawFile,wildc);
 
-	mafString endian_choices[2] = {_("Big Endian"),_("Little Endian")};
-	mafString scalar_choices[5] = {_("char"),_("short"),_("int"),_("float"),_("double")};
+	mafString endian_choices[2] = {_L("Big Endian"),_L("Little Endian")};
+	mafString scalar_choices[5] = {_L("char"),_L("short"),_L("int"),_L("float"),_L("double")};
 	m_Gui->Divider(0);
-	m_Gui->Combo(ID_BITS,_("endian"),&m_Endian,2,endian_choices);
-	m_Gui->Combo(ID_SCALAR_TYPE,"scalar type",&m_ScalarType,5,scalar_choices);
-	m_Gui->Bool(ID_SIGNED,"signed",&m_Signed);
+	m_Gui->Combo(ID_BITS,_L("endian"),&m_Endian,2,endian_choices);
+	m_Gui->Combo(ID_SCALAR_TYPE,_R("scalar type"),&m_ScalarType,5,scalar_choices);
+	m_Gui->Bool(ID_SIGNED,_R("signed"),&m_Signed);
 
-  m_Gui->Integer(ID_COMPONENTS,"comps", &m_NumberOfScalarComponents, 1, 4,
-    _("define the number of components in the data set, e.g., typical grey-scale data sets have"
+  m_Gui->Integer(ID_COMPONENTS,_R("comps"), &m_NumberOfScalarComponents, 1, 4,
+    _L("define the number of components in the data set, e.g., typical grey-scale data sets have"
       "one component only, RGB data sets have 3 components"));
 
 	m_Gui->Divider(0);
-	m_Gui->Label(_("dimensions (x,y,z)"));
-	m_Gui->Vector(ID_DIM, "",m_DataDimemsion,1,100000);   
-	m_Gui->VectorN(ID_VOI_X, "VOI x" ,&m_VOI[0],2,0,MAXINT,_("define the range of voxels in x dimension to import."));
-  m_Gui->VectorN(ID_VOI_Y, "VOI y" ,&m_VOI[2],2,0,MAXINT,_("define the range of voxels in y dimension to import."));
-  m_Gui->VectorN(ID_VOI_Z, "VOI z" ,&m_VOI[4],2,0,MAXINT,_("define the range of voxels in z dimension to import."));
+	m_Gui->Label(_L("dimensions (x,y,z)"));
+	m_Gui->Vector(ID_DIM, _R(""),m_DataDimemsion,1,100000);
+	m_Gui->VectorN(ID_VOI_X, _R("VOI x") ,&m_VOI[0],2,0,MAXINT,_L("define the range of voxels in x dimension to import."));
+  m_Gui->VectorN(ID_VOI_Y, _R("VOI y") ,&m_VOI[2],2,0,MAXINT,_L("define the range of voxels in y dimension to import."));
+  m_Gui->VectorN(ID_VOI_Z, _R("VOI z") ,&m_VOI[4],2,0,MAXINT,_L("define the range of voxels in z dimension to import."));
 
 	m_Gui->Divider(0);
-	m_Gui->Label(_("spacing in mm/pixel (x,y,z)"));
-	m_Gui->Vector(ID_SPC, "",m_DataSpacing,0.0000001, 100000,-1);
+	m_Gui->Label(_L("spacing in mm/pixel (x,y,z)"));
+	m_Gui->Vector(ID_SPC, _R(""),m_DataSpacing,0.0000001, 100000,-1);
 
-	m_Gui->Button(ID_COORD,_("load"),_("z coords"),_("load the file for non regulary spaced raw volume"));
+	m_Gui->Button(ID_COORD,_L("load"),_L("z coords"),_L("load the file for non regulary spaced raw volume"));
 
 	m_Gui->Divider(0);
-	m_Gui->Button(ID_GUESS,_("guess"),_("header size"));
-	m_Gui->Integer(ID_HEADER,_(" "),&m_FileHeader,0);
+	m_Gui->Button(ID_GUESS,_L("guess"),_L("header size"));
+	m_Gui->Integer(ID_HEADER,_L(" "),&m_FileHeader,0);
 
 	m_Gui->Divider(0);
 
@@ -240,20 +240,20 @@ void mafOpImporterRAWVolume_BES::OpRun()
 
 	nMaxMem /= 2;		//keep 50% free
 
-	m_Gui->Label(_("memory limit [MB]: "));
-	m_Gui->Slider(ID_MEMLIMIT, "", &m_MemLimit, 1, nMaxMem, 
-		_("if the data to be loaded is larger than the specified memory limit,"
+	m_Gui->Label(_L("memory limit [MB]: "));
+	m_Gui->Slider(ID_MEMLIMIT, _R(""), &m_MemLimit, 1, nMaxMem,
+		_L("if the data to be loaded is larger than the specified memory limit,"
 		  "it will be loaded as VolumeLarge VME"));
 #endif // VME_VOLUME_LARGE
   
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 	m_Gui->OkCancel();
 
 	//slice slider +++++++++++++++++++++++++++++++++++++++++++
 	m_GuiSlider = new mafGUI(this);  
-	m_SliceSlider = m_GuiSlider->Slider(ID_SLICE,_("slice num"),&m_CurrentSlice,0);
-  m_GuiSlider->Bool(ID_LOOKUPTABLE, _("use lookup table"), &m_UseLookupTable, 1, 
-    _("determines whether the default lookup table should be used for the preview"));
+	m_SliceSlider = m_GuiSlider->Slider(ID_SLICE,_L("slice num"),&m_CurrentSlice,0);
+  m_GuiSlider->Bool(ID_LOOKUPTABLE, _L("use lookup table"), &m_UseLookupTable, 1, 
+    _L("determines whether the default lookup table should be used for the preview"));
 	m_GuiSlider->Show(true);
 	m_GuiSlider->Reparent(m_Dialog);
 	wxBoxSizer *slider_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -428,7 +428,7 @@ void mafOpImporterRAWVolume_BES::	OnEvent(mafEventBase *maf_event)
 		case ID_GUESS:
 			{
 #ifdef VME_VOLUME_LARGE
-        long long len = (long long)mafVMEVolumeLargeUtils::GetFileLength(m_RawFile);
+        long long len = (long long)mafVMEVolumeLargeUtils::GetFileLength(m_RawFile.GetCStr());
 #else
         long long len = (long long)GetFileLength(m_RawFile);
 #endif
@@ -443,10 +443,10 @@ void mafOpImporterRAWVolume_BES::	OnEvent(mafEventBase *maf_event)
 
 		case ID_COORD:
 			{
-				wxString dir = mafGetApplicationDirectory().GetCStr();
-				dir += _("/Data/External");
-				wxString wildc =_("Z_coordinates (*.txt)|*.txt");
-				wxString file = mafGetOpenFile(dir,wildc,_("Open Z coordinates file")).GetCStr();
+				mafString dir = mafGetApplicationDirectory();
+				dir += _L("/Data/External");
+				mafString wildc =_L("Z_coordinates (*.txt)|*.txt");
+				mafString file = mafGetOpenFile(dir,wildc,_L("Open Z coordinates file"));
 				if(!file.IsEmpty())
 				{
 					m_CoordFile = file;
@@ -518,11 +518,11 @@ bool mafOpImporterRAWVolume_BES::VolumeLargeCheck()
     return false;
   else if (nResult == 2)
   {
-    wxString name, ext, path;
-    wxSplitPath(m_RawFile.GetCStr(), &path, &name, &ext);
+    mafString name, ext, path;
+    mafSplitPath(m_RawFile, &path, &name, &ext);
 
     m_OutputFileName = szStr;
-    m_OutputFileName += wxFILE_SEP_PATH + wxString::Format("%s_%X", name, (int)time(NULL));
+    m_OutputFileName += mafWxToString(wxFILE_SEP_PATH) + name + mafString::Format(_R("_%X"), (int)time(NULL));
   }
 	return true;
 }
@@ -532,7 +532,7 @@ bool mafOpImporterRAWVolume_BES::VolumeLargeCheck()
 template< typename TR >
 void mafOpImporterRAWVolume_BES::UpdateReaderT(TR* reader)
 {
-	reader->SetFileName(m_RawFile);
+	reader->SetFileName(m_RawFile.GetCStr());
   reader->SetDataScalarType(GetVTKDataType());
   if(m_Endian == 0)
     reader->SetDataByteOrderToBigEndian();
@@ -607,7 +607,7 @@ void mafOpImporterRAWVolume_BES::UpdateReader()
 template< typename TR >
 vtkDataObject* mafOpImporterRAWVolume_BES::ImportT(TR* reader)
 {
-	reader->SetFileName(m_RawFile);  
+	reader->SetFileName(m_RawFile.GetCStr());
   reader->SetDataScalarType(GetVTKDataType());
   if(m_Endian == 0)
     reader->SetDataByteOrderToBigEndian();
@@ -637,16 +637,15 @@ bool mafOpImporterRAWVolume_BES::Import()
 		mafEventMacro(mafEvent(this,PROGRESSBAR_SHOW));			
 		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
 
-		mafString szText = _("Importing RAW data ...");
+		mafString szText = _L("Importing RAW data ...");
 		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szText));
 	}
 
   vtkMAFSmartPointer<vtkDoubleArray> ZDoubleArray;	//Ref(ZDoubleArray) = 1
   if (m_BuildRectilinearGrid)
   {
-    const char* nome = (m_CoordFile);
     std::ifstream f_in;
-    f_in.open(nome);
+    f_in.open(m_CoordFile.GetCStr());
 
     char title[256];
     f_in.getline(title,256);
@@ -686,13 +685,13 @@ bool mafOpImporterRAWVolume_BES::Import()
 		}
 	
 		mafNEW(m_VolumeLarge);
-		m_VolumeLarge->SetFileName(this->m_RawFile);
+		m_VolumeLarge->SetFileName(this->m_RawFile.GetCStr());
 		mafVolumeLargeReader* rd = NULL;
 		mafVolumeLargeWriter wr;
 		wr.SetInputDataSet(img);
     if (m_BuildRectilinearGrid)
       wr.SetInputZCoordinates(ZDoubleArray.GetPointer());
-		wr.SetOutputFileName(m_OutputFileName);
+		wr.SetOutputFileName(m_OutputFileName.GetCStr());
 		wr.SetListener(GetListener());
 		if (wr.Update())
 		{
@@ -703,7 +702,7 @@ bool mafOpImporterRAWVolume_BES::Import()
 			VOI[5] = m_VOI[5] - m_VOI[4];
 
 			rd = new mafVolumeLargeReader();
-			rd->SetFileName(m_OutputFileName);
+			rd->SetFileName(m_OutputFileName.GetCStr());
 			rd->SetMemoryLimit(m_MemLimit * 1024);
 			rd->SetVOI(VOI);
 			rd->Update();
@@ -866,12 +865,12 @@ bool mafOpImporterRAWVolume_BES::Import()
 	}
 	
 	mafTagItem tag_Nature;
-	tag_Nature.SetName("VME_NATURE");
-	tag_Nature.SetValue("NATURAL");
+	tag_Nature.SetName(_R("VME_NATURE"));
+	tag_Nature.SetValue(_R("NATURAL"));
 
-	wxString name, ext, path;
-	wxSplitPath(m_RawFile.GetCStr(),&path,&name,&ext);
-	m_Output->SetName(name.c_str());
+	mafString name, ext, path;
+	mafSplitPath(m_RawFile,&path,&name,&ext);
+	m_Output->SetName(name);
 	m_Output->GetTagArray()->SetTag(tag_Nature);
 
 	if(!m_TestMode) {
@@ -901,14 +900,14 @@ int mafOpImporterRAWVolume_BES::GetFileLength(const char * filename)
 void mafOpImporterRAWVolume_BES::SetFileName(const char *raw_file)
 //----------------------------------------------------------------------------
 {
-	m_RawFile = raw_file;
+	m_RawFile = _R(raw_file);
 }
 
 #ifdef VME_VOLUME_LARGE
 //Sets the output file (with bricks)
 void mafOpImporterRAWVolume_BES::SetOutputFile(const char* szOutputFile)
 {
-	m_OutputFileName = szOutputFile;
+	m_OutputFileName = _R(szOutputFile);
 }
 #endif // VME_VOLUME_LARGE
 

@@ -38,14 +38,14 @@ medOpImporterC3D::medOpImporterC3D(const mafString& label) : Superclass(label)
 {
 	m_OpType	= OPTYPE_IMPORTER;
 	m_Canundo = true;
-	m_File		= "";
+	m_File		= _R("");
 	m_Vme			= NULL;
 	this->m_DictionaryAvailable = 0;
 
 	m_FileDir = mafGetApplicationDirectory(); 
-  m_FileDir +=  "/Data/External/";
+  m_FileDir +=  _R("/Data/External/");
 	m_DictDir = mafGetApplicationDirectory();
-  m_DictDir += "/Config/Dictionary/";
+  m_DictDir += _R("/Config/Dictionary/");
 }
 //----------------------------------------------------------------------------
 medOpImporterC3D::~medOpImporterC3D( ) 
@@ -73,17 +73,17 @@ void medOpImporterC3D::OpRun()
 //----------------------------------------------------------------------------
 {
 	int result = OP_RUN_CANCEL;
-	m_File = "";
-	m_Dict = "";
-	wxString c3d_wildc	= "C3D Data (*.c3d)|*.c3d";
-	wxString dict_wildc = "Dictionary (*.txt)|*.txt";
+	m_File = _R("");
+	m_Dict = _R("");
+	mafString c3d_wildc	= _R("C3D Data (*.c3d)|*.c3d");
+	mafString dict_wildc = _R("Dictionary (*.txt)|*.txt");
 
-	wxString f = mafGetOpenFile(m_FileDir,c3d_wildc).GetCStr(); 
-	if(f != "")
+	mafString f = mafGetOpenFile(m_FileDir,c3d_wildc); 
+	if(!f.IsEmpty())
 	{
 		m_File = f;
-		f = mafGetOpenFile(m_DictDir,dict_wildc,"Open Dictionary").GetCStr(); 
-		if(f != "")
+		f = mafGetOpenFile(m_DictDir,dict_wildc,_R("Open Dictionary")); 
+		if(!f.IsEmpty())
 		{
 			m_Dict = f;
 			this->m_DictionaryAvailable = 1;
@@ -118,8 +118,8 @@ void medOpImporterC3D::OpDo()
 
 	//reader->Read();
 
-  wxString path, name, ext;
-  wxSplitPath(m_File.c_str(),&path,&name,&ext);
+  mafString path, name, ext;
+  mafSplitPath(m_File,&path,&name,&ext);
 
 	//m_vme = reader->GetOutput()->GetFirstChild();
 	//m_Vme = reader->GetOutput();

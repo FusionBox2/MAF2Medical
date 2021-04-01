@@ -66,7 +66,7 @@ class MED_OPERATION_EXPORT medOpImporterDicomOffis : public mafOp
 {
 public:
 	/** constructor */
-	medOpImporterDicomOffis(const mafString& label = "Importer DICOM");
+	medOpImporterDicomOffis(const mafString& label = _R("Importer DICOM"));
 	/** RTTI macro */
 	mafTypeMacro(medOpImporterDicomOffis, mafOp);
 
@@ -92,7 +92,7 @@ public:
 	virtual void CreateGui();
 
 	/** Set the abs file name of the directory containing DICOM slices to import */
-	void SetDicomDirectoryABSFileName(const char *dirName){m_DicomDirectoryABSFileName = dirName;};
+	void SetDicomDirectoryABSFileName(const char *dirName){m_DicomDirectoryABSFileName = _R(dirName);};
 	const char *GetDicomDirectoryABSFileName() const {return m_DicomDirectoryABSFileName.GetCStr();};
 
 	/** Read Dicom file */
@@ -358,7 +358,7 @@ protected:
 
 	std::map<std::vector<mafString>,bool> m_SeriesIDContainsRotationsMap; ///< StudyUID-SeriesUIDWithPlanesNumber-SeriesUIDWithoutPlanesNumber vector to boolean map 
 
-	wxString  m_CurrentSliceABSFileName;
+	mafString  m_CurrentSliceABSFileName;
 	int				m_VolumeSide;
 
 	int				 m_NumberOfStudies; ///<Number of study present in the DICOM directory
@@ -441,11 +441,11 @@ public:
 	/** constructor */
 	medDicomSlice() 
 	{
-		m_PatientBirthdate = '###';
-		m_PatientName = '###';
-		m_Description = "###";
-		m_Date = "###";
-		m_SliceABSFileName = "";
+		m_PatientBirthdate = _R("###");
+		m_PatientName = _R("###");
+		m_Description = _R("###");
+		m_Date = _R("###");
+		m_SliceABSFileName = _R("");
 		m_DcmImagePositionPatient[0] = -9999;
 		m_DcmImagePositionPatient[1] = -9999;
 		m_DcmImagePositionPatient[2] = -9999;
@@ -509,28 +509,28 @@ public:
 	~medDicomSlice() {vtkDEL(m_Data);};
 
 	/** Return patient birthday */
-	mafString GetPatientBirthday(){return m_PatientBirthdate;};
+	mafString GetPatientBirthday(){return m_PatientBirthdate;}
 
 	/** Return patient name */
-	mafString GetPatientName(){return m_PatientName;};
+	mafString GetPatientName(){return m_PatientName;}
 
 	/** Return the filename of the corresponding dicom slice. */
-	const char *GetSliceABSFileName() const {return m_SliceABSFileName.GetCStr();};
+	const char *GetSliceABSFileName() const {return m_SliceABSFileName.GetCStr();}
 
 	/** Set the filename of the corresponding dicom slice. */
-	void SetSliceABSFileName(char *fileName){m_SliceABSFileName = fileName;};
+	void SetSliceABSFileName(char *fileName){m_SliceABSFileName = _R(fileName);}
 
 	/** Return the image number of the dicom slice*/
-	int GetDcmInstanceNumber() const {return m_DcmInstanceNumber;};
+	int GetDcmInstanceNumber() const {return m_DcmInstanceNumber;}
 
 	/** Set the image number of the dicom slice*/
-	void SetDcmInstanceNumber(int number){m_DcmInstanceNumber = number;};
+	void SetDcmInstanceNumber(int number){m_DcmInstanceNumber = number;}
 
 	/** Return the number of cardiac timeframes*/
-	int GetDcmCardiacNumberOfImages() const {return m_DcmCardiacNumberOfImages;};
+	int GetDcmCardiacNumberOfImages() const {return m_DcmCardiacNumberOfImages;}
 
 	/** Set the number of cardiac timeframes*/
-	void SetDcmCardiacNumberOfImages(int number){m_DcmCardiacNumberOfImages = number;};
+	void SetDcmCardiacNumberOfImages(int number){m_DcmCardiacNumberOfImages = number;}
 
 	/** Return the trigger time of the dicom slice*/
 	double GetDcmTriggerTime() const {return m_DcmTriggerTime;};

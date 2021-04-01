@@ -68,11 +68,11 @@ medOpIterativeRegistration::medOpIterativeRegistration(const mafString& label) :
  
   m_CurrentTime = -1; 
 
-  m_SourceVmeName = "";
-  m_TargetVmeName = "";
+  m_SourceVmeName = _R("");
+  m_TargetVmeName = _R("");
 
-  m_SourceVmeName = "";
-  m_TargetVmeName = "";
+  m_SourceVmeName = _R("");
+  m_TargetVmeName = _R("");
 
   m_UndoSourceAbsPose = NULL;
   m_RegistrationMatrix = NULL;
@@ -206,39 +206,39 @@ void medOpIterativeRegistration::CreateGui()
   m_Gui = new mafGUI(this);
   m_Gui->SetListener(this);
  
-  m_Gui->Label("source vme:", true);
+  m_Gui->Label(_R("source vme:"), true);
   m_Gui->Label(&m_SourceVmeName, false, true);
    
 
   m_Gui->Divider(2); 
-  m_Gui->Button(ID_CHOOSE_TARGET,  "choose target", "", "choose registration target vme");
+  m_Gui->Button(ID_CHOOSE_TARGET,  _R("choose target"), _R(""), _R("choose registration target vme"));
   
   
-  m_Gui->Label("target vme:", true);
+  m_Gui->Label(_R("target vme:"), true);
 
   m_Gui->Label(&m_TargetVmeName, false, true); 
   m_Gui->Divider(2); 
-  m_Gui->Label("mouse interaction", true);
-  m_Gui->Label("left mouse: pick landmark");
-  m_Gui->Label("middle mouse: translate landmark");
-  m_Gui->Label("middle mouse + ctrl: translate and snap");
+  m_Gui->Label(_R("mouse interaction"), true);
+  m_Gui->Label(_R("left mouse: pick landmark"));
+  m_Gui->Label(_R("middle mouse: translate landmark"));
+  m_Gui->Label(_R("middle mouse + ctrl: translate and snap"));
   m_Gui->Divider(2);
 
-  m_Gui->Button(ID_REGISTER,"register","","perform rigid registration");
+  m_Gui->Button(ID_REGISTER,_R("register"), _R(""),_R("perform rigid registration"));
   m_Gui->Enable(ID_REGISTER, false);
    
   // source gui
   m_Gui->Divider(2);
-  m_Gui->Label("source landmark:", true);
+  m_Gui->Label(_R("source landmark:"), true);
   m_GuiLandmark[SOURCE] = new medGUILandmark(m_SourceVME, this);
-  m_GuiLandmark[SOURCE]->SetLMCloudName("source_lc");
+  m_GuiLandmark[SOURCE]->SetLMCloudName(_R("source_lc"));
   m_Gui->AddGui(m_GuiLandmark[SOURCE]->GetGui());
 
   // target gui
   m_Gui->Divider(2);
-  m_Gui->Label("target landmark:", true);
+  m_Gui->Label(_R("target landmark:"), true);
   m_GuiLandmark[TARGET] = new medGUILandmark(m_TargetVME, this);
-  m_GuiLandmark[TARGET]->SetLMCloudName("target_lc");
+  m_GuiLandmark[TARGET]->SetLMCloudName(_R("target_lc"));
   m_Gui->AddGui(m_GuiLandmark[TARGET]->GetGui());
 
   m_Gui->Divider(2);
@@ -246,7 +246,7 @@ void medOpIterativeRegistration::CreateGui()
   m_Gui->Divider();
   
 	m_Gui->OkCancel(); 
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
 
   m_Gui->Update(); 
 
@@ -272,7 +272,7 @@ void medOpIterativeRegistration::OnEventThis(mafEventBase *maf_event)
   {
     case ID_CHOOSE_TARGET:
     {
-      mafString title = _("Choose target vme");
+      mafString title = _L("Choose target vme");
       mafEvent e(this,VME_CHOOSE,&title,(long)&medGUILandmark::VmeAccept);
       mafEventMacro(e); 
       m_TargetVME = mafVME::SafeDownCast(e.GetVme());

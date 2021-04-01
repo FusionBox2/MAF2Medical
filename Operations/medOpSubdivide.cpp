@@ -129,11 +129,11 @@ void medOpSubdivide::CreateGui()
   // ToDO: add your custom widgets...
 
   m_NumberOfSubdivision = 1;
-  m_Gui->Label(_("num. subdivision"));
-  m_Gui->Integer(ID_NUMBER_OF_SUBDIVISION,"",&m_NumberOfSubdivision,0);
+  m_Gui->Label(_L("num. subdivision"));
+  m_Gui->Integer(ID_NUMBER_OF_SUBDIVISION, _R(""),&m_NumberOfSubdivision,0);
 
-  m_Gui->Button(ID_SUBDIVIDE,_("subdivide"));
-  m_Gui->Button(ID_PREVIEW,_("preview"));
+  m_Gui->Button(ID_SUBDIVIDE,_L("subdivide"));
+  m_Gui->Button(ID_PREVIEW,_L("preview"));
 
   m_Gui->OkCancel();
   m_Gui->Divider();

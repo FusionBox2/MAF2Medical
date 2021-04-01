@@ -224,13 +224,13 @@ void mafViewSingleSlice::InitializeSlice(double slice[3])
 void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
 //----------------------------------------------------------------------------
 {
-  mafString pipe_name = "";
+  mafString pipe_name = _R("");
   GetVisualPipeName(vme, pipe_name);
 
   mafSceneNode *n = m_Sg->Vme2Node(vme);
   assert(n && !n->m_Pipe);
 
-  if (pipe_name != "")
+  if (!pipe_name.IsEmpty())
   {
     if((vme->IsMAFType(mafVMELandmarkCloud) && ((mafVMELandmarkCloud*)vme)->IsOpen()) || vme->IsMAFType(mafVMELandmark) && m_NumberOfVisibleVme == 1)
     {
@@ -243,12 +243,12 @@ void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
     mafPipeFactory *pipe_factory  = mafPipeFactory::GetInstance();
     assert(pipe_factory!=NULL);
     mafObject *obj= NULL;
-    obj = pipe_factory->CreateInstance(pipe_name);
+    obj = pipe_factory->CreateInstance(pipe_name.GetCStr());
     mafPipe *pipe = (mafPipe*)obj;
     if (pipe)
     {
       pipe->SetListener(this);
-      if (pipe_name.Equals("mafPipeVolumeSlice"))
+      if (pipe_name.Equals(_R("mafPipeVolumeSlice")))
       {
         m_CurrentVolume = n;
         if (m_AttachCamera)
@@ -291,7 +291,7 @@ void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
         }
         UpdateText();
       }
-      else if(pipe_name.Equals("mafPipeSurfaceSlice"))
+      else if(pipe_name.Equals(_R("mafPipeSurfaceSlice")))
       {
         double normal[3];
 				switch(m_CameraPositionId)
@@ -327,7 +327,7 @@ void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
 		    ((mafPipeSurfaceSlice *)pipe)->SetSlice(m_Slice);
 				((mafPipeSurfaceSlice *)pipe)->SetNormal(normal);
       }
-			else if(pipe_name.Equals("mafPipeMeshSlice"))
+			else if(pipe_name.Equals(_R("mafPipeMeshSlice")))
 			{
 				double normal[3];
 				switch(m_CameraPositionId)
@@ -362,7 +362,7 @@ void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
 				((mafPipeMeshSlice *)pipe)->SetSlice(m_Slice);
 				((mafPipeMeshSlice *)pipe)->SetNormal(normal);
 			}
-			else if(pipe_name.Equals("mafPipePolylineSlice"))
+			else if(pipe_name.Equals(_R("mafPipePolylineSlice")))
 			{
 				double normal[3];
 				switch(m_CameraPositionId)
@@ -411,7 +411,7 @@ void mafViewSingleSlice::VmeCreatePipe(mafNode *vme)
       }
     }
     else
-      mafErrorMessage("Cannot create visual pipe object of type \"%s\"!",pipe_name.GetCStr());
+      mafErrorMessage(_M(_R("Cannot create visual pipe object of type \"") + pipe_name + _R("\"!")));
   }
 }
 //----------------------------------------------------------------------------
@@ -480,7 +480,7 @@ mafGUI *mafViewSingleSlice::CreateGui()
   //m_Gui->AddGui(m_AttachCamera->GetGui());
 
 	//m_Slider = m_Gui->FloatSlider(ID_POSITION, _("Position"), &m_Position,MINDOUBLE,MAXDOUBLE);
-  m_Gui->Double(ID_POSITION, _("Position"), &m_Position,MINDOUBLE,MAXDOUBLE,2);
+  m_Gui->Double(ID_POSITION, _L("Position"), &m_Position,MINDOUBLE,MAXDOUBLE,2);
 	m_Gui->Enable(ID_POSITION,false);
 
 	//const wxString plane_string[] = {_("XY"), _("YZ"), _("ZX")};
@@ -617,8 +617,8 @@ void mafViewSingleSlice::SetLutRange(double low_val, double high_val)
 {
   if(!m_CurrentVolume) 
     return;
-  mafString pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-  if (pipe_name.Equals("mafPipeVolumeSlice"))
+  mafString pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+  if (pipe_name.Equals(_R("mafPipeVolumeSlice")))
   {
     mafPipeVolumeSlice *pipe = (mafPipeVolumeSlice *)m_CurrentVolume->m_Pipe;
     pipe->SetLutRange(low_val, high_val); 
@@ -632,8 +632,8 @@ void mafViewSingleSlice::SetSlice(double origin[3])
 	mafString pipe_name;
   if(m_CurrentVolume)
 	{
-		pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-		if (pipe_name.Equals("mafPipeVolumeSlice"))
+		pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+		if (pipe_name.Equals(_R("mafPipeVolumeSlice")))
 		{
 			mafPipeVolumeSlice *pipe = (mafPipeVolumeSlice *)m_CurrentVolume->m_Pipe;
 			pipe->SetSlice(origin); 
@@ -648,8 +648,8 @@ void mafViewSingleSlice::SetSlice(double origin[3])
   //  return;
   for(int i=0;i<m_CurrentSurface.size();i++)
   {
-    pipe_name = m_CurrentSurface.at(i)->m_Pipe->GetTypeName();
-    if (pipe_name.Equals("mafPipeSurfaceSlice"))
+    pipe_name = _R(m_CurrentSurface.at(i)->m_Pipe->GetTypeName());
+    if (pipe_name.Equals(_R("mafPipeSurfaceSlice")))
     {
       mafPipeSurfaceSlice *pipe = (mafPipeSurfaceSlice *)m_CurrentSurface[i]->m_Pipe;
       pipe->SetSlice(origin); 
@@ -660,8 +660,8 @@ void mafViewSingleSlice::SetSlice(double origin[3])
 	//	return;
 	for(int i=0;i<m_CurrentPolyline.size();i++)
 	{
-		pipe_name = m_CurrentPolyline.at(i)->m_Pipe->GetTypeName();
-		if (pipe_name.Equals("mafPipePolylineSlice"))
+		pipe_name = _R(m_CurrentPolyline.at(i)->m_Pipe->GetTypeName());
+		if (pipe_name.Equals(_R("mafPipePolylineSlice")))
 		{
 			mafPipePolylineSlice *pipe = (mafPipePolylineSlice *)m_CurrentPolyline[i]->m_Pipe;
 			pipe->SetSlice(origin); 

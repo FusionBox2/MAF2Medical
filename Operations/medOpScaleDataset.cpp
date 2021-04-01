@@ -205,8 +205,7 @@ void medOpScaleDataset::OnEventThis(mafEventBase *maf_event)
 
 	case ID_AUX_REF_SYS:
 	{
-		mafString s;
-		s << "Choose VME ref sys";
+		mafString s = _R("Choose VME ref sys");
 		mafEvent e(this,VME_CHOOSE, &s);
 		mafEventMacro(e);
 		SetRefSysVME(mafVME::SafeDownCast(e.GetVme()));
@@ -272,12 +271,12 @@ void medOpScaleDataset::CreateGui()
 
   if (buildHelpGui.GetArg() == true)
   {
-	  m_Gui->Button(ID_HELP, "Help","");	
+	  m_Gui->Button(ID_HELP, _R("Help"), _R(""));
   }
 
   m_Gui->Divider(2);
-  m_Gui->Label("gizmo interaction", true);
-  m_Gui->Label("left mouse: interact through gizmo");
+  m_Gui->Label(_R("gizmo interaction"), true);
+  m_Gui->Label(_R("left mouse: interact through gizmo"));
 
   //---------------------------------
   // Scaling Gizmo Gui
@@ -298,21 +297,21 @@ void medOpScaleDataset::CreateGui()
 
   //--------------------------------- 
   m_Gui->Divider(2);
-  m_Gui->Label("auxiliary ref sys", true);
-  m_Gui->Button(ID_AUX_REF_SYS,"choose");
+  m_Gui->Label(_R("auxiliary ref sys"), true);
+  m_Gui->Button(ID_AUX_REF_SYS,_R("choose"));
 
   if(this->m_RefSysVME == NULL)
   {
     SetRefSysVME(mafVME::SafeDownCast(m_Input));
     m_RefSysVMEName = m_Input->GetName();
   }
-  m_Gui->Label("refsys name: ",&m_RefSysVMEName);
+  m_Gui->Label(_R("refsys name: "),&m_RefSysVMEName);
 
   m_Gui->Divider(2);
-  m_Gui->Button(ID_RESET,"reset","","Cancel the transformation.");
+  m_Gui->Button(ID_RESET,_R("reset"), _R(""),_R("Cancel the transformation."));
 
 	m_Gui->OkCancel(); 
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
   //--------------------------------- 
 
   m_Gui->Update();

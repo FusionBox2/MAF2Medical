@@ -361,23 +361,23 @@ mafGUI *mafPipeMeshSlice_BES::CreateGui()
 {
 	assert(m_Gui == NULL);
 	m_Gui = new mafGUI(this);
-  m_Gui->Bool(ID_WIREFRAME,_("Wireframe"), &m_Wireframe, 1);
-  m_Gui->Bool(ID_WIRED_ACTOR_VISIBILITY,_("Border Elem."), &m_BorderElementsWiredActor, 1);
+  m_Gui->Bool(ID_WIREFRAME,_L("Wireframe"), &m_Wireframe, 1);
+  m_Gui->Bool(ID_WIRED_ACTOR_VISIBILITY,_L("Border Elem."), &m_BorderElementsWiredActor, 1);
   
-  m_Gui->Bool(ID_USE_VTK_PROPERTY,"property",&m_UseVTKProperty , 1);
+  m_Gui->Bool(ID_USE_VTK_PROPERTY,_R("property"),&m_UseVTKProperty , 1);
   m_MaterialButton = new mafGUIMaterialButton(m_Vme,this);
   m_Gui->AddGui(m_MaterialButton->GetGui());
   m_MaterialButton->Enable(m_UseVTKProperty != 0);
 
-  m_Gui->Combo(ID_SCALARS,"",&m_ScalarIndex,m_NumberOfArrays,m_ScalarsName);	
+  m_Gui->Combo(ID_SCALARS, _R(""),&m_ScalarIndex,m_NumberOfArrays,m_ScalarsName);
   
 
-  m_Gui->Bool(ID_SCALAR_MAP_ACTIVE,_("enable scalar field mapping"), &m_ScalarMapActive, 1);
-  m_Gui->Lut(ID_LUT,"lut",m_Table);
+  m_Gui->Bool(ID_SCALAR_MAP_ACTIVE,_L("enable scalar field mapping"), &m_ScalarMapActive, 1);
+  m_Gui->Lut(ID_LUT,_R("lut"),m_Table);
 
   m_Gui->Enable(ID_SCALARS, m_ScalarMapActive != 0);
   m_Gui->Enable(ID_LUT, m_ScalarMapActive != 0);
-  m_Gui->FloatSlider(ID_BORDER_CHANGE,_("Border"),&m_Border,1.0,5.0);
+  m_Gui->FloatSlider(ID_BORDER_CHANGE,_L("Border"),&m_Border,1.0,5.0);
   m_Gui->Divider();
   m_Gui->Update();
 	return m_Gui;
@@ -515,7 +515,7 @@ void mafPipeMeshSlice_BES::OnEvent(mafEventBase *maf_event)
     m_Table->GetTableRange(tr);
     stringStream << "LUT sr: " << "[" << tr[0] << " , " << tr[1] << "]"  << std::endl;
 
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 }
 
@@ -622,8 +622,8 @@ void mafPipeMeshSlice_BES::UpdateLUTAndMapperFromNewActiveScalars()
     {
       std::ostringstream stringStream;
       stringStream << "Scalar Range: [" << sr[0] << " , " << sr[1] << "]"  << std::endl;
-      mafLogMessage(stringStream.str().c_str());
-    }
+      mafLogMessage(_M(stringStream.str().c_str()));
+  }
 
   m_Table->SetTableRange(sr);
 
@@ -642,8 +642,8 @@ void mafPipeMeshSlice_BES::UpdateLUTAndMapperFromNewActiveScalars()
 
       std::ostringstream stringStream;
       stringStream << "LUT sr: " << "[" << tr[0] << " , " << tr[1] << "]"  << std::endl;
-      mafLogMessage(stringStream.str().c_str());
-    }
+      mafLogMessage(_M(stringStream.str().c_str()));
+  }
   m_Mapper->Update();
 
   m_Actor->Modified();
@@ -661,7 +661,7 @@ void mafPipeMeshSlice_BES::CreateFieldDataControlArrays()
   int numPointScalars = m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetNumberOfArrays();
   int numCellScalars = m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetNumberOfArrays();
 
-  wxString *tempScalarsPointsName=new wxString[numPointScalars + numCellScalars];
+  mafString *tempScalarsPointsName=new mafString[numPointScalars + numCellScalars];
   int count=0;
 
   int pointArrayNumber;
@@ -670,7 +670,7 @@ void mafPipeMeshSlice_BES::CreateFieldDataControlArrays()
     if(strcmp(m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetArrayName(pointArrayNumber),"")!=0)
     {
       count++;
-      tempScalarsPointsName[count-1]=m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetArrayName(pointArrayNumber);
+      tempScalarsPointsName[count-1]=_R(m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetArrayName(pointArrayNumber));
     }
   }
   for(int cellArrayNumber=0;cellArrayNumber<numCellScalars;cellArrayNumber++)
@@ -678,7 +678,7 @@ void mafPipeMeshSlice_BES::CreateFieldDataControlArrays()
     if(strcmp(m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetArrayName(cellArrayNumber),"")!=0)
     {
       count++;
-      tempScalarsPointsName[count-1]=m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetArrayName(cellArrayNumber);
+      tempScalarsPointsName[count-1]=_R(m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetArrayName(cellArrayNumber));
     }
   }
 
@@ -689,9 +689,9 @@ void mafPipeMeshSlice_BES::CreateFieldDataControlArrays()
   {
     m_ScalarsVTKName[j]=tempScalarsPointsName[j];
     if(j<pointArrayNumber)
-      m_ScalarsName[j]="[POINT] " + tempScalarsPointsName[j];
+      m_ScalarsName[j]=_R("[POINT] ") + tempScalarsPointsName[j];
     else
-      m_ScalarsName[j]="[CELL] " + tempScalarsPointsName[j];
+      m_ScalarsName[j]=_R("[CELL] ") + tempScalarsPointsName[j];
   }
 
   m_PointCellArraySeparation = pointArrayNumber;
@@ -729,7 +729,7 @@ void mafPipeMeshSlice_BES::UpdateVtkPolyDataNormalFilterActiveScalar()
     {
       std::ostringstream stringStream;
       stringStream << "Active Scalar: POINT TYPE, " << activeScalarName.GetCStr() << std::endl;
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
     }
   }
   else if(m_ActiveScalarType == CELL_TYPE)
@@ -752,7 +752,7 @@ void mafPipeMeshSlice_BES::UpdateVtkPolyDataNormalFilterActiveScalar()
     {
       std::ostringstream stringStream;
       stringStream << "Active Scalar: CELL TYPE, " << activeScalarName.GetCStr() << std::endl;
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
     }
   }
   m_NormalFilter->GetOutput()->Update();

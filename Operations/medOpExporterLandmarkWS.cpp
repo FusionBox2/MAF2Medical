@@ -43,7 +43,7 @@ mafOp(label)
 {
 	m_OpType	= OPTYPE_EXPORTER;
 	m_Canundo	= true;
-	m_File		= "";
+	m_File		= _R("");
 
   m_Cloud = NULL;
 }
@@ -70,14 +70,14 @@ mafOp* medOpExporterLandmarkWS::Copy()
 void medOpExporterLandmarkWS::OpRun()   
 //----------------------------------------------------------------------------
 {
-	wxString proposed = mafGetApplicationDirectory().GetCStr();
-  proposed += "/Data/External/";
+	mafString proposed = mafGetApplicationDirectory();
+  proposed += _R("/Data/External/");
 	proposed += m_Input->GetName();
-  proposed += "_TRAJECTORIES";
-	proposed += ".csv";
+  proposed += _R("_TRAJECTORIES");
+	proposed += _R(".csv");
 	
-  wxString wildc = "ASCII CSV file (*.csv)|*.csv";
-	wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
+  mafString wildc = _R("ASCII CSV file (*.csv)|*.csv");
+	mafString f = mafGetSaveFile(proposed,wildc); 
 
 	int result = OP_RUN_CANCEL;
 	if(!f.IsEmpty())
@@ -118,12 +118,12 @@ void medOpExporterLandmarkWS::Write()
 
   std::vector<mafTimeStamp> timeStamps;
   m_Cloud->GetTimeStamps(timeStamps);
-  mafString lmName = "";
+  mafString lmName = _R("");
   double pos[3] = {0.0,0.0,0.0};
   double ori[3] = {0.0,0.0,0.0};
   double t;
   
-  std::ofstream f_Out(m_File);
+  std::ofstream f_Out(m_File.GetCStr());
   if (!f_Out.bad())
   {
     // Add TRAJECTORIES tag
@@ -136,7 +136,7 @@ void medOpExporterLandmarkWS::Write()
     f_Out << ","; // This dummy comma is necessary for compatibility with the Importer
     for (int i=0; i<numberLandmark; i++)
     {
-      f_Out << points_name.at(i);
+      f_Out << points_name.at(i).GetCStr();
       if (i!=numberLandmark-1)
       {
         f_Out << ",,,"; // These dummy commas are necessary for compatibility with the Importer

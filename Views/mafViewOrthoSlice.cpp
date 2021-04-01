@@ -381,15 +381,15 @@ void mafViewOrthoSlice::OnEvent(mafEventBase *maf_event)
 mafGUI* mafViewOrthoSlice::CreateGui()
 //-------------------------------------------------------------------------
 {
-  mafString layout_choices[3] = {"default","layout 1","layout 2"};
+  mafString layout_choices[3] = {_R("default"),_R("layout 1"),_R("layout 2")};
 
   assert(m_Gui == NULL);
 
   mafView::CreateGui();
 
-  m_Gui->Combo(ID_LAYOUT_CHOOSER,"layout",&m_LayoutConfiguration,3,layout_choices);
+  m_Gui->Combo(ID_LAYOUT_CHOOSER,_R("layout"),&m_LayoutConfiguration,3,layout_choices);
   m_Gui->Divider();
-  m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+  m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
   m_Gui->Divider(2);
 
   wxString sidesName[2];
@@ -397,13 +397,13 @@ mafGUI* mafViewOrthoSlice::CreateGui()
   sidesName[1] = "right";
   // m_Gui->Radio(ID_SIDE_ORTHO, "side", &m_Side, 2, sidesName, 2);
 
-	m_Gui->Bool(ID_SNAP,"Snap on grid",&m_Snap,1);
+	m_Gui->Bool(ID_SNAP,_R("Snap on grid"),&m_Snap,1);
 
-  m_Gui->Button(ID_RESET_SLICES,"reset slices","");
+  m_Gui->Button(ID_RESET_SLICES,_R("reset slices"), _R(""));
   m_Gui->Divider();
 
-	m_Gui->Bool(ID_ALL_SURFACE,"All Surface",&m_AllSurface);
-	m_Gui->FloatSlider(ID_BORDER_CHANGE,"Border",&m_Border,1.0,5.0);
+	m_Gui->Bool(ID_ALL_SURFACE,_R("All Surface"),&m_AllSurface);
+	m_Gui->FloatSlider(ID_BORDER_CHANGE,_R("Border"),&m_Border,1.0,5.0);
 
   EnableWidgets(m_CurrentVolume != NULL);
   for(int i=1; i<m_NumOfChildView; i++)
@@ -427,7 +427,7 @@ mafGUI* mafViewOrthoSlice::CreateGui()
   }
   m_Gui->Divider(1);
   //m_Gui->Bool(ID_ENABLE_GPU,"Enable GPU",&m_EnableGPU,1);
-  m_Gui->Bool(ID_TRILINEAR_INTERPOLATION,"Interpolation",&m_TrilinearInterpolationOn,1);
+  m_Gui->Bool(ID_TRILINEAR_INTERPOLATION,_R("Interpolation"),&m_TrilinearInterpolationOn,1);
 
   m_Gui->Divider();
   return m_Gui;
@@ -446,7 +446,7 @@ void mafViewOrthoSlice::PlugVisualPipeInSliceViews(mafString vme_type, mafString
   }
   else
   {
-    mafLogMessage("OthoSlice Error: You cannot plug visual pipes after visualization operation");
+    mafLogMessage(_M("OthoSlice Error: You cannot plug visual pipes after visualization operation"));
   }
 }
 
@@ -462,7 +462,7 @@ void mafViewOrthoSlice::PlugVisualPipeInPerspective(mafString vme_type, mafStrin
       }
       else
       {
-        mafLogMessage("OthoSlice Error: You cannot plug visual pipes after visualization operation");
+        mafLogMessage(_M("OthoSlice Error: You cannot plug visual pipes after visualization operation"));
       }
 }
 
@@ -472,34 +472,34 @@ void mafViewOrthoSlice::PackageView()
 {
   int cam_pos[4] = {CAMERA_OS_P, CAMERA_OS_X, CAMERA_OS_Y, CAMERA_OS_Z};
   
-  wxString viewName[4] = {"perspective","camera x","camera y","camera z"};
+  mafString viewName[4] = {_R("perspective"),_R("camera x"),_R("camera y"),_R("camera z")};
 
 	bool TICKs[4]={false,false,true,true};
   for(int v=PERSPECTIVE_VIEW; v<VIEWS_NUMBER; v++)
   {
     m_Views[v] = new mafViewSlice(viewName[v], cam_pos[v],false,false,false,0,TICKs[v]);
-    m_Views[v]->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeSlice_BES", MUTEX);    
-    m_Views[v]->PlugVisualPipe("medVMELabeledVolume", "mafPipeVolumeSlice_BES", MUTEX);
-    m_Views[v]->PlugVisualPipe("mafVMEVolumeLarge", "mafPipeVolumeSlice_BES", MUTEX);   //BES: 3.11.2009
-		m_Views[v]->PlugVisualPipe("mafVMEImage", "mafPipeBox", NON_VISIBLE);
-    m_Views[v]->PlugVisualPipe("medVMESegmentationVolume", "mafPipeVolumeSlice_BES", MUTEX);
+    m_Views[v]->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeSlice_BES"), MUTEX);    
+    m_Views[v]->PlugVisualPipe(_R("medVMELabeledVolume"), _R("mafPipeVolumeSlice_BES"), MUTEX);
+    m_Views[v]->PlugVisualPipe(_R("mafVMEVolumeLarge"), _R("mafPipeVolumeSlice_BES"), MUTEX);   //BES: 3.11.2009
+		m_Views[v]->PlugVisualPipe(_R("mafVMEImage"), _R("mafPipeBox"), NON_VISIBLE);
+    m_Views[v]->PlugVisualPipe(_R("medVMESegmentationVolume"), _R("mafPipeVolumeSlice_BES"), MUTEX);
     // plug surface slice visual pipe in not perspective views
     if (v != PERSPECTIVE_VIEW)
     {
-      m_Views[v]->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice",MUTEX);
-      m_Views[v]->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice",MUTEX);
-      m_Views[v]->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice");
-      m_Views[v]->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice",MUTEX);
-      m_Views[v]->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice",MUTEX);
-      m_Views[v]->PlugVisualPipe("mafVMEPolyline", "mafPipePolylineSlice");
-      m_Views[v]->PlugVisualPipe("mafVMEPolylineSpline", "mafPipePolylineSlice");
-      m_Views[v]->PlugVisualPipe("mafVMEMeter", "mafPipePolyline");
-			m_Views[v]->PlugVisualPipe("medVMEMuscleWrapper", "mafPipeSurfaceSlice",MUTEX);
+      m_Views[v]->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurfaceSlice"),MUTEX);
+      m_Views[v]->PlugVisualPipe(_R("mafVMESurfaceParametric"), _R("mafPipeSurfaceSlice"),MUTEX);
+      m_Views[v]->PlugVisualPipe(_R("mafVMEMesh"), _R("mafPipeMeshSlice"));
+      m_Views[v]->PlugVisualPipe(_R("mafVMELandmark"), _R("mafPipeSurfaceSlice"),MUTEX);
+      m_Views[v]->PlugVisualPipe(_R("mafVMELandmarkCloud"), _R("mafPipeSurfaceSlice"),MUTEX);
+      m_Views[v]->PlugVisualPipe(_R("mafVMEPolyline"), _R("mafPipePolylineSlice"));
+      m_Views[v]->PlugVisualPipe(_R("mafVMEPolylineSpline"), _R("mafPipePolylineSlice"));
+      m_Views[v]->PlugVisualPipe(_R("mafVMEMeter"), _R("mafPipePolyline"));
+			m_Views[v]->PlugVisualPipe(_R("medVMEMuscleWrapper"), _R("mafPipeSurfaceSlice"),MUTEX);
     }
     else
     {
-      m_Views[v]->PlugVisualPipe("mafVMESurface", "mafPipeSurface",MUTEX);
-			m_Views[v]->PlugVisualPipe("medVMEMuscleWrapper", "mafPipeSurface",MUTEX);
+      m_Views[v]->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurface"),MUTEX);
+			m_Views[v]->PlugVisualPipe(_R("medVMEMuscleWrapper"), _R("mafPipeSurface"),MUTEX);
     }
 		
   }
@@ -720,14 +720,14 @@ void mafViewOrthoSlice::CreateOrthoslicesAndGizmos( mafNode * node )
 {
   if (node == NULL)
   {
-    mafLogMessage("node = NULL");
+    mafLogMessage(_M("node = NULL"));
     return;
   }
 
   m_CurrentVolume = mafVME::SafeDownCast(node);
   if (m_CurrentVolume == NULL)
   {
-    mafLogMessage("current volume = NULL");
+    mafLogMessage(_M("current volume = NULL"));
     return;
   }
 
@@ -767,7 +767,7 @@ void mafViewOrthoSlice::DestroyOrthoSlicesAndGizmos()
 	// Destroy Ortho Stuff
   if (m_CurrentVolume == NULL)
   {
-    mafLogMessage("current volume = NULL");
+    mafLogMessage(_M("current volume = NULL"));
     return;
   }
 	m_CurrentVolume->RemoveObserver(this);

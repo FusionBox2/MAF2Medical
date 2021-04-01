@@ -78,9 +78,9 @@ medInteractor2DAngle::medInteractor2DAngle(bool testMode /* = false */)
   m_ProbedVME = NULL;
   m_Mouse     = NULL;
 
-  mafString plot_title = _("Density vs. Length (mm)");
-  mafString plot_titleX = "mm";
-  mafString plot_titleY = _("Dens.");
+  mafString plot_title = _L("Density vs. Length (mm)");
+  mafString plot_titleX = _L("mm");
+  mafString plot_titleY = _L("Dens.");
 
   
   m_CurrentRenderer  = NULL;
@@ -408,9 +408,8 @@ void medInteractor2DAngle::DrawMeasureTool(double x, double y)
     if(vtkMath::Norm(v2) && vtkMath::Norm(v1))
     {
       CalculateMeasure();
-      mafString as;
-      as = wxString::Format(_("%.2f"), m_Angle);
-      m_MeterVector[m_MeterVector.size()-1]->SetText(as);
+      mafString as = mafString::Format(_R("%.2f"), m_Angle);
+      m_MeterVector[m_MeterVector.size()-1]->SetText(as.GetCStr());
       m_MeterVector[m_MeterVector.size()-1]->SetTextPosition(tmp_pos);
       m_CurrentRenderer->AddActor2D(m_MeterVector[m_MeterVector.size()-1]);
     }
@@ -430,9 +429,8 @@ void medInteractor2DAngle::DrawMeasureTool(double x, double y)
     m_Line->GetPoint2(tmp_pos2_1);
     m_Line2->GetPoint2(tmp_pos2_2);
 
-    mafString as;
-    as = wxString::Format(_("%.2f deg"), m_Angle);
-    m_MeterVector[m_MeterVector.size()-1]->SetText(as);
+    mafString as = mafString::Format(_R("%.2f deg"), m_Angle);
+    m_MeterVector[m_MeterVector.size()-1]->SetText(as.GetCStr());
     m_MeterVector[m_MeterVector.size()-1]->SetTextPosition(tmp_pos2_2);
     m_CurrentRenderer->AddActor2D(m_MeterVector[m_MeterVector.size()-1]);
   }
@@ -443,7 +441,8 @@ void medInteractor2DAngle::DrawMeasureTool(double x, double y)
     CalculateMeasure();
     m_RendererVector.push_back(m_CurrentRenderer);
 
-    if(mafString::Equals("*Error*",m_MeterVector[m_MeterVector.size()-1]->GetText()))
+#pragma message("vtkTextActor returns non-const char*")
+    if(mafString(_R("*Error*")) == _R(m_MeterVector[m_MeterVector.size()-1]->GetText()))
     {
       wxMessageBox(_("Impossible to measure the angle.\n Both the lines must have length > 0!"));
     }  
@@ -1341,12 +1340,11 @@ s = wxString::Format(L"tmp4OLD:%f , %f , %f" , tmp4[0],tmp4[1],tmp4[2]);
     m_LineSourceVector2[m_LineSourceVector2.size()-1]->SetPoint2(tmp5);
     m_LineSourceVector2[m_LineSourceVector2.size()-1]->Update();
 
-    mafString ds;
-    ds = wxString::Format(_("%.2f") , manualAngle);
-    ds.Append("");
+    mafString ds = mafString::Format(_R("%.2f") , manualAngle);
+    ds.Append(_R(""));
     if (!m_TestMode)
     {
-      m_MeterVector[m_MeterVector.size()-1]->SetText(ds);
+      m_MeterVector[m_MeterVector.size()-1]->SetText(ds.GetCStr());
     }
     
     double tmp_pos[3];
@@ -1367,7 +1365,7 @@ s = wxString::Format(L"tmp4OLD:%f , %f , %f" , tmp4[0],tmp4[1],tmp4[2]);
 void medInteractor2DAngle::SetLabel(mafString label)
 //----------------------------------------------------------------------------
 {
-	m_MeterVector[m_MeterVector.size()-1]->SetText(label);
+	m_MeterVector[m_MeterVector.size()-1]->SetText(label.GetCStr());
 	m_CurrentRenderer->GetRenderWindow()->Render();
 }
 

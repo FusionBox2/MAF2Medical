@@ -73,11 +73,11 @@ medVMESegmentationVolume::~medVMESegmentationVolume()
 mmaVolumeMaterial *medVMESegmentationVolume::GetMaterial()
 //-------------------------------------------------------------------------
 {
-  mmaVolumeMaterial *material = (mmaVolumeMaterial *)GetAttribute("VolumeMaterialAttributes");
+  mmaVolumeMaterial *material = (mmaVolumeMaterial *)GetAttribute(_R("VolumeMaterialAttributes"));
   if (material == NULL)
   {
     material = mmaVolumeMaterial::New();
-    SetAttribute("VolumeMaterialAttributes", material);
+    SetAttribute(_R("VolumeMaterialAttributes"), material);
   }
   return material;
 }
@@ -85,16 +85,16 @@ mmaVolumeMaterial *medVMESegmentationVolume::GetMaterial()
 medAttributeSegmentationVolume *medVMESegmentationVolume::GetVolumeAttribute()
 //-------------------------------------------------------------------------
 {
-  if (this->GetAttribute("SegmentationVolumeData") != NULL)
+  if (this->GetAttribute(_R("SegmentationVolumeData")) != NULL)
   {
-    m_VolumeAttribute = medAttributeSegmentationVolume::SafeDownCast(this->GetAttribute("SegmentationVolumeData"));
+    m_VolumeAttribute = medAttributeSegmentationVolume::SafeDownCast(this->GetAttribute(_R("SegmentationVolumeData")));
   }
   else
   {
     m_VolumeAttribute = medAttributeSegmentationVolume::New();
-    this->SetAttribute("SegmentationVolumeData",m_VolumeAttribute);
+    this->SetAttribute(_R("SegmentationVolumeData"),m_VolumeAttribute);
 
-    m_VolumeAttribute = medAttributeSegmentationVolume::SafeDownCast(this->GetAttribute("SegmentationVolumeData"));
+    m_VolumeAttribute = medAttributeSegmentationVolume::SafeDownCast(this->GetAttribute(_R("SegmentationVolumeData")));
   }
 
   return m_VolumeAttribute;
@@ -214,7 +214,7 @@ int medVMESegmentationVolume::InternalStore(mafStorageElement *parent)
 {  
   if (Superclass::InternalStore(parent)==MAF_OK)
   {
-    parent->StoreMatrix("Transform",&m_Transform->GetMatrix());
+    parent->StoreMatrix(_R("Transform"),&m_Transform->GetMatrix());
     return MAF_OK;
   }
   return MAF_ERROR;
@@ -226,7 +226,7 @@ int medVMESegmentationVolume::InternalRestore(mafStorageElement *node)
   if (Superclass::InternalRestore(node)==MAF_OK)
   {
     mafMatrix matrix;
-    if (node->RestoreMatrix("Transform",&matrix)==MAF_OK)
+    if (node->RestoreMatrix(_R("Transform"),&matrix)==MAF_OK)
     {
       m_Transform->SetMatrix(matrix);
       return MAF_OK;
@@ -242,8 +242,8 @@ mafGUI* medVMESegmentationVolume::CreateGui()
   m_Gui = mafNode::CreateGui(); // Called to show info about vmes' type and name
   m_Gui->Divider();
   mafVME *vol = mafVME::SafeDownCast(GetVolumeLink());
-  m_VolumeName = vol ? vol->GetName() : _("none");
-  m_Gui->Button(ID_VOLUME_LINK,&m_VolumeName,_("Volume"), _("Select the volume to be segmented"));
+  m_VolumeName = vol ? vol->GetName() : _L("none");
+  m_Gui->Button(ID_VOLUME_LINK,&m_VolumeName,_L("Volume"), _L("Select the volume to be segmented"));
 
   return m_Gui;
 }
@@ -258,7 +258,7 @@ void medVMESegmentationVolume::OnEvent(mafEventBase *maf_event)
     {
     case ID_VOLUME_LINK:
       {
-        mafString title = _("Choose volume vme");
+        mafString title = _L("Choose volume vme");
         e->SetId(VME_CHOOSE);
         e->SetArg((long)&medVMESegmentationVolume::VolumeAccept);
         e->SetString(&title);
@@ -415,7 +415,7 @@ int medVMESegmentationVolume::SetVolumeLink(mafNode *volume)
     return MAF_ERROR;
   }
 
-  SetLink("Volume", volume);
+  SetLink(_R("Volume"), volume);
   Modified();
 
   return MAF_OK;
@@ -424,7 +424,7 @@ int medVMESegmentationVolume::SetVolumeLink(mafNode *volume)
 void medVMESegmentationVolume::SetManualVolumeMask(mafNode *volume)
 //-----------------------------------------------------------------------
 {
-  SetLink("ManualVolumeMask", volume);
+  SetLink(_R("ManualVolumeMask"), volume);
   m_SegmentingDataPipe->SetManualVolumeMask(volume);
   Modified();
 }
@@ -432,13 +432,13 @@ void medVMESegmentationVolume::SetManualVolumeMask(mafNode *volume)
 mafNode *medVMESegmentationVolume::GetManualVolumeMask()
 //-----------------------------------------------------------------------
 {
-  return GetLink("ManualVolumeMask");
+  return GetLink(_R("ManualVolumeMask"));
 }
 //-----------------------------------------------------------------------
 void medVMESegmentationVolume::SetRefinementVolumeMask(mafNode *volume)
 //-----------------------------------------------------------------------
 {
-  SetLink("RefinementVolumeMask", volume);
+  SetLink(_R("RefinementVolumeMask"), volume);
   m_SegmentingDataPipe->SetRefinementVolumeMask(volume);
   Modified();
 }
@@ -446,7 +446,7 @@ void medVMESegmentationVolume::SetRefinementVolumeMask(mafNode *volume)
 mafNode *medVMESegmentationVolume::GetRefinementVolumeMask()
 //-----------------------------------------------------------------------
 {
-  return GetLink("RefinementVolumeMask");
+  return GetLink(_R("RefinementVolumeMask"));
 }
 //-----------------------------------------------------------------------
 vtkDataSet *medVMESegmentationVolume::GetAutomaticOutput()
@@ -476,7 +476,7 @@ vtkDataSet *medVMESegmentationVolume::GetManualOutput()
 mafNode *medVMESegmentationVolume::GetVolumeLink()
 //-----------------------------------------------------------------------
 {
-  return GetLink("Volume");
+  return GetLink(_R("Volume"));
 }
 //-----------------------------------------------------------------------
 int medVMESegmentationVolume::AddSeed(int seed[3])

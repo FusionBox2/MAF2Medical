@@ -34,7 +34,6 @@
 #include "mafVMEGroup.h"
 
 #include "mafGUI.h"
-#include "mafFilesDirs.h"
 
 #include <vtkCubeSource.h>
 #include <vtkTransformPolyDataFilter.h>
@@ -56,8 +55,8 @@ medOpImporterGRFWS::medOpImporterGRFWS(const mafString& label) : Superclass(labe
 {
 	m_OpType       	= OPTYPE_IMPORTER;
 	m_Canundo	      = true;
-	m_File		      = "";
-	m_FileDir       = mafGetApplicationDirectory() + "/Data/External/";
+	m_File		      = _R("");
+	m_FileDir       = mafGetApplicationDirectory() + _R("/Data/External/");
   m_Output        = NULL;
   m_PlatformLeft  = NULL;
   m_PlatformRight = NULL;
@@ -106,10 +105,10 @@ void medOpImporterGRFWS::OpRun()
 //----------------------------------------------------------------------------
 {
   int result = OP_RUN_CANCEL;
-  wxString pgd_wildc	= "GRF File (*.*)|*.*";
-  wxString f;
-  f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
-  if(!f.IsEmpty() && wxFileExists(f))
+  mafString pgd_wildc	= _R("GRF File (*.*)|*.*");
+  mafString f;
+  f = mafGetOpenFile(m_FileDir,pgd_wildc); 
+  if(!f.IsEmpty() && mafFileExists(f))
   {
     m_File = f;
     Read();
@@ -121,7 +120,7 @@ void medOpImporterGRFWS::OpRun()
 void medOpImporterGRFWS::Read()   
 //----------------------------------------------------------------------------
 {
-  wxFileInputStream inputFile( m_File.GetCStr());
+  wxFileInputStream inputFile( m_File.toWx());
   wxTextInputStream text( inputFile );
 
   wxString line;
@@ -137,7 +136,7 @@ void medOpImporterGRFWS::Read()
   }
   else
   {
-    mafErrorMessage("Invalid file format!");
+    mafErrorMessage(_M("Invalid file format!"));
     return;
   }
 }
@@ -155,10 +154,10 @@ void medOpImporterGRFWS::ReadForcePlates()
   mafSplitPath(m_File,&path,&name,&ext);
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("NATURAL");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("NATURAL"));
 
-  wxFileInputStream inputCountFile( m_File.GetCStr() );
+  wxFileInputStream inputCountFile( m_File.toWx() );
   wxTextInputStream textCount( inputCountFile );
 
   wxString line_count;
@@ -170,7 +169,7 @@ void medOpImporterGRFWS::ReadForcePlates()
   } while (!inputCountFile.Eof());
   totlines = totlines - 10;
 
-  wxFileInputStream inputFile( m_File.GetCStr() );
+  wxFileInputStream inputFile( m_File.toWx() );
   wxTextInputStream text( inputFile );
 
   wxString line;
@@ -194,21 +193,21 @@ void medOpImporterGRFWS::ReadForcePlates()
   //Get values of the corners of the first platforms
   line = text.ReadLine();
   wxStringTokenizer corners1(line,wxT(','),wxTOKEN_RET_EMPTY_ALL);
-  mafString junk = corners1.GetNextToken(); //Value to ignore
+  mafString junk = mafWxToString(corners1.GetNextToken()); //Value to ignore
   for (int i = 0 ; i < 12 ; i++)
   {
-    platform1St[i] = corners1.GetNextToken().c_str();
-    platform1[i] = atof(platform1St[i]);
+    platform1St[i] = mafWxToString(corners1.GetNextToken());
+    platform1[i] = atof(platform1St[i].GetCStr());
   }
   
   //Get values of the corners of the second platforms
   line = text.ReadLine();
   wxStringTokenizer corners2(line,wxT(','),wxTOKEN_RET_EMPTY_ALL);
-  junk = corners2.GetNextToken(); //Value to ignore
+  junk = mafWxToString(corners2.GetNextToken()); //Value to ignore
   for (int i = 0 ; i < 12 ; i++)
   {
-    platform2St[i] = corners2.GetNextToken().c_str();
-    platform2[i] = atof(platform2St[i]);
+    platform2St[i] = mafWxToString(corners2.GetNextToken());
+    platform2[i] = atof(platform2St[i].GetCStr());
   }
 
   vtkMAFSmartPointer<vtkCubeSource> platformLeft;
@@ -220,8 +219,8 @@ void medOpImporterGRFWS::ReadForcePlates()
 
    mafString PlatNameLeft = name;
    mafString platNameRight = name;
-   PlatNameLeft << "_PLATFORM_1";
-   platNameRight << "_PLATFORM_2";
+   PlatNameLeft += _R("_PLATFORM_1");
+   platNameRight += _R("_PLATFORM_2");
 
    m_PlatformLeft->SetName(PlatNameLeft);
    m_PlatformRight->SetName(platNameRight);
@@ -270,16 +269,16 @@ void medOpImporterGRFWS::ReadForcePlates()
 
   mafString alLeft = name;
   mafString alRight = name;
-  alLeft << "_GRF_1";
-  alRight << "_GRF_2";
+  alLeft += _R("_GRF_1");
+  alRight += _R("_GRF_2");
   
   m_ForceLeft->SetName(alLeft);
   m_ForceRight->SetName(alRight);
 
   mafString almLeft = name;
   mafString almRight = name;
-  almLeft << "_MOMENT_1";
-  almRight << "_MOMENT_2";
+  almLeft += _R("_MOMENT_1");
+  almRight += _R("_MOMENT_2");
   
   m_MomentLeft->SetName(almLeft);
   m_MomentRight->SetName(almRight);
@@ -289,38 +288,38 @@ void medOpImporterGRFWS::ReadForcePlates()
   {
     line = text.ReadLine();
     wxStringTokenizer tkz(line,wxT(','),wxTOKEN_RET_EMPTY_ALL);
-    timeSt = tkz.GetNextToken().c_str();
-    time = atof(timeSt)/freq_val; 
+    timeSt = mafWxToString(tkz.GetNextToken());
+    time = atof(timeSt.GetCStr())/freq_val;
    
     //Values of the first platform
-    cop1StX = tkz.GetNextToken().c_str();
-    cop1StY = tkz.GetNextToken().c_str();
-    cop1StZ = tkz.GetNextToken().c_str();
-    ref1StX = tkz.GetNextToken().c_str();
-    ref1StY = tkz.GetNextToken().c_str();
-    ref1StZ = tkz.GetNextToken().c_str();
-    force1StX = tkz.GetNextToken().c_str();
-    force1StY = tkz.GetNextToken().c_str();
-    force1StZ = tkz.GetNextToken().c_str();
-    moment1StX = tkz.GetNextToken().c_str();
-    moment1StY = tkz.GetNextToken().c_str();
-    moment1StZ = tkz.GetNextToken().c_str();
+    cop1StX = mafWxToString(tkz.GetNextToken());
+    cop1StY = mafWxToString(tkz.GetNextToken());
+    cop1StZ = mafWxToString(tkz.GetNextToken());
+    ref1StX = mafWxToString(tkz.GetNextToken());
+    ref1StY = mafWxToString(tkz.GetNextToken());
+    ref1StZ = mafWxToString(tkz.GetNextToken());
+    force1StX = mafWxToString(tkz.GetNextToken());
+    force1StY = mafWxToString(tkz.GetNextToken());
+    force1StZ = mafWxToString(tkz.GetNextToken());
+    moment1StX = mafWxToString(tkz.GetNextToken());
+    moment1StY = mafWxToString(tkz.GetNextToken());
+    moment1StZ = mafWxToString(tkz.GetNextToken());
 
-    double cop1X = atof(cop1StX);
-    double cop1Y = atof(cop1StY);
-    double cop1Z = atof(cop1StZ);
+    double cop1X = atof(cop1StX.GetCStr());
+    double cop1Y = atof(cop1StY.GetCStr());
+    double cop1Z = atof(cop1StZ.GetCStr());
 
-    double ref1X = atof(ref1StX);
-    double ref1Y = atof(ref1StY);
-    double ref1Z = atof(ref1StZ);
+    double ref1X = atof(ref1StX.GetCStr());
+    double ref1Y = atof(ref1StY.GetCStr());
+    double ref1Z = atof(ref1StZ.GetCStr());
    
-    double force1X = atof(force1StX);
-    double force1Y = atof(force1StY);
-    double force1Z = atof(force1StZ);
+    double force1X = atof(force1StX.GetCStr());
+    double force1Y = atof(force1StY.GetCStr());
+    double force1Z = atof(force1StZ.GetCStr());
 
-    double moment1X = atof(moment1StX);
-    double moment1Y = atof(moment1StY);
-    double moment1Z = atof(moment1StZ);
+    double moment1X = atof(moment1StX.GetCStr());
+    double moment1Y = atof(moment1StY.GetCStr());
+    double moment1Z = atof(moment1StZ.GetCStr());
 
     if (cop1X != NULL || cop1Y != NULL || cop1Z != NULL)
     {
@@ -372,34 +371,34 @@ void medOpImporterGRFWS::ReadForcePlates()
     }
 
     //Values of the second platform
-    cop2StX = tkz.GetNextToken().c_str();
-    cop2StY = tkz.GetNextToken().c_str();
-    cop2StZ = tkz.GetNextToken().c_str();
-    ref2StX = tkz.GetNextToken().c_str();
-    ref2StY = tkz.GetNextToken().c_str();
-    ref2StZ = tkz.GetNextToken().c_str();
-    force2StX = tkz.GetNextToken().c_str();
-    force2StY = tkz.GetNextToken().c_str();
-    force2StZ = tkz.GetNextToken().c_str();
-    moment2StX = tkz.GetNextToken().c_str();
-    moment2StY = tkz.GetNextToken().c_str();
-    moment2StZ = tkz.GetNextToken().c_str();
+    cop2StX = mafWxToString(tkz.GetNextToken());
+    cop2StY = mafWxToString(tkz.GetNextToken());
+    cop2StZ = mafWxToString(tkz.GetNextToken());
+    ref2StX = mafWxToString(tkz.GetNextToken());
+    ref2StY = mafWxToString(tkz.GetNextToken());
+    ref2StZ = mafWxToString(tkz.GetNextToken());
+    force2StX = mafWxToString(tkz.GetNextToken());
+    force2StY = mafWxToString(tkz.GetNextToken());
+    force2StZ = mafWxToString(tkz.GetNextToken());
+    moment2StX = mafWxToString(tkz.GetNextToken());
+    moment2StY = mafWxToString(tkz.GetNextToken());
+    moment2StZ = mafWxToString(tkz.GetNextToken());
 
-    double cop2X = atof(cop2StX);
-    double cop2Y = atof(cop2StY);
-    double cop2Z = atof(cop2StZ);
+    double cop2X = atof(cop2StX.GetCStr());
+    double cop2Y = atof(cop2StY.GetCStr());
+    double cop2Z = atof(cop2StZ.GetCStr());
 
-    double ref2X = atof(ref2StX);
-    double ref2Y = atof(ref2StY);
-    double ref2Z = atof(ref2StZ);
+    double ref2X = atof(ref2StX.GetCStr());
+    double ref2Y = atof(ref2StY.GetCStr());
+    double ref2Z = atof(ref2StZ.GetCStr());
 
-    double force2X = atof(force2StX);
-    double force2Y = atof(force2StY);
-    double force2Z = atof(force2StZ);
+    double force2X = atof(force2StX.GetCStr());
+    double force2Y = atof(force2StY.GetCStr());
+    double force2Z = atof(force2StZ.GetCStr());
 
-    double moment2X = atof(moment2StX);
-    double moment2Y = atof(moment2StY);
-    double moment2Z = atof(moment2StZ);
+    double moment2X = atof(moment2StX.GetCStr());
+    double moment2Y = atof(moment2StY.GetCStr());
+    double moment2Z = atof(moment2StZ.GetCStr());
 
     if (cop2X != NULL || cop2Y != NULL || cop2Z != NULL)
     {
@@ -499,10 +498,10 @@ void medOpImporterGRFWS::ReadSingleVector()
   mafSplitPath(m_File,&path,&name,&ext);
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("NATURAL");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("NATURAL"));
 
-  wxFileInputStream inputCountFile( m_File.GetCStr() );
+  wxFileInputStream inputCountFile( m_File.toWx() );
   wxTextInputStream textCount( inputCountFile );
 
   wxString line_count;
@@ -514,7 +513,7 @@ void medOpImporterGRFWS::ReadSingleVector()
   } while (!inputCountFile.Eof());
   totlines = totlines - 5;
 
-  wxFileInputStream inputFile( m_File.GetCStr());
+  wxFileInputStream inputFile( m_File.toWx());
   wxTextInputStream text( inputFile );
 
   wxString line;
@@ -544,7 +543,7 @@ void medOpImporterGRFWS::ReadSingleVector()
   mafNEW(m_ForceLeft);
 
   mafString alLeft = name;
-  alLeft << "_VECTOR";
+  alLeft += _R("_VECTOR");
   
   m_ForceLeft->SetName(alLeft);
 
@@ -553,31 +552,31 @@ void medOpImporterGRFWS::ReadSingleVector()
   {
     line = text.ReadLine();
     wxStringTokenizer tkz(line,wxT(','),wxTOKEN_RET_EMPTY_ALL);
-    timeSt = tkz.GetNextToken().c_str();
-    time = atof(timeSt)/freq_val; 
+    timeSt = mafWxToString(tkz.GetNextToken());
+    time = atof(timeSt.GetCStr())/freq_val;
    
     //Values of the first platform
-    cop1StX = tkz.GetNextToken().c_str();
-    cop1StY = tkz.GetNextToken().c_str();
-    cop1StZ = tkz.GetNextToken().c_str();
-    ref1StX = tkz.GetNextToken().c_str();
-    ref1StY = tkz.GetNextToken().c_str();
-    ref1StZ = tkz.GetNextToken().c_str();
-    force1StX = tkz.GetNextToken().c_str();
-    force1StY = tkz.GetNextToken().c_str();
-    force1StZ = tkz.GetNextToken().c_str();
+    cop1StX = mafWxToString(tkz.GetNextToken());
+    cop1StY = mafWxToString(tkz.GetNextToken());
+    cop1StZ = mafWxToString(tkz.GetNextToken());
+    ref1StX = mafWxToString(tkz.GetNextToken());
+    ref1StY = mafWxToString(tkz.GetNextToken());
+    ref1StZ = mafWxToString(tkz.GetNextToken());
+    force1StX = mafWxToString(tkz.GetNextToken());
+    force1StY = mafWxToString(tkz.GetNextToken());
+    force1StZ = mafWxToString(tkz.GetNextToken());
 
-    double cop1X = atof(cop1StX);
-    double cop1Y = atof(cop1StY);
-    double cop1Z = atof(cop1StZ);
+    double cop1X = atof(cop1StX.GetCStr());
+    double cop1Y = atof(cop1StY.GetCStr());
+    double cop1Z = atof(cop1StZ.GetCStr());
 
-    double ref1X = atof(ref1StX);
-    double ref1Y = atof(ref1StY);
-    double ref1Z = atof(ref1StZ);
+    double ref1X = atof(ref1StX.GetCStr());
+    double ref1Y = atof(ref1StY.GetCStr());
+    double ref1Z = atof(ref1StZ.GetCStr());
    
-    double force1X = atof(force1StX);
-    double force1Y = atof(force1StY);
-    double force1Z = atof(force1StZ);
+    double force1X = atof(force1StX.GetCStr());
+    double force1Y = atof(force1StY.GetCStr());
+    double force1Z = atof(force1StZ.GetCStr());
 
     if (cop1X != NULL || cop1Y != NULL || cop1Z != NULL)
     {

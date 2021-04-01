@@ -47,7 +47,7 @@ medOpExporterAnalogWS::medOpExporterAnalogWS(const mafString& label) : Superclas
 {
 	m_OpType	= OPTYPE_EXPORTER;
 	m_Canundo	= true;
-	m_File		= "";
+	m_File		= _R("");
 
   m_Analog = NULL;
 }
@@ -74,13 +74,13 @@ mafOp* medOpExporterAnalogWS::Copy()
 void medOpExporterAnalogWS::OpRun()   
 //----------------------------------------------------------------------------
 {
-	wxString proposed = mafGetApplicationDirectory().GetCStr();
-  proposed += "/Data/External/";
+	mafString proposed = mafGetApplicationDirectory();
+  proposed += _R("/Data/External/");
 	proposed += m_Input->GetName();
-	proposed += ".csv";
+	proposed += _R(".csv");
 	
-  wxString wildc = "ASCII CSV file (*.csv)|*.csv";
-	wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
+  mafString wildc = _R("ASCII CSV file (*.csv)|*.csv");
+	mafString f = mafGetSaveFile(proposed,wildc); 
 
 	int result = OP_RUN_CANCEL;
 	if(!f.IsEmpty())
@@ -103,12 +103,12 @@ void medOpExporterAnalogWS::Write()
   }
   
   m_Analog = medVMEAnalog::SafeDownCast(m_Input);
-  mafTagItem *tag_sig = m_Analog->GetTagArray()->GetTag("SIGNALS_NAME");
+  mafTagItem *tag_sig = m_Analog->GetTagArray()->GetTag(_R("SIGNALS_NAME"));
   int n_sig = (tag_sig) ? tag_sig->GetNumberOfComponents() : 0;
 
-  mafString empty("");
+  mafString empty;
 
-  std::ofstream f_Out(m_File);
+  std::ofstream f_Out(m_File.GetCStr());
   if (!f_Out.bad())
   {
     // Add ANALOG tag
@@ -120,12 +120,12 @@ void medOpExporterAnalogWS::Write()
     //Add the third line containing the signal names
     f_Out << "FRAME,";
     if(n_sig > 0)
-      f_Out << tag_sig->GetValue(0);
+      f_Out << tag_sig->GetValue(0).GetCStr();
     for (int i=1;i<n_sig;i++)
     {
-      if (!empty.Equals(tag_sig->GetValue(i)))
+      if (empty != tag_sig->GetValue(i))
       {
-        f_Out << "," << tag_sig->GetValue(i);
+        f_Out << "," << tag_sig->GetValue(i).GetCStr();
       }
     }
     f_Out << "\n";

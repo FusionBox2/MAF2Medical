@@ -42,8 +42,8 @@ medOpImporterAnalogWS::medOpImporterAnalogWS(const mafString& label) : Superclas
 {
 	m_OpType	= OPTYPE_IMPORTER;
 	m_Canundo	= true;
-	m_File		= "";
-	m_FileDir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
+	m_File		= _R("");
+	m_FileDir = mafGetApplicationDirectory() + _R("/Data/External/");
 
   m_EmgScalar = NULL;
 }
@@ -67,11 +67,11 @@ void medOpImporterAnalogWS::OpRun()
 //----------------------------------------------------------------------------
 {
 	int result = OP_RUN_CANCEL;
-	m_File = "";
-	wxString pgd_wildc	= "EMG File (*.*)|*.*";
-  wxString f;
-  f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
-	if(!f.IsEmpty() && wxFileExists(f))
+	m_File = _R("");
+	mafString pgd_wildc	= _R("EMG File (*.*)|*.*");
+  mafString f;
+  f = mafGetOpenFile(m_FileDir,pgd_wildc); 
+	if(!f.IsEmpty() && mafFileExists(f))
 	{
 	  m_File = f;
     Read();
@@ -91,18 +91,18 @@ void medOpImporterAnalogWS::Read()
   }
   
   mafNEW(m_EmgScalar);
-  wxString path, name, ext;
-  wxSplitPath(m_File.c_str(),&path,&name,&ext);
+  mafString path, name, ext;
+  mafSplitPath(m_File,&path,&name,&ext);
   m_EmgScalar->SetName(name);
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("NATURAL");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("NATURAL"));
 
   m_EmgScalar->GetTagArray()->SetTag(tag_Nature);
 
   mafString time, scalar;
-  wxFileInputStream inputFile( m_File );
+  wxFileInputStream inputFile( m_File.toWx() );
   wxTextInputStream text( inputFile );
 
   double emg_time; 
@@ -114,7 +114,7 @@ void medOpImporterAnalogWS::Read()
   line = text.ReadLine(); 
   if (line.CompareTo("ANALOG")!= 0)
   {
-    mafErrorMessage("Invalid file format!");
+    mafErrorMessage(_M("Invalid file format!"));
     return;
   }
  
@@ -133,7 +133,7 @@ void medOpImporterAnalogWS::Read()
   tkzName.GetNextToken(); //To skip ","
   while (tkzName.HasMoreTokens())
   {
-    stringVec.push_back(tkzName.GetNextToken()); 
+    stringVec.push_back(mafWxToString(tkzName.GetNextToken())); 
   }
 
   line = text.ReadLine();
@@ -153,7 +153,7 @@ void medOpImporterAnalogWS::Read()
   vnl_matrix<double> emgMatrix;
   emgMatrix.set_size(rowNumber , num_tk);
 
-  wxFileInputStream inputFile1( m_File );
+  wxFileInputStream inputFile1( m_File.toWx() );
   wxTextInputStream text1( inputFile1 );
   
   line = text1.ReadLine();
@@ -177,8 +177,8 @@ void medOpImporterAnalogWS::Read()
     while (tkz.HasMoreTokens())
     {
       i++;
-      scalar = tkz.GetNextToken();
-      val_scalar = atof(scalar);
+      scalar = mafWxToString(tkz.GetNextToken());
+      val_scalar = atof(scalar.GetCStr());
     
       emgMatrix.put(n,i,val_scalar); //Add scalar value to the vnl_matrix 
     }
@@ -195,11 +195,11 @@ void medOpImporterAnalogWS::Read()
   m_EmgScalar->SetData(emgMatrixTranspose, 0);
 
   mafTagItem tag_Sig;
-  tag_Sig.SetName("SIGNALS_NAME");
+  tag_Sig.SetName(_R("SIGNALS_NAME"));
   tag_Sig.SetNumberOfComponents(num_tk - 1);
   m_EmgScalar->GetTagArray()->SetTag(tag_Sig);
 
-  mafTagItem *tag_Signals = m_EmgScalar->GetTagArray()->GetTag("SIGNALS_NAME");
+  mafTagItem *tag_Signals = m_EmgScalar->GetTagArray()->GetTag(_R("SIGNALS_NAME"));
   for (int n = 0; n < stringVec.size(); n++)
   {
     tag_Signals->SetValue(stringVec[n], n);

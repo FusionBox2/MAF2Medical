@@ -115,16 +115,16 @@ void medOpSmoothSurface::CreateGui()
   // interface:
   m_Gui = new mafGUI(this);
 
-  m_Gui->Label("");
-  m_Gui->Label("smooth",true);
-  m_Gui->Slider(ID_ITERACTION,_("n.iteraction: "),&m_Iterations,0,500);
-  m_Gui->Button(ID_SMOOTH,_("apply smooth"));
-  m_Gui->Bool(ID_BOUNDARY,_("Boundary"),&m_BoundarySmoothing,0,_("Boundary Smoothing On/Off"));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R("smooth"),true);
+  m_Gui->Slider(ID_ITERACTION,_L("n.iteraction: "),&m_Iterations,0,500);
+  m_Gui->Button(ID_SMOOTH,_L("apply smooth"));
+  m_Gui->Bool(ID_BOUNDARY,_L("Boundary"),&m_BoundarySmoothing,0,_L("Boundary Smoothing On/Off"));
 
   m_Gui->Divider(2);
-  m_Gui->Label("");
-  m_Gui->Button(ID_PREVIEW,"preview");
-  m_Gui->Button(ID_CLEAR,"clear");
+  m_Gui->Label(_R(""));
+  m_Gui->Button(ID_PREVIEW,_R("preview"));
+  m_Gui->Button(ID_CLEAR,_R("clear"));
   m_Gui->OkCancel();
   m_Gui->Enable(wxOK,false);
 

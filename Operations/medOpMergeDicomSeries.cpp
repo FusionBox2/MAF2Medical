@@ -87,26 +87,26 @@ void medOpMergeDicomSeries::OpRun()
   bool result = true;
 	do 
 	{
-		if (m_DicomDirectoryABSFileName == "")
+		if (m_DicomDirectoryABSFileName.IsEmpty())
 		{	
       // Get the selected dicom directory
-			wxString lastDicomDir = ((medGUIDicomSettings*)GetSetting())->GetLastDicomDir();
+			mafString lastDicomDir = ((medGUIDicomSettings*)GetSetting())->GetLastDicomDir();
 
-			if (lastDicomDir == "UNEDFINED_m_LastDicomDir")
+			if (lastDicomDir == _R("UNEDFINED_m_LastDicomDir"))
 			{
 				mafString defaultPath = mafGetApplicationDirectory();
-        defaultPath += "/data/external/";
+        defaultPath += _R("/data/external/");
 				lastDicomDir = defaultPath;		
 			};
-			wxDirDialog dialog(NULL,"", lastDicomDir,wxRESIZE_BORDER,wxDefaultPosition);
+			wxDirDialog dialog(NULL,"", lastDicomDir.toWx(),wxRESIZE_BORDER,wxDefaultPosition);
 			dialog.SetReturnCode(wxID_OK);
 			int ret_code = dialog.ShowModal();
 
 			if (ret_code == wxID_OK)
 			{
-				wxString path = dialog.GetPath();
+				mafString path = mafWxToString(dialog.GetPath());
 				((medGUIDicomSettings*)GetSetting())->SetLastDicomDir(path);
-				m_DicomDirectoryABSFileName = path.c_str();
+				m_DicomDirectoryABSFileName = path;
 
         m_DicomSeriesInstanceUID = wxGetNumberFromUser(_("Series number"),_("Insert the series  ID for the output merged series"),"Input",999,0,999);
         
@@ -117,7 +117,7 @@ void medOpMergeDicomSeries::OpRun()
           return;
         }
         // call the "renaming" function
-        RanameSeriesAndManufacturer(m_DicomDirectoryABSFileName,m_DicomSeriesInstanceUID);
+        RenameSeriesAndManufacturer(m_DicomDirectoryABSFileName,m_DicomSeriesInstanceUID);
 			}
 			else
 			{
@@ -128,7 +128,7 @@ void medOpMergeDicomSeries::OpRun()
 		}
 		else
 		{
-			m_DicomDirectoryABSFileName = "";
+			m_DicomDirectoryABSFileName = _R("");
       bool result = false;
 		}
 	} while(!result);
@@ -137,7 +137,7 @@ void medOpMergeDicomSeries::OpRun()
   
 }
 //----------------------------------------------------------------------------
-bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSPath, int dicomSeriesUID)
+bool medOpMergeDicomSeries::RenameSeriesAndManufacturer(const mafString& dicomDirABSPath, int dicomSeriesUID)
 //----------------------------------------------------------------------------
 {
   // This function change the value for the dicom tag
@@ -154,16 +154,16 @@ bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSP
   bool enableToRead = true; //true for test mode
   bool errorOccurred = false;
   double lastDistance = 0;
-  mafString lastFileName = "";
+  mafString lastFileName = _R("");
 
   DcmFileFormat dicomImg;    
 
   vtkNEW(m_DICOMDirectoryReader);
-  if (m_DICOMDirectoryReader->Open(dicomDirABSPath) == 0)
+  if (m_DICOMDirectoryReader->Open(dicomDirABSPath.GetCStr()) == 0)
   {
     if(!this->m_TestMode)
     {
-      wxMessageBox(wxString::Format("Directory <%s> can not be opened",dicomDirABSPath),"Warning!!");
+      mafWarningMessage(_M(_R("Directory <") + dicomDirABSPath + _R("> can not be opened")));
     }
     return false;
   }
@@ -200,22 +200,22 @@ bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSP
     else
     {
       sliceNum++;
-      mafString currentSliceABSFileName = "";
-      mafString currentSliceLocalFileName = m_DICOMDirectoryReader->GetFile(i);
+      mafString currentSliceABSFileName = _R("");
+      mafString currentSliceLocalFileName = _R(m_DICOMDirectoryReader->GetFile(i));
 
       currentSliceABSFileName.Append(dicomDirABSPath);
-      currentSliceABSFileName.Append("\\");
+      currentSliceABSFileName.Append(_R("\\"));
       currentSliceABSFileName.Append(currentSliceLocalFileName);
 
       DJDecoderRegistration::registerCodecs(); // register JPEG codecs
       DcmRLEDecoderRegistration ::registerCodecs(OFFalse, OFFalse); // register RLE codecs
-      OFCondition status = dicomImg.loadFile(currentSliceABSFileName.GetCStr());//load data into offis structure
+      OFCondition status = dicomImg.loadFile(currentSliceABSFileName.toStd().c_str());//load data into offis structure
 
       if (!status.good())
       {
         if(!this->m_TestMode)
         {
-          wxLogMessage(wxString::Format("File <%s> can not be opened",currentSliceABSFileName));
+          mafLogMessage(_M(_R("File <") + currentSliceABSFileName + _R("> can not be opened")));
           errorOccurred = true;
           sliceNum--;
         }
@@ -232,7 +232,7 @@ bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSP
 
       if (!error.good())
       {
-        wxLogMessage(wxString::Format("Error decoding the image <%s>",currentSliceABSFileName));
+        mafLogMessage(_M(_R("Error decoding the image <") + currentSliceABSFileName + _R(">")));
         errorOccurred = true;
         //return false;
         continue;
@@ -266,9 +266,9 @@ bool medOpMergeDicomSeries::RanameSeriesAndManufacturer(const char *dicomDirABSP
         dicomDataset->findAndGetUint8Array(DCM_PixelData, dicom_buf_char); 
       } 
 
-      status = dicomImg.saveFile(currentSliceABSFileName.GetCStr());
+      status = dicomImg.saveFile(currentSliceABSFileName.toStd().c_str());
 
-      mafLogMessage("Modified file %s",currentSliceABSFileName);
+      mafLogMessage(_M(_R("Modified file ") + currentSliceABSFileName));
       mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,long((double(i)/double(m_DICOMDirectoryReader->GetNumberOfFiles()))*100)));
 
     }  

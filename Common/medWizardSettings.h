@@ -37,7 +37,7 @@ class MED_COMMON_EXPORT medWizardSettings : public mafGUISettings
 
 public:
   /** constructor */
-	medWizardSettings(mafBaseEventHandler *Listener, const mafString &label = _("Wizard Settings"));
+	medWizardSettings(mafBaseEventHandler *Listener, const mafString &label = _L("Wizard Settings"));
   /** destructor */
 	~medWizardSettings(); 
 

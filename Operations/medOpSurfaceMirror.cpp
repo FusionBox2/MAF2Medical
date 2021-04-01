@@ -135,17 +135,17 @@ void medOpSurfaceMirror::OpRun()
 
 		if (buildHelpGui.GetArg() == true)
 		{
-			m_Gui->Button(ID_HELP, "Help","");	
+			m_Gui->Button(ID_HELP, _R("Help"), _R(""));
 		}
 
-		m_Gui->Label("this doesn't work on animated vme");
-		m_Gui->Label("");
+		m_Gui->Label(_R("this doesn't work on animated vme"));
+		m_Gui->Label(_R(""));
 		
-		m_Gui->Bool(ID_MIRRORX,"mirror x coords", &m_MirrorX, 1);
-		m_Gui->Bool(ID_MIRRORY,"mirror y coords", &m_MirrorY, 1);
-		m_Gui->Bool(ID_MIRRORZ,"mirror z coords", &m_MirrorZ, 1);
+		m_Gui->Bool(ID_MIRRORX,_R("mirror x coords"), &m_MirrorX, 1);
+		m_Gui->Bool(ID_MIRRORY,_R("mirror y coords"), &m_MirrorY, 1);
+		m_Gui->Bool(ID_MIRRORZ,_R("mirror z coords"), &m_MirrorZ, 1);
 		//m_Gui->Bool(ID_FLIPNORMALS,"flip normals",&m_FlipNormals,1);
-		m_Gui->Label("");
+		m_Gui->Label(_R(""));
 		m_Gui->OkCancel();
 
 		ShowGui();

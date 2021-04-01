@@ -92,7 +92,7 @@ medOpSegmentationRegionGrowingConnectedThreshold::medOpSegmentationRegionGrowing
   m_Resample=NULL;
   m_ResampleInput= NULL;
 
-  m_SeedScalarValue = "";
+  m_SeedScalarValue = _R("");
 
   m_VolumeBounds[0] = m_VolumeBounds[1] = m_VolumeBounds[2] = \
   m_VolumeBounds[3] = m_VolumeBounds[4] = m_VolumeBounds[5] = 0;
@@ -137,14 +137,14 @@ void medOpSegmentationRegionGrowingConnectedThreshold::OpRun()
 	  mafVME::SafeDownCast(m_ResampleInput)->SetBehavior(m_Picker);
 
 	  mafNEW(m_Sphere);
-	  m_Sphere->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+	  m_Sphere->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 	  m_Sphere->SetVisibleToTraverse(false);
 	  m_Sphere->ReparentTo(m_ResampleInput->GetParent());
 
 	  vtkNEW(m_SphereVTK);
     double bounds[6];mafVME::SafeDownCast(m_ResampleInput)->GetOutput()->GetBounds(bounds);
 	  m_SphereVTK->SetRadius((bounds[5]-bounds[4])/256);
-    mafLogMessage("Sphere radius = %f",(bounds[5]-bounds[4])/256);
+    mafLogMessage(_M(_R("Sphere radius = ") + mafToString((bounds[5]-bounds[4])/256)));
 	  m_SphereVTK->Update();
 
 	  m_Sphere->SetData(m_SphereVTK->GetOutput(),0.0);
@@ -170,12 +170,12 @@ void medOpSegmentationRegionGrowingConnectedThreshold::CreateGui()
 {
   m_Gui = new mafGUI(this);
 
-  m_Gui->Label(_("Parameters"));
-  m_Gui->Integer(ID_LOWER,_("lower"),&m_Lower,MINLONG,MAXLONG,_("minimum intensity value to be included in segmentation"));
-  m_Gui->Integer(ID_UPPER,_("upper"),&m_Upper,MINLONG,MAXLONG,_("maximum intensity value to be included in segmentation"));
-  m_Gui->Integer(ID_REPLACE,_("replace"),&m_Replace,0,MAXINT,_("segmented region value"));
-  m_Gui->Label(_("Voxel val:"),&m_SeedScalarValue);
-  m_Gui->VectorN(ID_SEED,_("seed"),m_Seed,m_ImageDim,MININT,MAXINT,"seed point to start growing, in image coordinates");
+  m_Gui->Label(_L("Parameters"));
+  m_Gui->Integer(ID_LOWER,_L("lower"),&m_Lower,MINLONG,MAXLONG,_L("minimum intensity value to be included in segmentation"));
+  m_Gui->Integer(ID_UPPER,_L("upper"),&m_Upper,MINLONG,MAXLONG,_L("maximum intensity value to be included in segmentation"));
+  m_Gui->Integer(ID_REPLACE,_L("replace"),&m_Replace,0,MAXINT,_L("segmented region value"));
+  m_Gui->Label(_L("Voxel val:"),&m_SeedScalarValue);
+  m_Gui->VectorN(ID_SEED,_L("seed"),m_Seed,m_ImageDim,MININT,MAXINT,_R("seed point to start growing, in image coordinates"));
 
 //   m_Gui->Label(_("Anisotropic curvature diffusion parameters"));
 //   m_Gui->Integer(ID_ITERATIONS,_("iterations"),&m_NumIter,0,MAXINT,_("number of iterations. Default [5]"));
@@ -304,7 +304,7 @@ void medOpSegmentationRegionGrowingConnectedThreshold::Algorithm()
   itkTOvtk->Update();
 
   mafNEW(m_VolumeOut);
-  m_VolumeOut->SetName("Connected Threshold");
+  m_VolumeOut->SetName(_R("Connected Threshold"));
 
   vtkImageData *image = ((vtkImageData*)itkTOvtk->GetOutput());
   image->Update();
@@ -316,14 +316,14 @@ void medOpSegmentationRegionGrowingConnectedThreshold::Algorithm()
   m_VolumeOut->SetData(image_to_sp->GetOutput(),mafVME::SafeDownCast(m_ResampleInput)->GetTimeStamp());
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("SYNTHETIC");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("SYNTHETIC"));
 
   m_VolumeOut->GetTagArray()->SetTag(tag_Nature);
 
   m_VolumeOut->Update();
 
-  m_VolumeOut->GetTagArray()->SetTag(mafTagItem("VOLUME_TYPE","BINARY"));
+  m_VolumeOut->GetTagArray()->SetTag(mafTagItem(_R("VOLUME_TYPE"),_R("BINARY")));
 
   
   vtkMAFSmartPointer<vtkMEDVolumeToClosedSmoothSurface> volToSurface;
@@ -334,7 +334,7 @@ void medOpSegmentationRegionGrowingConnectedThreshold::Algorithm()
 
   //Generating Surface VME
   mafNEW(m_SurfaceOut);
-  m_SurfaceOut->SetName("Connected Threshold Surface");
+  m_SurfaceOut->SetName(_R("Connected Threshold Surface"));
   m_SurfaceOut->SetData(surface,mafVMEVolumeGray::SafeDownCast(m_ResampleInput)->GetTimeStamp());
   m_SurfaceOut->ReparentTo(m_ResampleInput);
   m_SurfaceOut->Modified();
@@ -427,7 +427,7 @@ void medOpSegmentationRegionGrowingConnectedThreshold::OnEvent(mafEventBase *maf
           m_Seed[2] = iz;
 
           double scalarValue = e->GetDouble();
-          m_SeedScalarValue = scalarValue;
+          m_SeedScalarValue = mafToString(scalarValue);
           m_Lower = scalarValue - 64;
           m_Upper = scalarValue + 64;
 

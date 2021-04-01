@@ -141,18 +141,18 @@ mafViewArbitrarySlice::~mafViewArbitrarySlice()
 void mafViewArbitrarySlice::PackageView()
 	//----------------------------------------------------------------------------
 {
-	m_ViewArbitrary = new mafViewVTK("",CAMERA_PERSPECTIVE);
-	m_ViewArbitrary->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", MUTEX);
-	m_ViewArbitrary->PlugVisualPipe("mafVMELabeledVolume", "mafPipeBox", MUTEX);
+	m_ViewArbitrary = new mafViewVTK(_R(""),CAMERA_PERSPECTIVE);
+	m_ViewArbitrary->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), MUTEX);
+	m_ViewArbitrary->PlugVisualPipe(_R("mafVMELabeledVolume"), _R("mafPipeBox"), MUTEX);
 
-	m_ViewSlice = new mafViewVTK("",CAMERA_OS_Z);
-	m_ViewSlice->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice");
-	m_ViewSlice->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice");
-	m_ViewSlice->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice");
-	m_ViewSlice->PlugVisualPipe("mafVMEGizmo", "mafPipeGizmo", NON_VISIBLE);
-	m_ViewSlice->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", NON_VISIBLE);
-	m_ViewSlice->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice");
-	m_ViewSlice->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice");
+	m_ViewSlice = new mafViewVTK(_R(""),CAMERA_OS_Z);
+	m_ViewSlice->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurfaceSlice"));
+	m_ViewSlice->PlugVisualPipe(_R("mafVMESurfaceParametric"), _R("mafPipeSurfaceSlice"));
+	m_ViewSlice->PlugVisualPipe(_R("mafVMEMesh"), _R("mafPipeMeshSlice"));
+	m_ViewSlice->PlugVisualPipe(_R("mafVMEGizmo"), _R("mafPipeGizmo"), NON_VISIBLE);
+	m_ViewSlice->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), NON_VISIBLE);
+	m_ViewSlice->PlugVisualPipe(_R("mafVMELandmark"), _R("mafPipeSurfaceSlice"));
+	m_ViewSlice->PlugVisualPipe(_R("mafVMELandmarkCloud"), _R("mafPipeSurfaceSlice"));
 
 	PlugChildView(m_ViewArbitrary);
 	PlugChildView(m_ViewSlice);
@@ -219,7 +219,7 @@ void mafViewArbitrarySlice::VmeShow(mafNode *node, bool show)
 
 			//Create VME slicer
 			mafNEW(m_Slicer);
-			m_Slicer->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+			m_Slicer->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 			m_Slicer->ReparentTo(mafVME::SafeDownCast(node));
 			m_Slicer->SetPose(m_SliceCenterSurfaceReset,m_SliceAngleReset,0);
 			m_Slicer->SetAbsMatrix(*m_MatrixReset);
@@ -806,23 +806,23 @@ mafGUI* mafViewArbitrarySlice::CreateGui()
 
 	if (buildHelpGui.GetArg() == true)
 	{
-		m_Gui->Button(ID_HELP, "Help","");	
+		m_Gui->Button(ID_HELP, _R("Help"), _R(""));
 	}
 
 	//combo box to choose the type of gizmo
-	m_Gui->Label("");
-	m_Gui->Label("Choose Gizmo");
-	mafString Text[2]={_("Gizmo Translation"),_("Gizmo Rotation")};
-	m_Gui->Combo(ID_COMBO_GIZMOS,"",&m_TypeGizmo,2,Text);
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_R("Choose Gizmo"));
+	mafString Text[2]={_L("Gizmo Translation"),_L("Gizmo Rotation")};
+	m_Gui->Combo(ID_COMBO_GIZMOS, _R(""),&m_TypeGizmo,2,Text);
 
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 	//button to reset at the start position
-	m_Gui->Button(ID_RESET,_("Reset"),"");
+	m_Gui->Button(ID_RESET,_L("Reset"), _R(""));
 	m_Gui->Divider(2);
 
-	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
 
-	m_Gui->Bool(ID_TRILINEAR_INTERPOLATION_ON,"Interpolation",&m_TrilinearInterpolationOn,1);
+	m_Gui->Bool(ID_TRILINEAR_INTERPOLATION_ON,_R("Interpolation"),&m_TrilinearInterpolationOn,1);
 
 	m_Gui->Divider();
 	m_Gui->Update();

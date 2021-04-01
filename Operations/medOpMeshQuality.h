@@ -47,7 +47,7 @@ Check the quality of the mesh, using an algorithm for checking the ratio of each
 class MED_OPERATION_EXPORT medOpMeshQuality: public mafOp
 {
 public:
-	medOpMeshQuality(const mafString& label = "Check Mesh Quality");
+	medOpMeshQuality(const mafString& label = _R("Check Mesh Quality"));
 	~medOpMeshQuality(); 
 
 	virtual void OnEvent(mafEventBase *maf_event);

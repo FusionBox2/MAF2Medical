@@ -150,8 +150,8 @@ mafGUI* mafViewCT::CreateGui()
 	assert(m_Gui == NULL);
 	m_Gui = new mafGUI(this);
 
-	m_Gui->Integer(ID_LAYOUT_WIDTH,"Layout Width",&m_LayoutWidth);
-	m_Gui->Integer(ID_LAYOUT_HEIGHT,"Layout Height",&m_LayoutHeight);
+	m_Gui->Integer(ID_LAYOUT_WIDTH,_R("Layout Width"),&m_LayoutWidth);
+	m_Gui->Integer(ID_LAYOUT_HEIGHT,_R("Layout Height"),&m_LayoutHeight);
 
 	return m_Gui;
 }
@@ -182,8 +182,8 @@ void mafViewCT::CreateGuiView()
 void mafViewCT::PackageView()
 //----------------------------------------------------------------------------
 {
-	m_ViewCTCompound = new mafViewCompound("CT view",2,5);
-	mafViewSlice *vs = new mafViewSlice("Slice view", CAMERA_PERSPECTIVE);
+	m_ViewCTCompound = new mafViewCompound(_R("CT view"),2,5);
+	mafViewSlice *vs = new mafViewSlice(_R("Slice view"), CAMERA_PERSPECTIVE);
 	/*m_Vs->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeSlice",MUTEX);
 	m_Vs->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice",MUTEX);
 	m_Vs->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice",MUTEX);

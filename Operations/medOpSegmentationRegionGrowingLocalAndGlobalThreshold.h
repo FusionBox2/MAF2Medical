@@ -41,7 +41,7 @@ class MED_OPERATION_EXPORT medOpSegmentationRegionGrowingLocalAndGlobalThreshold
 public:
 
   /** constructor. */
-  medOpSegmentationRegionGrowingLocalAndGlobalThreshold(const mafString& label = "Region Growing");
+  medOpSegmentationRegionGrowingLocalAndGlobalThreshold(const mafString& label = _R("Region Growing"));
   /** destructor. */
   ~medOpSegmentationRegionGrowingLocalAndGlobalThreshold(); 
 

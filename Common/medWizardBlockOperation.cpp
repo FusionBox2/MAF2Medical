@@ -35,12 +35,12 @@ medWizardBlockOperation::medWizardBlockOperation(const char *name):medWizardBloc
   m_AutoShowSelectedVME=true;
   m_windowhastoberesized = false;
   m_windowhastobetiled = false;
-  m_tile_windows = "";
+  m_tile_windows = _R("");
   m_x = 0.;
   m_y = 0.;
   m_width = 0.85;
   m_height = 0.35;
-  m_viewtodelete = "";
+  m_viewtodelete = _R("");
   m_viewhastobedeleted = false;
 }
 
@@ -66,7 +66,7 @@ void medWizardBlockOperation::SetViewToDelete( const char *View )
 	//----------------------------------------------------------------------------
 {
   m_viewhastobedeleted = true;
-  m_viewtodelete = View;
+  m_viewtodelete = _R(View);
 }
 
 //----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ void medWizardBlockOperation::ResizeView(double x, double y, double width, doubl
 void medWizardBlockOperation::TileWindows( const char *tile_windows )
 {
    m_windowhastobetiled = true;
-   m_tile_windows = tile_windows;
+   m_tile_windows = _R(tile_windows);
 }
 
 //----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ void medWizardBlockOperation::ExcutionBegin()
   if (m_RequiredView!="")
   {
     //send up the event in order to open/select the required view
-    tmpStr=m_RequiredView;
+    tmpStr=mafWxToString(m_RequiredView);
     mafEventMacro(mafEvent(this,WIZARD_REQUIRED_VIEW,&tmpStr));
 	if(m_windowhastoberesized) 
 	{
@@ -151,21 +151,21 @@ void medWizardBlockOperation::ExcutionBegin()
 	}
 	if(m_windowhastobetiled)
 	{
-		if(!m_tile_windows.Compare("Tile_window_horizontally")) 
+		if(!m_tile_windows.Compare(_R("Tile_window_horizontally"))) 
 		{
 	        mafEventMacro(mafEvent(this,TILE_WINDOW_HORIZONTALLY));
 		}
-		else if (!m_tile_windows.Compare("Tile_window_vertically")) 
+		else if (!m_tile_windows.Compare(_R("Tile_window_vertically"))) 
 		{
 			mafEventMacro(mafEvent(this,TILE_WINDOW_VERTICALLY));
 		}
-		else if (!m_tile_windows.Compare("Tile_window_cascade"))
+		else if (!m_tile_windows.Compare(_R("Tile_window_cascade")))
 		{
 			mafEventMacro(mafEvent(this,TILE_WINDOW_CASCADE));
 		}
 		else 
 		{
-	      mafLogMessage("The selected tile window modality does not exist!");
+	      mafLogMessage(_M("The selected tile window modality does not exist!"));
 		}
 	}
   }
@@ -184,7 +184,7 @@ void medWizardBlockOperation::ExcutionBegin()
   else 
   {
     //If we cannot select the correct vme we need to abort the wizard
-    mafLogMessage("Wizard Error: unable to select VME, path:\"%s\" base:\"%s\"",m_VmeSelect.c_str(),m_SelectedVME->GetName());
+    mafLogMessage(_M(_R("Wizard Error: unable to select VME, path:\"") + mafWxToString(m_VmeSelect) + _R("\" base:\"") + m_SelectedVME->GetName() + _R("\"")));
     Abort();
     //we stop execution now
     return;
@@ -213,7 +213,7 @@ void medWizardBlockOperation::ExcutionBegin()
   //Run Operation
   if (m_Operation!="")
   {
-    tmpStr=m_Operation;
+    tmpStr=mafWxToString(m_Operation);
     //ask logic for operation run the flow will continue after operation stop
     mafEventMacro(mafEvent(this,WIZARD_RUN_OP,&tmpStr));
   }
@@ -248,7 +248,7 @@ wxString medWizardBlockOperation::GetRequiredOperation()
 }
 
 //----------------------------------------------------------------------------
-void medWizardBlockOperation::SetRequiredOperation( const const char *name )
+void medWizardBlockOperation::SetRequiredOperation( const char *name )
 //----------------------------------------------------------------------------
 {
   //set the name of required operation

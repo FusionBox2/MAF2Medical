@@ -83,7 +83,7 @@ public:
   void OnEvent(mafEventBase *maf_event);
  
   /** Gizmo is reparented under the vme tree root, this modality is currently not supported */
-  void SetModalityToGlobal() {mafLogMessage("Global modality is currently not supported for this item");};
+  void SetModalityToGlobal() {mafLogMessage(_M("Global modality is currently not supported for this item"));}
 
   void  SetPosition(mafMatrix *matrix);
   mafMatrix *GetPosition(){return m_GizmoHandleCenterMatrix;};

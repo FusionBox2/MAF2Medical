@@ -59,7 +59,7 @@
 
 medGizmoPolylineGraph::medGizmoPolylineGraph(mafNode* imputVme, mafBaseEventHandler *listener, const char* name, bool showOnlyDirectionAxis, bool testMode) 
 { 
-  m_Name = name;
+  m_Name = _R(name);
   m_InputVME = mafVME::SafeDownCast(imputVme);
   SetListener(listener);
   m_TestMode = testMode;
@@ -393,17 +393,17 @@ void medGizmoPolylineGraph::LogTransformEvent( mafEvent *e )
   switch(mouseAction)
   {
   case mafInteractorGenericMouse::MOUSE_DOWN:
-    mouseActionString.Append("MOUSE DOWN");
+    mouseActionString.Append(_R("MOUSE DOWN"));
     break;
   case mafInteractorGenericMouse::MOUSE_MOVE:
-    mouseActionString.Append("MOUSE MOVE");
+    mouseActionString.Append(_R("MOUSE MOVE"));
     break;
   case mafInteractorGenericMouse::MOUSE_UP:
-    mouseActionString.Append("MOUSE UP");
+    mouseActionString.Append(_R("MOUSE UP"));
     break;
   default:
-    mouseActionString.Append("Unknown mouse action: mouseActionID = ");
-    mouseActionString << (long)mouseAction;
+    mouseActionString.Append(_R("Unknown mouse action: mouseActionID = "));
+    mouseActionString += mafToString((long)mouseAction);
     break;
   }
 
@@ -411,6 +411,6 @@ void medGizmoPolylineGraph::LogTransformEvent( mafEvent *e )
   stringStream << mouseActionString.GetCStr() << std::endl;
   e->GetMatrix()->Print(stringStream);
 
-  mafLogMessage(stringStream.str().c_str());
+  mafLogMessage(_M(stringStream.str().c_str()));
 }
 

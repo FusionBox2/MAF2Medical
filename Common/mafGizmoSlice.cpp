@@ -67,7 +67,7 @@ mafGizmoSlice::mafGizmoSlice(mafNode* inputVme, mafBaseEventHandler *Listener /*
 void mafGizmoSlice::CreateGizmoSlice(mafNode *imputVme, mafBaseEventHandler *listener, const char *name, bool inverseHandle, double centralClipfactor)
 //----------------------------------------------------------------------------
 {
-  m_Name = name;
+  m_Name = _R(name);
   SetListener(listener);
   
   // this is the only supported modality for the moment...
@@ -615,7 +615,7 @@ void mafGizmoSlice::SetInput( mafVME *vme )
   if (m_VmeGizmo != NULL)
   {
     DestroyGizmoSlice();
-    CreateGizmoSlice(vme, GetListener(), m_Name, m_InverseHandle, m_CentralClipFactor);
+    CreateGizmoSlice(vme, GetListener(), m_Name.GetCStr(), m_InverseHandle, m_CentralClipFactor);
   }
 }
 //----------------------------------------------------------------------------

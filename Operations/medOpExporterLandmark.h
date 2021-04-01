@@ -37,7 +37,7 @@ class MED_OPERATION_EXPORT medOpExporterLandmark: public mafOp
 {
 public:
   mafTypeMacro(medOpExporterLandmark, mafOp);
-	medOpExporterLandmark(const mafString& label = "Landmark Exporter");
+	medOpExporterLandmark(const mafString& label = _R("Landmark Exporter"));
 	~medOpExporterLandmark(); 
 	mafOp* Copy();
   void OnEvent(mafEventBase *maf_event);
@@ -52,7 +52,7 @@ public:
   void ExportLandmark();
 
   /** Set the filename for the .stl to export */
-  void SetFileName(const char *file_name) {m_File = file_name;};
+  void SetFileName(const char *file_name) {m_File = _R(file_name);}
 
 protected:
   void ExportingTraverse(std::ostream &out, const char *dirName, mafNode* node);

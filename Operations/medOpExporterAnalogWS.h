@@ -37,7 +37,7 @@ class MED_OPERATION_EXPORT medOpExporterAnalogWS : public mafOp
 {
 public:
   mafTypeMacro(medOpExporterAnalogWS, public mafOp)
-	medOpExporterAnalogWS(const mafString& label = "Analog Exporter");
+	medOpExporterAnalogWS(const mafString& label = _R("Analog Exporter"));
 	~medOpExporterAnalogWS(); 
 	mafOp* Copy();
 
@@ -77,10 +77,10 @@ public:
   void Write();
 
   /** Set the filename for the file to export */
-  void SetFileName(const char *file_name){m_File = file_name;};
+  void SetFileName(const char *file_name){m_File = _R(file_name);}
 
 protected:
   medVMEAnalog* m_Analog;
-	wxString m_File;
+	mafString m_File;
 };
 #endif

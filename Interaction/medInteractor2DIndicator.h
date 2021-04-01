@@ -89,9 +89,9 @@ public:
 	/**
 	Get the label*/
 	mafString GetLabel() { if(m_MeterVector.size()) 
-													 return mafString(m_MeterVector[m_MeterVector.size()-1]->GetText());
+													 return mafString(_R(m_MeterVector[m_MeterVector.size()-1]->GetText()));
 												 else 
-													 return mafString("");
+													 return mafString(_R(""));
 											 }
   /**
   Return the dimension of Measure Vector

@@ -38,9 +38,9 @@ mafCxxTypeMacro(medVMESurfaceEditor)
 medVMESurfaceEditor::medVMESurfaceEditor()
 //-------------------------------------------------------------------------
 {
-	m_VisualPipeName = "medPipeSurfaceEditor";
+	m_VisualPipeName = _R("medPipeSurfaceEditor");
 
-	GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+	GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 	SetVisibleToTraverse(false);
 }
 

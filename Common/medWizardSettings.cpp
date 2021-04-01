@@ -52,11 +52,11 @@ void medWizardSettings::CreateGui()
 
   //Creating Wizard Setting Gui
   m_Gui = new mafGUI(this);   
-  m_Gui->Label(_("Wizard Settings"));
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Bool(WIZARD_SETTINGS_ID,"Show information boxes",&m_ShowInformationBoxes,true);
+  m_Gui->Label(_L("Wizard Settings"));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Bool(WIZARD_SETTINGS_ID,_R("Show information boxes"),&m_ShowInformationBoxes,true);
 }
 
 //----------------------------------------------------------------------------

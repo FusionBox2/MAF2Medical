@@ -47,8 +47,8 @@ medOpImporterLandmarkWS::medOpImporterLandmarkWS(const mafString& label) : Super
 {
 	m_OpType	= OPTYPE_IMPORTER;
 	m_Canundo	= true;
-	m_File		= "";
-	m_FileDir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
+	m_File		= _R("");
+	m_FileDir = mafGetApplicationDirectory() + _R("/Data/External/");
 	m_VmeCloud		= NULL;
 }
 //----------------------------------------------------------------------------
@@ -76,14 +76,14 @@ void medOpImporterLandmarkWS::OpRun()
 //----------------------------------------------------------------------------
 {
 	int result = OP_RUN_CANCEL;
-	m_File = "";
-	wxString pgd_wildc	= "Landmark (*.*)|*.*";
-  wxString f;
+	m_File = _R("");
+	mafString pgd_wildc	= _R("Landmark (*.*)|*.*");
+  mafString f;
   if (!m_TestMode)
     {
-      f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
+      f = mafGetOpenFile(m_FileDir,pgd_wildc); 
     }
-	if(!f.IsEmpty() && wxFileExists(f))
+	if(!f.IsEmpty() && mafFileExists(f))
 	 {
 	   m_File = f;
      Read();
@@ -101,13 +101,13 @@ void medOpImporterLandmarkWS::Read()
     wxBusyInfo wait("Please wait, working...");
   }
   mafNEW(m_VmeCloud);
-  wxString path, name, ext;
-  wxSplitPath(m_File.c_str(),&path,&name,&ext);
+  mafString path, name, ext;
+  mafSplitPath(m_File,&path,&name,&ext);
   m_VmeCloud->SetName(name);
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("NATURAL");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("NATURAL"));
 
   m_VmeCloud->GetTagArray()->SetTag(tag_Nature);
 
@@ -126,14 +126,14 @@ void medOpImporterLandmarkWS::Read()
   
   std::vector<int> lm_idx;
 
-  wxFileInputStream inputFile( m_File );
+  wxFileInputStream inputFile( m_File.toWx() );
   wxTextInputStream text( inputFile );
 
   //check if file starts with the string "ANALOG"
   line = text.ReadLine(); //Ignore 4 lines of textual information
   if (line.CompareTo("TRAJECTORIES")!= 0)
   {
-    mafErrorMessage("Invalid file format!");
+    mafErrorMessage(_M("Invalid file format!"));
     return;
   }
 
@@ -152,7 +152,7 @@ void medOpImporterLandmarkWS::Read()
   tkzName.GetNextToken(); //To skip ","
   while (tkzName.HasMoreTokens())
   {
-    stringVec.push_back(tkzName.GetNextToken()); 
+    stringVec.push_back(mafWxToString(tkzName.GetNextToken())); 
     tkzName.GetNextToken(); //To skip ","
     tkzName.GetNextToken(); //To skip ","
   }
@@ -187,20 +187,20 @@ void medOpImporterLandmarkWS::Read()
   do 
   {
     wxStringTokenizer tkz(line,wxT(','),wxTOKEN_RET_EMPTY_ALL);
-    time = tkz.GetNextToken().c_str();
+    time = mafWxToString(tkz.GetNextToken());
     long counter = 0;
     int counterAL = 0;
     int indexCounter = 0;
-    tval = atof(time)/freq_val;
+    tval = atof(time.GetCStr())/freq_val;
 
     while (tkz.HasMoreTokens())
     {
-      x = tkz.GetNextToken().c_str();
-      y = tkz.GetNextToken().c_str();
-      z = tkz.GetNextToken().c_str();
-      xval = atof(x);
-      yval = atof(y);
-      zval = atof(z);
+      x = mafWxToString(tkz.GetNextToken());
+      y = mafWxToString(tkz.GetNextToken());
+      z = mafWxToString(tkz.GetNextToken());
+      xval = atof(x.GetCStr());
+      yval = atof(y.GetCStr());
+      zval = atof(z.GetCStr());
 
 
       if (!indexSplitCopy.empty()) //true if AL is split in columns

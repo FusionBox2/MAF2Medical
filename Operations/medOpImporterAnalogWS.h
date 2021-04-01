@@ -38,7 +38,7 @@ class MED_OPERATION_EXPORT medOpImporterAnalogWS : public mafOp
 {
 public:
   mafTypeMacro(medOpImporterAnalogWS,mafOp)
-	medOpImporterAnalogWS(const mafString& label = "Analog Importer");
+	medOpImporterAnalogWS(const mafString& label = _R("Analog Importer"));
 	~medOpImporterAnalogWS(); 
 	mafOp* Copy();
 
@@ -67,13 +67,13 @@ public:
   void Read();
 
   /** Set the filename for the file to import */
-  void SetFileName(const char *file_name){m_File = file_name;};
+  void SetFileName(const char *file_name){m_File = _R(file_name);};
 
 
 protected:
   medVMEAnalog *m_EmgScalar;
   vnl_matrix<double> m_EmgMatrix;
-  wxString m_FileDir;
-	wxString m_File;
+  mafString m_FileDir;
+	mafString m_File;
 };
 #endif

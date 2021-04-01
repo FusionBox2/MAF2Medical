@@ -52,7 +52,7 @@ void medViewSliceNotInterpolatedCompound::PackageView()
 //----------------------------------------------------------------------------
 {
   // Create child slice view
-  m_ViewSlice = new medViewSliceNotInterpolated("",CAMERA_CT);
+  m_ViewSlice = new medViewSliceNotInterpolated(_R(""),CAMERA_CT);
   m_ViewSlice->PackageView();
   m_ViewSlice->Create();
   PlugChildView(m_ViewSlice);

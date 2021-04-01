@@ -283,7 +283,7 @@ void medOpFillHoles::CreateOpDialog()
 	wxBusyCursor wait;
 
 	//===== setup interface ====
-	m_Dialog = new mafGUIDialog("Fill Holes", mafCLOSEWINDOW | mafRESIZABLE);
+	m_Dialog = new mafGUIDialog(_R("Fill Holes"), mafCLOSEWINDOW | mafRESIZABLE);
 
 	m_Rwi = new mafRWI(m_Dialog,ONE_LAYER,false);
 	m_Rwi->SetListener(this);
@@ -302,10 +302,10 @@ void medOpFillHoles::CreateOpDialog()
   wxStaticText* diam_label = new wxStaticText(m_Dialog, ID_DIAMETER_LABEL, _("  sphere size: "));
 	wxTextCtrl *diameter = new wxTextCtrl(m_Dialog,ID_DIAMETER, _("sphere dim."),p,wxSize(50, 16 ), wxNO_BORDER );
 
-	m_ButtonOk			= new mafGUIButton(m_Dialog, ID_OK,_("ok"), p, wxSize(80,20));
-	mafGUIButton  *b_cancel	= new mafGUIButton(m_Dialog, ID_CANCEL,_("cancel"), p, wxSize(80,20));
-	m_ButtonFill		= new mafGUIButton(m_Dialog, ID_FILL,_("fill"), p, wxSize(80,20));
-  m_ButtonUndo    = new mafGUIButton(m_Dialog,ID_UNDO,_("undo"),p,wxSize(80,20));
+	m_ButtonOk			= new mafGUIButton(m_Dialog, ID_OK,_L("ok"), p, wxSize(80,20));
+	mafGUIButton  *b_cancel	= new mafGUIButton(m_Dialog, ID_CANCEL,_L("cancel"), p, wxSize(80,20));
+	m_ButtonFill		= new mafGUIButton(m_Dialog, ID_FILL,_L("fill"), p, wxSize(80,20));
+  m_ButtonUndo    = new mafGUIButton(m_Dialog,ID_UNDO,_L("undo"),p,wxSize(80,20));
 
 	wxCheckBox *c_all		= new wxCheckBox(m_Dialog, ID_ALL,_("all holes"), p, wxSize(80,20));
 	wxCheckBox *c_smooth	= new wxCheckBox(m_Dialog, ID_SMOOTH,_("smooth"), p, wxSize(70,20));

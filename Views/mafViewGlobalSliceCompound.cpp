@@ -111,11 +111,11 @@ mafGUI* mafViewGlobalSliceCompound::CreateGui()
 
   if (buildHelpGui.GetArg() == true)
   {
-	  m_Gui->Button(ID_HELP, "Help","");	
+	  m_Gui->Button(ID_HELP, _R("Help"), _R(""));
   }
 
 	m_Gui->AddGui(((mafViewGlobalSlice*)m_ChildViewList[ID_VIEW_GLOBAL_SLICE])->GetGui());
-	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
 	m_LutWidget->Enable(false);
 	m_Gui->Divider(0);
 	m_Gui->FitGui();
@@ -126,15 +126,15 @@ mafGUI* mafViewGlobalSliceCompound::CreateGui()
 void mafViewGlobalSliceCompound::PackageView()
 //-------------------------------------------------------------------------
 {
-	m_ViewGlobalSlice = new mafViewGlobalSlice("",CAMERA_OS_P);
-	m_ViewGlobalSlice->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice");
-  m_ViewGlobalSlice->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice");
-	m_ViewGlobalSlice->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeSlice");
-  m_ViewGlobalSlice->PlugVisualPipe("medVMELabeledVolume", "mafPipeVolumeSlice");
-  m_ViewGlobalSlice->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice");
-  m_ViewGlobalSlice->PlugVisualPipe("medVMEAnalog", "mafPipeBox", NON_VISIBLE);
-  m_ViewGlobalSlice->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice");
-  m_ViewGlobalSlice->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice");
+	m_ViewGlobalSlice = new mafViewGlobalSlice(_R(""),CAMERA_OS_P);
+	m_ViewGlobalSlice->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurfaceSlice"));
+  m_ViewGlobalSlice->PlugVisualPipe(_R("mafVMESurfaceParametric"), _R("mafPipeSurfaceSlice"));
+	m_ViewGlobalSlice->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeSlice"));
+  m_ViewGlobalSlice->PlugVisualPipe(_R("medVMELabeledVolume"), _R("mafPipeVolumeSlice"));
+  m_ViewGlobalSlice->PlugVisualPipe(_R("mafVMEMesh"), _R("mafPipeMeshSlice"));
+  m_ViewGlobalSlice->PlugVisualPipe(_R("medVMEAnalog"), _R("mafPipeBox"), NON_VISIBLE);
+  m_ViewGlobalSlice->PlugVisualPipe(_R("mafVMELandmark"), _R("mafPipeSurfaceSlice"));
+  m_ViewGlobalSlice->PlugVisualPipe(_R("mafVMELandmarkCloud"), _R("mafPipeSurfaceSlice"));
 	
 	PlugChildView(m_ViewGlobalSlice);
 }

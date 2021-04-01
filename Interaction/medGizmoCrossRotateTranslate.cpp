@@ -38,7 +38,7 @@
 
 medGizmoCrossRotateTranslate::medGizmoCrossRotateTranslate()
 {
-	m_NameRTG = "UNDEFINED_RTG_NAME";
+	m_NameRTG = _R("UNDEFINED_RTG_NAME");
 	m_GizmoCrossTranslate = NULL;
 	m_GizmoCrossRotate = NULL;
 }

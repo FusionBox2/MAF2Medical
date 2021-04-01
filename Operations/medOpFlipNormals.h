@@ -54,7 +54,7 @@ class MED_OPERATION_EXPORT medOpFlipNormals: public mafOp
 public:
 
   /** constructor. */
-	medOpFlipNormals(const mafString& label = "Flip Normals");
+	medOpFlipNormals(const mafString& label = _R("Flip Normals"));
 
   /** destructor. */
 	~medOpFlipNormals(); 

@@ -46,7 +46,7 @@ class MED_OPERATION_EXPORT medOpExporterMeters: public mafOp
 {
 public:
   /** object constructor */
-  medOpExporterMeters(const mafString& label = "WrappedMeter");
+  medOpExporterMeters(const mafString& label = _R("WrappedMeter"));
   /** object destructor */
   ~medOpExporterMeters(); 
   /** RTTI Macro */
@@ -74,7 +74,7 @@ public:
   void OpDo();
 
   /** Set the filename for the .stl to export */
-  void SetFileName(const char *file_name) {m_File = file_name;};
+  void SetFileName(const char *file_name) {m_File = _R(file_name);};
   
   /**Public API for exporting*/
   void Export();

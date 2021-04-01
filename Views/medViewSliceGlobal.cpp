@@ -277,16 +277,16 @@ void medViewSliceGlobal::VmeDeletePipe(mafNode *vme)
 mafGUI *medViewSliceGlobal::CreateGui()
 //-------------------------------------------------------------------------
 {
-  mafString Views[3] = {"Z","Y","X"};
+  mafString Views[3] = {_R("Z"),_R("Y"),_R("X")};
 
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
 
-  m_GlobalSlider = m_Gui->FloatSlider(ID_POS_SLIDER,"pos.",&m_SliderOrigin,m_GlobalBounds[4],m_GlobalBounds[5]);
-  m_Gui->Combo(ID_CHANGE_VIEW,"view",&m_ViewIndex,3,Views);
-  m_OpacitySlider = m_Gui->FloatSlider(ID_OPACITY_SLIDER,"opacity",&m_Opacity,0.1,1.0);
+  m_GlobalSlider = m_Gui->FloatSlider(ID_POS_SLIDER,_R("pos."),&m_SliderOrigin,m_GlobalBounds[4],m_GlobalBounds[5]);
+  m_Gui->Combo(ID_CHANGE_VIEW,_R("view"),&m_ViewIndex,3,Views);
+  m_OpacitySlider = m_Gui->FloatSlider(ID_OPACITY_SLIDER,_R("opacity"),&m_Opacity,0.1,1.0);
 
-  m_Gui->Bool(ID_SHOW_TEXT, "Show text", &m_ShowText);
+  m_Gui->Bool(ID_SHOW_TEXT, _R("Show text"), &m_ShowText);
 
   bool Enable = false;
   mafNode *selVME = m_Sg->GetSelectedVme();
@@ -578,7 +578,7 @@ void medViewSliceGlobal::Print(std::ostream& os, const int tabs)// const
   mafIndent indent(tabs);
 
   os << indent << "medViewSliceGlobal" << '\t' << this << std::endl;
-  os << indent << "Name" << '\t' << GetLabel() << std::endl;
+  os << indent << "Name" << '\t' << GetLabel().GetCStr() << std::endl;
   os << std::endl;
   m_Sg->Print(os,1);
 }
@@ -592,7 +592,7 @@ void medViewSliceGlobal::CameraUpdate()
     mafVMEVolumeGray *volume = mafVMEVolumeGray::SafeDownCast(m_CurrentVolume->m_Vme);
 
     std::ostringstream stringStream;
-    stringStream << "VME " << volume->GetName() << " ABS matrix:" << std::endl;
+    stringStream << "VME " << volume->GetName().GetCStr() << " ABS matrix:" << std::endl;
 
     volume->GetAbsMatrixPipe()->GetMatrixPointer()->Print(stringStream);
 
@@ -616,14 +616,14 @@ void medViewSliceGlobal::CameraUpdate()
     if (m_NewABSPose.Equals(&oldABSPoseForEquals))
     { 
       if (DEBUG_MODE == true)
-        mafLogMessage("Calling Superclass Camera Update ");
+        mafLogMessage(_M("Calling Superclass Camera Update "));
 
       mafViewVTK::CameraUpdate();
     }
     else
     {
       if (DEBUG_MODE == true)
-        mafLogMessage("Calling Rotated Volumes Camera Update ");
+        mafLogMessage(_M("Calling Rotated Volumes Camera Update "));
       m_OldABSPose = m_NewABSPose;
       CameraUpdateForRotatedVolumes();
     }
@@ -632,7 +632,7 @@ void medViewSliceGlobal::CameraUpdate()
   {
 
     if (DEBUG_MODE == true)
-      mafLogMessage("Calling Superclass Camera Update ");
+      mafLogMessage(_M("Calling Superclass Camera Update "));
 
     mafViewVTK::CameraUpdate();
   }

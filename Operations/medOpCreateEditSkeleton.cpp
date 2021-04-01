@@ -107,11 +107,11 @@ void medOpCreateEditSkeleton::OpDo()
 	if(m_Input->IsMAFType(mafVMEVolumeGray))
 	{
 		m_Skeleton->SetData(m_ResultPolydata,((mafVME*)m_Input)->GetTimeStamp());
-		m_Skeleton->SetName("VME Skeleton");
+		m_Skeleton->SetName(_R("VME Skeleton"));
 
     mafTagItem tag_Nature;
-    tag_Nature.SetName("VME_NATURE");
-    tag_Nature.SetValue("SYNTHETIC");
+    tag_Nature.SetName(_R("VME_NATURE"));
+    tag_Nature.SetValue(_R("SYNTHETIC"));
 
     m_Skeleton->GetTagArray()->SetTag(tag_Nature);
 

@@ -189,7 +189,7 @@ public:
   };
 
   /** constructor. */
-  medOpSegmentation(const mafString &label = "Segmentation");
+  medOpSegmentation(const mafString &label = _R("Segmentation"));
 
   /** destructor. */
   ~medOpSegmentation(); 

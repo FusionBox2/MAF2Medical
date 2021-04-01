@@ -44,7 +44,7 @@ Scale vme dataset using the scaling gizmo or gui text entries
 class MED_OPERATION_EXPORT medOpScaleDataset : public mafOpTransformInterface
 {
 public:
-  medOpScaleDataset(const mafString& label = "Scale Dataset");
+  medOpScaleDataset(const mafString& label = _R("Scale Dataset"));
  ~medOpScaleDataset(); 
   virtual void OnEvent(mafEventBase *maf_event);
   

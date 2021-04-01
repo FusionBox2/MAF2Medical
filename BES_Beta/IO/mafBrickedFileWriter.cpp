@@ -242,7 +242,7 @@ void mafBrickedFileWriter::SetInputZCoordinates(vtkDoubleArray* pCoords)
 {
 	int nSampleRate = this->GetSampleRate();
 
-	mafString szMsg = wxString::Format(_("Sampling and bricking data (sr: %d, bs: %d) ..."),
+	mafString szMsg = mafString::Format(_L("Sampling and bricking data (sr: %d, bs: %d) ..."),
 		nSampleRate, m_NBrickSize[0]);
 
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
@@ -621,7 +621,7 @@ void mafBrickedFileWriter::CreateBricksIndexTable(int nCurBrickPlane)
 
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SHOW, this));
 
-	mafString szMsg = _("Initialization ...");
+	mafString szMsg = _L("Initialization ...");
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
 
@@ -629,7 +629,7 @@ void mafBrickedFileWriter::CreateBricksIndexTable(int nCurBrickPlane)
 	{
 		//create file
     m_BrickFile = vtkMAFFile2::New();
-		m_BrickFile->Create(m_BrickFileName);
+		m_BrickFile->Create(m_BrickFileName.GetCStr());
     m_BrickFile->Write( &m_FileHeader, sizeof(BBF_HEADER));
 
 		ExecuteInformation();	//initialize "global" variables
@@ -639,7 +639,7 @@ void mafBrickedFileWriter::CreateBricksIndexTable(int nCurBrickPlane)
 		ExecuteData();
 
 		//time to store low resolution
-		szMsg = _("Writing LOW Resolution map ...");
+		szMsg = _L("Writing LOW Resolution map ...");
 		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));    
 		
 		m_BrickFile->Write( m_PLowResLevel, m_NBricksDimSize[2]*m_NVoxelSizeInB);
@@ -650,7 +650,7 @@ void mafBrickedFileWriter::CreateBricksIndexTable(int nCurBrickPlane)
 //		IOFileUtils::CloseFile(f);
 
 		//and our index table
-		szMsg = _("Writing index table ...");
+		szMsg = _L("Writing index table ...");
 		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
 				
 		int nPrevSum = 0;		
@@ -686,13 +686,13 @@ void mafBrickedFileWriter::CreateBricksIndexTable(int nCurBrickPlane)
     m_BrickFile->Delete();
     m_BrickFile = NULL;
 #pragma warning(suppress: 6031) // warning C6031: Return value ignored: '_unlink'
-		_unlink(m_BrickFileName);
+		_unlink(m_BrickFileName.GetCStr());
 
 		return false;
 	}
 
 
-	szMsg = _("Finalization ...");
+	szMsg = _L("Finalization ...");
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
 
 	DeallocateBuffers();	

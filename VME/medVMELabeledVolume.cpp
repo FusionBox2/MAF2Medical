@@ -144,7 +144,7 @@ int medVMELabeledVolume::DeepCopy(mafNode *a)
   if (Superclass::DeepCopy(a) == MAF_OK)
   {
     medVMELabeledVolume *lab_volume = medVMELabeledVolume::SafeDownCast(a);
-    mafNode *linked_node = lab_volume->GetLink("VolumeLink");
+    mafNode *linked_node = lab_volume->GetLink(_R("VolumeLink"));
     if (linked_node)
     {
       SetVolumeLink(linked_node);
@@ -163,7 +163,7 @@ bool medVMELabeledVolume::Equals(mafVME *vme)
   if (Superclass::Equals(vme))
   {
     ret = m_Transform->GetMatrix() == ((medVMELabeledVolume *)vme)->m_Transform->GetMatrix() && \
-      GetLink("VolumeLink") == ((medVMELabeledVolume *)vme)->GetLink("VolumeLink");
+      GetLink(_R("VolumeLink")) == ((medVMELabeledVolume *)vme)->GetLink(_R("VolumeLink"));
   }
   return ret;
 }
@@ -187,7 +187,7 @@ void medVMELabeledVolume::DeleteOpDialog()
 void medVMELabeledVolume::SetVolumeLink(mafNode *n)
 //-------------------------------------------------------------------------
 {
-  SetLink("VolumeLink", n);
+  SetLink(_R("VolumeLink"), n);
   CopyDataset();
   Modified();
 }
@@ -275,7 +275,7 @@ void medVMELabeledVolume::GetLocalTimeStamps(std::vector<mafTimeStamp> &kframes)
 mafNode *medVMELabeledVolume::GetVolumeLink()
 //-------------------------------------------------------------------------
 {
-  return GetLink("VolumeLink");
+  return GetLink(_R("VolumeLink"));
 }
 
 //-------------------------------------------------------------------------
@@ -357,15 +357,15 @@ void medVMELabeledVolume::GenerateLabeledVolume()
       {
         wxString label = m_LabelNameVector.at(c);
         wxStringTokenizer tkz(label,wxT(' '),wxTOKEN_RET_EMPTY_ALL);
-        mafString labelName = tkz.GetNextToken().c_str();
-        mafString labelIntStr = tkz.GetNextToken().c_str();
-        m_LabelIntValue = atoi(labelIntStr);
+        mafString labelName = mafWxToString(tkz.GetNextToken());
+        mafString labelIntStr = mafWxToString(tkz.GetNextToken());
+        m_LabelIntValue = atoi(labelIntStr.GetCStr());
         labelIntVector.push_back(m_LabelIntValue);
-        mafString minStr = tkz.GetNextToken().c_str();
-        m_MinValue = atof(minStr);
+        mafString minStr = mafWxToString(tkz.GetNextToken());
+        m_MinValue = atof(minStr.GetCStr());
         minVector.push_back(m_MinValue);
-        mafString maxStr = tkz.GetNextToken().c_str();
-        m_MaxValue = atof(maxStr);
+        mafString maxStr = mafWxToString(tkz.GetNextToken());
+        m_MaxValue = atof(maxStr.GetCStr());
         maxVector.push_back(m_MaxValue);
         counter++;
       }
@@ -426,13 +426,13 @@ void medVMELabeledVolume::GenerateLabeledVolume()
 void medVMELabeledVolume::RetrieveTag()
 //----------------------------------------------------------------------
 { 
-  m_TagLabel = this->GetTagArray()->GetTag( "LABELS" );
+  m_TagLabel = this->GetTagArray()->GetTag( _R("LABELS") );
   if (!m_TagLabel)
   {
     mafTagItem tag_Item;
-    tag_Item.SetName("LABELS");
+    tag_Item.SetName(_R("LABELS"));
     this->GetTagArray()->SetTag(tag_Item);
-    m_TagLabel = this->GetTagArray()->GetTag( "LABELS" );
+    m_TagLabel = this->GetTagArray()->GetTag( _R("LABELS") );
   }
 }
 
@@ -442,7 +442,7 @@ int medVMELabeledVolume::InternalStore(mafStorageElement *parent)
 {  
   if (Superclass::InternalStore(parent)==MAF_OK)
   {
-    parent->StoreMatrix("Transform",&m_Transform->GetMatrix());
+    parent->StoreMatrix(_R("Transform"),&m_Transform->GetMatrix());
     return MAF_OK;
   }
   return MAF_ERROR;
@@ -454,7 +454,7 @@ int medVMELabeledVolume::InternalRestore(mafStorageElement *node)
   if (Superclass::InternalRestore(node)==MAF_OK)
   {
     mafMatrix matrix;
-    if (node->RestoreMatrix("Transform",&matrix)==MAF_OK)
+    if (node->RestoreMatrix(_R("Transform"),&matrix)==MAF_OK)
     {
       m_Transform->SetMatrix(matrix);
       return MAF_OK;
@@ -479,16 +479,16 @@ mafGUI* medVMELabeledVolume::CreateGui()
   m_Gui->SetListener(this); 
 
   // Settings for the buttons that will control the list box
-  m_Gui->Button(ID_INSERT_LABEL, _("Add label"), "", _("Add a label"));
-  m_Gui->Button(ID_REMOVE_LABEL, _("Remove label"), "", _("Remove a label"));
-  m_Gui->Button(ID_EDIT_LABEL, _("Edit label"), "", _("Edit a label"));
+  m_Gui->Button(ID_INSERT_LABEL, _L("Add label"), _R(""), _L("Add a label"));
+  m_Gui->Button(ID_REMOVE_LABEL, _L("Remove label"), _R(""), _L("Remove a label"));
+  m_Gui->Button(ID_EDIT_LABEL, _L("Edit label"), _R(""), _L("Edit a label"));
   if (m_VolumeLink)
   {
     EnableWidgets(true);
   }
 
   m_Gui->Divider(2);  
-  m_LabelCheckBox = m_Gui->CheckList(ID_LABELS,_("Labels"),360,_("Chose label to visualize"));
+  m_LabelCheckBox = m_Gui->CheckList(ID_LABELS,_L("Labels"),360,_L("Chose label to visualize"));
  
   typedef std::list< wxString > LIST;
   LIST myList;     
@@ -503,7 +503,7 @@ mafGUI* medVMELabeledVolume::CreateGui()
     {
       for ( unsigned int i = 0; i < noc; i++ )
       {
-        wxString label = m_TagLabel->GetValue( i );
+        wxString label = m_TagLabel->GetValue( i ).toWx();
         if ( label != "" )
         {
           myList.push_back( label );
@@ -514,7 +514,7 @@ mafGUI* medVMELabeledVolume::CreateGui()
       {
         for ( unsigned int j = 0; j < noc; j++ )
         {
-          wxString component = m_TagLabel->GetValue( j );
+          wxString component = m_TagLabel->GetValue( j ).toWx();
           if ( component != "" )
           {
             wxString labelName = *myListIter;
@@ -582,7 +582,7 @@ void medVMELabeledVolume::CreateOpDialog()
 
   int x_pos,y_pos,w,h;
   mafGetFrame()->GetPosition(&x_pos,&y_pos);
-  m_Dlg = new mafGUIDialogPreview("Insert Label",mafCLOSEWINDOW | mafRESIZABLE | mafUSERWI);
+  m_Dlg = new mafGUIDialogPreview(_R("Insert Label"),mafCLOSEWINDOW | mafRESIZABLE | mafUSERWI);
   m_Dlg->GetSize(&w,&h);
   m_Dlg->SetSize(x_pos+5,y_pos+5,w,h); 
 
@@ -602,8 +602,8 @@ void medVMELabeledVolume::CreateOpDialog()
   m_SliceMax  = m_SliceSlider->GetMax();
   m_Slice     = m_SliceSlider->GetValue();
 
-  mafGUIButton * b_incr_slice  = new mafGUIButton(m_Dlg,ID_INCREASE_SLICE, ">", p, wxSize( 25, 20) );
-  mafGUIButton * b_decr_slice  = new mafGUIButton(m_Dlg,ID_DECREASE_SLICE, "<", p, wxSize( 25, 20) );
+  mafGUIButton * b_incr_slice  = new mafGUIButton(m_Dlg,ID_INCREASE_SLICE, _R(">"), p, wxSize( 25, 20) );
+  mafGUIButton * b_decr_slice  = new mafGUIButton(m_Dlg,ID_DECREASE_SLICE, _R("<"), p, wxSize( 25, 20) );
 
   // slice interface validator
   text_slice->SetValidator(mafGUIValidator(this,ID_SLICE,text_slice,&m_Slice,m_SliceMin,m_SliceMax));
@@ -623,7 +623,7 @@ void medVMELabeledVolume::CreateOpDialog()
   m_LabelNameCtrl = new wxTextCtrl  ( m_Dlg, ID_D_LABEL_NAME, m_LabelNameValue, p, wxSize( 100, 16 ), wxNO_BORDER );    
   wxStaticText * lab_labelValue  = new wxStaticText( m_Dlg, -1, "Label value: ");
   m_LabelValueCtrl = new wxTextCtrl  ( m_Dlg, ID_D_LABEL_VALUE, m_LabelValueValue, p, wxSize( 100, 16 ), wxNO_BORDER );       
-  mafGUIButton  * bFit   = new mafGUIButton(m_Dlg,ID_FIT, "reset camera", p, wxSize(80,20));  
+  mafGUIButton  * bFit   = new mafGUIButton(m_Dlg,ID_FIT, _R("reset camera"), p, wxSize(80,20));  
 
   // other controls validator  
   m_LabelValueCtrl->SetValidator( mafGUIValidator( this, ID_D_LABEL_VALUE, m_LabelValueCtrl, &m_LabelIntValue, m_MinMin, m_MaxMax ) );
@@ -672,8 +672,8 @@ void medVMELabeledVolume::CreateOpDialog()
   h_sizer6->Add( text_max,    0, wxLEFT);	  
   h_sizer6->Add( m_MaxSlider, 1, wxEXPAND);  
 
-  mafGUIButton  * b_ok    = new mafGUIButton( m_Dlg, ID_OK, _("ok"), p, wxSize( 200, 20 ) );
-  mafGUIButton  * b_cancel= new mafGUIButton( m_Dlg, ID_CANCEL, _("cancel"), p, wxSize( 200, 20 ) );
+  mafGUIButton  * b_ok    = new mafGUIButton( m_Dlg, ID_OK, _L("ok"), p, wxSize( 200, 20 ) );
+  mafGUIButton  * b_cancel= new mafGUIButton( m_Dlg, ID_CANCEL, _L("cancel"), p, wxSize( 200, 20 ) );
   b_ok->SetValidator( mafGUIValidator( this, ID_OK, b_ok) );
   b_cancel->SetValidator( mafGUIValidator( this, ID_CANCEL, b_cancel) );
   wxBoxSizer *h_sizer4 = new wxBoxSizer(wxHORIZONTAL);
@@ -840,7 +840,7 @@ void medVMELabeledVolume::OnEvent(mafEventBase *maf_event)
         int noc = m_TagLabel->GetNumberOfComponents();
         for ( unsigned int w = 0; w < noc; w++ )
         {
-          wxString component = m_TagLabel->GetValue( w );
+          wxString component = m_TagLabel->GetValue( w ).toWx();
           if ( m_ItemLabel == component )
           {
             RemoveLabelTag(w);
@@ -859,17 +859,17 @@ void medVMELabeledVolume::OnEvent(mafEventBase *maf_event)
           int noc = m_TagLabel->GetNumberOfComponents();
           for ( unsigned int w = 0; w < noc; w++ )
           {
-            componentName = m_TagLabel->GetValue( w );
+            componentName = m_TagLabel->GetValue( w ).toWx();
             if ( m_ItemLabel == componentName )
             {
               wxStringTokenizer tkz(componentName,wxT(' '),wxTOKEN_RET_EMPTY_ALL);
-              mafString labelName = tkz.GetNextToken().c_str();
-              mafString labelIntStr = tkz.GetNextToken().c_str();
-              int labelValue = atof(labelIntStr);
-              mafString minStr = tkz.GetNextToken().c_str();
-              double min = atof(minStr);
-              mafString maxStr = tkz.GetNextToken().c_str();
-              double max = atof(maxStr);
+              mafString labelName = mafWxToString(tkz.GetNextToken());
+              mafString labelIntStr = mafWxToString(tkz.GetNextToken());
+              int labelValue = atof(labelIntStr.GetCStr());
+              mafString minStr = mafWxToString(tkz.GetNextToken());
+              double min = atof(minStr.GetCStr());
+              mafString maxStr = mafWxToString(tkz.GetNextToken());
+              double max = atof(maxStr.GetCStr());
 
               UpdateScalars();
               double sr[2];
@@ -883,8 +883,8 @@ void medVMELabeledVolume::OnEvent(mafEventBase *maf_event)
               m_MaxMin = m_MinAbsolute;  
               m_MaxMax = m_MaxAbsolute;
          
-              m_LabelNameValue = labelName;
-              m_LabelValueValue = labelIntStr;
+              m_LabelNameValue = labelName.toWx();
+              m_LabelValueValue = labelIntStr.toWx();
               m_LabelIntValue = labelValue;
               m_Min = min;
               m_Max = max;
@@ -900,7 +900,7 @@ void medVMELabeledVolume::OnEvent(mafEventBase *maf_event)
       case ID_LABELS:
       {
         int itemId = e->GetArg();
-        m_ItemLabel = m_LabelCheckBox->GetItemLabel(itemId);
+        m_ItemLabel = m_LabelCheckBox->GetItemLabel(itemId).toWx();
         m_ItemSelected = m_LabelCheckBox->FindItemIndex(itemId);
         for (int i = 0; i < m_CheckedVector.size(); i++)
         {
@@ -1047,7 +1047,7 @@ void medVMELabeledVolume::UpdateLabel()
     int noc = m_TagLabel->GetNumberOfComponents();
     for ( unsigned int i = 0; i < noc; i++ )
     {
-      wxString component = m_TagLabel->GetValue( i );
+      wxString component = m_TagLabel->GetValue( i ).toWx();
 
       // Check if another name for the label already exists
       wxString currentLabelName = component.BeforeFirst( ' ' );       
@@ -1093,11 +1093,11 @@ void medVMELabeledVolume::UpdateLabel()
     m_CheckListId++;
     m_LabelCheckBox->Update();
     int nComp = m_TagLabel->GetNumberOfComponents();
-    SetLabelTag(labelLine.c_str(), nComp);
+    SetLabelTag(mafWxToString(labelLine), nComp);
   }
   else
   {
-    m_LabelCheckBox->SetItemLabel(m_ItemSelected, labelLine);
+    m_LabelCheckBox->SetItemLabel(m_ItemSelected, mafWxToString(labelLine));
     m_LabelCheckBox->CheckItem(m_ItemSelected, true);
     ModifyLabelVector(m_ItemSelected, labelLine, true);
     m_LabelCheckBox->Update();
@@ -1105,10 +1105,10 @@ void medVMELabeledVolume::UpdateLabel()
     int noc = m_TagLabel->GetNumberOfComponents();
     for ( unsigned int w = 0; w < noc; w++ )
     {
-      wxString componentName = m_TagLabel->GetValue( w );
+      wxString componentName = m_TagLabel->GetValue( w ).toWx();
       if ( m_ItemLabel == componentName )
       {
-        SetLabelTag(labelLine.c_str(), w );
+        SetLabelTag(mafWxToString(labelLine), w );
       }
     }
   }
@@ -1146,11 +1146,11 @@ void medVMELabeledVolume::RemoveLabelTag(int component)
 mmaVolumeMaterial * medVMELabeledVolume::GetMaterial()
 //-------------------------------------------------------------------------
 {
-  mmaVolumeMaterial *material = (mmaVolumeMaterial *)GetAttribute("VolumeMaterialAttributes");
+  mmaVolumeMaterial *material = (mmaVolumeMaterial *)GetAttribute(_R("VolumeMaterialAttributes"));
   if (material == NULL)
   {
     material = mmaVolumeMaterial::New();
-    SetAttribute("VolumeMaterialAttributes", material);
+    SetAttribute(_R("VolumeMaterialAttributes"), material);
     if (m_Output)
     {
       ((mafVMEOutputVolume *)m_Output)->SetMaterial(material);

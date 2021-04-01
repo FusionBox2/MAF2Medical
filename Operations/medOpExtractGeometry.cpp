@@ -167,7 +167,7 @@ void medOpExtractGeometry::CreateGui()
   m_Gui->AddGui(m_ExtractSurfaceGui);
 
   //m_Gui->OkCancel();
-  m_Gui->TwoButtons(ID_CANCEL, ID_OK, "Cancel", "Ok");
+  m_Gui->TwoButtons(ID_CANCEL, ID_OK, _R("Cancel"), _R("Ok"));
 
   if(m_VolumeInput->GetOutput()->GetVTKData()->IsA("vtkRectilinearGrid"))
   {
@@ -183,38 +183,38 @@ void medOpExtractGeometry::CreateExtractSurfaceGui()
 {
   m_ExtractSurfaceGui = new mafGUI(this);
 
-  m_ExtractSurfaceGui->Label(mafString("Pre-processing volume"), true);
-  m_ExtractSurfaceGui->Bool(ID_VOLUME_SMOOTHING, "Volume Smoothing", &m_VolumeSmoothing, 1);
-  m_ExtractSurfaceGui->Slider(ID_VOLUME_SMOOTHING_REPETITIONS, wxString("Iterations"), &m_VolumeSmoothingRepetitions, 1, 5);
+  m_ExtractSurfaceGui->Label(mafString(_R("Pre-processing volume")), true);
+  m_ExtractSurfaceGui->Bool(ID_VOLUME_SMOOTHING, _R("Volume Smoothing"), &m_VolumeSmoothing, 1);
+  m_ExtractSurfaceGui->Slider(ID_VOLUME_SMOOTHING_REPETITIONS, mafString(_R("Iterations")), &m_VolumeSmoothingRepetitions, 1, 5);
   m_ExtractSurfaceGui->Enable(ID_VOLUME_SMOOTHING_REPETITIONS, m_VolumeSmoothing>0);
   m_ExtractSurfaceGui->Divider();
 
-  m_ExtractSurfaceGui->Bool(ID_AUTO_CONTOUR_VALUE, _("Auto contour value"), &m_AutoSurfaceContourValue, 1);
-  m_SurfaceContourValueSlider = m_ExtractSurfaceGui->FloatSlider(ID_CONTOUR_VALUE, _("Contour value"), &m_SurfaceContourValue, m_ScalarRange[0], m_ScalarRange[1]);
+  m_ExtractSurfaceGui->Bool(ID_AUTO_CONTOUR_VALUE, _L("Auto contour value"), &m_AutoSurfaceContourValue, 1);
+  m_SurfaceContourValueSlider = m_ExtractSurfaceGui->FloatSlider(ID_CONTOUR_VALUE, _L("Contour value"), &m_SurfaceContourValue, m_ScalarRange[0], m_ScalarRange[1]);
   m_ExtractSurfaceGui->Enable(ID_CONTOUR_VALUE, m_AutoSurfaceContourValue<=0);
 
   //////////////////////////////////////////////////////////////////////////
   // Surface Processing
   //////////////////////////////////////////////////////////////////////////
-  m_ExtractSurfaceGui->Label(mafString("Filtering Method"), true);
+  m_ExtractSurfaceGui->Label(mafString(_R("Filtering Method")), true);
   m_ExtractSurfaceGui->Divider();
 
-  mafString processingType[3] = {"Poisson", "Taubin and Fill Holes","Taubin"};
-  m_ExtractSurfaceGui->Combo(ID_PROCESSING_TYPE, "", &m_ProcessingType, 3, processingType);
+  mafString processingType[3] = {_R("Poisson"), _R("Taubin and Fill Holes"),_R("Taubin")};
+  m_ExtractSurfaceGui->Combo(ID_PROCESSING_TYPE, _R(""), &m_ProcessingType, 3, processingType);
 
 
   //////////////////////////////////////////////////////////////////////////
   // Surface optimization
   //////////////////////////////////////////////////////////////////////////
-  m_ExtractSurfaceGui->Label(mafString("Surface Optimization"), true);
+  m_ExtractSurfaceGui->Label(mafString(_R("Surface Optimization")), true);
   m_ExtractSurfaceGui->Divider();
 
-  m_ExtractSurfaceGui->Bool(ID_CONNECTIVITY, _("Connectivity"), &m_Connectivity, 1);
+  m_ExtractSurfaceGui->Bool(ID_CONNECTIVITY, _L("Connectivity"), &m_Connectivity, 1);
 
-  m_ExtractSurfaceGui->Bool(ID_CLEAN_SURFACE, _("Clean surface"), &m_CleanSurface, 1);
+  m_ExtractSurfaceGui->Bool(ID_CLEAN_SURFACE, _L("Clean surface"), &m_CleanSurface, 1);
 
-  m_ExtractSurfaceGui->Bool(ID_SMOOTH_SURFACE, _("Smooth Surface"), &m_SmoothSurface, 1);
-  m_ExtractSurfaceGui->Slider(ID_SMOOTH_SURFACE_ITERATIONS, _("Iterations"), &m_SmoothSurfaceIterationsNumber, 25, 75);
+  m_ExtractSurfaceGui->Bool(ID_SMOOTH_SURFACE, _L("Smooth Surface"), &m_SmoothSurface, 1);
+  m_ExtractSurfaceGui->Slider(ID_SMOOTH_SURFACE_ITERATIONS, _L("Iterations"), &m_SmoothSurfaceIterationsNumber, 25, 75);
 
   CreateSurfaceDecimationGui();
   //////////////////////////////////////////////////////////////////////////
@@ -276,8 +276,8 @@ void medOpExtractGeometry::CreateResampleGui()
 {
   m_ResampleGui = new mafGUI(this);
 
-  m_ResampleGui->Label( _("Resample volume"), true );
-  m_ResampleGui->Label( _("Volume Spacing") ,false );
+  m_ResampleGui->Label( _L("Resample volume"), true );
+  m_ResampleGui->Label( _L("Volume Spacing") ,false );
 
   medOpVolumeResample *op = new medOpVolumeResample();
   op->SetInput(m_VolumeInput);
@@ -286,9 +286,9 @@ void medOpExtractGeometry::CreateResampleGui()
   op->GetSpacing(m_VolumeSpacing);
   mafDEL(op);
 
-  m_ResampleGui->Vector(ID_RESAMPLE_VOLUME_SPACING, "", this->m_VolumeSpacing,MINFLOAT,MAXFLOAT,4,"output volume spacing");
+  m_ResampleGui->Vector(ID_RESAMPLE_VOLUME_SPACING, _R(""), this->m_VolumeSpacing,MINFLOAT,MAXFLOAT,4,_R("output volume spacing"));
 
-  m_ResampleGui->Button(ID_RESAMPLE_OK, _("Resample"), "" );
+  m_ResampleGui->Button(ID_RESAMPLE_OK, _L("Resample"), _R(""));
 
   m_ResampleGui->Divider(1);
 
@@ -568,7 +568,7 @@ int medOpExtractGeometry::GenerateIsosurface()
   {
     // smoothing volume with some itk filters
 
-    mafString smoothedVolumeName = "smoothed_";
+    mafString smoothedVolumeName = _R("smoothed_");
     smoothedVolumeName += m_Input->GetName();
 
     m_ResampledVolume = (mafVMEVolumeGray *)m_VolumeInput->NewInstance();
@@ -576,16 +576,16 @@ int medOpExtractGeometry::GenerateIsosurface()
     m_ResampledVolume->GetTagArray()->DeepCopy(m_VolumeInput->GetTagArray());
 
     mafTagItem *ti = NULL;
-    ti = m_ResampledVolume->GetTagArray()->GetTag("VME_NATURE");
+    ti = m_ResampledVolume->GetTagArray()->GetTag(_R("VME_NATURE"));
     if(ti)
     {
-      ti->SetValue("SYNTHETIC");
+      ti->SetValue(_R("SYNTHETIC"));
     }
     else
     {
       mafTagItem tag_Nature;
-      tag_Nature.SetName("VME_NATURE");
-      tag_Nature.SetValue("SYNTHETIC");
+      tag_Nature.SetName(_R("VME_NATURE"));
+      tag_Nature.SetValue(_R("SYNTHETIC"));
 
       m_ResampledVolume->GetTagArray()->SetTag(tag_Nature);
     }
@@ -685,12 +685,12 @@ int medOpExtractGeometry::GenerateIsosurface()
   m_SurfaceOutput->SetData(m_SurfaceData,mafVMEVolumeGray::SafeDownCast(m_Input)->GetTimeStamp());
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("SYNTHETIC");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("SYNTHETIC"));
 
   m_SurfaceOutput->GetTagArray()->SetTag(tag_Nature);
 
-  m_SurfaceOutput->SetName("Surface");
+  m_SurfaceOutput->SetName(_R("Surface"));
   m_SurfaceOutput->ReparentTo(m_Input);
   m_SurfaceOutput->Update();
 

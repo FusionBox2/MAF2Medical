@@ -104,9 +104,9 @@ void medOpInteractionDebugger::CreateGui()
   m_Gui = new mafGUI(this);
   m_Gui->SetListener(this);
   m_Gui->Divider();
-  m_Gui->Button(ID_RESET, "Reset", "");
+  m_Gui->Button(ID_RESET, _R("Reset"), _R(""));
   m_Gui->Divider();
-  m_Gui->Button(ID_CHOOSE, "Choose Constrain", "");
+  m_Gui->Button(ID_CHOOSE, _R("Choose Constrain"), _R(""));
   m_Gui->Divider();
   m_Gui->AddGui(m_GizmoDebugger->GetGui());
   m_Gui->Divider();
@@ -141,7 +141,7 @@ void medOpInteractionDebugger::OnEvent(mafEventBase *maf_event)
       break;
       case ID_CHOOSE:
       {
-        mafString s(_("Choose Constrain"));
+        mafString s(_L("Choose Constrain"));
         mafEvent e(this,VME_CHOOSE, &s, (long)&medOpInteractionDebugger::ConstrainAccept);
         mafEventMacro(e);
         mafNode *vme = e.GetVme();
@@ -325,7 +325,7 @@ void medOpInteractionDebugger::AddMAFVMEPolylineTestConstrain1ToTree()
   BuildPolyline1(in_points);
   BuildVMEPolyline(in_points, polyline);
 
-  polyline->SetName("pippo constrain");
+  polyline->SetName(_R("pippo constrain"));
   polyline->ReparentTo(m_Input);
   
   mafDEL(polyline);
@@ -344,7 +344,7 @@ void medOpInteractionDebugger::AddMEDVMEPolylineGraphTestConstrain1ToTree()
   polyline->GetOutput()->GetVTKData()->Update();
   polyline->Update();
 
-  polyline->SetName("test graph");
+  polyline->SetName(_R("test graph"));
   polyline->ReparentTo(m_Input);
 
   mafDEL(polyline);
@@ -356,7 +356,7 @@ void medOpInteractionDebugger::RemoveTestConstraintGraph1FromTree()
 
   mafVME *vmeRoot = mafVME::SafeDownCast(m_Input->GetRoot());
 
-  mafVME *constraint = mafVME::SafeDownCast(vmeRoot->FindInTreeByName("test graph"));
+  mafVME *constraint = mafVME::SafeDownCast(vmeRoot->FindInTreeByName(_R("test graph")));
   assert(constraint != NULL);
   
   constraint->ReparentTo(NULL);
@@ -371,7 +371,7 @@ void medOpInteractionDebugger::AddMAFVMEPolylineTestConstrain2ToTree()
   BuildPolyline2(in_points);
   BuildVMEPolyline(in_points, polyline);
 
-  polyline->SetName("test constrain");
+  polyline->SetName(_R("test constrain"));
   polyline->ReparentTo(m_Input);
 
   mafDEL(polyline);
@@ -386,7 +386,7 @@ void medOpInteractionDebugger::AddMAFVMEPolylineTestConstrain3ToTree()
   BuildPolyline3(in_points);
   BuildVMEPolyline(in_points, polyline);
 
-  polyline->SetName("pluto constrain");
+  polyline->SetName(_R("pluto constrain"));
   polyline->ReparentTo(m_Input);
 
   mafDEL(polyline);
@@ -398,7 +398,7 @@ void medOpInteractionDebugger::AddMEDGizmoDebuggerToTree()
 
   mafVME *vmeRoot = mafVME::SafeDownCast(m_Input->GetRoot());
 
-  mafVME *constraint = mafVME::SafeDownCast(vmeRoot->FindInTreeByName("test graph"));
+  mafVME *constraint = mafVME::SafeDownCast(vmeRoot->FindInTreeByName(_R("test graph")));
   assert(constraint != NULL);
   
   // Create the output vtk data...

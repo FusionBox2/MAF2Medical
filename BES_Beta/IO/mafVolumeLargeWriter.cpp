@@ -235,16 +235,16 @@ int mafVolumeLargeWriter::ComputeBrickSize(int nSampleRate, int nMaxSampleRate)
 int mafVolumeLargeWriter::CreateLODs(int nMaxSampleRate, vtkIdType64& nTotalMaxSize) throw(...)
 {
 	//construct name
-	wxString szPath, szFile, szExt;	
-	wxSplitPath(m_BrickFileName, &szPath, &szFile, &szExt);
-	wxString szFNamePref = szPath;
-	if (!wxEndsWithPathSeparator(szPath))
-		szFNamePref += wxFILE_SEP_PATH;	
+	mafString szPath, szFile, szExt;	
+	mafSplitPath(m_BrickFileName, &szPath, &szFile, &szExt);
+	mafString szFNamePref = szPath;
+	if (!wxEndsWithPathSeparator(szPath.toWx()))
+		szFNamePref += mafWxToString(wxFILE_SEP_PATH);	
 	
 	//create directory for our files
-	if (!wxDirExists(szFNamePref))
-		wxMkdir(szFNamePref);
-	szFNamePref += wxFILE_SEP_PATH;
+	if (!mafDirExists(szFNamePref))
+		mafDirMake(szFNamePref);
+	szFNamePref += mafWxToString(wxFILE_SEP_PATH);
 	szFNamePref += szFile;
 
 
@@ -276,18 +276,18 @@ int mafVolumeLargeWriter::CreateLODs(int nMaxSampleRate, vtkIdType64& nTotalMaxS
       ::QueryPerformanceCounter(&liBegin);
 #endif //_PROFILE_LARGEDATA_
 
-			wxString szFName = wxString::Format("%s_%02d.bbf", szFNamePref, /*pOrder[i]*/i);
+			mafString szFName = szFNamePref + mafString::Format(_R("_%02d.bbf"), /*pOrder[i]*/i);
 
 			bf.SetSampleRate(i/*pOrder[i]*/);
 			bf.SetBrickSize(ComputeBrickSize(i/*pOrder[i]*/, nMaxSampleRate));
-			bf.SetFileName(szFName);
+			bf.SetFileName(szFName.GetCStr());
 			if (!bf.Update()) 
 			{
-				wxString szMsg = wxString::Format(_("Unable to create level %d"), i);
-				throw std::ios::failure(szMsg.c_str());
+				mafString szMsg = mafString::Format(_L("Unable to create level %d"), i);
+				throw std::ios::failure(szMsg.GetCStr());
 			}
 
-      vtkIdType64 nFileSize = vtkMAFFile2::GetFileSize(szFName);
+      vtkIdType64 nFileSize = vtkMAFFile2::GetFileSize(szFName.GetCStr());
 
 #ifdef _PROFILE_LARGEDATA_
       LARGE_INTEGER liEnd;

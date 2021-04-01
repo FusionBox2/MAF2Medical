@@ -67,7 +67,7 @@ void medWizard::Execute()
   medWizardBlock *start=GetBlockByName("START");
 
   if (start==NULL)
-    mafLogMessage("Wizard Error: Wizard has no starting point");
+    mafLogMessage(_M("Wizard Error: Wizard has no starting point"));
   else 
   {
     if (m_ShowProgressBar)
@@ -150,7 +150,7 @@ medWizardBlock *medWizard::GetBlockByName(const char *name )
     if (m_Blocks[i]->GetName()==name)
       return m_Blocks[i];
 
-  mafLogMessage("Wizard error: Block:'%s' not fount", name);
+  mafLogMessage(_M(_R("Wizard error: Block:'") + mafString(_R(name)) + _R("' not fount")));
   return NULL;
 }
 
@@ -228,7 +228,7 @@ void medWizard::BlockExecutionEnd()
     //checking match bracket 
     if (nextBlock[nextBlock.size()-1] != '}')
     {
-      mafLogMessage("WIZARD special keyword error: WIZARD{<name>} wrong format");
+      mafLogMessage(_M("WIZARD special keyword error: WIZARD{<name>} wrong format"));
 
       if (m_ShowProgressBar)
         mafEventMacro(mafEvent(this,PROGRESSBAR_HIDE));
@@ -238,7 +238,7 @@ void medWizard::BlockExecutionEnd()
     else 
     {
       //getting the wizard substring
-      mafString wizardName = nextBlock.SubString(7,nextBlock.size()-2).c_str();
+      mafString wizardName = mafWxToString(nextBlock.SubString(7,nextBlock.size()-2));
       mafEventMacro(mafEvent(this,WIZARD_SWITCH,&wizardName));
     }
   }
@@ -249,7 +249,7 @@ void medWizard::BlockExecutionEnd()
     //if the next block is undefined we abort the wizard execution
     if (m_CurrentBlock==NULL)
     {
-      mafLogMessage("Wizard Error: undefined block :'%s'",nextBlock.c_str());
+      mafLogMessage(_M(_R("Wizard Error: undefined block :'") + mafWxToString(nextBlock) + _R("'")));
       AbortWizard();
     }
     //else we start the execution of the next block to continue wizard flow
@@ -311,9 +311,9 @@ mafString medWizard::GetDescriptionTitle()
 {
 
   if (m_CurrentBlock)
-    return mafString("Wizard - ") + m_CurrentBlock->GetDescriptionLabel().GetCStr();
+    return _R("Wizard - ") + m_CurrentBlock->GetDescriptionLabel();
   else 
-    return mafString("Wizard - No running Block");
+    return mafString(_R("Wizard - No running Block"));
 
 }
 

@@ -221,14 +221,14 @@ mafGUI *medPipeVolumeDRR::CreateGui()
 
 	this->m_Gui->SetListener(this);
 
-	m_Gui->Double(ID_RESAMPLE_FACTOR,"Resample",&m_ResampleFactor,0.00001,1);
+	m_Gui->Double(ID_RESAMPLE_FACTOR,_R("Resample"),&m_ResampleFactor,0.00001,1);
 
-	this->m_Gui->Label("DRR settings:", true);
-	m_Gui->Color(ID_VOLUME_COLOR, "Color", &this->m_VolumeColor);
+	this->m_Gui->Label(_R("DRR settings:"), true);
+	m_Gui->Color(ID_VOLUME_COLOR, _R("Color"), &this->m_VolumeColor);
 	vtkXRayVolumeMapper::GetExposureCorrection(this->m_ExposureCorrection);
-	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_L,	"Min", &this->m_ExposureCorrection[0], -1.f, 1.f);
-	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_H,	"Max", &this->m_ExposureCorrection[1], -1.f, 1.f);
-	m_Gui->FloatSlider(ID_GAMMA,	"Gamma", &this->m_Gamma, 0.1f, 3.f);
+	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_L,	_R("Min"), &this->m_ExposureCorrection[0], -1.f, 1.f);
+	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_H,	_R("Max"), &this->m_ExposureCorrection[1], -1.f, 1.f);
+	m_Gui->FloatSlider(ID_GAMMA,	_R("Gamma"), &this->m_Gamma, 0.1f, 3.f);
 /*
 	this->m_Gui->Divider(0);
 	this->m_Gui->Label("Image settings:", true);
@@ -238,16 +238,16 @@ mafGUI *medPipeVolumeDRR::CreateGui()
 	m_Gui->FloatSlider(ID_IMAGE_OFFSET_Y, "Offset Y", &(m_Offset[1]), -1.0, 1.0);
 */
 	this->m_Gui->Divider(0);
-	this->m_Gui->Label("Camera settings:", true);
+	this->m_Gui->Label(_R("Camera settings:"), true);
 	vtkCamera *camera = m_RenFront->GetActiveCamera();
 	this->m_CameraAngle = camera->GetViewAngle();
-	m_Gui->FloatSlider(ID_CAMERA_ANGLE, "View angle", &m_CameraAngle, 0.5, 45.0);
+	m_Gui->FloatSlider(ID_CAMERA_ANGLE, _R("View angle"), &m_CameraAngle, 0.5, 45.0);
 	camera->GetPosition(this->m_CameraPosition);
-	m_Gui->Vector(ID_CAMERA_POSITION, "Position",	m_CameraPosition);
+	m_Gui->Vector(ID_CAMERA_POSITION, _R("Position"),	m_CameraPosition);
 	camera->GetFocalPoint(this->m_CameraFocus);
-	m_Gui->Vector(ID_CAMERA_FOCUS, "Focal point",	m_CameraFocus);
+	m_Gui->Vector(ID_CAMERA_FOCUS, _R("Focal point"),	m_CameraFocus);
 	this->m_CameraRoll = camera->GetRoll();
-	m_Gui->FloatSlider(ID_CAMERA_ROLL, "Roll angle", &m_CameraRoll, -180., 180.0);
+	m_Gui->FloatSlider(ID_CAMERA_ROLL, _R("Roll angle"), &m_CameraRoll, -180., 180.0);
 
 	this->m_Gui->Divider(0);
 	//this->m_Gui->Button(ID_EXPORT, "Export Registration Settings");

@@ -133,9 +133,9 @@ medGizmoCrossTranslatePlane::medGizmoCrossTranslatePlane(mafVME *input, mafBaseE
 	{
 		// the ith gizmo
 		m_Gizmo[i] = mafVMEGizmo::New();
-		vmeName = "part";
-		vmeName << i;
-		m_Gizmo[i]->SetName(vmeName.GetCStr());
+		vmeName = _R("part");
+		vmeName += mafToString(i);
+		m_Gizmo[i]->SetName(vmeName);
 		m_Gizmo[i]->SetData(m_RotatePDF[i]->GetOutput());
 		m_Gizmo[i]->SetMediator(GetListener());
 	}
@@ -618,7 +618,7 @@ void medGizmoCrossTranslatePlane::CreateFeedbackGizmoPipeline()
 	m_FeedbackStuffAppendPolydata->AddInput(m_DownFeedbackConeTransformPDF->GetOutput());
 	m_FeedbackStuffAppendPolydata->Update();
 
-	m_TranslationFeedbackGizmo->SetName("PlaneTranslationFeedbackGizmo");
+	m_TranslationFeedbackGizmo->SetName(_R("PlaneTranslationFeedbackGizmo"));
 	m_TranslationFeedbackGizmo->SetMediator(GetListener());
 	m_TranslationFeedbackGizmo->SetData(m_FeedbackStuffAppendPolydata->GetOutput());
 	assert(m_InputVme);

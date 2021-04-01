@@ -208,7 +208,7 @@ mafGUI* medViewSliceBlendRX::CreateGui()
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
 
-  m_Gui->Label(_("Blend View"),true);
+  m_Gui->Label(_L("Blend View"),true);
   m_BlendGui = m_ChildViewList[BLEND_VIEW]->GetGui();
   // m_BlendGui->SetListener(this);
   m_Gui->AddGui(m_ChildViewList[BLEND_VIEW]->GetGui());
@@ -252,13 +252,13 @@ void medViewSliceBlendRX::PackageView()
   int cam_pos[2] = {CAMERA_RX_FRONT, CAMERA_RX_LEFT};
   // create to the child view
   //Create a mafViewRX
-  m_ViewsRX = new mafViewRX("RX child view", cam_pos[0]);
-  m_ViewsRX->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeProjected",MUTEX);
-  m_ViewsRX->PlugVisualPipe("mafVMELabeledVolume", "mafPipeVolumeProjected",MUTEX);
+  m_ViewsRX = new mafViewRX(_R("RX child view"), cam_pos[0]);
+  m_ViewsRX->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeProjected"),MUTEX);
+  m_ViewsRX->PlugVisualPipe(_R("mafVMELabeledVolume"), _R("mafPipeVolumeProjected"),MUTEX);
   PlugChildView(m_ViewsRX);
   //Create a medViewSliceBlend
-  m_ViewSliceBlend = new medViewSliceBlend("Blend",CAMERA_BLEND);
-  m_ViewSliceBlend->PlugVisualPipe("mafVMEVolumeGray","medPipeVolumeSliceBlend",MUTEX);
+  m_ViewSliceBlend = new medViewSliceBlend(_R("Blend"),CAMERA_BLEND);
+  m_ViewSliceBlend->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("medPipeVolumeSliceBlend"),MUTEX);
 
   PlugChildView(m_ViewSliceBlend);
 }

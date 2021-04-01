@@ -188,9 +188,9 @@ void medPipeComputeWrapping::Create(mafNode *node, mafView *view/*, bool use_axe
     double pos[3], rot[3];
     mafVME *linked_vme = m_WrappedMeterVME->GetStartVME();
     mafSmartPointer<mafTransform> TmpTransform;
-    if(linked_vme && linked_vme->IsMAFType(mafVMELandmarkCloud) && m_WrappedMeterVME->GetLinkSubId("StartVME") != -1)
+    if(linked_vme && linked_vme->IsMAFType(mafVMELandmarkCloud) && m_WrappedMeterVME->GetLinkSubId(_R("StartVME")) != -1)
     {
-      ((mafVMELandmarkCloud *)linked_vme)->GetLandmark(m_WrappedMeterVME->GetLinkSubId("StartVME"),pos,-1);
+      ((mafVMELandmarkCloud *)linked_vme)->GetLandmark(m_WrappedMeterVME->GetLinkSubId(_R("StartVME")),pos,-1);
       TmpTransform->SetMatrix(*linked_vme->GetOutput()->GetAbsMatrix());
       TmpTransform->TransformPoint(pos,pos);
     }
@@ -231,27 +231,27 @@ medPipeComputeWrapping::~medPipeComputeWrapping()
 mafGUI *medPipeComputeWrapping::CreateGui()
 //----------------------------------------------------------------------------
 {
-  const mafString type_measure_string[] = {"absolute", "relative"};
-  const mafString representation_string[] = {"line", "tube"};
-  const mafString color_string[] = {"one", "range"};
+  const mafString type_measure_string[] = {_R("absolute"), _R("relative")};
+  const mafString representation_string[] = {_R("line"), _R("tube")};
+  const mafString color_string[] = {_R("one"), _R("range")};
   int num_choices = 2;
 
   mmaMeter *meter_attrib = m_WrappedMeterVME->GetMeterAttributes();
 
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
-  m_Gui->Bool(ID_SHOW_LABEL,"label", &meter_attrib->m_LabelVisibility);
-  m_Gui->Combo(ID_COLOR_MODE,"color", &meter_attrib->m_ColorMode,num_choices,color_string);
+  m_Gui->Bool(ID_SHOW_LABEL,_R("label"), &meter_attrib->m_LabelVisibility);
+  m_Gui->Combo(ID_COLOR_MODE,_R("color"), &meter_attrib->m_ColorMode,num_choices,color_string);
   m_MaterialButton = new mafGUIMaterialButton(m_Vme,this);
   m_Gui->AddGui(m_MaterialButton->GetGui());
-  m_Gui->VectorN(ID_DISTANCE_RANGE,"range",meter_attrib->m_DistanceRange,2,0);
-  m_Gui->Combo(ID_METER_REPRESENTATION,"",&meter_attrib->m_Representation,num_choices,representation_string);
-  m_Gui->Double(ID_TUBE_RADIUS,"radius",&meter_attrib->m_TubeRadius,0);
-  m_Gui->Bool(ID_TUBE_CAPPING,"capping",&meter_attrib->m_Capping);
-  m_Gui->Combo(ID_METER_MEASURE_TYPE,"",&meter_attrib->m_MeasureType,num_choices,type_measure_string);
-  m_Gui->Double(ID_INIT_MEASURE,"init",&meter_attrib->m_InitMeasure,0);
-  m_Gui->Bool(ID_GENERATE_EVENT,"gen. event",&meter_attrib->m_GenerateEvent);
-  m_Gui->Double(ID_DELTA_PERCENT,"delta %",&meter_attrib->m_DeltaPercent,0);
+  m_Gui->VectorN(ID_DISTANCE_RANGE,_R("range"),meter_attrib->m_DistanceRange,2,0);
+  m_Gui->Combo(ID_METER_REPRESENTATION, _R(""),&meter_attrib->m_Representation,num_choices,representation_string);
+  m_Gui->Double(ID_TUBE_RADIUS,_R("radius"),&meter_attrib->m_TubeRadius,0);
+  m_Gui->Bool(ID_TUBE_CAPPING,_R("capping"),&meter_attrib->m_Capping);
+  m_Gui->Combo(ID_METER_MEASURE_TYPE, _R(""),&meter_attrib->m_MeasureType,num_choices,type_measure_string);
+  m_Gui->Double(ID_INIT_MEASURE,_R("init"),&meter_attrib->m_InitMeasure,0);
+  m_Gui->Bool(ID_GENERATE_EVENT,_R("gen. event"),&meter_attrib->m_GenerateEvent);
+  m_Gui->Double(ID_DELTA_PERCENT,_R("delta %"),&meter_attrib->m_DeltaPercent,0);
 
   m_MaterialButton->Enable(meter_attrib->m_ColorMode == medVMEComputeWrapping::ONE_COLOR);
   m_Gui->Enable(ID_DISTANCE_RANGE,meter_attrib->m_ColorMode == medVMEComputeWrapping::RANGE_COLOR);
@@ -383,9 +383,9 @@ void medPipeComputeWrapping::UpdateProperty(bool fromTag)
   double rot[3] = {0,0,0};
   mafVME *linked_vme = m_WrappedMeterVME->GetStartVME();
   mafSmartPointer<mafTransform> TmpTransform;
-  if(linked_vme && linked_vme->IsMAFType(mafVMELandmarkCloud) && m_WrappedMeterVME->GetLinkSubId("StartVME") != -1)
+  if(linked_vme && linked_vme->IsMAFType(mafVMELandmarkCloud) && m_WrappedMeterVME->GetLinkSubId(_R("StartVME")) != -1)
   {
-    ((mafVMELandmarkCloud *)linked_vme)->GetLandmark(m_WrappedMeterVME->GetLinkSubId("StartVME"),pos,-1);
+    ((mafVMELandmarkCloud *)linked_vme)->GetLandmark(m_WrappedMeterVME->GetLinkSubId(_R("StartVME")),pos,-1);
     TmpTransform->SetMatrix(*linked_vme->GetOutput()->GetAbsMatrix());
     TmpTransform->TransformPoint(pos,pos);
   }

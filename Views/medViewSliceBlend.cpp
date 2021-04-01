@@ -145,13 +145,13 @@ void medViewSliceBlend::VmeCreatePipe(mafNode *vme)
     return;
   }
 
-  mafString pipe_name = "";
+  mafString pipe_name = _R("");
   GetVisualPipeName(vme, pipe_name);
 
   mafSceneNode *n = m_Sg->Vme2Node(vme);
   assert(n && !n->m_Pipe);
 
-  if (pipe_name != "")
+  if (!pipe_name.IsEmpty())
   {
     if((vme->IsMAFType(mafVMELandmarkCloud) && ((mafVMELandmarkCloud*)vme)->IsOpen()) || vme->IsMAFType(mafVMELandmark) && m_NumberOfVisibleVme == 1)
     {
@@ -164,13 +164,13 @@ void medViewSliceBlend::VmeCreatePipe(mafNode *vme)
     mafPipeFactory *pipe_factory  = mafPipeFactory::GetInstance();
     assert(pipe_factory!=NULL);
     mafObject *obj= NULL;
-    obj = pipe_factory->CreateInstance(pipe_name);
+    obj = pipe_factory->CreateInstance(pipe_name.GetCStr());
     mafPipe *pipe = (mafPipe*)obj;
     if (pipe)
     {
       pipe->SetListener(this);
       // Initialize medPipeVolumeSliceBlend
-      if (pipe_name.Equals("medPipeVolumeSliceBlend"))
+      if (pipe_name.Equals(_R("medPipeVolumeSliceBlend")))
       {
         m_CurrentVolume = n;
         if (m_AttachCamera)
@@ -214,7 +214,7 @@ void medViewSliceBlend::VmeCreatePipe(mafNode *vme)
       n->m_Pipe = (mafPipe*)pipe;
     }
     else
-      mafErrorMessage("Cannot create visual pipe object of type \"%s\"!",pipe_name.GetCStr());
+      mafErrorMessage(_M(_R("Cannot create visual pipe object of type \"") + pipe_name + _R("\"!")));
   }
 }
 //----------------------------------------------------------------------------
@@ -298,7 +298,7 @@ mafGUI *medViewSliceBlend::CreateGui()
 
   //Create attach camera for the volume
   m_AttachCamera = new mafAttachCamera(m_Gui, m_Rwi, this);
-  m_Gui->FloatSlider(ID_OPACITY,&m_Opacity,0.0,1.0,_("Down"),_("Top"));
+  m_Gui->FloatSlider(ID_OPACITY,&m_Opacity,0.0,1.0,_L("Down"),_L("Top"));
   m_Gui->FitGui();
   m_Gui->Enable(ID_OPACITY,m_CurrentVolume!=NULL);
   return m_Gui;
@@ -337,8 +337,8 @@ void medViewSliceBlend::SetLutRange(double low_val, double high_val)
   //If a volume is visualized set his lut range
   if(!m_CurrentVolume) 
     return;
-  mafString pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-  if (pipe_name.Equals("medPipeVolumeSliceBlend"))
+  mafString pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+  if (pipe_name.Equals(_R("medPipeVolumeSliceBlend")))
   {
     medPipeVolumeSliceBlend *pipe = (medPipeVolumeSliceBlend *)m_CurrentVolume->m_Pipe;
     pipe->SetLutRange(low_val, high_val); 
@@ -353,8 +353,8 @@ void medViewSliceBlend::SetSliceLocalOrigin(double origin0[3],double origin1[3])
   {
     memcpy(m_Slice1,origin0,sizeof(origin0));
     memcpy(m_Slice2,origin1,sizeof(origin1));
-    mafString pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-    if (pipe_name.Equals("medPipeVolumeSliceBlend"))
+    mafString pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+    if (pipe_name.Equals(_R("medPipeVolumeSliceBlend")))
     {
       medPipeVolumeSliceBlend *pipe = (medPipeVolumeSliceBlend *)m_CurrentVolume->m_Pipe;
       //Set origin0 for slice 0
@@ -378,8 +378,8 @@ void medViewSliceBlend::SetSlice(int nSlice,double pos[3])
       memcpy(m_Slice1,pos,sizeof(m_Slice1));
     else if(nSlice==1)
       memcpy(m_Slice2,pos,sizeof(m_Slice2));
-    mafString pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-    if (pipe_name.Equals("medPipeVolumeSliceBlend"))
+    mafString pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+    if (pipe_name.Equals(_R("medPipeVolumeSliceBlend")))
     {
       medPipeVolumeSliceBlend *pipe = (medPipeVolumeSliceBlend *)m_CurrentVolume->m_Pipe;
       pipe->SetSlice(nSlice,pos);
@@ -533,7 +533,7 @@ void medViewSliceBlend::Print(std::ostream& os, const int tabs)// const
   mafIndent indent(tabs);
 
   os << indent << "medViewSliceBlend" << '\t' << this << std::endl;
-  os << indent << "Name" << '\t' << GetLabel() << std::endl;
+  os << indent << "Name" << '\t' << GetLabel().GetCStr() << std::endl;
   os << std::endl;
   m_Sg->Print(os,1);
 }
@@ -548,8 +548,8 @@ void medViewSliceBlend::SetNormal(double normal[3])
     {
       if(m_CurrentSurface.at(i) && m_CurrentSurface.at(i)->m_Pipe)
       {
-        mafString pipe_name = m_CurrentSurface.at(i)->m_Pipe->GetTypeName();
-        if (pipe_name.Equals("mafPipeSurfaceSlice"))
+        mafString pipe_name = _R(m_CurrentSurface.at(i)->m_Pipe->GetTypeName());
+        if (pipe_name.Equals(_R("mafPipeSurfaceSlice")))
         {
           mafPipeSurfaceSlice *pipe = (mafPipeSurfaceSlice *)m_CurrentSurface[i]->m_Pipe;
           pipe->SetNormal(normal); 

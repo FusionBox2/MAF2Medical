@@ -226,7 +226,7 @@ void mafView3D::OnEvent(mafEventBase *maf_event)
 			break;
 		case ID_COMBO_PIPE:
 			{
-				if(((mafVME*)m_CurrentVolume)->GetVisualPipe())
+				if(((mafVME*)m_CurrentVolume)->GetVisualPipe().GetCStr())
 				{
 					mafVME *TempVolume=m_CurrentVolume;
 					if(m_CurrentSurface)
@@ -242,19 +242,19 @@ void mafView3D::OnEvent(mafEventBase *maf_event)
 					wxBusyCursor wait;
 					if(m_Choose == ID_PIPE_ISO)
 					{
-						this->PlugVisualPipe("mafVMEVolumeGray","mafPipeIsosurface");
+						this->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("mafPipeIsosurface"));
 					}
           else if(m_Choose == ID_PIPE_MIP)
           {
-            this->PlugVisualPipe("mafVMEVolumeGray","medPipeVolumeMIP");
+            this->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("medPipeVolumeMIP"));
           }
 					else if(m_Choose == ID_PIPE_DRR)
           {
-						this->PlugVisualPipe("mafVMEVolumeGray","medPipeVolumeDRR");
+						this->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("medPipeVolumeDRR"));
           }
           else if(m_Choose == ID_PIPE_VR)
           {
-            this->PlugVisualPipe("mafVMEVolumeGray","medPipeVolumeVR");
+            this->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("medPipeVolumeVR"));
           }
 					this->VmeShow(TempVolume,true);
 				}
@@ -290,41 +290,41 @@ void mafView3D::Create()
   m_Picker2D->SetTolerance(0.005);
   m_Picker2D->InitializePickList();
 
-	this->PlugVisualPipe("mafVMEVolumeGray","mafPipeIsosurface");
+	this->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("mafPipeIsosurface"));
 }
 //----------------------------------------------------------------------------
 void mafView3D::VmeCreatePipe(mafNode *vme)
 //----------------------------------------------------------------------------
 {
-  mafString pipe_name = "";
+  mafString pipe_name = _R("");
   GetVisualPipeName(vme, pipe_name);
 
-  if (pipe_name != "")
+  if (!pipe_name.IsEmpty())
   {
     m_NumberOfVisibleVme++;
     mafPipeFactory *pipe_factory  = mafPipeFactory::GetInstance();
     assert(pipe_factory!=NULL);
     mafObject *obj = NULL;
-    obj = pipe_factory->CreateInstance(pipe_name);
+    obj = pipe_factory->CreateInstance(pipe_name.GetCStr());
     mafPipe *pipe = (mafPipe*)obj;
     if (pipe)
     {
       pipe->SetListener(this);
       mafSceneNode *n = m_Sg->Vme2Node(vme);
       assert(n && !n->m_Pipe);
-			if(pipe_name == "medPipeVolumeDRR")
+			if(pipe_name == _R("medPipeVolumeDRR"))
 			{
 				((medPipeVolumeDRR *)pipe)->SetResampleFactor(m_ResampleFactor);
 			}
-			if(pipe_name == "medPipeVolumeVR")
+			if(pipe_name == _R("medPipeVolumeVR"))
 			{
 				((medPipeVolumeVR *)pipe)->SetResampleFactor(m_ResampleFactor);
 			}
-      if(pipe_name == "mafPipeIsosurface")
+      if(pipe_name == _R("mafPipeIsosurface"))
       {
         ((mafPipeIsosurface *)pipe)->EnableBoundingBoxVisibility(false);
       }
-			if(pipe_name == "medPipeVolumeMIP")
+			if(pipe_name == _R("medPipeVolumeMIP"))
 			{
 				((medPipeVolumeMIP *)pipe)->SetResampleFactor(m_ResampleFactor);
 			}
@@ -341,7 +341,7 @@ void mafView3D::VmeCreatePipe(mafNode *vme)
     }
     else
     {
-      mafErrorMessage(_("Cannot create visual pipe object of type \"%s\"!"),pipe_name.GetCStr());
+      mafErrorMessage(_M(_L("Cannot create visual pipe object of type \"") + pipe_name + _L("\"!")));
     }
   }
 }
@@ -361,40 +361,40 @@ mafGUI *mafView3D::CreateGui()
 {
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
-	mafString choices[4] = {_("ISO"),_("MIP"),_("DRR"),_("VR")};
-	m_Gui->Combo(ID_COMBO_PIPE,_("Choose pipe"),&m_Choose,4,choices);
+	mafString choices[4] = {_L("ISO"),_L("MIP"),_L("DRR"),_L("VR")};
+	m_Gui->Combo(ID_COMBO_PIPE,_L("Choose pipe"),&m_Choose,4,choices);
 	m_Gui->Enable(ID_COMBO_PIPE,m_CurrentVolume!=NULL);
-	m_Gui->Double(ID_RESAMPLE_FACTOR,_("Resample"),&m_ResampleFactor,0.000001,1);
+	m_Gui->Double(ID_RESAMPLE_FACTOR,_L("Resample"),&m_ResampleFactor,0.000001,1);
 	m_Gui->Enable(ID_RESAMPLE_FACTOR,m_CurrentVolume!=NULL);
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 
 	//Isosurface GUI
-	m_Gui->Label(_("Isosurface settings:"));
+	m_Gui->Label(_L("Isosurface settings:"));
 	double range[2] = {VTK_DOUBLE_MIN, VTK_DOUBLE_MAX};
 	m_ContourValueIso = 0.0;
-	m_SliderContourIso = m_Gui->FloatSlider(ID_CONTOUR_VALUE_ISO,_("contour"), &m_ContourValueIso,range[0],range[1]);
-	m_SliderAlphaIso = m_Gui->FloatSlider(ID_ALPHA_VALUE_ISO,_("alpha"), &m_AlphaValueIso,0.0,1.0);
-	m_Gui->Button(ID_EXTRACT_ISO,_("Extract Iso"));
+	m_SliderContourIso = m_Gui->FloatSlider(ID_CONTOUR_VALUE_ISO,_L("contour"), &m_ContourValueIso,range[0],range[1]);
+	m_SliderAlphaIso = m_Gui->FloatSlider(ID_ALPHA_VALUE_ISO,_L("alpha"), &m_AlphaValueIso,0.0,1.0);
+	m_Gui->Button(ID_EXTRACT_ISO,_L("Extract Iso"));
 
 	//DDR GUI
-	m_Gui->Label(_("DRR settings:"));
-	m_Gui->Color(ID_VOLUME_COLOR, _("Color"), &m_VolumeColor);
+	m_Gui->Label(_L("DRR settings:"));
+	m_Gui->Color(ID_VOLUME_COLOR, _L("Color"), &m_VolumeColor);
 	vtkXRayVolumeMapper::GetExposureCorrection(m_ExposureCorrection);
-	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_L,	_("Min"), &m_ExposureCorrection[0], -1.f, 1.f);
-	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_H,	_("Max"), &m_ExposureCorrection[1], -1.f, 1.f);
-	m_Gui->FloatSlider(ID_GAMMA,	_("Gamma"), &m_Gamma, 0.1f, 3.f);
-	m_Gui->Label(_("Camera settings:"));
+	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_L,	_L("Min"), &m_ExposureCorrection[0], -1.f, 1.f);
+	m_Gui->FloatSlider(ID_EXPOSURE_CORRECTION_H,	_L("Max"), &m_ExposureCorrection[1], -1.f, 1.f);
+	m_Gui->FloatSlider(ID_GAMMA,	_L("Gamma"), &m_Gamma, 0.1f, 3.f);
+	m_Gui->Label(_L("Camera settings:"));
 	vtkCamera *camera = m_Sg->m_RenFront->GetActiveCamera();
 	this->m_CameraAngle = camera->GetViewAngle();
-	m_Gui->FloatSlider(ID_CAMERA_ANGLE, _("View angle"), &m_CameraAngle, 0.5, 45.0);
+	m_Gui->FloatSlider(ID_CAMERA_ANGLE, _L("View angle"), &m_CameraAngle, 0.5, 45.0);
 	camera->GetPosition(m_CameraPositionDRR);
-	m_Gui->Vector(ID_CAMERA_POSITION, _("Position"),	m_CameraPositionDRR);
+	m_Gui->Vector(ID_CAMERA_POSITION, _L("Position"),	m_CameraPositionDRR);
 	camera->GetFocalPoint(m_CameraFocus);
-	m_Gui->Vector(ID_CAMERA_FOCUS, _("Focal point"),	m_CameraFocus);
+	m_Gui->Vector(ID_CAMERA_FOCUS, _L("Focal point"),	m_CameraFocus);
 	this->m_CameraRoll = camera->GetRoll();
-	m_Gui->FloatSlider(ID_CAMERA_ROLL, _("Roll angle"), &m_CameraRoll, -180., 180.0);
+	m_Gui->FloatSlider(ID_CAMERA_ROLL, _L("Roll angle"), &m_CameraRoll, -180., 180.0);
 
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 
 	EnableSubGui(ID_PIPE_ALL,false);
 

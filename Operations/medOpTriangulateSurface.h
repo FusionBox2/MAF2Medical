@@ -36,7 +36,7 @@ class mafEvent;
 class MED_OPERATION_EXPORT medOpTriangulateSurface: public mafOp
 {
 public:
-	medOpTriangulateSurface(const mafString& label = "FilterSurface");
+	medOpTriangulateSurface(const mafString& label = _R("FilterSurface"));
 	~medOpTriangulateSurface(); 
 	virtual void OnEvent(mafEventBase *maf_event);
 

@@ -108,7 +108,7 @@ mafGUI* medViewVTKCompound::CreateGui()
   {
      m_Gui->AddGui(((mafViewVTK*)m_ChildViewList[ID_VIEW_VTK])->GetGui());
   }
-	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
 	m_LutWidget->Enable(false);
 	m_Gui->Divider();
 	m_Gui->FitGui();

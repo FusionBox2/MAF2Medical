@@ -266,7 +266,7 @@ medOpSegmentation::medOpSegmentation(const mafString &label) : mafOp(label)
   m_LoadedVolume = NULL;
   m_LastMouseMovePointID = 0;
 
-  m_LoadedVolumeName = "[Select input volume]";
+  m_LoadedVolumeName = _R("[Select input volume]");
 
   m_OldAutomaticThreshold = MAXINT;
   m_OldAutomaticUpperThreshold = MAXINT;
@@ -434,29 +434,29 @@ void medOpSegmentation::OpDo()
       previousSurface->ReparentTo(NULL);
   }
 
-  m_OutputVolume->SetName(wxString::Format("Segmentation Output (%s)",m_Volume->GetName()).c_str());
+  m_OutputVolume->SetName(_R("Segmentation Output (") + m_Volume->GetName() + _R(")"));
   lutPreset(4,m_OutputVolume->GetMaterial()->m_ColorLut);
   m_OutputVolume->GetMaterial()->m_ColorLut->SetTableRange(0,255);
   m_OutputVolume->GetMaterial()->UpdateFromTables();
-  m_OutputVolume->GetTagArray()->SetTag(mafTagItem("SEGMENTATION_PARENT",wxString::Format("%d",m_Volume->GetId()).c_str()));
+  m_OutputVolume->GetTagArray()->SetTag(mafTagItem(_R("SEGMENTATION_PARENT"),mafToString(m_Volume->GetId())));
 
-  mafTagItem *ti = m_OutputVolume->GetTagArray()->GetTag("VME_NATURE");
+  mafTagItem *ti = m_OutputVolume->GetTagArray()->GetTag(_R("VME_NATURE"));
   if(ti)
   {
-    ti->SetValue("SYNTHETIC");
+    ti->SetValue(_R("SYNTHETIC"));
   }
   else
   {
     mafTagItem tag_Nature;
-    tag_Nature.SetName("VME_NATURE");
-    tag_Nature.SetValue("SYNTHETIC");
+    tag_Nature.SetName(_R("VME_NATURE"));
+    tag_Nature.SetValue(_R("SYNTHETIC"));
 
     m_OutputVolume->GetTagArray()->SetTag(tag_Nature);
   }
 
   //m_OutputVolume->ReparentTo(m_Volume);
    
-  m_OutputVolume->GetTagArray()->SetTag(mafTagItem("VOLUME_TYPE","BINARY"));
+  m_OutputVolume->GetTagArray()->SetTag(mafTagItem(_R("VOLUME_TYPE"),_R("BINARY")));
 
 
   //GENERATIN SURFACE OUTPUT
@@ -474,23 +474,23 @@ void medOpSegmentation::OpDo()
 
   //Generating Surface VME
   mafNEW(m_OutputSurface);
-  m_OutputSurface->SetName(wxString::Format("Segmentation Surface (%s)",m_Volume->GetName()).c_str());
+  m_OutputSurface->SetName(_R("Segmentation Surface (") + m_Volume->GetName() + _R(")"));
   m_OutputSurface->SetData(surface,mafVMEVolumeGray::SafeDownCast(m_Input)->GetTimeStamp());
   m_OutputSurface->ReparentTo(m_Input);
   m_OutputSurface->Modified();
   
   vtkDEL(surface);
 
-  mafTagItem *tis = m_OutputSurface->GetTagArray()->GetTag("VME_NATURE");
+  mafTagItem *tis = m_OutputSurface->GetTagArray()->GetTag(_R("VME_NATURE"));
   if(tis)
   {
-    tis->SetValue("SYNTHETIC");
+    tis->SetValue(_R("SYNTHETIC"));
   }
   else
   {
     mafTagItem tag_Nature;
-    tag_Nature.SetName("VME_NATURE");
-    tag_Nature.SetValue("SYNTHETIC");
+    tag_Nature.SetName(_R("VME_NATURE"));
+    tag_Nature.SetValue(_R("SYNTHETIC"));
 
     m_OutputSurface->GetTagArray()->SetTag(tag_Nature);
   }
@@ -531,9 +531,9 @@ bool medOpSegmentation::IsOutput(mafNode* vme)
 {
   if(!vme->GetTagArray())
     return false;
-  if(const mafTagItem *ti = vme->GetTagArray()->GetTag("SEGMENTATION_PARENT"))
+  if(const mafTagItem *ti = vme->GetTagArray()->GetTag(_R("SEGMENTATION_PARENT")))
   {
-    if(atoi(ti->GetValue()) == m_Volume->GetId())
+    if(atoi(ti->GetValue().GetCStr()) == m_Volume->GetId())
     {
       return true;
     }
@@ -635,7 +635,7 @@ void medOpSegmentation::CreateOpDialog()
   wxPoint defPos = wxDefaultPosition;
   wxSize defSize = wxDefaultSize;
 
-  m_Dialog = new mafGUIDialog(GetLabel().GetCStr(), mafCLOSEWINDOW);  
+  m_Dialog = new mafGUIDialog(GetLabel(), mafCLOSEWINDOW);  
   m_Dialog->SetListener(this);
 
   m_GuiDialog = new mafGUI(this);
@@ -646,7 +646,7 @@ void medOpSegmentation::CreateOpDialog()
   mafSetFrame(m_Dialog);
 
   //Create rendering view   
-  m_View = new medViewSliceNotInterpolated("Volume Slice");  
+  m_View = new medViewSliceNotInterpolated(_R("Volume Slice"));  
   m_View->Create();
   m_View->GetGui();
 
@@ -688,20 +688,20 @@ void medOpSegmentation::CreateOpDialog()
   //Label to indicate the current slice
   //////////////////////////////////////////////////////////////////////////
   vtkNEW(m_AutomaticSliceTextMapper);
-  mafString text = "Slice = ";
-  text<<m_CurrentSliceIndex;
-  text<<" of ";
+  mafString text = _R("Slice = ");
+  text += mafToString(m_CurrentSliceIndex);
+  text += _R(" of ");
   if (m_CurrentSlicePlane == XY)
   {
-    text<<m_VolumeDimensions[2];
+    text += mafToString(m_VolumeDimensions[2]);
   } 
   else if (m_CurrentSlicePlane == XZ)
   {
-    text<<m_VolumeDimensions[1];
+    text += mafToString(m_VolumeDimensions[1]);
   }
   else if (m_CurrentSlicePlane == YZ)
   {
-    text<<m_VolumeDimensions[0];
+    text += mafToString(m_VolumeDimensions[0]);
   }
   m_AutomaticSliceTextMapper->SetInput(text.GetCStr());
   m_AutomaticSliceTextMapper->GetTextProperty()->SetColor(1.0,1.0,0.0);
@@ -769,13 +769,13 @@ void medOpSegmentation::CreateOpDialog()
   m_SnippetsLabel = new wxStaticText(m_Dialog, -1, "", p, wxSize(500,18), wxALIGN_LEFT | wxST_NO_AUTORESIZE );
   hSz3->Add(m_SnippetsLabel,0,wxEXPAND | wxALL);
 
-  m_OkButton = new mafGUIButton(m_Dialog,ID_OK,_("Ok"),defPos);
+  m_OkButton = new mafGUIButton(m_Dialog,ID_OK,_L("Ok"),defPos);
   m_OkButton->SetListener(this);
   m_OkButton->SetValidator(mafGUIValidator(this,ID_OK,m_OkButton));
 
   m_OkButton->Enable(m_CurrentOperation != LOAD_SEGMENTATION);
  
-  m_CancelButton = new mafGUIButton(m_Dialog,ID_CANCEL,_("Cancel"),defPos);
+  m_CancelButton = new mafGUIButton(m_Dialog,ID_CANCEL,_L("Cancel"),defPos);
   m_CancelButton->SetListener(this);
   m_CancelButton->SetValidator(mafGUIValidator(this,ID_CANCEL,m_CancelButton));
 
@@ -805,17 +805,17 @@ void medOpSegmentation::CreateOpDialog()
   CreateManualSegmentationGui();
   CreateRefinementGui();
   
-  m_SegmentationOperationsRollOut[LOAD_SEGMENTATION]        = m_GuiDialog->RollOut(ID_LOAD_SEGMENTATION, "Load Segmentation", m_SegmentationOperationsGui[LOAD_SEGMENTATION], false);
-  m_SegmentationOperationsRollOut[AUTOMATIC_SEGMENTATION]   = m_GuiDialog->RollOut(ID_AUTO_SEGMENTATION, "Thresholding", m_SegmentationOperationsGui[AUTOMATIC_SEGMENTATION], false);
-  m_SegmentationOperationsRollOut[MANUAL_SEGMENTATION]      = m_GuiDialog->RollOut(ID_MANUAL_SEGMENTATION, "Manual Segmentation", m_SegmentationOperationsGui[MANUAL_SEGMENTATION], false);
-  m_SegmentationOperationsRollOut[REFINEMENT_SEGMENTATION]  = m_GuiDialog->RollOut(ID_REFINEMENT, "Segmentation Refinement", m_SegmentationOperationsGui[REFINEMENT_SEGMENTATION], false);
+  m_SegmentationOperationsRollOut[LOAD_SEGMENTATION]        = m_GuiDialog->RollOut(ID_LOAD_SEGMENTATION, _R("Load Segmentation"), m_SegmentationOperationsGui[LOAD_SEGMENTATION], false);
+  m_SegmentationOperationsRollOut[AUTOMATIC_SEGMENTATION]   = m_GuiDialog->RollOut(ID_AUTO_SEGMENTATION, _R("Thresholding"), m_SegmentationOperationsGui[AUTOMATIC_SEGMENTATION], false);
+  m_SegmentationOperationsRollOut[MANUAL_SEGMENTATION]      = m_GuiDialog->RollOut(ID_MANUAL_SEGMENTATION, _R("Manual Segmentation"), m_SegmentationOperationsGui[MANUAL_SEGMENTATION], false);
+  m_SegmentationOperationsRollOut[REFINEMENT_SEGMENTATION]  = m_GuiDialog->RollOut(ID_REFINEMENT, _R("Segmentation Refinement"), m_SegmentationOperationsGui[REFINEMENT_SEGMENTATION], false);
 
   m_GuiDialog->Enable(ID_LOAD_SEGMENTATION,false);
   m_GuiDialog->Enable(ID_AUTO_SEGMENTATION, false);
   m_GuiDialog->Enable(ID_MANUAL_SEGMENTATION,false);
   m_GuiDialog->Enable(ID_REFINEMENT,false);
 
-  m_GuiDialog->TwoButtons(ID_BUTTON_PREV,ID_BUTTON_NEXT,_("Prev"),_("Next"));
+  m_GuiDialog->TwoButtons(ID_BUTTON_PREV,ID_BUTTON_NEXT,_L("Prev"),_L("Next"));
 
   m_GuiDialog->FitGui();
   m_GuiDialog->Update();
@@ -1438,11 +1438,11 @@ void medOpSegmentation::CreateSliceNavigationGui()
   //////////////////////////////////////////////////////////////////////////
 
   mafString planes[3];
-  planes[0] = mafString("XY");
-  planes[1] = mafString("XZ");
-  planes[2] = mafString("YZ");
+  planes[0] = _R("XY");
+  planes[1] = _R("XZ");
+  planes[2] = _R("YZ");
 
-  m_GuiDialog->Combo(ID_SLICE_PLANE, "Slice Plane", &m_CurrentSlicePlane, 3, planes)->SetSelection(m_CurrentSlicePlane);
+  m_GuiDialog->Combo(ID_SLICE_PLANE, _R("Slice Plane"), &m_CurrentSlicePlane, 3, planes)->SetSelection(m_CurrentSlicePlane);
 
   ////////////////////////////////////////////////////////////////////////
   // SLICE SLIDER
@@ -1469,8 +1469,8 @@ void medOpSegmentation::CreateSliceNavigationGui()
 
   m_CurrentSliceIndex = 1;
   m_SliceSlider = new wxSlider(m_GuiDialog, ID_SLICE_SLIDER,  m_CurrentSliceIndex, 1, m_VolumeDimensions[2], p, wxSize(64,18));
-  mafGUIButton *b_incr_slice = new mafGUIButton(m_GuiDialog, ID_SLICE_NEXT, ">",	p,wxSize(18, 18));
-  mafGUIButton *b_decr_slice = new mafGUIButton(m_GuiDialog, ID_SLICE_PREV, "<",	p,wxSize(18, 18));
+  mafGUIButton *b_incr_slice = new mafGUIButton(m_GuiDialog, ID_SLICE_NEXT, _R(">"),	p,wxSize(18, 18));
+  mafGUIButton *b_decr_slice = new mafGUIButton(m_GuiDialog, ID_SLICE_PREV, _R("<"),	p,wxSize(18, 18));
   slice_text->SetValidator(mafGUIValidator(this,ID_SLICE_TEXT,slice_text,&m_CurrentSliceIndex,m_SliceSlider,1,m_VolumeDimensions[2]));
   m_SliceSlider->SetValidator(mafGUIValidator(this, ID_SLICE_SLIDER, m_SliceSlider,&m_CurrentSliceIndex,slice_text));
 
@@ -1498,15 +1498,15 @@ void medOpSegmentation::CreateAutoSegmentationGui()
 {
   mafGUI *currentGui = new mafGUI(this);
 
-  currentGui->Label(_("Threshold"),true);
+  currentGui->Label(_L("Threshold"),true);
   std::vector<mafString> increaseLabels;
-  increaseLabels.push_back("+");
-  increaseLabels.push_back("+");
-  increaseLabels.push_back("+");
+  increaseLabels.push_back(_R("+"));
+  increaseLabels.push_back(_R("+"));
+  increaseLabels.push_back(_R("+"));
   std::vector<mafString> decreaseLabels;
-  decreaseLabels.push_back("-");
-  decreaseLabels.push_back("-");
-  decreaseLabels.push_back("-");
+  decreaseLabels.push_back(_R("-"));
+  decreaseLabels.push_back(_R("-"));
+  decreaseLabels.push_back(_R("-"));
   double sr[2];
   m_Volume->GetOutput()->GetVTKData()->GetScalarRange(sr);
   
@@ -1539,10 +1539,10 @@ void medOpSegmentation::CreateAutoSegmentationGui()
 
   //end Threshold
 
-  mafString choices[2] = {_("Global"),_("Range")};
-  currentGui->Label("");
-  currentGui->Label(_("Threshold type:"),true);
-  currentGui->Radio(ID_AUTOMATIC_GLOBAL_THRESHOLD,"",&m_AutomaticGlobalThreshold,2,choices);
+  mafString choices[2] = {_L("Global"),_L("Range")};
+  currentGui->Label(_R(""));
+  currentGui->Label(_L("Threshold type:"),true);
+  currentGui->Radio(ID_AUTOMATIC_GLOBAL_THRESHOLD, _R(""),&m_AutomaticGlobalThreshold,2,choices);
 
   /*currentGui->Label("");*/
   /*currentGui->Label("Global range:",true);*/
@@ -1556,8 +1556,8 @@ void medOpSegmentation::CreateAutoSegmentationGui()
   //[ - ] [ - ] [ - ] 
 
   m_AutomaticRangeSlider = new mafGUILutSlider(currentGui,-1,wxPoint(0,0),wxSize(300,24));
-  currentGui->Label("");
-  currentGui->Label(_("Slice range settings:"),true);
+  currentGui->Label(_R(""));
+  currentGui->Label(_L("Slice range settings:"),true);
   m_AutomaticRangeSlider->SetListener(this);
   m_AutomaticRangeSlider->SetText(1,"Z Axis");  
   m_AutomaticRangeSlider->SetRange(1,m_VolumeDimensions[2]);
@@ -1579,10 +1579,10 @@ void medOpSegmentation::CreateAutoSegmentationGui()
   currentGui->MultipleButtons(3,3,decreaseIDs,decreaseLabels);
   //End
 
-  m_AutomaticListOfRange = currentGui->ListBox(ID_AUTOMATIC_LIST_OF_RANGE,"");
-  currentGui->TwoButtons(ID_AUTOMATIC_ADD_RANGE,ID_AUTOMATIC_REMOVE_RANGE,("Add"),_("Remove"));
-  currentGui->Button(ID_AUTOMATIC_UPDATE_RANGE,("Update"));
-  currentGui->Label("");
+  m_AutomaticListOfRange = currentGui->ListBox(ID_AUTOMATIC_LIST_OF_RANGE, _R(""));
+  currentGui->TwoButtons(ID_AUTOMATIC_ADD_RANGE,ID_AUTOMATIC_REMOVE_RANGE,_R("Add"),_L("Remove"));
+  currentGui->Button(ID_AUTOMATIC_UPDATE_RANGE,_R("Update"));
+  currentGui->Label(_R(""));
 
   m_SegmentationOperationsGui[AUTOMATIC_SEGMENTATION] = currentGui;
 }
@@ -1594,7 +1594,7 @@ void medOpSegmentation::CreateLoadSegmentationGui()
   mafGUI *currentGui = new mafGUI(this);
 
   currentGui->Label(&m_LoadedVolumeName);
-  currentGui->TwoButtons(ID_LOAD_SEGMENTATION,ID_RESET_LOADED,"Load","Reset");
+  currentGui->TwoButtons(ID_LOAD_SEGMENTATION,ID_RESET_LOADED,_R("Load"),_R("Reset"));
   m_SegmentationOperationsGui[LOAD_SEGMENTATION] = currentGui;
 
 }
@@ -1606,8 +1606,8 @@ void medOpSegmentation::CreateManualSegmentationGui()
   mafGUI *currentGui = new mafGUI(this);
 
   wxString tools[2];
-  tools[0] = mafString("brush");
-  tools[1] = mafString("bucket");
+  tools[0] = wxString("brush");
+  tools[1] = wxString("bucket");
   int w_id = currentGui->GetWidgetId(ID_MANUAL_TOOLS);
 
   wxBoxSizer *manualToolsSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -1717,7 +1717,7 @@ void medOpSegmentation::CreateManualSegmentationGui()
   currentGui->Add(m_BrushEditingSizer, wxALIGN_CENTER_HORIZONTAL);
   currentGui->Add(m_BucketEditingSizer, wxALIGN_CENTER_HORIZONTAL);
   /*currentGui->Bool(-1,"Global",&m_GlobalFloodFill,1,"");*/
-  currentGui->TwoButtons(ID_MANUAL_UNDO,ID_MANUAL_REDO,"Undo","Redo");
+  currentGui->TwoButtons(ID_MANUAL_UNDO,ID_MANUAL_REDO,_R("Undo"),_R("Redo"));
 
   EnableSizerContent(m_BucketEditingSizer,false);
   EnableSizerContent(m_BrushEditingSizer,true);
@@ -1747,10 +1747,10 @@ void medOpSegmentation::CreateRefinementGui()
   // Action: remove islands OR fill holes.
   m_RefinementSegmentationAction = ID_REFINEMENT_ISLANDS_REMOVE;
   mafString operations[2];
-  operations[ID_REFINEMENT_ISLANDS_REMOVE] = wxString("Remove Islands");
-  operations[ID_REFINEMENT_HOLES_FILL] = wxString("Fill Holes");
+  operations[ID_REFINEMENT_ISLANDS_REMOVE] = _R("Remove Islands");
+  operations[ID_REFINEMENT_HOLES_FILL] = _R("Fill Holes");
 
-  currentGui->Combo(ID_REFINEMENT_ACTION, "Action", &m_RefinementSegmentationAction, 2, operations);
+  currentGui->Combo(ID_REFINEMENT_ACTION, _R("Action"), &m_RefinementSegmentationAction, 2, operations);
 
   // Size of islands/holes to be taken into consideration
   m_RefinementRegionsSize = 1;
@@ -1777,16 +1777,16 @@ void medOpSegmentation::CreateRefinementGui()
 
   // Switch on/off the "apply on every slice" option
   m_RefinementEverySlice = 0;
-  currentGui->Bool(ID_REFINEMENT_EVERY_SLICE, mafString("Global"), &m_RefinementEverySlice, 0, mafString("Apply refinement procedure on every slice"));
+  currentGui->Bool(ID_REFINEMENT_EVERY_SLICE, _R("Global"), &m_RefinementEverySlice, 0, _R("Apply refinement procedure on every slice"));
 
   m_RefinementIterative = 0;
   //currentGui->Bool(ID_REFINEMENT_ITERATIVE, mafString("Iterative"), &m_RefinementIterative, 0, mafString("Switch on/off the iterative feature"));
   
-  currentGui->Bool(ID_REFINEMENT_REMOVE_PENINSULA_REGIONS, mafString("Apply to peninsula regions"), &m_RemovePeninsulaRegions, 1, mafString("Apply refinement on peninsula regions"));
+  currentGui->Bool(ID_REFINEMENT_REMOVE_PENINSULA_REGIONS, _R("Apply to peninsula regions"), &m_RemovePeninsulaRegions, 1, _R("Apply refinement on peninsula regions"));
 
-  currentGui->TwoButtons(ID_REFINEMENT_UNDO, ID_REFINEMENT_REDO, "Undo", "Redo");
+  currentGui->TwoButtons(ID_REFINEMENT_UNDO, ID_REFINEMENT_REDO, _R("Undo"), _R("Redo"));
 
-  currentGui->Button(ID_REFINEMENT_APPLY, mafString("Apply"), "");
+  currentGui->Button(ID_REFINEMENT_APPLY, _R("Apply"), _R(""));
 
   //currentGui->Integer(-1,"m. thr.",&m_MajorityThreshold,0);
 
@@ -1827,8 +1827,8 @@ void medOpSegmentation::InitSegmentedVolume()
 {
   mafNEW(m_SegmentatedVolume);
   m_SegmentatedVolume->SetVolumeLink(m_Volume);
-  m_SegmentatedVolume->SetName("Segmented Volume");
-  m_SegmentatedVolume->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+  m_SegmentatedVolume->SetName(_R("Segmented Volume"));
+  m_SegmentatedVolume->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
   m_SegmentatedVolume->ReparentTo(m_Volume->GetParent());
   m_SegmentatedVolume->SetDoubleThresholdModality(true);
   m_SegmentatedVolume->Update();
@@ -1839,7 +1839,7 @@ void medOpSegmentation::InitThresholdVolume()
 {
   mafNEW(m_ThresholdVolume);
   m_ThresholdVolume->DeepCopy(m_Volume);
-  m_ThresholdVolume->SetName("Threshold Volume");
+  m_ThresholdVolume->SetName(_R("Threshold Volume"));
   m_ThresholdVolume->ReparentTo(m_Volume->GetParent());
   m_ThresholdVolume->Update();
 
@@ -1863,7 +1863,7 @@ void medOpSegmentation::InitManualVolumeMask()
     m_ManualVolumeMask->DeepCopy(m_ThresholdVolume);
   }
   
-  m_ManualVolumeMask->SetName("Manual Volume Mask");
+  m_ManualVolumeMask->SetName(_R("Manual Volume Mask"));
   m_ManualVolumeMask->ReparentTo(m_Volume->GetParent());
   m_ManualVolumeMask->Update();
 }
@@ -1882,7 +1882,7 @@ void medOpSegmentation::InitRefinementVolumeMask()
   mafNEW(m_RefinementVolumeMask);
 
   m_RefinementVolumeMask->DeepCopy(m_ManualVolumeMask);
-  m_RefinementVolumeMask->SetName("Refinement Volume Mask");
+  m_RefinementVolumeMask->SetName(_R("Refinement Volume Mask"));
   
   m_RefinementVolumeMask->ReparentTo(m_Volume->GetParent());
   vtkLookupTable *lut = m_RefinementVolumeMask->GetMaterial()->m_ColorLut;
@@ -2218,7 +2218,7 @@ void medOpSegmentation::OnNextStep()
     break;
     default:
     {
-      mafLogMessage("Invalid Operation");
+      mafLogMessage(_M("Invalid Operation"));
       return;
     }
   }
@@ -2297,7 +2297,7 @@ void medOpSegmentation::OnPreviousStep()
       break;
     default:
     {
-      mafLogMessage("Invalid Operation");
+      mafLogMessage(_M("Invalid Operation"));
       return;
     }
   }
@@ -2339,7 +2339,7 @@ void medOpSegmentation::OnEvent(mafEventBase *maf_event)
     else if (e->GetSender() == m_AutomaticPER && e->GetId()== MOUSE_MOVE)
     {
       m_AutomaticMouseThreshold = e->GetDouble();
-      mafString text = wxString::Format("Scalar = %.3f",m_AutomaticMouseThreshold);
+      mafString text = mafString::Format(_R("Scalar = %.3f"),m_AutomaticMouseThreshold);
       m_AutomaticScalarTextMapper->SetInput(text.GetCStr());
       m_View->CameraUpdate();
     }
@@ -3594,7 +3594,7 @@ void medOpSegmentation::OnLoadSegmentationEvent(mafEvent *e)
   case ID_LOAD_SEGMENTATION:
     {
 
-      mafString title = mafString("Select a segmentation:");
+      mafString title = _R("Select a segmentation:");
       mafEvent e(this,VME_CHOOSE);
       e.SetString(&title);
       e.SetArg((long)(&medOpSegmentation::SegmentedVolumeAccept));
@@ -3651,7 +3651,7 @@ void medOpSegmentation::OnLoadSegmentationEvent(mafEvent *e)
       //m_View->VmeRemove(m_LoadedVolume);
       m_View->CameraUpdate();
       m_LoadedVolume = NULL;
-      m_LoadedVolumeName = "[Select input volume]";
+      m_LoadedVolumeName = _R("[Select input volume]");
       m_SegmentationOperationsGui[LOAD_SEGMENTATION]->Update();
     }
     break;
@@ -3787,10 +3787,10 @@ void medOpSegmentation::InitializeViewSlice()
 
   // slicing the volume
   vtkDataSet *dataSet = ((mafVME *)m_Volume)->GetOutput()->GetVTKData();
-  m_View->PlugVisualPipe("mafVMEVolumeGray","medPipeVolumeSliceNotInterpolated");
-  m_View->PlugVisualPipe("medVMESegmentationVolume","medPipeVolumeSliceNotInterpolated");
-  m_View->PlugVisualPipe("mafVMEImage","mafPipeImage3D");
-  m_View->PlugVisualPipe("mafVMESurface","mafPipeSurfaceSlice");
+  m_View->PlugVisualPipe(_R("mafVMEVolumeGray"),_R("medPipeVolumeSliceNotInterpolated"));
+  m_View->PlugVisualPipe(_R("medVMESegmentationVolume"),_R("medPipeVolumeSliceNotInterpolated"));
+  m_View->PlugVisualPipe(_R("mafVMEImage"),_R("mafPipeImage3D"));
+  m_View->PlugVisualPipe(_R("mafVMESurface"),_R("mafPipeSurfaceSlice"));
  
   dataSet->GetPoint((0,0,0),m_SliceOrigin);
 //  m_View->InitializeSlice(m_SliceOrigin);
@@ -4157,19 +4157,19 @@ void medOpSegmentation::InitializeInteractors()
   //Create the device manager
   mafNEW(m_DeviceManager);
   m_DeviceManager->SetListener(this);
-  m_DeviceManager->SetName("DialogDeviceManager");
+  m_DeviceManager->SetName(_R("DialogDeviceManager"));
   m_DeviceManager->Initialize();
 
   //Create the static event router and connect it
   mafNEW(m_SER);
-  m_SER->SetName("StaticEventRouter");
+  m_SER->SetName(_R("StaticEventRouter"));
   m_SER->SetListener(this);
 
   //Create a Mouse device
   mafPlugDevice<medDeviceButtonsPadMouseDialog>("Mouse");
   m_DialogMouse = (medDeviceButtonsPadMouseDialog *)m_DeviceManager->AddDevice("medDeviceButtonsPadMouseDialog",false); // add as persistent device
   assert(m_DialogMouse);
-  m_DialogMouse->SetName("DialogMouse");
+  m_DialogMouse->SetName(_R("DialogMouse"));
 
   //Define the action for pointing and manipulating
   mafAction *pntAction = m_SER->AddAction("pntAction",-10);
@@ -4178,7 +4178,7 @@ void medOpSegmentation::InitializeInteractors()
 
 
   mafNEW(m_ManualPER);
-  m_ManualPER->SetName("m_EditingPER");
+  m_ManualPER->SetName(_R("m_EditingPER"));
   m_ManualPER->SetListener(this);
 
   assert(m_View);
@@ -4270,16 +4270,16 @@ void medOpSegmentation::UpdateSliceLabel()
   //////////////////////////////////////////////////////////////////////////
   //Update slice text actor
   //////////////////////////////////////////////////////////////////////////
-  mafString text = "Slice = ";
-  text<<m_CurrentSliceIndex;
-  text<<" of ";
+  mafString text = _R("Slice = ");
+  text += mafToString(m_CurrentSliceIndex);
+  text += _R(" of ");
   
   if (m_CurrentSlicePlane == XY)
-    text<<m_VolumeDimensions[2];
+    text += mafToString(m_VolumeDimensions[2]);
   else if (m_CurrentSlicePlane == XZ)
-    text<<m_VolumeDimensions[1];
+    text += mafToString(m_VolumeDimensions[1]);
   else if (m_CurrentSlicePlane == YZ)
-    text<<m_VolumeDimensions[0];
+    text += mafToString(m_VolumeDimensions[0]);
   
   m_AutomaticSliceTextMapper->SetInput(text.GetCStr());
   //////////////////////////////////////////////////////////////////////////
@@ -4297,14 +4297,14 @@ void medOpSegmentation::UpdateThresholdLabel()
       for (int i=0;i<m_AutomaticRanges.size();i++)
         if (m_AutomaticRanges[i].m_StartSlice<=m_CurrentSliceIndex-1 && m_AutomaticRanges[i].m_EndSlice>=m_CurrentSliceIndex-1)
         {
-          mafString text = wxString::Format("Threshold low:%.3f high:%.3f",m_AutomaticRanges[i].m_ThresholdValue,m_AutomaticRanges[i].m_UpperThresholdValue);
+          mafString text = mafString::Format(_R("Threshold low:%.3f high:%.3f"),m_AutomaticRanges[i].m_ThresholdValue,m_AutomaticRanges[i].m_UpperThresholdValue);
           m_AutomaticThresholdTextMapper->SetInput(text.GetCStr());
           return;
         }
     }
     else if(m_AutomaticGlobalThreshold == GLOBAL)
     {
-      mafString text = wxString::Format("Threshold low:%.3f high:%.3f",m_AutomaticThreshold,m_AutomaticUpperThreshold);
+      mafString text = mafString::Format(_R("Threshold low:%.3f high:%.3f"),m_AutomaticThreshold,m_AutomaticUpperThreshold);
       m_AutomaticThresholdTextMapper->SetInput(text.GetCStr());
       return;
     }
@@ -4326,7 +4326,8 @@ bool medOpSegmentation::CheckNumberOfThresholds()
     for (int j=0;j<m_AutomaticRanges.size();j++)
       if (i>=(m_AutomaticRanges[j].m_StartSlice) && i<=(m_AutomaticRanges[j].m_EndSlice))
       {
-        mafLogMessage("Slice %d° hasn't a threshold",i+1);
+        mafLogMessage(_M(_R("Slice ") + mafToString(i+1) + _R("° hasn't a threshold")));
+#pragma message ("degree symbol")
         return false;
       }
   return true;
@@ -4509,7 +4510,7 @@ void medOpSegmentation::InitManualVolumeSlice()
   {
     mafNEW(m_ManualVolumeSlice);
     m_ManualVolumeSlice->ReparentTo(m_Volume->GetParent());
-    m_ManualVolumeSlice->SetName("Manual Volume Slice");
+    m_ManualVolumeSlice->SetName(_R("Manual Volume Slice"));
     m_View->VmeAdd(m_ManualVolumeSlice);
     //m_View->VmeCreatePipe(m_ManualVolumeSlice);
     InitDataVolumeSlice<vtkUnsignedCharArray>(m_ManualVolumeSlice);
@@ -4529,7 +4530,7 @@ void medOpSegmentation::InitEmptyVolumeSlice()
   }
   
   m_EmptyVolumeSlice->ReparentTo(m_Volume->GetParent());
-  m_EmptyVolumeSlice->SetName("Empty Volume Slice");
+  m_EmptyVolumeSlice->SetName(_R("Empty Volume Slice"));
   //m_View->VmeAdd(m_EmptyVolumeSlice);
   //m_View->VmeCreatePipe(m_EmptyVolumeSlice);
   //m_View->CameraUpdate();
@@ -4711,7 +4712,7 @@ void medOpSegmentation::InitThresholdVolumeSlice()
   mafNEW(m_ThresholdVolumeSlice);
 
   m_ThresholdVolumeSlice->ReparentTo(m_Volume->GetParent());
-  m_ThresholdVolumeSlice->SetName("Threshold Volume Slice");
+  m_ThresholdVolumeSlice->SetName(_R("Threshold Volume Slice"));
 
   InitDataVolumeSlice<vtkUnsignedCharArray>(m_ThresholdVolumeSlice);
 
@@ -5092,7 +5093,7 @@ void medOpSegmentation::UpdateThresholdRealTimePreview()
   mafNEW(tVol);
 
   tVol->SetVolumeLink(m_EmptyVolumeSlice);
-  tVol->SetName("Threshold Volume");
+  tVol->SetName(_R("Threshold Volume"));
   tVol->ReparentTo(tVol->GetParent());
   tVol->SetDoubleThresholdModality(true);
   tVol->Update();

@@ -35,7 +35,7 @@ class name: medOpExporterLandmarkWS
 class MED_OPERATION_EXPORT medOpExporterLandmarkWS : public mafOp
 {
 public:
-	medOpExporterLandmarkWS(const mafString &label = "Trajectories Exporter");
+	medOpExporterLandmarkWS(const mafString &label = _R("Trajectories Exporter"));
 	~medOpExporterLandmarkWS(); 
 	mafOp* Copy();
 
@@ -74,10 +74,10 @@ public:
   void Write();
 
   /** Set the filename for the file to export */
-  void SetFileName(const char *file_name){m_File = file_name;};
+  void SetFileName(const char *file_name){m_File = _R(file_name);};
 
 protected:
-	wxString m_File;
+	mafString m_File;
 	mafVMELandmarkCloud  *m_Cloud;
 };
 #endif

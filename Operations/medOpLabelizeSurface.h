@@ -50,7 +50,7 @@ class vtkLookupTable;
 class MED_OPERATION_EXPORT medOpLabelizeSurface: public mafOp
 {
 public:
-	medOpLabelizeSurface(const mafString& label = "ClipSurface");
+	medOpLabelizeSurface(const mafString& label = _R("ClipSurface"));
 	~medOpLabelizeSurface(); 
 	virtual void OnEvent(mafEventBase *maf_event);
 

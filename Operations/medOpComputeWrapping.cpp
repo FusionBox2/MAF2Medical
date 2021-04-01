@@ -68,7 +68,7 @@ void medOpComputeWrapping::OpRun()
 //----------------------------------------------------------------------------
 {
   mafNEW(m_Meter);
-  m_Meter->SetName("Wrapped Action Line");
+  m_Meter->SetName(_R("Wrapped Action Line"));
   m_Output = m_Meter;
   mafEventMacro(mafEvent(this,OP_RUN_OK));
 }

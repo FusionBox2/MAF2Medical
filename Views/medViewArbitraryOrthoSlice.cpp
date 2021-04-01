@@ -136,9 +136,9 @@ medViewArbitraryOrthoSlice::medViewArbitraryOrthoSlice(const mafString& label, b
 
 {
 
-	m_ThicknessText[RED] = "UNDEFINED_THICKNESS_RED_TEXT";
-	m_ThicknessText[GREEN] = "UNDEFINED_THICKNESS_GREEN_TEXT";
-	m_ThicknessText[BLUE] = "UNDEFINED_THICKNESS_BLUE_TEXT";
+	m_ThicknessText[RED] = _R("UNDEFINED_THICKNESS_RED_TEXT");
+	m_ThicknessText[GREEN] = _R("UNDEFINED_THICKNESS_GREEN_TEXT");
+	m_ThicknessText[BLUE] = _R("UNDEFINED_THICKNESS_BLUE_TEXT");
 
 	m_XSlicerPicker = NULL;
 	m_YSlicerPicker = NULL;
@@ -352,42 +352,42 @@ medViewArbitraryOrthoSlice::~medViewArbitraryOrthoSlice()
 
 void medViewArbitraryOrthoSlice::PackageView()
 {
-	m_ViewArbitrary = new mafViewVTK("",CAMERA_PERSPECTIVE,true,false,false,0,false,mafAxes::HEAD);
-	m_ViewArbitrary->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", MUTEX);
+	m_ViewArbitrary = new mafViewVTK(_R(""),CAMERA_PERSPECTIVE,true,false,false,0,false,mafAxes::HEAD);
+	m_ViewArbitrary->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), MUTEX);
 	//	m_ViewArbitrary->PlugVisualPipe("mafVMELabeledVolume", "mafPipeBox", MUTEX);
 
-	m_ViewArbitrary->PlugVisualPipe("mafVMEGizmo", "mafPipeGizmo", NON_VISIBLE);
+	m_ViewArbitrary->PlugVisualPipe(_R("mafVMEGizmo"), _R("mafPipeGizmo"), NON_VISIBLE);
 
-	m_ViewSliceX = new mafViewVTK("",CAMERA_OS_X,true,false,false,0,false,mafAxes::HEAD);
+	m_ViewSliceX = new mafViewVTK(_R(""),CAMERA_OS_X,true,false,false,0,false,mafAxes::HEAD);
 
 
 	// 	m_ViewSliceX->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceX->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceX->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice", NON_VISIBLE);
 
-	m_ViewSliceX->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", NON_VISIBLE);
+	m_ViewSliceX->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), NON_VISIBLE);
 	// 	m_ViewSliceX->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceX->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice", NON_VISIBLE);
 
-	m_ViewSliceY = new mafViewVTK("",CAMERA_OS_Y,true,false,false,0,false,mafAxes::HEAD);
+	m_ViewSliceY = new mafViewVTK(_R(""),CAMERA_OS_Y,true,false,false,0,false,mafAxes::HEAD);
 
 
 	// 	m_ViewSliceY->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceY->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceY->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice", NON_VISIBLE);
 	//m_ViewSliceY->PlugVisualPipe("mafVMEGizmo", "mafPipeGizmo");
-	m_ViewSliceY->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", NON_VISIBLE);
+	m_ViewSliceY->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), NON_VISIBLE);
 	// 	m_ViewSliceY->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceY->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice", NON_VISIBLE);
 
-	m_ViewSliceZ = new mafViewVTK("",CAMERA_OS_Z,true,false,false,0,false,mafAxes::HEAD);
+	m_ViewSliceZ = new mafViewVTK(_R(""),CAMERA_OS_Z,true,false,false,0,false,mafAxes::HEAD);
 
 
 	// 	m_ViewSliceZ->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceZ->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceZ->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice", NON_VISIBLE);
 	//m_ViewSliceZ->PlugVisualPipe("mafVMEGizmo", "mafPipeGizmo");
-	m_ViewSliceZ->PlugVisualPipe("mafVMEVolumeGray", "mafPipeBox", NON_VISIBLE);
+	m_ViewSliceZ->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeBox"), NON_VISIBLE);
 	// 	m_ViewSliceZ->PlugVisualPipe("mafVMELandmark", "mafPipeSurfaceSlice", NON_VISIBLE);
 	// 	m_ViewSliceZ->PlugVisualPipe("mafVMELandmarkCloud", "mafPipeSurfaceSlice", NON_VISIBLE);
 
@@ -530,7 +530,7 @@ void medViewArbitraryOrthoSlice::OnEvent(mafEventBase *maf_event)
 		string pickedSliceName;
 		if (event->GetSender() == m_XSlicerPicker)
 		{
-			pickedSliceName = m_XSlicerPicker->GetName();
+			pickedSliceName = m_XSlicerPicker->GetName().GetCStr();
 
 			medInteractorPicker *picker = m_XSlicerPicker;
 			MyMethod(picker, pickedPointCoordinates);
@@ -538,7 +538,7 @@ void medViewArbitraryOrthoSlice::OnEvent(mafEventBase *maf_event)
 		}
 		else if (event->GetSender() == m_YSlicerPicker)
 		{
-			pickedSliceName = m_YSlicerPicker->GetName();
+			pickedSliceName = m_YSlicerPicker->GetName().GetCStr();
 
 			medInteractorPicker *picker = m_YSlicerPicker;
 			MyMethod(picker, pickedPointCoordinates);
@@ -546,7 +546,7 @@ void medViewArbitraryOrthoSlice::OnEvent(mafEventBase *maf_event)
 		}
 		else if (event->GetSender() == m_ZSlicerPicker)
 		{
-			pickedSliceName = m_ZSlicerPicker->GetName();
+			pickedSliceName = m_ZSlicerPicker->GetName().GetCStr();
 
 			medInteractorPicker *picker = m_ZSlicerPicker;
 			MyMethod(picker, pickedPointCoordinates);
@@ -558,7 +558,7 @@ void medViewArbitraryOrthoSlice::OnEvent(mafEventBase *maf_event)
 		std::ostringstream stringStream;
 		stringStream << "picked: " << pickedSliceName << std::endl;
 		stringStream << "on position: " << pickedPointCoordinates[0] << " " << pickedPointCoordinates[1] << " " << pickedPointCoordinates[2] << std::endl;
-		mafLogMessage(stringStream.str().c_str());
+        mafLogMessage(_M(stringStream.str().c_str()));
 
 	}
 	else
@@ -1430,18 +1430,18 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	//	m_Gui->Divider(2);
 
 	//button to reset at the sta
-	m_Gui->Label("");
-	m_Gui->Label(_("CTRL + MOUSE LEFT click"),true);
-	m_Gui->Label("moves the cross on picked point");
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_L("CTRL + MOUSE LEFT click"),true);
+	m_Gui->Label(_R("moves the cross on picked point"));
 	m_Gui->Divider(2);
 
 	//m_Gui->Label("reset slices", true);
-	m_Gui->Button(ID_RESET,_("reset slices"),"");
+	m_Gui->Button(ID_RESET,_L("reset slices"), _R(""));
 
 
 	m_Gui->Divider();
 
-	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
+	m_LutWidget = m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
 
 	
 	m_Gui->Update();
@@ -1451,22 +1451,22 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	// RED Thickness
 	//-------------------------------------------------------------------
 
-	m_Gui->Label("");
-	m_Gui->Label("THICKNESS", true);
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_R("THICKNESS"), true);
 	m_Gui->Divider(2);
-	m_Gui->Label("Red", true);
-	m_Gui->Bool(ID_ENABLE_THICKNESS_RED, "",&m_EnableThickness[RED]);
+	m_Gui->Label(_R("Red"), true);
+	m_Gui->Bool(ID_ENABLE_THICKNESS_RED, _R(""),&m_EnableThickness[RED]);
 
-	mafString thicknessChoices[25] = {"0.5", "1.0", "1.5",\
-		"2.0", "2.5", "3.0",\
-		"3.5", "4.0", "4.5",\
-		"5.0", "5.5", "6.0",\
-		"6.5", "7.0", "7.5",\
-		"8.0", "8.5", "9.0",\
-		"9.5", "10.0","20.0","40.0", "80.0" , "100.0" , "130.0"};
+	mafString thicknessChoices[25] = {_R("0.5"), _R("1.0"), _R("1.5"),\
+		_R("2.0"), _R("2.5"), _R("3.0"),\
+		_R("3.5"), _R("4.0"), _R("4.5"),\
+		_R("5.0"), _R("5.5"), _R("6.0"),\
+		_R("6.5"), _R("7.0"), _R("7.5"),\
+		_R("8.0"), _R("8.5"), _R("9.0"),\
+		_R("9.5"), _R("10.0"),_R("20.0"),_R("40.0"), _R("80.0") , _R("100.0") , _R("130.0")};
 
-	m_Gui->Label("Thickness value:");
-	m_Gui->Combo(ID_THICKNESS_VALUE_CHANGED_RED, _(""), &m_ThicknessComboAssignment[RED], 25, thicknessChoices);
+	m_Gui->Label(_R("Thickness value:"));
+	m_Gui->Combo(ID_THICKNESS_VALUE_CHANGED_RED, _L(""), &m_ThicknessComboAssignment[RED], 25, thicknessChoices);
 
 	//-------------------------------------------------------------------
 	// GREEN Thickness
@@ -1476,13 +1476,13 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	//m_Gui->Label("");
 
 	//m_Gui->Divider(2);
-	m_Gui->Label("Green", true);
-	m_Gui->Bool(ID_ENABLE_THICKNESS_GREEN, "",&m_EnableThickness[GREEN]);
+	m_Gui->Label(_R("Green"), true);
+	m_Gui->Bool(ID_ENABLE_THICKNESS_GREEN, _R(""),&m_EnableThickness[GREEN]);
 
-	m_Gui->Label("Thickness value:");
-	m_Gui->Combo(ID_THICKNESS_VALUE_CHANGED_GREEN, _(""), &m_ThicknessComboAssignment[GREEN], 25, thicknessChoices);
+	m_Gui->Label(_R("Thickness value:"));
+	m_Gui->Combo(ID_THICKNESS_VALUE_CHANGED_GREEN, _L(""), &m_ThicknessComboAssignment[GREEN], 25, thicknessChoices);
 
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 
 	//-------------------------------------------------------------------
 	// BLUE Thickness
@@ -1492,29 +1492,29 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	//m_Gui->Label("");
 
 	//m_Gui->Divider(2);
-	m_Gui->Label("Blue", true);
-	m_Gui->Bool(ID_ENABLE_THICKNESS_BLUE, "",&m_EnableThickness[BLUE]);
+	m_Gui->Label(_R("Blue"), true);
+	m_Gui->Bool(ID_ENABLE_THICKNESS_BLUE, _R(""),&m_EnableThickness[BLUE]);
 
-	m_Gui->Label("Thickness value:");
-	m_Gui->Combo(ID_THICKNESS_VALUE_CHANGED_BLUE, _(""), &m_ThicknessComboAssignment[BLUE], 25, thicknessChoices);
+	m_Gui->Label(_R("Thickness value:"));
+	m_Gui->Combo(ID_THICKNESS_VALUE_CHANGED_BLUE, _L(""), &m_ThicknessComboAssignment[BLUE], 25, thicknessChoices);
 
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 
 	//-------------------------------------------------------------------
 	// RED Export Images
 	//-------------------------------------------------------------------
 
 	
-	m_Gui->Label("EXPORT IMAGES", true);
+	m_Gui->Label(_R("EXPORT IMAGES"), true);
 	m_Gui->Divider(2);
-	m_Gui->Label("Red", true);
-	m_Gui->Bool(ID_ENABLE_EXPORT_IMAGES_RED, "",&m_EnableExportImages[RED]);
+	m_Gui->Label(_R("Red"), true);
+	m_Gui->Bool(ID_ENABLE_EXPORT_IMAGES_RED, _R(""),&m_EnableExportImages[RED]);
 	//  m_Gui->Label("");
 
-	m_Gui->Label("Export planes height:");
-	m_Gui->Integer(ID_EXPORT_PLANES_HEIGHT_RED,_(""),&m_ExportPlanesHeight[RED],0, 50);
-	m_Gui->Label("Axial sections:");
-	m_Gui->Integer(ID_NUMBER_OF_AXIAL_SECTIONS_RED,_(""),&m_NumberOfAxialSections[RED],0, 20);
+	m_Gui->Label(_R("Export planes height:"));
+	m_Gui->Integer(ID_EXPORT_PLANES_HEIGHT_RED,_L(""),&m_ExportPlanesHeight[RED],0, 50);
+	m_Gui->Label(_R("Axial sections:"));
+	m_Gui->Integer(ID_NUMBER_OF_AXIAL_SECTIONS_RED,_L(""),&m_NumberOfAxialSections[RED],0, 20);
 	m_Gui->Divider();
 
 	//-------------------------------------------------------------------
@@ -1522,15 +1522,15 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	//-------------------------------------------------------------------
 
 	m_Gui->Divider(2);
-	m_Gui->Label("Green", true);
+	m_Gui->Label(_R("Green"), true);
 
-	m_Gui->Bool(ID_ENABLE_EXPORT_IMAGES_GREEN, "",&m_EnableExportImages[GREEN]);
+	m_Gui->Bool(ID_ENABLE_EXPORT_IMAGES_GREEN, _R(""),&m_EnableExportImages[GREEN]);
 	//  m_Gui->Label("");
 
-	m_Gui->Label("Export planes height:");
-	m_Gui->Integer(ID_EXPORT_PLANES_HEIGHT_GREEN,_(""),&m_ExportPlanesHeight[GREEN],0, 50);
-	m_Gui->Label("Axial sections:");
-	m_Gui->Integer(ID_NUMBER_OF_AXIAL_SECTIONS_GREEN,_(""),&m_NumberOfAxialSections[GREEN],0, 20);
+	m_Gui->Label(_R("Export planes height:"));
+	m_Gui->Integer(ID_EXPORT_PLANES_HEIGHT_GREEN,_L(""),&m_ExportPlanesHeight[GREEN],0, 50);
+	m_Gui->Label(_R("Axial sections:"));
+	m_Gui->Integer(ID_NUMBER_OF_AXIAL_SECTIONS_GREEN,_L(""),&m_NumberOfAxialSections[GREEN],0, 20);
 	m_Gui->Divider();
 
 	//-------------------------------------------------------------------
@@ -1538,23 +1538,23 @@ mafGUI* medViewArbitraryOrthoSlice::CreateGui()
 	//-------------------------------------------------------------------
 
 	m_Gui->Divider(2);
-	m_Gui->Label("Blue", true);
+	m_Gui->Label(_R("Blue"), true);
 
-	m_Gui->Bool(ID_ENABLE_EXPORT_IMAGES_BLUE, "",&m_EnableExportImages[BLUE]);
+	m_Gui->Bool(ID_ENABLE_EXPORT_IMAGES_BLUE, _R(""),&m_EnableExportImages[BLUE]);
 	//  m_Gui->Label("");
 
-	m_Gui->Label("Export planes height:");
-	m_Gui->Integer(ID_EXPORT_PLANES_HEIGHT_BLUE,_(""),&m_ExportPlanesHeight[BLUE],0, 50);
-	m_Gui->Label("Axial sections:");
-	m_Gui->Integer(ID_NUMBER_OF_AXIAL_SECTIONS_BLUE,_(""),&m_NumberOfAxialSections[BLUE],0, 20);
+	m_Gui->Label(_R("Export planes height:"));
+	m_Gui->Integer(ID_EXPORT_PLANES_HEIGHT_BLUE,_L(""),&m_ExportPlanesHeight[BLUE],0, 50);
+	m_Gui->Label(_R("Axial sections:"));
+	m_Gui->Integer(ID_NUMBER_OF_AXIAL_SECTIONS_BLUE,_L(""),&m_NumberOfAxialSections[BLUE],0, 20);
 	m_Gui->Divider();
 
 	//-------------------------------------------------------------------
 	// Write Images
 	//-------------------------------------------------------------------
 
-	m_Gui->Button(ID_CHOOSE_DIR,"Choose export dir");
-	m_Gui->Button(ID_EXPORT,"Write images");
+	m_Gui->Button(ID_CHOOSE_DIR,_R("Choose export dir"));
+	m_Gui->Button(ID_EXPORT,_R("Write images"));
 
 	// 	m_Gui->Label("");
 	// 	m_Gui->Button(ID_SHOW_RULER, "Show Ruler");
@@ -2290,8 +2290,8 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 	m_SlicerXResetMatrix->DeepCopy(slicerXTransform->GetMatrix());
 
 	mafNEW(m_SlicerX);
-	m_SlicerX->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
-	m_SlicerX->SetName("m_SlicerX");
+	m_SlicerX->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
+	m_SlicerX->SetName(_R("m_SlicerX"));
 	m_SlicerX->ReparentTo(vmeVolume);
 	m_SlicerX->SetAbsMatrix(mafMatrix(slicerXTransform->GetMatrix()));
 	m_SlicerX->SetSlicedVMELink(vmeVolume);
@@ -2313,8 +2313,8 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 	m_SlicerYResetMatrix->DeepCopy(slicerYTransform->GetMatrix());
 
 	mafNEW(m_SlicerY);
-	m_SlicerY->SetName("m_SlicerY");
-	m_SlicerY->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+	m_SlicerY->SetName(_R("m_SlicerY"));
+	m_SlicerY->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 	m_SlicerY->ReparentTo(vmeVolume);
 	m_SlicerY->SetAbsMatrix(mafMatrix(slicerYTransform->GetMatrix()));
 	m_SlicerY->SetSlicedVMELink(vmeVolume);
@@ -2327,8 +2327,8 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 	BuildYCameraConeVME();
 
 	mafNEW(m_SlicerZ);
-	m_SlicerZ->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
-	m_SlicerZ->SetName("m_SlicerZ");
+	m_SlicerZ->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
+	m_SlicerZ->SetName(_R("m_SlicerZ"));
 	m_SlicerZ->ReparentTo(vmeVolume);
 	m_SlicerZ->SetAbsMatrix(*m_SlicerZResetMatrix);
 	m_SlicerZ->SetSlicedVMELink(vmeVolume);
@@ -2400,7 +2400,7 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 
 	m_GizmoZView = new medGizmoCrossRotateTranslate();
 	m_GizmoZView->Create(m_SlicerZ, this, true, medGizmoCrossRotateTranslate::Z);
-	m_GizmoZView->SetName("m_GizmoZView");
+	m_GizmoZView->SetName(_R("m_GizmoZView"));
 	m_GizmoZView->SetInput(m_SlicerZ);
 	m_GizmoZView->SetRefSys(m_SlicerZ);
 	m_GizmoZView->SetAbsPose(m_SlicerZResetMatrix);
@@ -2416,7 +2416,7 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 
 	m_GizmoYView = new medGizmoCrossRotateTranslate();
 	m_GizmoYView->Create(m_SlicerY, this, true, medGizmoCrossRotateTranslate::Y);
-	m_GizmoYView->SetName("m_GizmoYView");
+	m_GizmoYView->SetName(_R("m_GizmoYView"));
 	m_GizmoYView->SetInput(m_SlicerY);
 	m_GizmoYView->SetRefSys(m_SlicerY);
 	m_GizmoYView->SetAbsPose(m_SlicerYResetMatrix);
@@ -2432,7 +2432,7 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 
 	m_GizmoXView = new medGizmoCrossRotateTranslate();
 	m_GizmoXView->Create(m_SlicerX, this, true, medGizmoCrossRotateTranslate::X);
-	m_GizmoXView->SetName("m_GizmoXView");
+	m_GizmoXView->SetName(_R("m_GizmoXView"));
 	m_GizmoXView->SetInput(m_SlicerX);
 	m_GizmoXView->SetRefSys(m_SlicerX);
 	m_GizmoXView->SetAbsPose(m_SlicerXResetMatrix);
@@ -2497,19 +2497,19 @@ void medViewArbitraryOrthoSlice::ShowSlicers( mafVME * vmeVolume, bool show )
 	// create the pick interactor for slicer X
 	m_XSlicerPicker = medInteractorPicker::New();
 	m_XSlicerPicker->SetListener(this);
-	m_XSlicerPicker->SetName("m_XSlicerPicker");
+	m_XSlicerPicker->SetName(_R("m_XSlicerPicker"));
 	m_SlicerX->SetBehavior(m_XSlicerPicker);
 
 	// create the pick interactor for slicer X
 	m_YSlicerPicker = medInteractorPicker::New();
 	m_YSlicerPicker->SetListener(this);
-	m_YSlicerPicker->SetName("m_YSlicerPicker");
+	m_YSlicerPicker->SetName(_R("m_YSlicerPicker"));
 	m_SlicerY->SetBehavior(m_YSlicerPicker);
 
 	// create the pick interactor for slicer X
 	m_ZSlicerPicker = medInteractorPicker::New();
 	m_ZSlicerPicker->SetListener(this);
-	m_ZSlicerPicker->SetName("m_ZSlicerPicker");
+	m_ZSlicerPicker->SetName(_R("m_ZSlicerPicker"));
 	m_SlicerZ->SetBehavior(m_ZSlicerPicker);
 
 	EnableSlicersPicking(true);
@@ -2548,8 +2548,8 @@ void medViewArbitraryOrthoSlice::BuildXCameraConeVME()
 
 	mafNEW(m_XCameraConeVME);
 	// DEBUG
-	m_XCameraConeVME->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
-	m_XCameraConeVME->SetName("Cone X Camera");
+	m_XCameraConeVME->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
+	m_XCameraConeVME->SetName(_R("Cone X Camera"));
 	m_XCameraConeVME->SetData(XCameraConeSource->GetOutput(), m_CurrentVolume->GetTimeStamp());
 	m_XCameraConeVME->SetVisibleToTraverse(false);
 
@@ -2613,8 +2613,8 @@ void medViewArbitraryOrthoSlice::BuildYCameraConeVME()
 
 	mafNEW(m_YCameraConeVME);
 	// DEBUG
-	m_YCameraConeVME->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
-	m_YCameraConeVME->SetName("m_YCameraConeVME");
+	m_YCameraConeVME->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
+	m_YCameraConeVME->SetName(_R("m_YCameraConeVME"));
 	m_YCameraConeVME->SetData(YCameraConeSource->GetOutput(), m_CurrentVolume->GetTimeStamp());
 	m_YCameraConeVME->SetVisibleToTraverse(false);
 
@@ -2685,8 +2685,8 @@ void medViewArbitraryOrthoSlice::BuildZCameraConeVME()
 
 	mafNEW(m_ZCameraConeVME);
 	// DEBUG
-	m_ZCameraConeVME->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
-	m_ZCameraConeVME->SetName("m_ZCameraConeVME");
+	m_ZCameraConeVME->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
+	m_ZCameraConeVME->SetName(_R("m_ZCameraConeVME"));
 	m_ZCameraConeVME->SetData(ZCameraConeSource->GetOutput(), m_CurrentVolume->GetTimeStamp());
 	m_ZCameraConeVME->SetVisibleToTraverse(false);
 
@@ -2727,22 +2727,22 @@ bool medViewArbitraryOrthoSlice::BelongsToZNormalGizmo( mafVME * vme )
 	translate = dynamic_cast<medGizmoCrossTranslate *>(mediator);
 
 	std::ostringstream stringStream;
-	stringStream << "Gizmo name: " << vme->GetName() << std::endl;        
+	stringStream << "Gizmo name: " << vme->GetName().GetCStr() << std::endl;
 
-	if (translate && translate->GetName().Equals("m_GizmoZView"))
+	if (translate && translate->GetName().Equals(_R("m_GizmoZView")))
 	{
-		stringStream << "Gizmo master: " << translate->GetName() << std::endl;       
-		mafLogMessage(stringStream.str().c_str());
+		stringStream << "Gizmo master: " << translate->GetName().GetCStr() << std::endl;
+        mafLogMessage(_M(stringStream.str().c_str()));
 		return true;
 	}
 
 	medGizmoCrossRotate *rotate = NULL;
 	rotate = dynamic_cast<medGizmoCrossRotate *>(mediator);
 
-	if (rotate && rotate->GetName().Equals("m_GizmoZView"))
+	if (rotate && rotate->GetName().Equals(_R("m_GizmoZView")))
 	{
-		stringStream << "Gizmo master: " << rotate->GetName() << std::endl;       
-		mafLogMessage(stringStream.str().c_str());
+		stringStream << "Gizmo master: " << rotate->GetName().GetCStr() << std::endl;
+        mafLogMessage(_M(stringStream.str().c_str()));
 		return true;
 	}
 
@@ -2763,22 +2763,22 @@ bool medViewArbitraryOrthoSlice::BelongsToXNormalGizmo( mafVME * vme )
 	translate = dynamic_cast<medGizmoCrossTranslate *>(mediator);
 
 	std::ostringstream stringStream;
-	stringStream << "Gizmo name: " << vme->GetName() << std::endl;        
+	stringStream << "Gizmo name: " << vme->GetName().GetCStr() << std::endl;
 
-	if (translate && translate->GetName().Equals("m_GizmoXView"))
+	if (translate && translate->GetName().Equals(_R("m_GizmoXView")))
 	{
-		stringStream << "Gizmo master: " << translate->GetName() << std::endl;       
-		mafLogMessage(stringStream.str().c_str());
+		stringStream << "Gizmo master: " << translate->GetName().GetCStr() << std::endl;
+        mafLogMessage(_M(stringStream.str().c_str()));
 		return true;
 	}
 
 	medGizmoCrossRotate *rotate = NULL;
 	rotate = dynamic_cast<medGizmoCrossRotate *>(mediator);
 
-	if (rotate && rotate->GetName().Equals("m_GizmoXView"))
+	if (rotate && rotate->GetName().Equals(_R("m_GizmoXView")))
 	{
-		stringStream << "Gizmo master: " << rotate->GetName() << std::endl;       
-		mafLogMessage(stringStream.str().c_str());
+		stringStream << "Gizmo master: " << rotate->GetName().GetCStr() << std::endl;
+        mafLogMessage(_M(stringStream.str().c_str()));
 		return true;
 	}
 
@@ -2796,22 +2796,22 @@ bool medViewArbitraryOrthoSlice::BelongsToYNormalGizmo( mafVME * vme )
 	translate = dynamic_cast<medGizmoCrossTranslate *>(mediator);
 
 	std::ostringstream stringStream;
-	stringStream << "Gizmo name: " << vme->GetName() << std::endl;        
+	stringStream << "Gizmo name: " << vme->GetName().GetCStr() << std::endl;
 
-	if (translate && translate->GetName().Equals("m_GizmoYView"))
+	if (translate && translate->GetName().Equals(_R("m_GizmoYView")))
 	{
-		stringStream << "Gizmo master: " << translate->GetName() << std::endl;       
-		mafLogMessage(stringStream.str().c_str());
+		stringStream << "Gizmo master: " << translate->GetName().GetCStr() << std::endl;
+        mafLogMessage(_M(stringStream.str().c_str()));
 		return true;
 	}
 
 	medGizmoCrossRotate *rotate = NULL;
 	rotate = dynamic_cast<medGizmoCrossRotate *>(mediator);
 
-	if (rotate && rotate->GetName().Equals("m_GizmoYView"))
+	if (rotate && rotate->GetName().Equals(_R("m_GizmoYView")))
 	{
-		stringStream << "Gizmo master: " << rotate->GetName() << std::endl;       
-		mafLogMessage(stringStream.str().c_str());
+		stringStream << "Gizmo master: " << rotate->GetName().GetCStr() << std::endl;
+        mafLogMessage(_M(stringStream.str().c_str()));
 		return true;
 	}
 
@@ -2970,7 +2970,7 @@ void medViewArbitraryOrthoSlice::GetLeftRightLettersFromCamera( double viewUp[3]
 	stringStream << "labels: " << leftRight.c_str() << std::endl;
 
 
-	mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
 
 }
 
@@ -3071,7 +3071,7 @@ void medViewArbitraryOrthoSlice::UpdateZView2DActors()
 
 	stringStream << leftLetter.c_str() << " " << rightLetter.c_str() << std::endl;
 
-	mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
 
 	m_TextMapperLeftZView->SetInput(leftLetter.c_str());
 	m_TextMapperRightZView->SetInput(rightLetter.c_str());
@@ -3141,7 +3141,7 @@ void medViewArbitraryOrthoSlice::UpdateYView2DActors()
 
 	stringStream << leftLetter.c_str() << " " << rightLetter.c_str() << std::endl;
 
-	mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
 
 	m_TextMapperLeftYView->SetInput(leftLetter.c_str());
 	m_TextMapperRightYView->SetInput(rightLetter.c_str());
@@ -3259,7 +3259,7 @@ void medViewArbitraryOrthoSlice::AccumulateTextures( mafVMESlicer *inSlicer, dou
 
 	std::ostringstream stringStream;
 	stringStream << "additional profiles number: " << additionalProfileNumber << std::endl;          
-	mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
 
 	vtkMatrix4x4 *slicerAbsMatrix = inSlicer->GetAbsMatrixPipe()->GetMatrix().GetVTKMatrix();
 	assert(slicerAbsMatrix);
@@ -3350,7 +3350,7 @@ void medViewArbitraryOrthoSlice::AccumulateTextures( mafVMESlicer *inSlicer, dou
 			std::ostringstream stringStream;
 			stringStream << "Slicer number: " << profileId  << " matrix" << std::endl;          
 			inSlicer->GetAbsMatrixPipe()->GetMatrix().GetVTKMatrix()->PrintSelf(stringStream, NULL);
-			mafLogMessage(stringStream.str().c_str());
+            mafLogMessage(_M(stringStream.str().c_str()));
 		}
 		// get the current slice profile texture
 
@@ -3415,7 +3415,7 @@ void medViewArbitraryOrthoSlice::ShowVTKDataAsVMESurface( vtkPolyData *vmeVTKDat
 	assert(vmeVTKData->GetNumberOfPoints());
 
 	// DEBUG VISUALIZATION
-	vmeSurface->SetName("cutting line");
+	vmeSurface->SetName(_R("cutting line"));
 	vmeSurface->SetData(vmeVTKData, m_CurrentVolume->GetTimeStamp());
 	vmeSurface->SetVisibleToTraverse(false);
 
@@ -3727,7 +3727,7 @@ void medViewArbitraryOrthoSlice::BuildSlicingPlane(mafVMESurface *inVME,
 void medViewArbitraryOrthoSlice::AddVMEToMSFTree(mafVMESurface *vme)
 {
 	assert(vme != NULL);
-	vme->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+	vme->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 	mafEventMacro(mafEvent(this, VME_ADD, vme));
 	assert(vme);
 }
@@ -4812,8 +4812,8 @@ void medViewArbitraryOrthoSlice::SaveSlicesFromRenderWindowToFile(int chooseExpo
 				guide1FileName.append("/SlicerZ_Reference_Y_View.png");
 			}
 
-			((mafViewSlice*)m_ChildViewList[guideView0])->GetRWI()->SaveImage(guide0FileName.c_str());			
-			((mafViewSlice*)m_ChildViewList[guideView1])->GetRWI()->SaveImage(guide1FileName.c_str());  
+			((mafViewSlice*)m_ChildViewList[guideView0])->GetRWI()->SaveImage(mafWxToString(guide0FileName));			
+			((mafViewSlice*)m_ChildViewList[guideView1])->GetRWI()->SaveImage(mafWxToString(guide1FileName));
 		}
 
 		if (currentSlicer == m_SlicerX)
@@ -4852,7 +4852,7 @@ void medViewArbitraryOrthoSlice::SaveSlicesFromRenderWindowToFile(int chooseExpo
 		fileName << ".png";
 
 
-		((mafViewSlice*)m_ChildViewList[viewToExport])->GetRWI()->SaveImage(fileName.c_str());
+		((mafViewSlice*)m_ChildViewList[viewToExport])->GetRWI()->SaveImage(mafWxToString(fileName));
 
 		
 		height = height + step;

@@ -35,7 +35,7 @@ class mafVME;
 class MED_OPERATION_EXPORT medOpExporterVTKXML: public mafOp
 {
 public:
-  medOpExporterVTKXML(const mafString &label = "VTKXMLExporter");
+  medOpExporterVTKXML(const mafString &label = _R("VTKXMLExporter"));
  ~medOpExporterVTKXML(); 
   
   mafTypeMacro(medOpExporterVTKXML, mafOp);
@@ -58,7 +58,7 @@ public:
   void SetExportAsBynary(int binary_file) {m_Binary = binary_file;};
 
   /** Set the filename for the .stl to export */
-  void SetFileName(const char *file_name) {m_File = file_name;};
+  void SetFileName(const char *file_name) {m_File = _R(file_name);};
 
   /** Export vtk data. */
   void ExportVTK();
