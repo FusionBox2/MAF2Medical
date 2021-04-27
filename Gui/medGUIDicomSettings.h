@@ -47,7 +47,7 @@ class MED_GUI_EXPORT medGUIDicomSettings : public mafGUISettings
 {
 public:
   /** constructor.*/
-	medGUIDicomSettings(mafBaseEventHandler *Listener, const mafString &label = _("Dicom"));
+	medGUIDicomSettings(mafBaseEventHandler *Listener, const mafString &label = _L("Dicom"));
   /** destructor.*/
 	~medGUIDicomSettings(); 
 
@@ -141,7 +141,7 @@ public:
 	void OnEvent(mafEventBase *maf_event);
 
   /** Retrieve Dictionary path name. */
-	mafString GetDictionary(){return "";}; // Left for backward compatibility. Always return the empty string
+	mafString GetDictionary(){return _R("");} // Left for backward compatibility. Always return the empty string
 
   /** Retrieve Automatic Crop Position Flag. */
 	int AutoCropPosition(){return m_AutoCropPos;};
@@ -193,8 +193,8 @@ public:
   void SetEnableToRead(char *type,bool enable);
 
   /** Helper function to store and retrieve the last dicom dir opened */
-  void SetLastDicomDir(wxString lastDicomDir);;
-  wxString GetLastDicomDir() {return m_LastDicomDir;};
+  void SetLastDicomDir(mafString lastDicomDir);;
+  mafString GetLastDicomDir() {return m_LastDicomDir;};
 
   /** Return the type of output name format */
   int GetOutputNameFormat(){return m_OutputNameType;};
@@ -242,7 +242,7 @@ protected:
   int m_OutputNameType;
   int m_ShowAdvancedOptionOfSorting;
   int m_UseDefaultDicomFolder;
-  wxString m_LastDicomDir;
+  mafString m_LastDicomDir;
   mafString m_DicomFolder;
   double m_ScalarDistanceTolerance;
   double m_PercentageDistanceTolerance;

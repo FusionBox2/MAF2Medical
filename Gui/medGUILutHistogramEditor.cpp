@@ -50,7 +50,7 @@
 //----------------------------------------------------------------------------
 //vtkDataSet *dataSet, mmaVolumeMaterial *material, char *name="Histogram & Windowing", mafObserver *Listener=NULL, int id=MINID);
 medGUILutHistogramEditor::medGUILutHistogramEditor(vtkDataSet *dataSet,mmaVolumeMaterial *material, char *name, mafBaseEventHandler *Listener, int id)
-:mafGUIDialog(name)
+:mafGUIDialog(_R(name))
 //----------------------------------------------------------------------------
 {
 	 
@@ -82,7 +82,7 @@ medGUILutHistogramEditor::medGUILutHistogramEditor(vtkDataSet *dataSet,mmaVolume
   mafGUI *gui = new mafGUI(this);
   m_GuiDialog = gui;
   mafString tag_name;
-  tag_name = "HISTOGRAM_VOLUME";
+  tag_name = _R("HISTOGRAM_VOLUME");
 
   //Setting up the histogram
   m_Histogram = new mafGUIHistogramWidget(gui,-1,wxPoint(0,0),wxSize(500,100),wxTAB_TRAVERSAL);
@@ -107,15 +107,15 @@ medGUILutHistogramEditor::medGUILutHistogramEditor(vtkDataSet *dataSet,mmaVolume
   gui->Divider();
   //gamma correction slider 
   m_Gamma = material->m_GammaCorrection;
-  m_GammaSlider = gui->FloatSlider(ID_GAMMA_CORRETION,_("Gamma: "), &m_Gamma,0,5, wxSize(300,30), "", false);
+  m_GammaSlider = gui->FloatSlider(ID_GAMMA_CORRETION,_L("Gamma: "), &m_Gamma,0,5, wxSize(300,30), _R(""), false);
 
   //Activate only if required
   if (m_DataSet->GetPointData()->GetScalars()->GetNumberOfTuples()>SUB_SAMPLED_SIZE)
-    gui->Bool(ID_FULL_SAMPLING,"Full Sampling (accurate but slow)",&m_FullSampling,1);
+    gui->Bool(ID_FULL_SAMPLING,_R("Full Sampling (accurate but slow)"),&m_FullSampling,1);
   
-  gui->Bool(ID_LOG_SCALE_VIEW,"View histogram in log scale",&m_LogScale,1);
+  gui->Bool(ID_LOG_SCALE_VIEW,_R("View histogram in log scale"),&m_LogScale,1);
 
-  gui->Button(ID_RESET_LUT,"Reset Lut");
+  gui->Button(ID_RESET_LUT,_R("Reset Lut"));
 
   wxStaticText *label = new wxStaticText(this, -1, " Right click + Up/Down in the histogram to zoom In/Out", wxDefaultPosition, wxSize(500,18), wxALIGN_LEFT | wxST_NO_AUTORESIZE );
 

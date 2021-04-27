@@ -439,8 +439,7 @@ void medOpMove::OnEventThis(mafEventBase *maf_event)
     // move this to opgui; both gizmos and gui should know ref sys
     case ID_AUX_REF_SYS:
     {
-      mafString s;
-      s << "Choose VME ref sys";
+      mafString s = _R("Choose VME ref sys");
 			mafEvent e(this,VME_CHOOSE, &s);
 			mafEventMacro(e);
       SetRefSysVME(mafVME::SafeDownCast(e.GetVme()));
@@ -617,26 +616,26 @@ void medOpMove::CreateGui()
 
   if (buildHelpGui.GetArg() == true)
   {
-	  m_Gui->Button(ID_HELP, "Help","");	
+	  m_Gui->Button(ID_HELP, _R("Help"), _R(""));
   }
 
   // enable/disable gizmo interaction
-  m_Gui->Label("interaction modality", true);
-  mafString interactionModality[2] = {"mouse", "gizmo"};
-  m_Gui->Combo(ID_SHOW_GIZMO,"",&m_UseGizmo,2,interactionModality);
+  m_Gui->Label(_R("interaction modality"), true);
+  mafString interactionModality[2] = {_R("mouse"), _R("gizmo")};
+  m_Gui->Combo(ID_SHOW_GIZMO, _R(""),&m_UseGizmo,2,interactionModality);
 
   m_Gui->Divider(2);
-  m_Gui->Label("gizmo interaction", true);
-  m_Gui->Label("left mouse: interact through gizmo");
+  m_Gui->Label(_R("gizmo interaction"), true);
+  m_Gui->Label(_R("left mouse: interact through gizmo"));
 
   // choose active gizmo
-  mafString available_gizmos[3] = {"translate", "rotate"};
-  m_Gui->Combo(ID_CHOOSE_GIZMO_COMBO, "", &m_ActiveGizmo, 2, available_gizmos);
+  mafString available_gizmos[3] = {_R("translate"), _R("rotate")};
+  m_Gui->Combo(ID_CHOOSE_GIZMO_COMBO, _R(""), &m_ActiveGizmo, 2, available_gizmos);
   m_Gui->Divider(2);
-  m_Gui->Label("step parameters:",true);
-  m_Gui->Double(ID_TRANSLATION_STEP,"translation",&m_TranslationStep,0.01);
-  m_Gui->Double(ID_ROTATION_STEP,"rotation",&m_RotationStep,0.01);
-  m_Gui->Bool(ID_ENABLE_STEP,"on/off",&m_EnableStep);
+  m_Gui->Label(_R("step parameters:"),true);
+  m_Gui->Double(ID_TRANSLATION_STEP,_R("translation"),&m_TranslationStep,0.01);
+  m_Gui->Double(ID_ROTATION_STEP,_R("rotation"),&m_RotationStep,0.01);
+  m_Gui->Bool(ID_ENABLE_STEP,_R("on/off"),&m_EnableStep);
   m_Gui->Enable(ID_CHOOSE_GIZMO_COMBO, m_UseGizmo?true:false);
   m_Gui->Enable(ID_ROTATION_STEP, m_UseGizmo?true:false);
   m_Gui->Enable(ID_TRANSLATION_STEP, m_UseGizmo?true:false);
@@ -651,12 +650,12 @@ void medOpMove::CreateGui()
   // add transform gui to operation
   m_Gui->AddGui(m_GuiTransformMouse->GetGui());
 
-  m_Gui->Double(ID_TRANSLATE_X, "Translate X", &m_TransfTranslation[0]);
-  m_Gui->Double(ID_TRANSLATE_Y, "Translate Y", &m_TransfTranslation[1]);
-  m_Gui->Double(ID_TRANSLATE_Z, "Translate Z", &m_TransfTranslation[2]);
-  m_Gui->Double(ID_ROTATE_X, "Rotate X", &m_TransfRotation[0]);
-  m_Gui->Double(ID_ROTATE_Y, "Rotate Y", &m_TransfRotation[1]);
-  m_Gui->Double(ID_ROTATE_Z, "Rotate Z", &m_TransfRotation[2]);
+  m_Gui->Double(ID_TRANSLATE_X, _R("Translate X"), &m_TransfTranslation[0]);
+  m_Gui->Double(ID_TRANSLATE_Y, _R("Translate Y"), &m_TransfTranslation[1]);
+  m_Gui->Double(ID_TRANSLATE_Z, _R("Translate Z"), &m_TransfTranslation[2]);
+  m_Gui->Double(ID_ROTATE_X, _R("Rotate X"), &m_TransfRotation[0]);
+  m_Gui->Double(ID_ROTATE_Y, _R("Rotate Y"), &m_TransfRotation[1]);
+  m_Gui->Double(ID_ROTATE_Z, _R("Rotate Z"), &m_TransfRotation[2]);
 
   m_Gui->Enable(ID_TRANSLATE_X, true);
   m_Gui->Enable(ID_TRANSLATE_Y, true);
@@ -666,9 +665,9 @@ void medOpMove::CreateGui()
   m_Gui->Enable(ID_ROTATE_Z, true);
   if (false)
   {
-    m_Gui->Double(ID_SCALE_X, "Scale X", &m_TransfScaling[0], 0);
-    m_Gui->Double(ID_SCALE_Y, "Scale Y", &m_TransfScaling[1], 0);
-    m_Gui->Double(ID_SCALE_Z, "Scale Z", &m_TransfScaling[2], 0);
+    m_Gui->Double(ID_SCALE_X, _R("Scale X"), &m_TransfScaling[0], 0);
+    m_Gui->Double(ID_SCALE_Y, _R("Scale Y"), &m_TransfScaling[1], 0);
+    m_Gui->Double(ID_SCALE_Z, _R("Scale Z"), &m_TransfScaling[2], 0);
     m_Gui->Enable(ID_SCALE_X, true);
     m_Gui->Enable(ID_SCALE_Y, true);
     m_Gui->Enable(ID_SCALE_Z, true);
@@ -682,7 +681,7 @@ void medOpMove::CreateGui()
 
   // add transform Gui to operation
   //m_Gui->AddGui(m_GuiTransformTextEntries->GetGui());
-  m_Gui->RollOut(ID_ROLLOUT_TEXT_ENTRIES," Text entries", m_GuiTransformTextEntries->GetGui(), false);
+  m_Gui->RollOut(ID_ROLLOUT_TEXT_ENTRIES,_R(" Text entries"), m_GuiTransformTextEntries->GetGui(), false);
 
   //---------------------------------
   // Translation Gizmo Gui
@@ -694,7 +693,7 @@ void medOpMove::CreateGui()
 
   // add translation gizmo Gui to operation
   //m_Gui->AddGui(m_GizmoTranslate->GetGui());
-  m_Gui->RollOut(ID_ROLLOUT_GIZMO_TRANSLATE," Gizmo translate", m_GizmoTranslate->GetGui(), false);
+  m_Gui->RollOut(ID_ROLLOUT_GIZMO_TRANSLATE,_R(" Gizmo translate"), m_GizmoTranslate->GetGui(), false);
   
   //---------------------------------
   // Rotation Gizmo Gui
@@ -704,7 +703,7 @@ void medOpMove::CreateGui()
 
   // add rotation gizmo Gui to operation
   //m_Gui->AddGui(m_GizmoRotate->GetGui());
-  m_Gui->RollOut(ID_ROLLOUT_GIZMO_ROTATE," Gizmo rotate", m_GizmoRotate->GetGui(), false);
+  m_Gui->RollOut(ID_ROLLOUT_GIZMO_ROTATE,_R(" Gizmo rotate"), m_GizmoRotate->GetGui(), false);
   
   //---------------------------------
   // Store/Restore position Gui
@@ -713,25 +712,25 @@ void medOpMove::CreateGui()
   
   // add Gui to operation
   //m_Gui->AddGui(m_GuiSaveRestorePose->GetGui());
-  m_Gui->RollOut(ID_ROLLOUT_SAVE_POS," Save pose", m_GuiSaveRestorePose->GetGui(), false);
+  m_Gui->RollOut(ID_ROLLOUT_SAVE_POS,_R(" Save pose"), m_GuiSaveRestorePose->GetGui(), false);
 
   //--------------------------------- 
   m_Gui->Divider(2);
 
-  m_Gui->Label("auxiliary ref sys", true);
-	m_Gui->Button(ID_AUX_REF_SYS,"choose");
+  m_Gui->Label(_R("auxiliary ref sys"), true);
+	m_Gui->Button(ID_AUX_REF_SYS,_R("choose"));
 	if(this->m_RefSysVME == NULL)
   {
     SetRefSysVME(mafVME::SafeDownCast(m_Input));
     m_RefSysVMEName = m_Input->GetName();
   }
-  m_Gui->Label("refsys name: ",&m_RefSysVMEName);
+  m_Gui->Label(_R("refsys name: "),&m_RefSysVMEName);
 
   m_Gui->Divider(2);
-  m_Gui->Button(ID_RESET,"reset","","Cancel the transformation.");
+  m_Gui->Button(ID_RESET,_R("reset"), _R(""),_R("Cancel the transformation."));
 
 	m_Gui->OkCancel(); 
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
   //--------------------------------- 
 
   m_Gui->Update();

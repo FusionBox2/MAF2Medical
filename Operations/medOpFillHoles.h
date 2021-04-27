@@ -49,7 +49,7 @@ class MED_OPERATION_EXPORT medOpFillHoles: public mafOp
 {
 public:
   /** constructor*/
-	medOpFillHoles(const mafString& label = "Fill Holes");
+	medOpFillHoles(const mafString& label = _R("Fill Holes"));
   /** destructor */
 	~medOpFillHoles(); 
 

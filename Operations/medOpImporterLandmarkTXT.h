@@ -43,7 +43,7 @@ class MED_OPERATION_EXPORT medOpImporterLandmarkTXT : public mafOp
 public:
   mafTypeMacro(medOpImporterLandmarkTXT, mafOp)
   /** object constructor */
-	medOpImporterLandmarkTXT(const mafString& label = "");
+	medOpImporterLandmarkTXT(const mafString& label = _R(""));
   /** object destructor */
 	~medOpImporterLandmarkTXT();
   /** method for clone object */
@@ -66,14 +66,14 @@ public:
   void Read();
 
   /** Set the filename for the file to import */
-  void SetFileName(const char *file_name){m_File = file_name;};
+  void SetFileName(const char *file_name){m_File = _R(file_name);};
 
   /** Set number of column to skip */
   void SetSkipColumn(int column);
 
 protected:
-  wxString m_FileDir;
-	wxString m_File;
+  mafString m_FileDir;
+	mafString m_File;
 	mafVMELandmarkCloud  *m_VmeCloud;
   int m_Start;
 };

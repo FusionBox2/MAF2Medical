@@ -61,7 +61,7 @@ void medWizardBlockVMESelection::ExcutionBegin()
   //Setting global variable witch can be referred by static function
   globalAccept=m_AcceptedVME;
 
-  mafString title = m_Title.c_str();
+  mafString title = mafWxToString(m_Title);
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
   e.SetArg((long)(&VMEAccept)); 

@@ -37,7 +37,7 @@ medWizardBlock::medWizardBlock(const char *name)
   m_Name = name;
 
   if (m_Name == "END")
-    mafLogMessage("MafWizardBlock: 'END' was reserved");
+    mafLogMessage(_M("MafWizardBlock: 'END' was reserved"));
   
   m_Success=true;
 
@@ -160,7 +160,7 @@ void medWizardBlock::SetDescriptionLabel( const char *label)
 //----------------------------------------------------------------------------
 {
   //setting description label
-  m_DescriptionLabel=label;
+  m_DescriptionLabel=_R(label);
 }
 
 void medWizardBlock::SetNextBlockOnAbort( const char *label )

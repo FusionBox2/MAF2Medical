@@ -17,6 +17,7 @@
 
 
 #include "medDefines.h" 
+#include "mafDecl.h"
 //----------------------------------------------------------------------------
 // NOTE: Every CPP file in the MAF must include "mafDefines.h" as first.
 // This force to include Window,wxWidgets and VTK exactly in this order.
@@ -79,7 +80,7 @@ void medHTMLTemplateParser::SetTemplateFromFile( wxString filename )
   }
   else
   {
-    mafLogMessage("medHTMLTemplateParser: Cannot open File: %s",filename.c_str());
+    mafLogMessage(_M(_R("medHTMLTemplateParser: Cannot open File: ") + mafWxToString(filename)));
   }
   
 }

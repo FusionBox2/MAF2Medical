@@ -161,7 +161,7 @@ int mafVMEVolumeLarge::InternalInitialize()
 mmaVolumeMaterial *mafVMEVolumeLarge::GetMaterial()
 //-------------------------------------------------------------------------
 {
-  mmaVolumeMaterial *material = (mmaVolumeMaterial *)GetAttribute("VolumeMaterialAttributes");
+  mmaVolumeMaterial *material = (mmaVolumeMaterial *)GetAttribute(_R("VolumeMaterialAttributes"));
   if (material == NULL)
   {
     material = mmaVolumeMaterial::New();
@@ -176,7 +176,7 @@ mmaVolumeMaterial *mafVMEVolumeLarge::GetMaterial()
       material->UpdateFromTables();
     }
 
-    SetAttribute("VolumeMaterialAttributes", material);
+    SetAttribute(_R("VolumeMaterialAttributes"), material);
     if (m_Output)
     {
       ((mafVMEOutputVolume *)m_Output)->SetMaterial(material);
@@ -793,11 +793,11 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
   vtkDEL(pCopyRLG);
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("NATURAL");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("NATURAL"));
 
-  wxString name = this->GetName();
-  newVME->SetName(wxString::Format("%s (OR[%d,%d,%d], SR[%d])", name, 
+  mafString name = this->GetName();
+  newVME->SetName(name + mafString::Format(_R(" (OR[%d,%d,%d], SR[%d])"),
     m_VOI[0], m_VOI[2], m_VOI[4], m_LargeDataReader->GetSampleRate()));
   newVME->GetTagArray()->SetTag(tag_Nature);
     
@@ -999,7 +999,7 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 		return ret_val;
 
 
-	mafStorageElement* ds_info = parent->AppendChild("LargeDataSetInfo");
+	mafStorageElement* ds_info = parent->AppendChild(_R("LargeDataSetInfo"));
 
 #ifdef VME_VOLUME_VER1
 	int AutoSampleRate = (int)ds->GetAutoSampleRate();
@@ -1044,26 +1044,26 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 	ds_info->StoreDouble(_("SpZ"), sp[2]);
 #else
 	int MemoryLimit = m_SampleMemLimit*1024;
-	ds_info->StoreText(_("ClassName"), m_LargeDataReader->GetStaticTypeName());
-	ds_info->StoreInteger(_("MemoryLimit"), MemoryLimit);
+	ds_info->StoreText(_L("ClassName"), _R(m_LargeDataReader->GetStaticTypeName()));
+	ds_info->StoreInteger(_L("MemoryLimit"), MemoryLimit);
 #endif
 
-	ds_info->StoreInteger(_("FE0"), m_FullExtent[0]);
-	ds_info->StoreInteger(_("FE1"), m_FullExtent[1]);
-	ds_info->StoreInteger(_("FE2"), m_FullExtent[2]);
-	ds_info->StoreInteger(_("FE3"), m_FullExtent[3]);
-	ds_info->StoreInteger(_("FE4"), m_FullExtent[4]);
-	ds_info->StoreInteger(_("FE5"), m_FullExtent[5]);
+	ds_info->StoreInteger(_L("FE0"), m_FullExtent[0]);
+	ds_info->StoreInteger(_L("FE1"), m_FullExtent[1]);
+	ds_info->StoreInteger(_L("FE2"), m_FullExtent[2]);
+	ds_info->StoreInteger(_L("FE3"), m_FullExtent[3]);
+	ds_info->StoreInteger(_L("FE4"), m_FullExtent[4]);
+	ds_info->StoreInteger(_L("FE5"), m_FullExtent[5]);
 
 #ifndef VME_VOLUME_VER1
-	ds_info->StoreInteger(_("V0"), m_VOI[0]);
-	ds_info->StoreInteger(_("V1"), m_VOI[1]);
-	ds_info->StoreInteger(_("V2"), m_VOI[2]);
-	ds_info->StoreInteger(_("V3"), m_VOI[3]);
-	ds_info->StoreInteger(_("V4"), m_VOI[4]);
-	ds_info->StoreInteger(_("V5"), m_VOI[5]);	
+	ds_info->StoreInteger(_L("V0"), m_VOI[0]);
+	ds_info->StoreInteger(_L("V1"), m_VOI[1]);
+	ds_info->StoreInteger(_L("V2"), m_VOI[2]);
+	ds_info->StoreInteger(_L("V3"), m_VOI[3]);
+	ds_info->StoreInteger(_L("V4"), m_VOI[4]);
+	ds_info->StoreInteger(_L("V5"), m_VOI[5]);	
 
-	ds_info->StoreText(_("FileName"), m_LargeDataReader->GetFileName());
+	ds_info->StoreText(_L("FileName"), m_LargeDataReader->GetFileName());
 #else
 	int VOI[6];
 	ds->GetVOI(VOI);
@@ -1145,22 +1145,22 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 		return ret_val;	
 
 	//Restore m_LargeData
-	mafStorageElement* ds_info = node->FindNestedElement("LargeDataSetInfo");
+	mafStorageElement* ds_info = node->FindNestedElement(_R("LargeDataSetInfo"));
 	if (ds_info != NULL)
 	{
 		//Oops. It was not stored.
 		mafString clsname;
-		ds_info->RestoreText(_("ClassName"), clsname);
+		ds_info->RestoreText(_L("ClassName"), clsname);
 #ifdef VME_VOLUME_VER1
 		assert(m_LargeData == NULL);
 		if (clsname.Compare(_("vtkMAFLargeImageData")) != 0) 
 #else
 		assert(m_LargeDataReader == NULL);
-		if (clsname.Compare(_("mafVolumeLargeReader")) != 0) 		
+		if (clsname.Compare(_L("mafVolumeLargeReader")) != 0) 		
 #endif
 		{
 			wxMessageBox(wxString::Format(_("Class '%s' is unsupported in the current release."),
-				clsname.GetCStr()), _("Error while restoring Large Data"), 
+				clsname.toWx()), _("Error while restoring Large Data"), 
 				wxOK | wxCENTER | wxICON_EXCLAMATION);
 
 			return ret_val;
@@ -1191,7 +1191,7 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 #endif
 
 			int MemoryLimit;
-			ds_info->RestoreInteger(_("MemoryLimit"), MemoryLimit);
+			ds_info->RestoreInteger(_L("MemoryLimit"), MemoryLimit);
 #ifdef VME_VOLUME_VER1
 			ds_info->RestoreInteger(_("ScalarType"), ScalarType);
 			ds_info->RestoreInteger(_("DimX"), dims[0]);
@@ -1215,19 +1215,19 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 			ds_info->RestoreDouble(_("SpZ"), sp[2]);
 #endif
 
-			ds_info->RestoreInteger(_("FE0"), m_FullExtent[0]);
-			ds_info->RestoreInteger(_("FE1"), m_FullExtent[1]);
-			ds_info->RestoreInteger(_("FE2"), m_FullExtent[2]);
-			ds_info->RestoreInteger(_("FE3"), m_FullExtent[3]);
-			ds_info->RestoreInteger(_("FE4"), m_FullExtent[4]);
-			ds_info->RestoreInteger(_("FE5"), m_FullExtent[5]);
+			ds_info->RestoreInteger(_L("FE0"), m_FullExtent[0]);
+			ds_info->RestoreInteger(_L("FE1"), m_FullExtent[1]);
+			ds_info->RestoreInteger(_L("FE2"), m_FullExtent[2]);
+			ds_info->RestoreInteger(_L("FE3"), m_FullExtent[3]);
+			ds_info->RestoreInteger(_L("FE4"), m_FullExtent[4]);
+			ds_info->RestoreInteger(_L("FE5"), m_FullExtent[5]);
 
-			ds_info->RestoreInteger(_("V0"), m_VOI[0]);
-			ds_info->RestoreInteger(_("V1"), m_VOI[1]);
-			ds_info->RestoreInteger(_("V2"), m_VOI[2]);
-			ds_info->RestoreInteger(_("V3"), m_VOI[3]);
-			ds_info->RestoreInteger(_("V4"), m_VOI[4]);
-			ds_info->RestoreInteger(_("V5"), m_VOI[5]);
+			ds_info->RestoreInteger(_L("V0"), m_VOI[0]);
+			ds_info->RestoreInteger(_L("V1"), m_VOI[1]);
+			ds_info->RestoreInteger(_L("V2"), m_VOI[2]);
+			ds_info->RestoreInteger(_L("V3"), m_VOI[3]);
+			ds_info->RestoreInteger(_L("V4"), m_VOI[4]);
+			ds_info->RestoreInteger(_L("V5"), m_VOI[5]);
 
 #ifdef VME_VOLUME_VER1		
 			ds->SetVOI(m_VOI);			
@@ -1245,8 +1245,8 @@ void mafVMEVolumeLarge::OnEvent(mafEventBase *maf_event)
 			m_SampleMemLimit = MemoryLimit / 1024;
 
 			mafString szStr;
-			ds_info->RestoreText(_("FileName"), szStr);			
-			m_LargeDataReader->SetFileName(szStr);
+			ds_info->RestoreText(_L("FileName"), szStr);			
+			m_LargeDataReader->SetFileName(szStr.GetCStr());
 			
 //			int emptyVOI[6];
 //			memset(emptyVOI, 0, sizeof(int)*6);
@@ -1428,17 +1428,17 @@ void mafVMEVolumeLarge::SetFileName(const char *filename)
 {
 	mafTagItem item;
 
-	item.SetName("EXTDATA_FILENAME");
-	item.SetValue(filename);
+	item.SetName(_R("EXTDATA_FILENAME"));
+	item.SetValue(_R(filename));
 	this->GetTagArray()->SetTag(item);
 }
 
 //Get the pathname of the large data file (that is used)
 const char* mafVMEVolumeLarge::GetFileName()
 {
-	mafTagItem *item=this->GetTagArray()->GetTag("EXTDATA_FILENAME");
+	mafTagItem *item=this->GetTagArray()->GetTag(_R("EXTDATA_FILENAME"));
   if (item != NULL)
-	  return item->GetValue();
+	  return item->GetValue().GetCStr();
   else
   {
     assert(false);
@@ -1691,13 +1691,13 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 	m_Gui->Divider(3);	//3 should be for sunken, no constants defined
 
 	m_InfoGui = CreateInfoGui();
-	m_Gui->RollOut(ID_ROLLOUT_INFO, _("Original data info"), m_InfoGui, false);
+	m_Gui->RollOut(ID_ROLLOUT_INFO, _L("Original data info"), m_InfoGui, false);
 
 	m_SampleInfoGui = CreateSampleInfoGui();
-	m_Gui->RollOut(ID_ROLLOUT_SAMPLE_INFO, _("Sample data info"), m_SampleInfoGui, false);
+	m_Gui->RollOut(ID_ROLLOUT_SAMPLE_INFO, _L("Sample data info"), m_SampleInfoGui, false);
 
 	m_CropGui = CreateCropGui();
-	m_Gui->RollOut(ID_ROLLOUT_CROP, _("Cropping"), m_CropGui, false);
+	m_Gui->RollOut(ID_ROLLOUT_CROP, _L("Cropping"), m_CropGui, false);
 	
 	//this trick is here to place both voxels and mm controls 
 	//at the same location (i.e., there is no gap in gui)	
@@ -1712,7 +1712,7 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 #endif	
 
 	m_Gui->Divider(0);
-	m_Gui->Label(" ");
+	m_Gui->Label(_R(" "));
 
 	OnViewROIVolume();
 	//UpdateGui();	//fill controls
@@ -1726,16 +1726,16 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 	gui->Show(true);
 
 	gui->Divider(0);
-	gui->Label(_("source: "), &m_SourceFile, true);
-	gui->Label(_("path: "), &m_SourcePath, true);
-	gui->Label(_("dims: "), &m_SourceDimensions, true);
-	gui->Label(_("size: "), &m_SourceSize, true);
+	gui->Label(_L("source: "), &m_SourceFile, true);
+	gui->Label(_L("path: "), &m_SourcePath, true);
+	gui->Label(_L("dims: "), &m_SourceDimensions, true);
+	gui->Label(_L("size: "), &m_SourceSize, true);
 
 	gui->Divider(0);
 
-	gui->Label(_("original spacing: "), true);
+	gui->Label(_L("original spacing: "), true);
 	gui->Label(&m_SourceSpacing);		
-	gui->Label(_("original bounds: "), true);
+	gui->Label(_L("original bounds: "), true);
 	gui->Label(&m_SourceBounds[0]);
 	gui->Label(&m_SourceBounds[1]);
 	gui->Label(&m_SourceBounds[2]);
@@ -1749,21 +1749,21 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 {
 	mafGUI* gui = new mafGUI(this);
 	gui->Show(true);
-	gui->Label(_("sample dims:"), true);
+	gui->Label(_L("sample dims:"), true);
 	gui->Label(&m_SampleDimensions);
-	gui->Label(_("sample bounds:"), true);
+	gui->Label(_L("sample bounds:"), true);
 	gui->Label(&m_SampleBounds[0]);
 	gui->Label(&m_SampleBounds[1]);
 	gui->Label(&m_SampleBounds[2]);
-	gui->Label(_("sample size: "), true);
+	gui->Label(_L("sample size: "), true);
 	gui->Label(&m_SampleSize);
-	gui->Label(_("memory limit: "), true);
+	gui->Label(_L("memory limit: "), true);
 	//gui->Label(&m_SampleMemLimit);
 
-	gui->Slider(ID_SAMPLE_MEMLIMIT, "", &m_SampleMemLimit, 1, 512, 
-		_("specifies memory limit for subsampled versions of data"));
+	gui->Slider(ID_SAMPLE_MEMLIMIT, _R(""), &m_SampleMemLimit, 1, 512,
+		_L("specifies memory limit for subsampled versions of data"));
 
-	gui->Label(_("sample rate: "), true);
+	gui->Label(_L("sample rate: "), true);
 	gui->Label(&m_SampleRate);
 
 	gui->Divider(0);
@@ -1779,35 +1779,35 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 	gui->Show(true);
 
 	gui->Divider(0);
-	gui->Bool(ID_SHOW_ROI, "show ROI", &m_ShowROI, 0, 
-		_("toggle region of interest visibility"));
+	gui->Bool(ID_SHOW_ROI, _R("show ROI"), &m_ShowROI, 0, 
+		_L("toggle region of interest visibility"));
 
 	m_ShowROIOpt = new mafGUI(this);
 	m_ShowROIOpt->Divider(0);
 
-	m_ShowROIOpt->Bool(ID_SHOW_HANDLES, _("show handles"), &m_ShowHandles, 1, 
-		_("toggle gizmo handles visibility"));
-	m_ShowROIOpt->Bool(ID_SHOW_AXIS, _("show axis"), &m_ShowAxis, 1, 
-		_("toggle gizmo translation axis visibility"));
-	m_ShowROIOpt->Bool(ID_SHOW_PLANES, _("show planes"), &m_ShowPlanes, 1, 
-		_("toggle gizmo translation planes visibility"));
+	m_ShowROIOpt->Bool(ID_SHOW_HANDLES, _L("show handles"), &m_ShowHandles, 1, 
+		_L("toggle gizmo handles visibility"));
+	m_ShowROIOpt->Bool(ID_SHOW_AXIS, _L("show axis"), &m_ShowAxis, 1, 
+		_L("toggle gizmo translation axis visibility"));
+	m_ShowROIOpt->Bool(ID_SHOW_PLANES, _L("show planes"), &m_ShowPlanes, 1, 
+		_L("toggle gizmo translation planes visibility"));
 
 	m_ShowROIOpt->Enable(ID_SHOW_HANDLES, false);
 	m_ShowROIOpt->Enable(ID_SHOW_AXIS, false);
 	m_ShowROIOpt->Enable(ID_SHOW_PLANES, false);
 		
-	gui->RollOut(ID_ROLLOUT_SHOW_ROI_OPT, _("show ROI options"), m_ShowROIOpt, false);
+	gui->RollOut(ID_ROLLOUT_SHOW_ROI_OPT, _L("show ROI options"), m_ShowROIOpt, false);
 
 	gui->Divider(3);
-	gui->Label(_("selected ROI:"), true);
+	gui->Label(_L("selected ROI:"), true);
 	AddVoxelsMmCombo(gui, ID_COMBO_VOI_UNITS, &m_VOIUnits);
 
 	m_CropEdVxls = new mafGUI(this);	
 //	m_CropEdVxls->Show(m_VOIUnits == 0);
 	m_CropEdVxls->Show(true);
-	m_CropEdVxls->VectorN(ID_CROP_DIR_X, _("range x"), &m_VOI[0], 2, m_FullExtent[0], m_FullExtent[1]);
-	m_CropEdVxls->VectorN(ID_CROP_DIR_Y, _("range y"), &m_VOI[2], 2, m_FullExtent[2], m_FullExtent[3]);
-	m_CropEdVxls->VectorN(ID_CROP_DIR_Z, _("range z"), &m_VOI[4], 2, m_FullExtent[4], m_FullExtent[5]);
+	m_CropEdVxls->VectorN(ID_CROP_DIR_X, _L("range x"), &m_VOI[0], 2, m_FullExtent[0], m_FullExtent[1]);
+	m_CropEdVxls->VectorN(ID_CROP_DIR_Y, _L("range y"), &m_VOI[2], 2, m_FullExtent[2], m_FullExtent[3]);
+	m_CropEdVxls->VectorN(ID_CROP_DIR_Z, _L("range z"), &m_VOI[4], 2, m_FullExtent[4], m_FullExtent[5]);
 	gui->AddGui(m_CropEdVxls);	
 	
 	double bounds[6];
@@ -1851,25 +1851,25 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 	m_CropEdMm = new mafGUI(this);	
 //	m_CropEdMm->Show(m_VOIUnits != 0);	
 	m_CropEdMm->Show(true);
-	m_CropEdMm->VectorN(ID_CROP_DIR_XMM, _("range x"), &m_ROI[0], 2, bounds[0], bounds[1]);
-	m_CropEdMm->VectorN(ID_CROP_DIR_YMM, _("range y"), &m_ROI[2], 2, bounds[2], bounds[3]);
-	m_CropEdMm->VectorN(ID_CROP_DIR_ZMM, _("range z"), &m_ROI[4], 2, bounds[4], bounds[5]);
+	m_CropEdMm->VectorN(ID_CROP_DIR_XMM, _L("range x"), &m_ROI[0], 2, bounds[0], bounds[1]);
+	m_CropEdMm->VectorN(ID_CROP_DIR_YMM, _L("range y"), &m_ROI[2], 2, bounds[2], bounds[3]);
+	m_CropEdMm->VectorN(ID_CROP_DIR_ZMM, _L("range z"), &m_ROI[4], 2, bounds[4], bounds[5]);
 	gui->AddGui(m_CropEdMm);
 	
-  gui->Bool(ID_AUTOPROOF, _("auto proof"), &m_AutoProof, 1, 
-    _("if checked, the resolution of displayed volume increases progresivelly "
+  gui->Bool(ID_AUTOPROOF, _L("auto proof"), &m_AutoProof, 1, 
+    _L("if checked, the resolution of displayed volume increases progresivelly "
      "without the necessity to press 'view ROI volume' button. N.B. the application may "
      "display larger VOI than requested in this mode."));
 
-	gui->Button(ID_RESET_CROPPING_AREA, _("reset ROI"), "", 
-		_("reset the cropping area"));
-	gui->Button(ID_VIEW_ROI_VOLUME, _("view ROI volume"),"",
-		_("displays the data in the selected ROI only, using as high quality as possible"));
-	gui->Button(ID_VIEW_ORIGVOI_VOLUME, _("view original volume"),"",
-		_("displays the data in the original VOI, using as high quality as possible"));
+	gui->Button(ID_RESET_CROPPING_AREA, _L("reset ROI"), _R(""),
+		_L("reset the cropping area"));
+	gui->Button(ID_VIEW_ROI_VOLUME, _L("view ROI volume"), _R(""),
+		_L("displays the data in the selected ROI only, using as high quality as possible"));
+	gui->Button(ID_VIEW_ORIGVOI_VOLUME, _L("view original volume"), _R(""),
+		_L("displays the data in the original VOI, using as high quality as possible"));
 #ifndef VME_VOLUME_LARGE_EXCLUDE_CROP
-	gui->Button(ID_CROP, _("crop ..."),"",
-		_("performs the cropping operation"));
+	gui->Button(ID_CROP, _L("crop ..."), _R(""),
+		_L("performs the cropping operation"));
 #endif // VME_VOLUME_LARGE_EXCLUDE_CROP
 	
 	//gui->Enable(ID_VIEW_ORIGVOI_VOLUME, !m_ShowFEOutput);
@@ -1907,11 +1907,11 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 
 	//reset variables
 	m_SourceFile = m_SourcePath = m_SourceDimensions = 
-		m_SourceSpacing = m_SourceSize = "";
+		m_SourceSpacing = m_SourceSize = _R("");
 		
 
 	for (int i = 0; i < 3; i++){
-		m_SourceBounds[i] = "";
+		m_SourceBounds[i] = _R("");
 	}
 
 
@@ -1956,10 +1956,10 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 	if (m_LargeDataReader != NULL)
 	{
 		//name
-		wxString szPath, szFile, szExt;
-		wxSplitPath(this->GetFileName(), &szPath, &szFile, &szExt);
+		mafString szPath, szFile, szExt;
+		mafSplitPath(_R(this->GetFileName()), &szPath, &szFile, &szExt);
 		m_SourcePath = szPath;
-		m_SourceFile = szFile + "." + szExt;
+		m_SourceFile = szFile + _R(".") + szExt;
 
 		mafBrickedFileReader* ds = m_LargeDataReader->GetLevelFile(1);
 		assert(ds != NULL);
@@ -1969,7 +1969,7 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 			//dims
 			int dims[3];
 			ds->GetDataDimensions(dims);
-			m_SourceDimensions = wxString::Format("%d x %d x %d", dims[0], dims[1], dims[2]);
+			m_SourceDimensions = mafString::Format(_R("%d x %d x %d"), dims[0], dims[1], dims[2]);
 
 			//size		
 			mafFormatDataSize(((vtkIdType64)dims[0])*dims[1]*dims[2], m_SourceSize);		
@@ -1978,7 +1978,7 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
       if (ds->IsRectilinearGrid())
       {
         //spacing
-        m_SourceSpacing = "N/A (rectilinear grid)";
+        m_SourceSpacing = _R("N/A (rectilinear grid)");
 
         vtkDoubleArray* pXYZCoords = ds->GetXCoordinates();
         b[0] = *pXYZCoords->GetPointer(0);
@@ -1997,7 +1997,7 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 			  //spacing
 			  double sp[3];
 			  ds->GetDataSpacing(sp);
-			  m_SourceSpacing = wxString::Format("  %.2f x %.2f x %.2f [mm]", 
+			  m_SourceSpacing = mafString::Format(_R("  %.2f x %.2f x %.2f [mm]"), 
 				  sp[0], sp[1], sp[2]);
 
 			  //bounds			  
@@ -2007,9 +2007,9 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 			  }
       }
 			
-      m_SourceBounds[0] = wxString::Format("  xmin: %.2f  xmax: %.2f [mm]", b[0], b[1]);
-			m_SourceBounds[1] = wxString::Format("  ymin: %.2f  ymax: %.2f [mm]", b[2], b[3]);
-			m_SourceBounds[2] = wxString::Format("  zmin: %.2f  zmax: %.2f [mm]", b[4], b[5]);					      
+      m_SourceBounds[0] = mafString::Format(_R("  xmin: %.2f  xmax: %.2f [mm]"), b[0], b[1]);
+			m_SourceBounds[1] = mafString::Format(_R("  ymin: %.2f  ymax: %.2f [mm]"), b[2], b[3]);
+			m_SourceBounds[2] = mafString::Format(_R("  zmin: %.2f  zmax: %.2f [mm]"), b[4], b[5]);					      
 		}
 	}
 #endif
@@ -2024,24 +2024,24 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
   if (gui == NULL)
     return;
 
-	m_SampleDimensions = m_SampleSize = m_SampleRate = "";
+	m_SampleDimensions = m_SampleSize = m_SampleRate = _R("");
 	for (int i = 0; i < 3; i++){
-		m_SampleBounds[i] = "";
+		m_SampleBounds[i] = _R("");
 	}
 
 	//Sample VOI
 	double b[6];
 	GetOutput()->GetVMELocalBounds(b);
-	m_SampleBounds[0] = wxString::Format("  xmin: %.2f  xmax: %.2f [mm]", b[0], b[1]);
-	m_SampleBounds[1] = wxString::Format("  ymin: %.2f  ymax: %.2f [mm]", b[2], b[3]);
-	m_SampleBounds[2] = wxString::Format("  zmin: %.2f  zmax: %.2f [mm]", b[4], b[5]);
+	m_SampleBounds[0] = mafString::Format(_R("  xmin: %.2f  xmax: %.2f [mm]"), b[0], b[1]);
+	m_SampleBounds[1] = mafString::Format(_R("  ymin: %.2f  ymax: %.2f [mm]"), b[2], b[3]);
+	m_SampleBounds[2] = mafString::Format(_R("  zmin: %.2f  zmax: %.2f [mm]"), b[4], b[5]);
 
 	vtkDataSet* ds = GetOutput()->GetVTKData();				
 	
 	//dims
 	int wext[6];
 	ds->GetWholeExtent(wext);
-	m_SampleDimensions = wxString::Format("%d x %d x %d", wext[1] - wext[0] + 1,
+	m_SampleDimensions = mafString::Format(_R("%d x %d x %d"), wext[1] - wext[0] + 1,
 		wext[3] - wext[2] + 1, wext[5] - wext[4] + 1);
 
 	//size		
@@ -2082,7 +2082,7 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 	}
 #else	
 	//sample rate and memory limit
-	m_SampleRate = wxString::Format("%d", m_LargeDataReader->GetSampleRate());
+	m_SampleRate = mafToString(m_LargeDataReader->GetSampleRate());
 	m_SampleMemLimit = m_LargeDataReader->GetMemoryLimit() / 1024;
 	gui->Enable(ID_SAMPLE_MEMLIMIT, true);
 #endif
@@ -2119,9 +2119,9 @@ void mafVMEVolumeLarge::InverseTransformExtent(double extMm[6], int outUn[6])
 void mafVMEVolumeLarge::AddVoxelsMmCombo(mafGUI* gui, int id, int* pvar)
 {
 	const int UNITCHOISE_NUM = 2;
-	const mafString UNITCHOISE_STR[UNITCHOISE_NUM] = {_("voxels"), _("mm")};
+	const mafString UNITCHOISE_STR[UNITCHOISE_NUM] = {_L("voxels"), _L("mm")};
 
-	gui->Combo(id, _("units:"), pvar, UNITCHOISE_NUM, UNITCHOISE_STR);
+	gui->Combo(id, _L("units:"), pvar, UNITCHOISE_NUM, UNITCHOISE_STR);
 }
 
 //updates the gizmo

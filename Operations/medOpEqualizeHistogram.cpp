@@ -140,7 +140,7 @@ void medOpEqualizeHistogram::OpRun()
   mafNEW(m_VolumeOutput);
   m_VolumeOutput->SetData(vtkStructuredPoints::SafeDownCast(m_VolumeInput->GetOutput()->GetVTKData()),m_VolumeInput->GetTimeStamp());
   mafString name = m_VolumeInput->GetName();
-  name<<" - Equalized Histogram";
+  name+=_R(" - Equalized Histogram");
   m_VolumeOutput->SetName(name);
   m_VolumeOutput->ReparentTo(m_Input);
   m_VolumeOutput->Update();
@@ -156,12 +156,12 @@ void medOpEqualizeHistogram::CreateGui()
   m_Gui = new mafGUI(this);
 
   // ToDO: add your custom widgets...
-  m_Gui->Double(ID_ALPHA,_("Alpha"),&m_Alpha,0.0,1.0);
-  m_Gui->Double(ID_BETA,_("Beta"),&m_Beta,0.0,1.0);
-  m_Gui->Vector(ID_RADIUS,_("Radius"),m_Radius);
+  m_Gui->Double(ID_ALPHA,_L("Alpha"),&m_Alpha,0.0,1.0);
+  m_Gui->Double(ID_BETA,_L("Beta"),&m_Beta,0.0,1.0);
+  m_Gui->Vector(ID_RADIUS,_L("Radius"),m_Radius);
   m_Gui->Divider(1);
-  m_Gui->Button(ID_EXECUTE,_("Execute"));
-  m_Gui->Button(ID_HISTOGRAM,_("Histogram"));
+  m_Gui->Button(ID_EXECUTE,_L("Execute"));
+  m_Gui->Button(ID_HISTOGRAM,_L("Histogram"));
   m_Gui->Divider(1);
   m_Gui->OkCancel();
 
@@ -171,7 +171,7 @@ void medOpEqualizeHistogram::CreateGui()
 void medOpEqualizeHistogram::CreateHistogramDialog()
 //----------------------------------------------------------------------------
 {
-  m_Dialog = new mafGUIDialog("Histogram", mafCLOSEWINDOW | mafRESIZABLE);
+  m_Dialog = new mafGUIDialog(_R("Histogram"), mafCLOSEWINDOW | mafRESIZABLE);
 
   m_Histogram = new mafGUIHistogramWidget(m_Gui,-1,wxPoint(0,0),wxSize(400,500),wxTAB_TRAVERSAL,true);
   m_Histogram->SetListener(this);
@@ -183,7 +183,7 @@ void medOpEqualizeHistogram::CreateHistogramDialog()
   mafGUI *gui = new mafGUI(this);
   gui->Add(m_Histogram,1);
   gui->AddGui(m_Histogram->GetGui());
-  gui->Button(ID_DIALOG_OK,_("OK"));
+  gui->Button(ID_DIALOG_OK,_L("OK"));
   gui->FitGui();
   gui->Update();
 

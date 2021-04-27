@@ -41,7 +41,7 @@ and visualization enabled.
 class MED_VIEWS_EXPORT medViewSliceGlobal: public mafViewSlice
 {
 public:
-  medViewSliceGlobal(const mafString& label = "Slice", int camera_position = CAMERA_CT, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0,bool showTICKs=false,bool textureInterpolate=true);
+  medViewSliceGlobal(const mafString& label = _R("Slice"), int camera_position = CAMERA_CT, bool show_axes = false, bool show_grid = false, bool show_ruler = false, int stereo = 0,bool showTICKs=false,bool textureInterpolate=true);
   virtual ~medViewSliceGlobal(); 
 
   mafTypeMacro(medViewSliceGlobal, mafViewSlice);

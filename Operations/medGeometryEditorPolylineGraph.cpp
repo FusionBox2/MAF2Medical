@@ -65,7 +65,7 @@ medGeometryEditorPolylineGraph::medGeometryEditorPolylineGraph(mafVME *input, ma
 	m_PolylineGraph->CopyToPolydata(data);
 
 	mafNEW(m_VMEPolylineEditor);
-	m_VMEPolylineEditor->SetName("VME Editor");
+	m_VMEPolylineEditor->SetName(_R("VME Editor"));
 	if(input)
 		m_VMEPolylineEditor->ReparentTo(mafVME::SafeDownCast(input->GetRoot()));
 
@@ -228,7 +228,7 @@ void medGeometryEditorPolylineGraph::OnEvent(mafEventBase *maf_event)
 						mafEventMacro(mafEvent(this,CAMERA_UPDATE));
 					}
 					else
-						mafLogMessage("It's impossible to delete a point of degree > 2");
+						mafLogMessage(_M("It's impossible to delete a point of degree > 2"));
 				}
 				break;
 			case ID_BUTTON_BRANCH_DELETE:
@@ -298,25 +298,25 @@ void medGeometryEditorPolylineGraph::CreateGui()
 //----------------------------------------------------------------------------
 {
 	m_Gui =new mafGUI(this);
-	mafString choices_action[2]={_("Point"),_("Branch")};
-	m_Gui->Radio(ID_ACTION,_("Action"),&m_Action,2,choices_action);
+	mafString choices_action[2]={_L("Point"),_L("Branch")};
+	m_Gui->Radio(ID_ACTION,_L("Action"),&m_Action,2,choices_action);
 
-	mafString choices_point_tool[4]={_("Add Point"),_("Insert Point"),_("Move Point"),_("Select Point")};
-	m_Gui->Radio(ID_POINT_TOOL,_("Point Tool"),&m_PointTool,4,choices_point_tool);
+	mafString choices_point_tool[4]={_L("Add Point"),_L("Insert Point"),_L("Move Point"),_L("Select Point")};
+	m_Gui->Radio(ID_POINT_TOOL,_L("Point Tool"),&m_PointTool,4,choices_point_tool);
 	m_Gui->Enable(ID_POINT_TOOL,m_Action==ID_POINT_ACTION);
 
-  m_Gui->Label(_("Point Radius"));
-  m_Gui->Double(ID_SPHERE_RADIUS,"",&m_SphereRadius);
+  m_Gui->Label(_L("Point Radius"));
+  m_Gui->Double(ID_SPHERE_RADIUS, _R(""),&m_SphereRadius);
   m_Gui->Enable(ID_SPHERE_RADIUS,m_Action==ID_POINT_ACTION);
 
-	m_Gui->Button(ID_BUTTON_POINT_DELETE,_("Delete"));
+	m_Gui->Button(ID_BUTTON_POINT_DELETE,_L("Delete"));
 	m_Gui->Enable(ID_BUTTON_POINT_DELETE,m_Action==ID_POINT_ACTION && m_SelectedPoint!=UNDEFINED_POINT_ID);
 
-	mafString choices_branch_tool[2]={_("Add Branch"),_("Select Branch")};
-	m_Gui->Radio(ID_BRANCH_TOOL,_("Branch Tool"),&m_BranchTool,2,choices_branch_tool);
+	mafString choices_branch_tool[2]={_L("Add Branch"),_L("Select Branch")};
+	m_Gui->Radio(ID_BRANCH_TOOL,_L("Branch Tool"),&m_BranchTool,2,choices_branch_tool);
 	m_Gui->Enable(ID_BRANCH_TOOL,m_Action==ID_BRANCH_ACTION);
 
-	m_Gui->Button(ID_BUTTON_BRANCH_DELETE,_("Delete"));
+	m_Gui->Button(ID_BUTTON_BRANCH_DELETE,_L("Delete"));
 	m_Gui->Enable(ID_BUTTON_BRANCH_DELETE,m_Action==ID_BRANCH_ACTION && m_SelectedBranch!=UNDEFINED_BRANCH_ID);
 
 }
@@ -473,7 +473,7 @@ void medGeometryEditorPolylineGraph::VmePicked(mafEvent *e)
         MovePoint(vertexCoord);
 
         #ifndef _DEBUG
-          mafLogMessage(wxString::Format("%.3f %.3f %.3f",vertexCoord[0],vertexCoord[1],vertexCoord[2]));
+          mafLogMessage(_M(mafString::Format(_R(("%.3f %.3f %.3f"),vertexCoord[0],vertexCoord[1],vertexCoord[2]))));
         #endif
 			}
 			else if(m_PointTool==ID_SELECT_POINT)
@@ -530,7 +530,7 @@ void medGeometryEditorPolylineGraph::VmePicked(mafEvent *e)
 
 				SelectBranch(pos);
 
-        mafLogMessage(wxString::Format("Branch Select = %d",m_CurrentBranch));
+        mafLogMessage(_M(_R("Branch Select = ") + mafToString(m_CurrentBranch)));
 
 				m_Gui->Enable(ID_BUTTON_BRANCH_DELETE,m_Action==ID_BRANCH_ACTION && m_SelectedBranch!=UNDEFINED_BRANCH_ID);
 			}
@@ -561,7 +561,7 @@ void medGeometryEditorPolylineGraph::VmePicked(mafEvent *e)
 					}
 					else
 					{
-						mafLogMessage("Point must have degree > 1");
+						mafLogMessage(_M("Point must have degree > 1"));
 					}
 				}
 			}
@@ -942,8 +942,8 @@ void medGeometryEditorPolylineGraph::SelectBranch(double position[3])
 	vtkMAFSmartPointer<vtkIdList> idlist;
 
 	vtkIdList *IDS=poly->GetCell(CellID)->GetPointIds();
-  mafLogMessage(wxString::Format("Points %.3f %.3f %.3f",position[0],position[1],position[2])),
-  mafLogMessage(wxString::Format("CellID %d N* Points %d",CellID,IDS->GetNumberOfIds()));
+  mafLogMessage(_M(mafString::Format(_R("Points %.3f %.3f %.3f"),position[0],position[1],position[2]))),
+  mafLogMessage(_M(mafString::Format(_R("CellID %d N* Points %d"),CellID,IDS->GetNumberOfIds())));
 	for(int i=0;i<IDS->GetNumberOfIds();i++)
 	{
 		int ID=IDS->GetId(i);

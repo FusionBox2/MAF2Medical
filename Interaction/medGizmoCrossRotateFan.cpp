@@ -73,7 +73,7 @@ medGizmoCrossRotateFan::medGizmoCrossRotateFan(mafVME *input, mafBaseEventHandle
   //-----------------
   // the circle gizmo
   m_Gizmo = mafVMEGizmo::New();
-  m_Gizmo->SetName("fan");
+  m_Gizmo->SetName(_R("fan"));
   m_Gizmo->SetData(m_ChangeFanAxisTPDF->GetOutput());
   m_Gizmo->SetMediator(GetListener());
   this->SetMediator(GetListener());
@@ -231,15 +231,15 @@ void medGizmoCrossRotateFan::OnEvent(mafEventBase *maf_event)
         mafString activeAxisStringToSend;
         if (m_ActiveAxis == X)
         {
-          activeAxisStringToSend = "X";
+          activeAxisStringToSend = _R("X");
         }
         else if (m_ActiveAxis == Y)
         {
-          activeAxisStringToSend = "Y";
+          activeAxisStringToSend = _R("Y");
         } 
         else if (m_ActiveAxis == Z)
         {
-          activeAxisStringToSend = "Z";
+          activeAxisStringToSend = _R("Z");
         }
 
         assert(e->GetString() == NULL);

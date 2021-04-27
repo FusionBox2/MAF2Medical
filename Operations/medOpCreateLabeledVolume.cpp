@@ -69,7 +69,7 @@ void medOpCreateLabeledVolume::OpRun()
 //----------------------------------------------------------------------------
 {
   mafNEW(m_LabeledVolume);
-  m_LabeledVolume->SetName("Labeled Volume");
+  m_LabeledVolume->SetName(_R("Labeled Volume"));
 
  
   

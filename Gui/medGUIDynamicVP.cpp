@@ -281,7 +281,7 @@ void medGUIDynamicVP::OnEvent(mafEventBase *maf_event)
     CreateVisualPipe(szPipeName);
 
     if (m_VPipe == NULL)
-      mafLogMessage(_("Cannot create visual pipe: '%s'"), szPipeName);
+      mafLogMessage(_M(mafString(_L("Cannot create visual pipe: '")) + _R(szPipeName) + _L("'")));
     else
     {
       mafGUI* pipeGUI = m_VPipe->GetGui();
@@ -366,7 +366,7 @@ void medGUIDynamicVP::SetGUIStyle(long newstyle)
 void medGUIDynamicVP::SetName(const char* szNewName)
 //------------------------------------------------------------------------
 {  
-  m_Name = szNewName;
+  m_Name = _R(szNewName);
   m_GUI_This->TransferDataToWindow();
 }
 

@@ -67,7 +67,7 @@ If the first slice is not 0, the slice offset (m_offset) must be setted. */
 class MED_OPERATION_EXPORT medOpImporterRAWImages: public mafOp
 {
 public:
-  medOpImporterRAWImages(const mafString& label="RAWImporterImage");
+  medOpImporterRAWImages(const mafString& label=_R("RAWImporterImage"));
   virtual     ~medOpImporterRAWImages();
 
   mafTypeMacro(medOpImporterRAWImages, mafOp);
@@ -96,8 +96,8 @@ public:
   void SetRawDirectory(mafString Dir){m_RawDirectory=Dir;};
   void SetSigned(int Signed){m_Signed=Signed;};
   void SetDataType(int Bit){m_Bit=Bit;};
-  void SetCoordFile(wxString File){m_CoordFile=File;m_Rect = true;m_Spacing[2] = 1.0;};
-  void SetStringPrefix(wxString Prefix){m_Prefix=Prefix;};
+  void SetCoordFile(mafString File){m_CoordFile=File;m_Rect = true;m_Spacing[2] = 1.0;};
+  void SetStringPrefix(mafString Prefix){m_Prefix=Prefix;};
 
 #ifdef VME_VOLUME_LARGE
   //Sets the output file (with bricks)

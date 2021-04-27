@@ -78,8 +78,8 @@ mafOp(label)
   m_EventRouter->SetCallback(ErrorProcessEvents);
   m_EventRouter->SetClientData(this);
 
-  m_File    = "";
-  m_FileDir = "";
+  m_File    = _R("");
+  m_FileDir = _R("");
 
   ResetErrorCount();
 }
@@ -115,16 +115,16 @@ mafOp* medOpImporterVTKXML::Copy()
 void medOpImporterVTKXML::OpRun()   
 //----------------------------------------------------------------------------
 {
-  mafString wildc = "vtk xml ImageData (*.vti)|*.vti ";
-  wildc += "|vtk xml PolyData (*.vtp)|*.vtp";
-  wildc += "|vtk xml StructuredGrid (*.vts)|*.vts";
-  wildc += "|vtk xml RectilinearGrid (*.vtr)|*.vtr";
-  wildc += "|vtk xml UnstructuredGrid (*.vtu)|*.vtu";
+  mafString wildc = _R("vtk xml ImageData (*.vti)|*.vti ");
+  wildc += _R("|vtk xml PolyData (*.vtp)|*.vtp");
+  wildc += _R("|vtk xml StructuredGrid (*.vts)|*.vts");
+  wildc += _R("|vtk xml RectilinearGrid (*.vtr)|*.vtr");
+  wildc += _R("|vtk xml UnstructuredGrid (*.vtu)|*.vtu");
 
   mafString f;
   if (m_File.IsEmpty())
   {
-    f = mafGetOpenFile(m_FileDir, wildc, _("Choose VTK XML file"));
+    f = mafGetOpenFile(m_FileDir, wildc, _L("Choose VTK XML file"));
     m_File = f;
   }
 
@@ -133,21 +133,21 @@ void medOpImporterVTKXML::OpRun()
   {
     if (ImportVTKXML() == MAF_OK)
     {
-      wxString path, name, ext;
-      wxSplitPath(m_File.GetCStr(),&path,&name,&ext);
+      mafString path, name, ext;
+      mafSplitPath(m_File,&path,&name,&ext);
       mafTagItem tag_Nature;
-      tag_Nature.SetName("VME_NATURE");
-      tag_Nature.SetValue("NATURAL");
+      tag_Nature.SetName(_R("VME_NATURE"));
+      tag_Nature.SetValue(_R("NATURAL"));
       m_Output->GetTagArray()->SetTag(tag_Nature);
       m_Output->ReparentTo(m_Input);
-      m_Output->SetName(name.c_str());
+      m_Output->SetName(name);
 
       result = OP_RUN_OK;
     }
     else
     {
       if(!this->m_TestMode)
-        mafMessage(_("Unsupported file format"), _("I/O Error"), wxICON_ERROR );
+          mafErrorMessage(_M(mafString(_L("Unsupported file format"))));
     }
   }
   mafEventMacro(mafEvent(this,result));

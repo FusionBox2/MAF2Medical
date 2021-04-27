@@ -234,10 +234,10 @@ mafGUI *medPipeVolumeMIP::CreateGui()
   if(mafVMEVolume::SafeDownCast(m_Vme)->GetOutput()->GetVTKData()->IsA("vtkRectilinearGrid"))
     return m_Gui;
   lutPreset(15,m_ColorLUT);
-  m_Gui->Lut(ID_LUT_CHOOSER,_("lut"),m_ColorLUT);
+  m_Gui->Lut(ID_LUT_CHOOSER,_L("lut"),m_ColorLUT);
   UpdateMIPFromLUT();
 
-  m_Gui->Double(ID_RESAMPLE_FACTOR,"Resample Factor",&m_ResampleFactor,0.0,1.0,2,"Insert a value for the resampling factor");
+  m_Gui->Double(ID_RESAMPLE_FACTOR,_R("Resample Factor"),&m_ResampleFactor,0.0,1.0,2,_R("Insert a value for the resampling factor"));
   m_Gui->Divider();
   return m_Gui;
 }

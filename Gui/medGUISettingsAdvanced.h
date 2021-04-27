@@ -39,7 +39,7 @@ class MED_GUI_EXPORT medGUISettingsAdvanced : public mafGUISettings
 {
 public:
   /** constructor.  */
-  medGUISettingsAdvanced(mafBaseEventHandler *Listener, const mafString &label = _("Advanced"));
+  medGUISettingsAdvanced(mafBaseEventHandler *Listener, const mafString &label = _L("Advanced"));
   /** destructor.  */
   ~medGUISettingsAdvanced(); 
 

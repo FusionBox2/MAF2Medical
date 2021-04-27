@@ -36,7 +36,7 @@ class MED_OPERATION_EXPORT medOpCreateSurface: public mafOp
 {
 public:
 
-	medOpCreateSurface(const mafString& label = "Create Surface");
+	medOpCreateSurface(const mafString& label = _R("Create Surface"));
 	~medOpCreateSurface(); 
 
 	mafTypeMacro(medOpCreateSurface, mafOp);

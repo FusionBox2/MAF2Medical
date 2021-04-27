@@ -78,7 +78,7 @@ public:
 
   int DeepCopy(mafNode *a) ; ///< Deep copy
 
-  mafString GetVisualPipe() {return mafString("mafPipePolyline");}; ///< Get pipe name
+  mafString GetVisualPipe() {return mafString(_R("mafPipePolyline"));} ///< Get pipe name
   mafVMEOutputPolyline *GetPolylineOutput(); ///< return the right type of output 
   vtkPolyData *GetStentPolyData(); ///< Get stent polydata
 
@@ -119,9 +119,9 @@ public:
 
   void SetStentLink(const char *link_name, mafNode *ns);
 
-  void SetStentCompanyName(wxString CompanyName) {m_CompanyName = CompanyName;}
-  void SetStentModelName(wxString ModelName) {m_ModelName = ModelName;}
-  void SetStentMaterial(wxString Material) {m_Material = Material;}
+  void SetStentCompanyName(mafString CompanyName) {m_CompanyName = CompanyName;}
+  void SetStentModelName(mafString ModelName) {m_ModelName = ModelName;}
+  void SetStentMaterial(mafString Material) {m_Material = Material;}
   void SetStentDeliverySystem(double delsys) {m_DeliverySystem = delsys;}
   void SetStentDiameter(double d) {m_Stent_Diameter = d;}
   void SetStentDBDiameter(double d) {m_Stent_DBDiameter = d;}
@@ -144,9 +144,9 @@ public:
   /// calculate strut length, given strut angle and crown length.
   void CalcStrutLength() ; 
 
-  wxString GetStentCompanyName() const {return m_CompanyName;};
-  wxString GetStentModelName() const {return m_ModelName;};
-  wxString GetStentMaterial() const {return m_Material;};
+  mafString GetStentCompanyName() const {return m_CompanyName;};
+  mafString GetStentModelName() const {return m_ModelName;};
+  mafString GetStentMaterial() const {return m_Material;};
   double GetStentDeliverySystem() const {return m_DeliverySystem;};
   double GetStentRadius() const {return m_Stent_Diameter/2.0;}
   double GetStentDiameter() const {return m_Stent_Diameter;}
@@ -391,9 +391,9 @@ private:
 
 
   // basic stent parameters */
-  wxString m_CompanyName;
-  wxString m_ModelName;
-  wxString m_Material;
+  mafString m_CompanyName;
+  mafString m_ModelName;
+  mafString m_Material;
   double m_DeliverySystem;
 
   int m_Stent_Type; // 1 Abbott 2 Bard, else Medtronic

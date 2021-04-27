@@ -130,7 +130,7 @@ void medWizardManager::FillMenu( wxMenu* wizardMenu )
       if(sub_menu)
         sub_menu->Append(wizard->GetId(), _(wizard->GetLabel()), _(wizard->GetLabel()));
       else
-        mafLogMessage(_("error in FillMenu"));
+        mafLogMessage(_M(mafString(_L("error in FillMenu"))));
     }
     else
     {
@@ -289,7 +289,7 @@ void medWizardManager::WizardContinue(int opSuccess)
   if (m_RunningWizard)
     m_RunningWizard->ContinueExecution(opSuccess);
   else 
-    mafLogMessage("Error no wizard running");
+    mafLogMessage(_M("Error no wizard running"));
 }
 
 
@@ -318,7 +318,7 @@ mafString medWizardManager::GetDescription()
   if (m_RunningWizard)
     return m_RunningWizard->GetDescriptionTitle();
   else 
-    return mafString("No running wizard");
+    return mafString(_R("No running wizard"));
 
 }
 
@@ -328,40 +328,40 @@ void medWizardManager::OnRunOp(mafEvent *e)
 {
   //Special operation for the wizard
   mafString opString=*e->GetString();
-  if (opString=="PAUSE")
+  if (opString==_R("PAUSE"))
   {
     //pause op
     mafEventMacro(mafEvent(this,WIZARD_PAUSE,m_WaitOp));
   }
-  else if (opString=="SAVE")
+  else if (opString==_R("SAVE"))
   {
     //Save msf
     mafEventMacro(mafEvent(this,MENU_FILE_SAVE));
   }
-  else if (opString=="SAVE_AS")
+  else if (opString==_R("SAVE_AS"))
   {
     //save msf with name
     mafEventMacro(mafEvent(this,MENU_FILE_SAVEAS));
   }
-  else if (opString=="OPEN")
+  else if (opString==_R("OPEN"))
   {
     //Open MSF
     mafEventMacro(mafEvent(this,MENU_FILE_OPEN));
   }
-  else if (opString=="DELETE")
+  else if (opString==_R("DELETE"))
   {
     //Delete current VME
     mafEventMacro(mafEvent(this,WIZARD_OP_DELETE));
   }
-  else if (opString=="NEW")
+  else if (opString==_R("NEW"))
   {
     mafEventMacro(mafEvent(this,WIZARD_OP_NEW));
   }
-  else if (opString=="RELOAD")
+  else if (opString==_R("RELOAD"))
   {
     mafEventMacro(mafEvent(this,WIZARD_RELOAD_MSF));
   }
-  else if (opString=="SNAPSHOT")
+  else if (opString==_R("SNAPSHOT"))
   {
     mafEventMacro(mafEvent(this,MENU_FILE_SNAPSHOT,true));
   }

@@ -81,19 +81,19 @@
   mafVMEStorage* storage = mafVMEStorage::SafeDownCast(e.GetStorage());
   if (storage == NULL)
     szStr = mafGetDirName(mafGetApplicationDirectory(), 
-    _("Select a folder for optimized volume files"));
+    _L("Select a folder for optimized volume files"));
   else
   {
     szStr = storage->GetURL();
     szStr.ExtractPathName();
 
     wxString szSep = wxFILE_SEP_PATH;
-    if (!wxEndsWithPathSeparator(szStr))
-      szStr += szSep;
-    szStr += "LargeVolumes";	
+    if (!wxEndsWithPathSeparator(szStr.toWx()))
+      szStr += mafWxToString(szSep);
+    szStr += _R("LargeVolumes");	
 
 #pragma warning(suppress: 6031) // warning C6031: Return value ignored: 'wxMkDir'
-    ::wxMkDir(szStr);
+    mafDirMake(szStr);
   }
 
   return szStr;
@@ -155,7 +155,7 @@
     "which includes the construction of a couple of optimized volume files \n"
     "with the total size up to %s (much less for medical data).\n\n"
     "The current project must be saved before proceeding.\n"
-    "Do you want to continue?"), szSize.GetCStr()), 
+    "Do you want to continue?"), szSize.toWx()), 
     _("Confirmation"), wxYES_NO | wxICON_QUESTION) == wxYES);    
 }
 
@@ -170,7 +170,7 @@
   wxMessageBox(wxString::Format(
     _("An optimised volume file with the total size\n"
     "%s was successfuly constructed."					
-    ), szSize.GetCStr()), _("Information"), wxOK | wxICON_INFORMATION);  
+    ), szSize.toWx()), _("Information"), wxOK | wxICON_INFORMATION);  
 }
 
 //------------------------------------------------------------------------

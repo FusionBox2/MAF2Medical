@@ -85,7 +85,7 @@ medOpImporterRAWImages::medOpImporterRAWImages(const mafString& label) : Supercl
 {
   m_OpType					= OPTYPE_IMPORTER;
   m_Canundo					= true;
-  m_RawDirectory		= (mafGetApplicationDirectory() + "/Data/External/").c_str();
+  m_RawDirectory		= mafGetApplicationDirectory() + _R("/Data/External/");
 #ifdef VME_VOLUME_LARGE
   m_OutputFileName = m_RawDirectory;
 #endif // VME_VOLUME_LARGE
@@ -98,7 +98,7 @@ medOpImporterRAWImages::medOpImporterRAWImages(const mafString& label) : Supercl
   m_Header		= 0;
 
   m_Rect			= false;
-  m_CoordFile	= "";	
+  m_CoordFile	= _R("");	
 
   m_Spacing[0] = 1.0;
   m_Spacing[1] = 1.0;
@@ -125,9 +125,9 @@ medOpImporterRAWImages::medOpImporterRAWImages(const mafString& label) : Supercl
 
   m_CurrentSlice = 0;
 
-  m_Prefix    = "";
-  m_Pattern   = "%s%04d";
-  m_Extension = ".raw";
+  m_Prefix    = _R("");
+  m_Pattern   = _R("%s%04d");
+  m_Extension = _R(".raw");
 
   m_SliceText   = NULL;
   m_SliceSlider = NULL;
@@ -261,44 +261,44 @@ void medOpImporterRAWImages::CreateGui()
   int res=OP_RUN_OK;
   if(!this->m_TestMode)
   {
-    m_Dialog = new mafGUIDialogPreview(_("raw importer"), mafCLOSEWINDOW | mafRESIZABLE | mafUSEGUI | mafUSERWI);
+    m_Dialog = new mafGUIDialogPreview(_L("raw importer"), mafCLOSEWINDOW | mafRESIZABLE | mafUSEGUI | mafUSERWI);
 
-    mafString bit_choices[4] = {_("8 bits"),_("16 bits Big Endian"),_("16 bits Little Endian"),_("24 bits (RGB)")};
-    mafString type_choices[2] = {_("interleaved"),_("not interleaved")};
+    mafString bit_choices[4] = {_L("8 bits"),_L("16 bits Big Endian"),_L("16 bits Little Endian"),_L("24 bits (RGB)")};
+    mafString type_choices[2] = {_L("interleaved"),_L("not interleaved")};
 
     m_Gui = new mafGUI(this);
     m_Gui->SetListener(this);
 
     m_Gui->Divider(0);
-    m_Gui->DirOpen(ID_OPEN_DIR, _("raw folder"),&m_RawDirectory);
-    m_Gui->String(ID_STRING_PREFIX,_("file pref."), &m_Prefix);
-    m_Gui->String(ID_STRING_PATTERN,_("file patt."), &m_Pattern);
-    m_Gui->String(ID_STRING_EXT,_("file ext."), &m_Extension);
+    m_Gui->DirOpen(ID_OPEN_DIR, _L("raw folder"),&m_RawDirectory);
+    m_Gui->String(ID_STRING_PREFIX,_L("file pref."), &m_Prefix);
+    m_Gui->String(ID_STRING_PATTERN,_L("file patt."), &m_Pattern);
+    m_Gui->String(ID_STRING_EXT,_L("file ext."), &m_Extension);
     m_Gui->Divider(0);
-    m_Gui->Combo(ID_BITS,_("bits/pixel"),&m_Bit,4,bit_choices);
+    m_Gui->Combo(ID_BITS,_L("bits/pixel"),&m_Bit,4,bit_choices);
 #ifdef VME_VOLUME_LARGE //LargeReader supports non-interleaved mode
-    m_Gui->Combo(ID_RGB_TYPE,"",&m_RgbType,2,type_choices);
+    m_Gui->Combo(ID_RGB_TYPE, _R(""),&m_RgbType,2,type_choices);
 #endif
     m_Gui->Enable(ID_RGB_TYPE,false);
-    m_Gui->Bool(ID_SIGNED,_("signed"),&m_Signed);
+    m_Gui->Bool(ID_SIGNED,_L("signed"),&m_Signed);
     m_Gui->Divider(0);
-    m_Gui->Label(_("dimensions (x,y,z):"));
-    m_Gui->Label(_("z is the number of slices"));
-    m_Gui->Vector(ID_DIMENSIONS,"",m_Dimension,1,10000,1,10000,1,10000);
-    m_Gui->Bool(ID_ROI,_("define ROI"),&m_CropMode);
-    m_Gui->Label(_("spacing in mm/pixel (x,y,z)"));
+    m_Gui->Label(_L("dimensions (x,y,z):"));
+    m_Gui->Label(_L("z is the number of slices"));
+    m_Gui->Vector(ID_DIMENSIONS, _R(""),m_Dimension,1,10000,1,10000,1,10000);
+    m_Gui->Bool(ID_ROI,_L("define ROI"),&m_CropMode);
+    m_Gui->Label(_L("spacing in mm/pixel (x,y,z)"));
     //m_Gui->Vector(ID_SPC, "",m_Spacing,0.0000001, 100000,6); 	
-    m_Gui->Double(ID_SPC_X,_("x: "),&m_Spacing[0],0.0000001, 100000,3,6);
-    m_Gui->Double(ID_SPC_Y,_("y: "),&m_Spacing[1],0.0000001, 100000,3,6);
-    m_Gui->Double(ID_SPC_Z,_("z: "),&m_Spacing[2],0.0000001, 100000,3,6);
+    m_Gui->Double(ID_SPC_X,_L("x: "),&m_Spacing[0],0.0000001, 100000,3);
+    m_Gui->Double(ID_SPC_Y,_L("y: "),&m_Spacing[1],0.0000001, 100000,3);
+    m_Gui->Double(ID_SPC_Z,_L("z: "),&m_Spacing[2],0.0000001, 100000,3);
     m_Gui->Divider(0);
-    m_Gui->Label(_("z coordinates file:"));
-    m_Gui->Button(ID_COORD,_("load"),"", _("load the file for non regularly spaced raw volume"));
+    m_Gui->Label(_L("z coordinates file:"));
+    m_Gui->Button(ID_COORD,_L("load"), _R(""), _L("load the file for non regularly spaced raw volume"));
     m_Gui->Divider(0);
-    m_Gui->Button(ID_GUESS,_("guess"),_("header size"));
-    m_Gui->Integer(ID_HEADER," ",&m_Header,0);
-    m_Gui->Integer(ID_OFFSET,_("file offset:"),&m_Offset,0, MAXINT,_("set the first slice number in the files name"));
-    m_Gui->Integer(ID_SPACING,_("file spc.:"),&m_FileSpacing,1, MAXINT, _("set the spacing between the slices in the files name"));
+    m_Gui->Button(ID_GUESS,_L("guess"),_L("header size"));
+    m_Gui->Integer(ID_HEADER,_R(" "),&m_Header,0);
+    m_Gui->Integer(ID_OFFSET,_L("file offset:"),&m_Offset,0, MAXINT,_L("set the first slice number in the files name"));
+    m_Gui->Integer(ID_SPACING,_L("file spc.:"),&m_FileSpacing,1, MAXINT, _L("set the spacing between the slices in the files name"));
     m_Gui->Divider(0);
 
 #ifdef VME_VOLUME_LARGE
@@ -314,20 +314,20 @@ void medOpImporterRAWImages::CreateGui()
 
     nMaxMem /= 4;		//keep 75% free
 
-    m_Gui->Label(_("memory limit [MB]: "));
-    m_Gui->Slider(ID_MEMLIMIT, "", &m_MemLimit, 1, nMaxMem, 
-      _("if the data to be loaded is larger than the specified memory limit,"
+    m_Gui->Label(_L("memory limit [MB]: "));
+    m_Gui->Slider(ID_MEMLIMIT, _R(""), &m_MemLimit, 1, nMaxMem,
+      _L("if the data to be loaded is larger than the specified memory limit,"
       "it will be loaded as VolumeLarge VME"));
 
     m_Gui->Divider(0);
 #endif // VME_VOLUME_LARGE
 
-    m_Gui->Label(_("Crop Dim."),true);
-    m_Gui->Label(_("DimX:"), &m_DimXCrop);
-    m_Gui->Label(_("DimY:"), &m_DimYCrop);
+    m_Gui->Label(_L("Crop Dim."),true);
+    m_Gui->Label(_L("DimX:"), &m_DimXCrop);
+    m_Gui->Label(_L("DimY:"), &m_DimYCrop);
 
-    m_DimXCrop = wxString::Format("%d", 0);
-    m_DimYCrop = wxString::Format("%d", 0);
+    m_DimXCrop = mafToString(0);
+    m_DimYCrop = mafToString(0);
 
     m_Gui->Divider(0);
     m_Gui->OkCancel();
@@ -353,8 +353,8 @@ void medOpImporterRAWImages::CreateGui()
 
 #pragma warning(suppress: 6211) // warning C6211: Leaking memory 'slice_sizer' due to an exception. Consider using a local catch block to clean up memory:
     m_GuiSlider = new mafGUI(this);      
-    m_GuiSlider->Bool(ID_LOOKUPTABLE, _("use lookup table"), &m_UseLookupTable, 1, 
-      _("determines whether the default lookup table should be used for the preview"));
+    m_GuiSlider->Bool(ID_LOOKUPTABLE, _L("use lookup table"), &m_UseLookupTable, 1, 
+      _L("determines whether the default lookup table should be used for the preview"));
     m_GuiSlider->Show(true);
     m_GuiSlider->Reparent(m_Dialog);
     slice_sizer->Add(m_GuiSlider, 0, wxALIGN_CENTER|wxLEFT);
@@ -534,19 +534,18 @@ void medOpImporterRAWImages::OnEvent(mafEventBase *maf_event)
     case ID_COORD:
       {	
         m_Gui->Enable(ID_SPC_Z, true);
-        wxString rect_dir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
-        wxString rect_wildc = _("Z_coordinates (*.txt)|*.txt");
-        wxString file = mafGetOpenFile(rect_dir,rect_wildc,_("Open Z coordinates file")).GetCStr();
-        if (file != "")
+        mafString rect_dir = mafGetApplicationDirectory() + _R("/Data/External/");
+        mafString rect_wildc = _L("Z_coordinates (*.txt)|*.txt");
+        mafString file = mafGetOpenFile(rect_dir,rect_wildc,_L("Open Z coordinates file"));
+        if (!file.IsEmpty())
         {
           m_CoordFile = file;
           m_Rect = true;
           m_Spacing[2] = 1.0;
           m_Gui->Enable(ID_SPC_Z, false);						
 
-          const char* nome = (m_CoordFile);
           std::ifstream f_in;
-          f_in.open(nome);
+          f_in.open(m_CoordFile.GetCStr());
 
           char title[256];
 
@@ -714,8 +713,8 @@ void medOpImporterRAWImages::OnEvent(mafEventBase *maf_event)
           m_Dialog->GetRWI()->CameraUpdate();
 
 
-          m_DimXCrop = wxString::Format("%.2f", abs(m_GizmoPlane->GetPoint2()[0]-m_GizmoPlane->GetPoint1()[0]));
-          m_DimYCrop = wxString::Format("%.2f", abs(m_GizmoPlane->GetPoint2()[1]-m_GizmoPlane->GetPoint1()[1]));
+          m_DimXCrop = mafString::Format(_R("%.2f"), abs(m_GizmoPlane->GetPoint2()[0]-m_GizmoPlane->GetPoint1()[0]));
+          m_DimYCrop = mafString::Format(_R("%.2f"), abs(m_GizmoPlane->GetPoint2()[1]-m_GizmoPlane->GetPoint1()[1]));
           m_Gui->Update();
         }
       }
@@ -776,8 +775,8 @@ void medOpImporterRAWImages::OnEvent(mafEventBase *maf_event)
           }
         }
         m_Dialog->GetRWI()->CameraUpdate();
-        m_DimXCrop = wxString::Format("%.2f", abs(m_GizmoPlane->GetPoint2()[0]-m_GizmoPlane->GetPoint1()[0]));
-        m_DimYCrop = wxString::Format("%.2f", abs(m_GizmoPlane->GetPoint2()[1]-m_GizmoPlane->GetPoint1()[1]));
+        m_DimXCrop = mafString::Format(_R("%.2f"), abs(m_GizmoPlane->GetPoint2()[0]-m_GizmoPlane->GetPoint1()[0]));
+        m_DimYCrop = mafString::Format(_R("%.2f"), abs(m_GizmoPlane->GetPoint2()[1]-m_GizmoPlane->GetPoint1()[1]));
         m_Gui->Update();
       }
       break;
@@ -796,8 +795,8 @@ void medOpImporterRAWImages::OnEvent(mafEventBase *maf_event)
         m_ROI_2D[2] = b[2];
         m_ROI_2D[3] = b[3];
       }
-      m_DimXCrop = wxString::Format("%.2f", abs(m_GizmoPlane->GetPoint2()[0]-m_GizmoPlane->GetPoint1()[0]));
-      m_DimYCrop = wxString::Format("%.2f", abs(m_GizmoPlane->GetPoint2()[1]-m_GizmoPlane->GetPoint1()[1]));
+      m_DimXCrop = mafString::Format(_R("%.2f"), abs(m_GizmoPlane->GetPoint2()[0]-m_GizmoPlane->GetPoint1()[0]));
+      m_DimYCrop = mafString::Format(_R("%.2f"), abs(m_GizmoPlane->GetPoint2()[1]-m_GizmoPlane->GetPoint1()[1]));
       m_Gui->Update();
       break;
     case wxOK:
@@ -876,7 +875,7 @@ bool medOpImporterRAWImages::VolumeLargeCheck()
   else if (nResult == 2)
   {    
     m_OutputFileName = szStr;  
-    m_OutputFileName += wxFILE_SEP_PATH + wxString::Format("%s_%X", m_Prefix, (int)time(NULL));   
+    m_OutputFileName += mafWxToString(wxFILE_SEP_PATH) + m_Prefix + mafString::Format(_R("_%X"), (int)time(NULL));
   }
   return true;
 }
@@ -928,10 +927,10 @@ bool medOpImporterRAWImages::VolumeLargeCheck()
 void medOpImporterRAWImages::	UpdateReader() 
 //----------------------------------------------------------------------------
 {
-  mafString prefix = m_RawDirectory + "\\" + m_Prefix;
-  m_Reader->SetFilePrefix(prefix);
+  mafString prefix = m_RawDirectory + _R("\\") + m_Prefix;
+  m_Reader->SetFilePrefix(prefix.GetCStr());
 
-  mafString pattern = m_Pattern + wxString(m_Extension);
+  mafString pattern = m_Pattern + m_Extension;
   m_Reader->SetFilePattern(pattern.GetCStr());
 
   m_Reader->SetDataScalarType(GetVTKDataType());
@@ -1046,16 +1045,16 @@ void medOpImporterRAWImages::	UpdateReader()
 bool medOpImporterRAWImages::Import()
 //----------------------------------------------------------------------------
 {
-  wxString prefix = m_RawDirectory + "\\" + m_Prefix;
-  wxString pattern = m_Pattern + wxString(m_Extension);
+  mafString prefix = m_RawDirectory + _R("\\") + m_Prefix;
+  mafString pattern = m_Pattern + m_Extension;
 
 #ifdef VME_VOLUME_LARGE
   vtkMAFSmartPointer< vtkMAFLargeImageReader > r;
 #else
   vtkMAFSmartPointer< vtkImageReader > r;
 #endif //VME_VOLUME_LARGE
-  r->SetFilePrefix(prefix);
-  r->SetFilePattern(pattern.c_str());
+  r->SetFilePrefix(prefix.GetCStr());
+  r->SetFilePattern(pattern.GetCStr());
 
   r->SetDataScalarType(GetVTKDataType());
   r->SetNumberOfScalarComponents(1);
@@ -1114,9 +1113,9 @@ bool medOpImporterRAWImages::Import()
 
   r->Update();
 
-  wxString slice_name = m_RawDirectory;
-  wxString path, name, ext;
-  wxSplitPath(slice_name.c_str(),&path,&name,&ext);
+  mafString slice_name = m_RawDirectory;
+  mafString path, name, ext;
+  mafSplitPath(slice_name,&path,&name,&ext);
 
   vtkMAFSmartPointer<vtkImageToStructuredPoints> convert;
 
@@ -1127,9 +1126,8 @@ bool medOpImporterRAWImages::Import()
     ZDoubleArray = vtkDoubleArray::New();
 
     char title[256];
-    const char* nome = (m_CoordFile);
     std::ifstream f_in;
-    f_in.open(nome);
+    f_in.open(m_CoordFile.GetCStr());
     f_in.getline(title,256);
 
     //z array is read from a file	
@@ -1266,7 +1264,7 @@ bool medOpImporterRAWImages::Import()
     mafVolumeLargeWriter wr;
     wr.SetInputDataSet(r->GetOutput());
     wr.SetInputZCoordinates(ZDoubleArray);   //is NULL for regular girds
-    wr.SetOutputFileName(m_OutputFileName);
+    wr.SetOutputFileName(m_OutputFileName.GetCStr());
     wr.SetListener(GetListener());
     vtkDEL(ZDoubleArray);                    //no longer needed
 
@@ -1281,13 +1279,13 @@ bool medOpImporterRAWImages::Import()
       }
 
       mafVolumeLargeReader* rd = new mafVolumeLargeReader();
-      rd->SetFileName(m_OutputFileName);
+      rd->SetFileName(m_OutputFileName.GetCStr());
       rd->SetMemoryLimit(m_MemLimit * 1024);
       rd->SetVOI(VOI);
       rd->Update();
 
       mafNEW(m_VolumeLarge);
-      m_VolumeLarge->SetFileName(this->m_RawDirectory);
+      m_VolumeLarge->SetFileName(this->m_RawDirectory.GetCStr());
       if (m_VolumeLarge->SetLargeData(rd) == MAF_OK)
         m_Output = m_VolumeLarge;
 
@@ -1313,10 +1311,10 @@ bool medOpImporterRAWImages::Import()
    if(!m_Output) return false;	
 
    mafTagItem tag_Nature;
-   tag_Nature.SetName(_("VME_NATURE"));
-   tag_Nature.SetValue(_("NATURAL"));
+   tag_Nature.SetName(_R("VME_NATURE"));
+   tag_Nature.SetValue(_R("NATURAL"));
 
-   m_Output->SetName(name.c_str());
+   m_Output->SetName(name);
    m_Output->ReparentTo(m_Input);
 
    m_Output->GetTagArray()->SetTag(tag_Nature);
@@ -1341,12 +1339,11 @@ int medOpImporterRAWImages::GetFileLength(const char * filename)
 void medOpImporterRAWImages::OnStringPrefix() 
 //----------------------------------------------------------------------------
 {
-  const char* nome_file = (m_Prefix);
   int length = m_Prefix.Length();
   m_NumberSlices = 0;
   for( int i = 0; i < m_NumberFile; i++)
   {
-    if((strncmp(m_VtkRawDirectory->GetFile(i),nome_file,length) == 0))
+    if((strncmp(m_VtkRawDirectory->GetFile(i),m_Prefix.GetCStr(),length) == 0))
       m_NumberSlices++;	
   }
 
@@ -1371,8 +1368,8 @@ void medOpImporterRAWImages::OnOpenDir()
     wxBusyInfo wait("Reading File, please wait...");
 
   vtkNEW(m_VtkRawDirectory);
-  if (m_VtkRawDirectory->Open(m_RawDirectory) == 0)
-    wxLogMessage("Directory <%s> can not be opened", m_RawDirectory);
+  if (m_VtkRawDirectory->Open(m_RawDirectory.GetCStr()) == 0)
+    wxLogMessage(wxString::Format("Directory <%s> can not be opened", m_RawDirectory.toWx()));
 
   if(!this->m_TestMode)
   {
@@ -1388,10 +1385,10 @@ bool medOpImporterRAWImages::ControlFilenameList()
 //----------------------------------------------------------------------------
 {
   //control how many files are present in directory
-  wxString prefix = m_RawDirectory + "\\" + m_Prefix;
-  wxString pattern = m_Pattern + wxString(m_Extension);
+  wxString prefix = m_RawDirectory.toWx() + "\\" + m_Prefix.toWx();
+  wxString pattern = m_Pattern.toWx() + m_Extension.toWx();
 
-  wxDir dir(m_RawDirectory.GetCStr());
+  wxDir dir(m_RawDirectory.toWx());
   bool result = true;
   if ( !dir.IsOpened() )
   {
@@ -1401,13 +1398,13 @@ bool medOpImporterRAWImages::ControlFilenameList()
   }
 
   wxArrayString SkinFiles;
-  const wxString FileSpec = "*" + m_Extension;
+  const wxString FileSpec = "*" + m_Extension.toWx();
   const int flags = wxDIR_FILES;
 
-  if (m_RawDirectory.GetCStr() != wxEmptyString && wxDirExists(m_RawDirectory.GetCStr()))
+  if (m_RawDirectory.toWx() != wxEmptyString && mafDirExists(m_RawDirectory))
   {
     // Get all .zip files
-    wxDir::GetAllFiles(m_RawDirectory.GetCStr(), &SkinFiles, FileSpec, flags);
+    wxDir::GetAllFiles(m_RawDirectory.toWx(), &SkinFiles, FileSpec, flags);
   }
 
   //wxMessageBox(wxString::Format("%d",SkinFiles.GetCount()));
@@ -1487,6 +1484,6 @@ bool medOpImporterRAWImages::ControlFilenameList()
 //Sets the output file (with bricks)
 void medOpImporterRAWImages::SetOutputFile(const char* szOutputFile)
 {
-  m_OutputFileName = szOutputFile;
+  m_OutputFileName = _R(szOutputFile);
 }
 #endif // VME_VOLUME_LARGE

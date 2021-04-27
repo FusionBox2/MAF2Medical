@@ -311,7 +311,7 @@ mafGUI *medVisualPipeSlicerSlice::CreateGui()
 {
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
-  m_Gui->FloatSlider(ID_BORDER_CHANGE,_("Border"),&m_Border,1.0,5.0);
+  m_Gui->FloatSlider(ID_BORDER_CHANGE,_L("Border"),&m_Border,1.0,5.0);
   m_Gui->Divider();
 	return m_Gui;
 }

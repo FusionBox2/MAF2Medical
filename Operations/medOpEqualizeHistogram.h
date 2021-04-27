@@ -38,7 +38,7 @@ class MED_OPERATION_EXPORT medOpEqualizeHistogram: public mafOp
 public:
 
   /** constructor. */
-  medOpEqualizeHistogram(const mafString& label = "Equalize Histogram");
+  medOpEqualizeHistogram(const mafString& label = _R("Equalize Histogram"));
   /** destructor. */
   ~medOpEqualizeHistogram(); 
 

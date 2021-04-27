@@ -103,7 +103,7 @@ class MED_OPERATION_EXPORT medOpMML3: public mafOp
 {
 public:
   mafTypeMacro(medOpMML3, mafOp)
-  medOpMML3(const mafString& label=""); ///< constructor
+  medOpMML3(const mafString& label= _R("")); ///< constructor
   ~medOpMML3(); ///< destructor
 
   mafOp* Copy();
@@ -355,8 +355,8 @@ protected:
   wxString m_PatientMSFSectionName;
 
   // volume and surface names
-  wxString m_VolName;
-  wxString m_SurfaceName;
+  mafString m_VolName;
+  mafString m_SurfaceName;
 
   // input and output timestamps
   bool m_UserTimeStampSet ;         // has user set a time stamp

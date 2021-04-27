@@ -226,9 +226,9 @@ mafGUI* mafViewRXCompound::CreateGui()
   m_Gui = new mafGUI(this);
   
   mafString m_Choices[2];
-  m_Choices[0]="Right";
-  m_Choices[1]="Left";
-  m_Gui->Radio(ID_RIGHT_OR_LEFT,"Side",&m_RightOrLeft,2,m_Choices);
+  m_Choices[0]=_R("Right");
+  m_Choices[1]=_R("Left");
+  m_Gui->Radio(ID_RIGHT_OR_LEFT,_R("Side"),&m_RightOrLeft,2,m_Choices);
 
   m_Gui->Divider(1);
   
@@ -272,9 +272,9 @@ void mafViewRXCompound::PackageView()
   for(int v=RX_FRONT_VIEW; v<VIEWS_NUMBER; v++)
   {
     // create to the child view
-    m_ViewsRX[v] = new mafViewRX("RX child view", cam_pos[v]);
-    m_ViewsRX[v]->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeProjected",MUTEX);
-    m_ViewsRX[v]->PlugVisualPipe("mafVMELabeledVolume", "mafPipeVolumeProjected",MUTEX);
+    m_ViewsRX[v] = new mafViewRX(_R("RX child view"), cam_pos[v]);
+    m_ViewsRX[v]->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeProjected"),MUTEX);
+    m_ViewsRX[v]->PlugVisualPipe(_R("mafVMELabeledVolume"), _R("mafPipeVolumeProjected"),MUTEX);
     
     PlugChildView(m_ViewsRX[v]);
   }

@@ -105,14 +105,14 @@ void medOpTriangulateSurface::CreateGui()
   // interface:
   m_Gui = new mafGUI(this);
 
-  m_Gui->Label("");
-  m_Gui->Label(_("Triangulate Surface"),true);
-  m_Gui->Button(ID_SMOOTH,_("Triangulate"));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_L("Triangulate Surface"),true);
+  m_Gui->Button(ID_SMOOTH,_L("Triangulate"));
 
   m_Gui->Divider(2);
-  m_Gui->Label("");
-  m_Gui->Button(ID_PREVIEW,_("preview"));
-  m_Gui->Button(ID_CLEAR,_("clear"));
+  m_Gui->Label(_R(""));
+  m_Gui->Button(ID_PREVIEW,_L("preview"));
+  m_Gui->Button(ID_CLEAR,_L("clear"));
   m_Gui->OkCancel();
   m_Gui->Enable(wxOK,false);
 

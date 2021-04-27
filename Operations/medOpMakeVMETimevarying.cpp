@@ -94,10 +94,10 @@ medOpMakeVMETimevarying::medOpMakeVMETimevarying(const mafString& label /* = "Ma
 
   m_VMETimevarying = NULL;
   m_CurrentVME = NULL;
-  m_CurrentVMEName = _("");
-  m_VMETimevaryingName = _("New Timevariyng VME");
-  m_VMEsType = _("mafVME");
-  m_VMEsOutputType = _("mafVMEOutput");
+  m_CurrentVMEName = _L("");
+  m_VMETimevaryingName = _L("New Timevariyng VME");
+  m_VMEsType = _L("mafVME");
+  m_VMEsOutputType = _L("mafVMEOutput");
   m_VMEsVTKDataType = VTK_DATA_SET;
 
   m_AddedVMEsListBox = NULL;
@@ -163,10 +163,10 @@ void medOpMakeVMETimevarying::CreateGui()
   m_Gui->Divider();
 
   //------VME List panel------//
-  m_Gui->Label(_("Added VMEs"));
-  m_AddedVMEsListBox = m_Gui->ListBox(ID_ADDED_VMEs_LISTBOX,_(""),200);
+  m_Gui->Label(_L("Added VMEs"));
+  m_AddedVMEsListBox = m_Gui->ListBox(ID_ADDED_VMEs_LISTBOX,_L(""),200);
   
-  m_Gui->TwoButtons(ID_ADD_VME_BUTTON,ID_DELETE_VME_BUTTON,_("Add"),_("Delete"));
+  m_Gui->TwoButtons(ID_ADD_VME_BUTTON,ID_DELETE_VME_BUTTON,_L("Add"),_L("Delete"));
   m_Gui->Enable(ID_DELETE_VME_BUTTON,false);
   //-------------------------//
 
@@ -176,10 +176,10 @@ void medOpMakeVMETimevarying::CreateGui()
   //------Add VME panel------//
   m_Gui->Label(&m_CurrentVMEName,true);
   mafString radioChoice[2];
-  radioChoice[0] = _("User input");
-  radioChoice[1] = _("From VME");
-  m_Gui->Radio(ID_TIMESTAMP_MODALITY_RADIO,_("Timestamp Modality"),&m_CurrentVMETimestampModality,2,radioChoice);
-  m_Gui->Double(ID_TIMESTAMP_TEXTBOX,_("User input"),&m_CurrentVMETimeStamp);
+  radioChoice[0] = _L("User input");
+  radioChoice[1] = _L("From VME");
+  m_Gui->Radio(ID_TIMESTAMP_MODALITY_RADIO,_L("Timestamp Modality"),&m_CurrentVMETimestampModality,2,radioChoice);
+  m_Gui->Double(ID_TIMESTAMP_TEXTBOX,_L("User input"),&m_CurrentVMETimeStamp);
   wxBoxSizer * hszVMETimeStampFromVME = new wxBoxSizer(wxHORIZONTAL);
   m_LblVMETimeStampFromVME = new wxStaticText(m_Gui,ID_TIMESTAMP_FROM_VME_LABEL,_("From VME"),wxDefaultPosition,wxSize(55,17),wxALIGN_RIGHT);
   m_LblVMETimeStampFromVMEData = new wxStaticText(m_Gui,ID_TIMESTAMP_FROM_VME_LABEL_DATA,wxString::Format("%f",m_CurrentVMETimeStampFromVME),wxDefaultPosition,wxSize(100,17));
@@ -188,9 +188,9 @@ void medOpMakeVMETimevarying::CreateGui()
 	hszVMETimeStampFromVME->Add(m_LblVMETimeStampFromVME,0,wxRIGHT, 5);
 	hszVMETimeStampFromVME->Add(m_LblVMETimeStampFromVMEData,0,wxEXPAND || wxLEFT);
   m_Gui->Add(hszVMETimeStampFromVME);
-  m_Gui->Double(ID_TIMESTAMP_AUTOINCREMENT_TEXTBOX,_("Increment"),&m_VMETimestampIncrement);
+  m_Gui->Double(ID_TIMESTAMP_AUTOINCREMENT_TEXTBOX,_L("Increment"),&m_VMETimestampIncrement);
   m_Gui->Divider();
-  m_Gui->TwoButtons(ID_ADD_VME_OK_BUTTON,ID_ADD_VME_CANCEL_BUTTON,_("Ok"),_("Cancel"));
+  m_Gui->TwoButtons(ID_ADD_VME_OK_BUTTON,ID_ADD_VME_CANCEL_BUTTON,_L("Ok"),_L("Cancel"));
   m_Gui->Enable(ID_TIMESTAMP_TEXTBOX,false);
   m_Gui->Enable(ID_TIMESTAMP_AUTOINCREMENT_TEXTBOX,false);
   m_Gui->Enable(ID_TIMESTAMP_MODALITY_RADIO,false);
@@ -202,12 +202,12 @@ void medOpMakeVMETimevarying::CreateGui()
   m_Gui->Divider();
 
   //------Make VME panel------//
-  m_Gui->Label(_("Name"));
-  m_Gui->String(ID_VMETIMEVARYING_NAME_TEXTBOX,_(""),&m_VMETimevaryingName);
+  m_Gui->Label(_L("Name"));
+  m_Gui->String(ID_VMETIMEVARYING_NAME_TEXTBOX,_L(""),&m_VMETimevaryingName);
   m_Gui->Divider();
-  m_Gui->Button(ID_RESET_BUTTON,_("Reset"));
+  m_Gui->Button(ID_RESET_BUTTON,_L("Reset"));
   m_Gui->Enable(ID_RESET_BUTTON,false);
-  m_Gui->TwoButtons(ID_OK_BUTTON,ID_CANCEL_BUTTON,_("Ok"),_("Cancel"));
+  m_Gui->TwoButtons(ID_OK_BUTTON,ID_CANCEL_BUTTON,_L("Ok"),_L("Cancel"));
   m_Gui->Enable(ID_OK_BUTTON,false);
   //--------------------------//
 
@@ -240,7 +240,7 @@ void medOpMakeVMETimevarying::OnEvent(mafEventBase *maf_event)
       //------------------------------------------//
       case ID_ADD_VME_BUTTON:
       {
-        mafString title = _("Choose VME");
+        mafString title = _L("Choose VME");
         mafEvent e(this,VME_CHOOSE,&title,(long)&medOpMakeVMETimevarying::DialogAcceptVME);
         mafEventMacro(e);
         
@@ -332,7 +332,7 @@ void medOpMakeVMETimevarying::OnEvent(mafEventBase *maf_event)
         {
           AddVME(m_CurrentVME,currentTimestamp);
           //Update GUI
-          m_CurrentVMEName = _("");
+          m_CurrentVMEName = _L("");
           UpdateAddedVMEsListBox();
           m_Gui->Enable(ID_OK_BUTTON,true);
           m_Gui->Enable(ID_RESET_BUTTON,true);
@@ -360,7 +360,7 @@ void medOpMakeVMETimevarying::OnEvent(mafEventBase *maf_event)
       //------------------------------------------//
       case ID_ADD_VME_CANCEL_BUTTON:
       {
-        m_CurrentVMEName = _("");
+        m_CurrentVMEName = _L("");
         //Update GUI
         m_Gui->Enable(ID_TIMESTAMP_TEXTBOX,false);
         m_LblVMETimeStampFromVME->Enable(false);
@@ -407,10 +407,10 @@ void medOpMakeVMETimevarying::OnEvent(mafEventBase *maf_event)
       {
         m_AddedVMEs.clear();
         m_CurrentVMETimeStamp = 0;
-        m_VMEsType = _("mafVME");
-        m_VMEsOutputType = _("mafVMEOutput");
+        m_VMEsType = _L("mafVME");
+        m_VMEsOutputType = _L("mafVMEOutput");
         m_VMEsVTKDataType = VTK_DATA_SET;
-        m_VMETimevaryingName = _("New Timevariyng VME");
+        m_VMETimevaryingName = _L("New Timevariyng VME");
         //Update GUI
         m_Gui->Enable(ID_OK_BUTTON,false);
         m_Gui->Enable(ID_DELETE_VME_BUTTON,false);
@@ -463,18 +463,18 @@ bool medOpMakeVMETimevarying::AcceptVME(mafVME * vme)
   if(NULL == vme)
     return false;
 
-  if(m_VMEsType.Equals(mafString(_("mafVME"))) && m_VMEsVTKDataType == VTK_DATA_SET && m_VMEsOutputType.Equals(mafString(_("mafVMEOutput"))))
+  if(m_VMEsType.Equals(_L("mafVME")) && m_VMEsVTKDataType == VTK_DATA_SET && m_VMEsOutputType.Equals(_L("mafVMEOutput")))
   {
-    m_VMEsType = mafString(vme->GetTypeName());
-    m_VMEsOutputType = mafString(vme->GetOutput()->GetTypeName());
+    m_VMEsType = _R(vme->GetTypeName());
+    m_VMEsOutputType = _R(vme->GetOutput()->GetTypeName());
     m_VMEsVTKDataType = vme->GetOutput()->GetVTKData()->GetDataObjectType();
     return true;
   }
   else
   {
     if(m_VMEsVTKDataType == vme->GetOutput()->GetVTKData()->GetDataObjectType() &&  //Check vtk data type
-            m_VMEsOutputType.Equals(mafString(vme->GetOutput()->GetTypeName())) &&  //Check output type
-            (m_VMEsType.Equals(mafString(vme->GetTypeName()))))                     //Check VME type      
+            m_VMEsOutputType.Equals(_R(vme->GetOutput()->GetTypeName())) &&  //Check output type
+            (m_VMEsType.Equals(_R(vme->GetTypeName()))))                     //Check VME type      
     {
       return true;
     }
@@ -525,8 +525,8 @@ void medOpMakeVMETimevarying::DeleteVME(int index)
   if(m_AddedVMEs.size() == 1)
   {
     m_AddedVMEs.clear();
-    m_VMEsType = _("mafVME");
-    m_VMEsOutputType = _("mafVMEOutput");
+    m_VMEsType = _L("mafVME");
+    m_VMEsOutputType = _L("mafVMEOutput");
     m_VMEsVTKDataType = VTK_DATA_SET;
     m_CurrentVMETimeStamp = 0.0;
   }
@@ -549,7 +549,7 @@ void medOpMakeVMETimevarying::UpdateAddedVMEsListBox()//GUI
     newListBoxItem = wxString("t = ");
     newListBoxItem.Append(wxString::Format("%f",(* AddedVMEsIter)->m_TimeStamp));
     newListBoxItem.Append(wxString(" - "));
-    newListBoxItem.Append(wxString((* AddedVMEsIter)->m_VME->GetName()));
+    newListBoxItem.Append((* AddedVMEsIter)->m_VME->GetName().toWx());
     m_AddedVMEsListBox->Append(newListBoxItem);
   }
 }
@@ -560,62 +560,62 @@ void medOpMakeVMETimevarying::Execute()
   assert(m_AddedVMEs.size() != 0);
 
   //Assign the correct type to the resulting timevarying VME
-  if(m_VMEsType.Equals(mafString(_("mafVMEImage"))))
+  if(m_VMEsType.Equals(_L("mafVMEImage")))
   {
     mafVMEImage * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMEMesh"))))//OK
+  else if(m_VMEsType.Equals(_L("mafVMEMesh")))//OK
   {
     mafVMEMesh * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMEPointSet"))))
+  else if(m_VMEsType.Equals(_L("mafVMEPointSet")))
   {
     mafVMEPointSet * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMELandmarkCloud"))))//OK
+  else if(m_VMEsType.Equals(_L("mafVMELandmarkCloud")))//OK
   {
     mafVMELandmarkCloud * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMEVector"))))
+  else if(m_VMEsType.Equals(_L("mafVMEVector")))
   {
     mafVMEVector * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMESurface"))))//OK
+  else if(m_VMEsType.Equals(_L("mafVMESurface")))//OK
   {
     mafVMESurface * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMESurfaceParametric"))))//OK
+  else if(m_VMEsType.Equals(_L("mafVMESurfaceParametric")))//OK
   {
     //A timevarying VME created from a set of parametric surface (mafVMESurfaceParametric) is treated as a surface (mafVMESurface)
     mafVMESurface * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMEVolumeGray"))))
+  else if(m_VMEsType.Equals(_L("mafVMEVolumeGray")))
   {
     mafVMEVolumeGray * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMEVolumeRGB"))))
+  else if(m_VMEsType.Equals(_L("mafVMEVolumeRGB")))
   {
     mafVMEVolumeRGB * tmpVME;
     mafNEW(tmpVME);
     m_VMETimevarying = tmpVME;
   }
-  else if(m_VMEsType.Equals(mafString(_("mafVMEPolyline"))))//OK
+  else if(m_VMEsType.Equals(_L("mafVMEPolyline")))//OK
   {
     mafVMEPolyline * tmpVME;
     mafNEW(tmpVME);
@@ -628,13 +628,11 @@ void medOpMakeVMETimevarying::Execute()
     m_VMETimevarying = tmpVME;
   }
 
-  std::vector<VmeTimevaryingItem *>::iterator AddedVMEsIter;
-
   mafVMEItemVTK * lastVmeItem = NULL;
   mafMatrix * lastVmeMatrix = NULL;
 
   //Fill VME's DataVector and MatrixVector
-  for(AddedVMEsIter = m_AddedVMEs.begin();AddedVMEsIter != m_AddedVMEs.end();AddedVMEsIter++)
+  for(auto AddedVMEsIter = m_AddedVMEs.begin();AddedVMEsIter != m_AddedVMEs.end();AddedVMEsIter++)
   {
     //Data changes
     mafVMEItemVTK * vmeItem;

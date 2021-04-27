@@ -89,11 +89,11 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 		  case ABOUT_APPLICATION:
 			{
         // trap the ABOUT_APPLICATION event and shows the about window with the application infos
-				wxString message = m_AppTitle.GetCStr();
-				message += _(" Application ");
+				mafString message = m_AppTitle;
+				message += _L(" Application ");
 				message += m_Revision;
-				wxMessageBox(message, "About Application");
-				mafLogMessage(wxString::Format("%s",m_Revision.GetCStr()));
+				wxMessageBox(message.toWx(), "About Application");
+				mafLogMessage(_M(m_Revision));
 			}
 		 break;
 		 case ID_GET_FILENAME:
@@ -107,7 +107,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 				  if (msfFilename.IsEmpty())
 				  {
 					  mafString dirName = mafGetApplicationDirectory();
-					  dirName << "\\data\\msf\\";
+					  dirName += _R("\\data\\msf\\");
 
 					  m_MSFDir = dirName;
 					  this->OnFileSaveAs();
@@ -115,16 +115,16 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 					  msfFilename = m_MSFFile;
 				  }
 
-				  wxString path, name, ext;
-				  wxSplitPath(msfFilename.GetCStr(),&path,&name,&ext);
-				  wxString imagesDirectoryName = path;
-				  imagesDirectoryName += "/images";
-				  if (!::wxDirExists(imagesDirectoryName))
+				  mafString path, name, ext;
+				  mafSplitPath(msfFilename,&path,&name,&ext);
+				  mafString imagesDirectoryName = path;
+				  imagesDirectoryName += _R("/images");
+				  if (!mafDirExists(imagesDirectoryName))
 				  {
-					  ::wxMkdir(imagesDirectoryName);
+					  mafDirMake(imagesDirectoryName);
 				  }
 
-				  wxDir imagesDirectory(imagesDirectoryName);
+				  wxDir imagesDirectory(imagesDirectoryName.toWx());
 				  wxString filename;
 				  int i = 0;
 				  bool cont = imagesDirectory.GetFirst(&filename);
@@ -137,42 +137,42 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 				  if (e->GetString() && !(e->GetString()->IsEmpty()))
 				  {
 					  mafString *imageFileName = new mafString();
-					  imageFileName->Append(imagesDirectoryName.c_str());
-					  imageFileName->Append("/");
-					  imageFileName->Append(e->GetString()->GetCStr());
-					  imageFileName->Append(wxString::Format("_%d",i));
-					  imageFileName->Append(".png");
+					  imageFileName->Append(imagesDirectoryName);
+					  imageFileName->Append(_R("/"));
+					  imageFileName->Append(*e->GetString());
+					  imageFileName->Append(mafString::Format(_R("_%d"),i));
+					  imageFileName->Append(_R(".png"));
 
 					  /*mafRWIBase::SafeDownCast(e->GetVtkObj())->SaveImage(imageFileName);*/
 					  e->SetString(imageFileName);
 
-					  wxString path,name,ext;
-					  wxSplitPath(imageFileName->GetCStr(),&path,&name,&ext);
+					  mafString path,name,ext;
+					  mafSplitPath(*imageFileName,&path,&name,&ext);
 					  wxString oldWD = wxGetCwd();
-					  wxSetWorkingDirectory(path);
-					  wxString command = "START  ";
-					  command = command + name+"."+ext;
-					  wxExecute( command );
+					  wxSetWorkingDirectory(path.toWx());
+					  mafString command = _R("START  ");
+					  command = command + name+_R(".")+ext;
+					  wxExecute( command.toWx() );
 					  wxSetWorkingDirectory(oldWD);
 
 
 				  }
 				  else
 				  {
-					  wxString imageFileName = "";
+					  mafString imageFileName = _R("");
 					  mafViewCompound *v = mafViewCompound::SafeDownCast(m_ViewManager->GetSelectedView());
 					  if (v)
 					  {
 						  imageFileName = imagesDirectoryName;
-						  imageFileName << "/";
+						  imageFileName += _R("/");
 						  wxString tmpImageFile;
-						  tmpImageFile << v->GetLabel();
+						  tmpImageFile << v->GetLabel().toWx();
 						  tmpImageFile << i;
 						  tmpImageFile << ".png";
 
 						  tmpImageFile.Replace(" ","_");
 
-						  imageFileName << tmpImageFile;
+						  imageFileName += mafWxToString(tmpImageFile);
 
 						  v->GetRWI()->SaveAllImages(imageFileName,v, m_ApplicationSettings->GetImageTypeId());
 
@@ -183,15 +183,15 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 						  mafView *v = m_ViewManager->GetSelectedView();
 
 						  imageFileName = imagesDirectoryName;
-						  imageFileName << "/";
+						  imageFileName += _R("/");
 						  wxString tmpImageFile;
-						  tmpImageFile << v->GetLabel();
+						  tmpImageFile << v->GetLabel().toWx();
 						  tmpImageFile << i;
 						  tmpImageFile << ".png";
 
 						  tmpImageFile.Replace(" ","_");
 
-						  imageFileName << tmpImageFile;
+						  imageFileName += mafWxToString(tmpImageFile);
 
 						  if (v)
 						  {
@@ -200,13 +200,13 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
 						  }
 					  }
 
-					  wxString path,name,ext;
-					  wxSplitPath(imageFileName,&path,&name,&ext);
+					  mafString path,name,ext;
+					  mafSplitPath(imageFileName,&path,&name,&ext);
 					  wxString oldWD = wxGetCwd();
-					  wxSetWorkingDirectory(path);
-					  wxString command = "START  ";
-					  command = command + name+"."+ext;
-					  wxShell( command );
+					  wxSetWorkingDirectory(path.toWx());
+					  mafString command = _R("START  ");
+					  command = command + name+_R(".")+ext;
+					  wxShell( command.toWx() );
 					  wxSetWorkingDirectory(oldWD);
 				  }
 
@@ -261,7 +261,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
          if (view)
            m_ViewManager->Activate(view);
          else
-           m_ViewManager->ViewCreate(viewStr);
+           m_ViewManager->ViewCreate(_R(viewStr));
        }
     break;
 	case WIZARD_DELETE_VIEW:
@@ -283,7 +283,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
       {
         //Running an op required from the wizard
         mafString *tmp=e->GetString();
-        mafLogMessage("wiz starting :%s",tmp->GetCStr());
+        mafLogMessage(_M(_R("wiz starting :") + *tmp));
         m_CancelledBeforeOpStarting=true;
         UpdateFrameTitle();
         m_OpManager->OpRun(*(e->GetString()));
@@ -327,7 +327,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
         file=m_MSFFile;
         if(file.IsEmpty())
         {
-          mafLogMessage ("Reload requested whitout opened MSF");
+          mafLogMessage (_M("Reload requested whitout opened MSF"));
           //continue wizard with error
           m_WizardManager->WizardContinue(false);
         }
@@ -341,7 +341,7 @@ void medLogicWithManagers::OnEvent(mafEventBase *maf_event)
       break;
     case OP_RUN_STARTING:
       {
-        mafLogMessage("run starting");
+        mafLogMessage(_M("run starting"));
         m_CancelledBeforeOpStarting=false;
         mafLogicWithManagers::OnEvent(maf_event);
       }
@@ -423,7 +423,7 @@ void medLogicWithManagers::Init(int argc, char **argv)
 
 
 //----------------------------------------------------------------------------
-void medLogicWithManagers::Plug( mafOp *op, wxString menuPath /*= ""*/, bool canUndo /*= true*/, mafGUISettings *setting /*= NULL*/ )
+void medLogicWithManagers::Plug( mafOp *op, const mafString& menuPath /*= ""*/, bool canUndo /*= true*/, mafGUISettings *setting /*= NULL*/ )
 //----------------------------------------------------------------------------
 {
   //plug functions needs to be redefined to avoid overload ambiguity
@@ -439,17 +439,17 @@ void medLogicWithManagers::Plug( mafView* view, bool visibleInMenu /*= true*/ )
 }
 
 //----------------------------------------------------------------------------
-void medLogicWithManagers::Plug( medWizard *wizard, wxString menuPath /*= ""*/ )
+void medLogicWithManagers::Plug( medWizard *wizard, const mafString& menuPath /*= ""*/ )
 //----------------------------------------------------------------------------
 {
   //Plugging the wizard    
   if(m_WizardManager)
   {
-    m_WizardManager->WizardAdd(wizard, menuPath);
+    m_WizardManager->WizardAdd(wizard, menuPath.toWx());
   }
   else 
   {
-    mafLogMessage("Enable wizard pluggin to plug wizards"); 
+    mafLogMessage(_M("Enable wizard pluggin to plug wizards")); 
   }
 }
 
@@ -581,8 +581,8 @@ void medLogicWithManagers::UpdateFrameTitle()
   //Special Window title management during wizards
   if (m_WizardRunning)
   {
-    wxString title(m_AppTitle);
-    title += "   " + m_WizardManager->GetDescription();
+    wxString title = m_AppTitle.toWx();
+    title += "   " + m_WizardManager->GetDescription().toWx();
     m_Win->SetTitle(title);
   }
   else 
@@ -659,7 +659,7 @@ void medLogicWithManagers::CreateWizardToolbar()
   m_WizardLabel->Disable();
  
 
-  m_Win->AddDockPane(m_WizardGauge,  wxPaneInfo()
+  m_Win->AddDockPane(m_WizardGauge,  wxAuiPaneInfo()
     .Name("wizardgauge")
     //.Caption(wxT("ToolBar1"))
     .Top()
@@ -673,7 +673,7 @@ void medLogicWithManagers::CreateWizardToolbar()
     );
   
 
-  m_Win->AddDockPane(tmp,  wxPaneInfo()
+  m_Win->AddDockPane(tmp,  wxAuiPaneInfo()
     .Name("tmpwithtest")
     //.Caption(wxT("ToolBar2"))
     .Top()
@@ -686,7 +686,7 @@ void medLogicWithManagers::CreateWizardToolbar()
     .Gripper(false)
     );
 
-  m_Win->AddDockPane(serparatorBar,  wxPaneInfo()
+  m_Win->AddDockPane(serparatorBar,  wxAuiPaneInfo()
     .Name("separator")
     //.Caption(wxT("ToolBar3"))
     .Top()

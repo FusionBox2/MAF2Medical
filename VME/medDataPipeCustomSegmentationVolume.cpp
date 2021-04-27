@@ -196,7 +196,7 @@ void medDataPipeCustomSegmentationVolume::ApplyManualSegmentation()
 
   if (maskVolumeData==NULL || maskVolumeData->GetNumberOfPoints() != volumeData->GetNumberOfPoints() || maskVolumeData->GetPointData()->GetScalars()==NULL)
   {
-    mafLogMessage("Error! Wrong manual volume mask");
+    mafLogMessage(_M("Error! Wrong manual volume mask"));
     return;
   }
   
@@ -452,7 +452,7 @@ void medDataPipeCustomSegmentationVolume::ApplyRefinementSegmentation()
 
   if (maskVolumeData==NULL || maskVolumeData->GetNumberOfPoints() != volumeData->GetNumberOfPoints() || maskVolumeData->GetPointData()->GetScalars()==NULL)
   {
-    mafLogMessage("Error! Wrong refinement volume mask");
+    mafLogMessage(_M("Error! Wrong refinement volume mask"));
     return;
   }
 
@@ -1082,7 +1082,8 @@ bool medDataPipeCustomSegmentationVolume::CheckNumberOfThresholds()
         }
         if (!found)
         {
-          mafLogMessage("Slice %d° hasn't a threshold",i+1);
+          mafLogMessage(_M(_R("Slice ") + mafToString(i + 1) + _R("° hasn't a threshold")));
+#pragma message ("degree sign")
           return false;
         }
       }
@@ -1270,7 +1271,7 @@ int medDataPipeCustomSegmentationVolume::AutomaticCheckRange(int startSlice,int 
 
   if (minInt > maxInt)
   {
-    mafLogMessage("Lower slice index is higher than upper slice index");
+    mafLogMessage(_M("Lower slice index is higher than upper slice index"));
     return MAF_ERROR;
   }
 
@@ -1281,19 +1282,19 @@ int medDataPipeCustomSegmentationVolume::AutomaticCheckRange(int startSlice,int 
     {
 	    if (m_AutomaticSegmentationRanges[i][1] == maxInt || m_AutomaticSegmentationRanges[i][0] == minInt)
 	    {
-	      mafLogMessage("Slice already inserted in the automatic segmentation");
+	      mafLogMessage(_M("Slice already inserted in the automatic segmentation"));
 	      return MAF_ERROR;
 	    }
 	
 	    if (m_AutomaticSegmentationRanges[i][1] >= minInt && m_AutomaticSegmentationRanges[i][1] <= maxInt)
 	    {
-	      mafLogMessage("Overlaps of slices range");
+	      mafLogMessage(_M("Overlaps of slices range"));
 	      return MAF_ERROR;
 	    }
 	
 	    if (m_AutomaticSegmentationRanges[i][0] >= minInt && m_AutomaticSegmentationRanges[i][0] <= maxInt)
 	    {
-	      mafLogMessage("Overlaps of slices range");
+	      mafLogMessage(_M("Overlaps of slices range"));
 	      return MAF_ERROR;
 	    }
     }

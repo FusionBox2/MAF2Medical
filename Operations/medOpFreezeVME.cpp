@@ -112,7 +112,7 @@ void medOpFreezeVME::OpRun()
 	{
 		if(medVMELabeledVolume *labeledVolume = medVMELabeledVolume::SafeDownCast(vme))
 		{
-			mmaMaterial *material = (mmaMaterial *)labeledVolume->GetAttribute("MaterialAttributes");
+			mmaMaterial *material = (mmaMaterial *)labeledVolume->GetAttribute(_R("MaterialAttributes"));
 
 			mafSmartPointer<mafVMEVolumeGray> newVolume;
 			newVolume->SetName(labeledVolume->GetName());
@@ -140,7 +140,7 @@ void medOpFreezeVME::OpRun()
 		{
 			if(medVMELabeledVolume *labeledVolume = medVMELabeledVolume::SafeDownCast(vme))
 			{
-				mmaMaterial *material = (mmaMaterial *)labeledVolume->GetAttribute("MaterialAttributes");
+				mmaMaterial *material = (mmaMaterial *)labeledVolume->GetAttribute(_R("MaterialAttributes"));
 
 				mafSmartPointer<mafVMEVolumeGray> newVolume;
 				newVolume->SetName(labeledVolume->GetName());

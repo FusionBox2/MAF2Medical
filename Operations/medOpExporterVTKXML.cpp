@@ -53,13 +53,13 @@ mafOp(label)
 {
   m_OpType  = OPTYPE_EXPORTER;
   m_Canundo = true;
-  m_File    = "";
+  m_File    = _R("");
   m_Input   = NULL;
 
 	m_Binary        = 1;
 	m_ABSMatrixFlag = 0;
 
-	m_FileDir = "";//mafGetApplicationDirectory().c_str();
+	m_FileDir = _R("");//mafGetApplicationDirectory().c_str();
   m_ForceUnsignedShortScalarOutputForStructuredPoints = FALSE;
 }
 //----------------------------------------------------------------------------
@@ -103,39 +103,39 @@ void medOpExporterVTKXML::OpRun()
   mafString wildc;
   if(inputData->IsA("vtkRectilinearGrid"))
   {
-    wildc = "vtk xml Data (*.vtr)|*.vtr";
+    wildc = _R("vtk xml Data (*.vtr)|*.vtr");
   }
   if(inputData->IsA("vtkPolyData"))
   {
-    wildc = "vtk xml Data (*.vtp)|*.vtp";
+    wildc = _R("vtk xml Data (*.vtp)|*.vtp");
   }
   if(inputData->IsA("vtkImageData"))
   {
-    wildc = "vtk xml Data (*.vti)|*.vti";
+    wildc = _R("vtk xml Data (*.vti)|*.vti");
   }
   if(inputData->IsA("vtkUnstructuredGrid"))
   {
-    wildc = "vtk xml Data (*.vtu)|*.vtu";
+    wildc = _R("vtk xml Data (*.vtu)|*.vtu");
   }
   if(inputData->IsA("vtkStructuredGrid"))
   {
-    wildc = "vtk xml Data (*.vts)|*.vts";
+    wildc = _R("vtk xml Data (*.vts)|*.vts");
   }
 
   m_Gui = new mafGUI(this);
-  m_Gui->FileSave(ID_CHOOSE_FILENAME, _("vtk xml file"), &m_File, wildc);
-	m_Gui->Label("file type",true);
-	m_Gui->Bool(ID_VTK_BINARY_FILE,"binary",&m_Binary,0);
-	m_Gui->Label("absolute matrix",true);
-	m_Gui->Bool(ID_ABS_MATRIX,"apply",&m_ABSMatrixFlag,0);
+  m_Gui->FileSave(ID_CHOOSE_FILENAME, _L("vtk xml file"), &m_File, wildc);
+	m_Gui->Label(_R("file type"),true);
+	m_Gui->Bool(ID_VTK_BINARY_FILE,_R("binary"),&m_Binary,0);
+	m_Gui->Label(_R("absolute matrix"),true);
+	m_Gui->Bool(ID_ABS_MATRIX,_R("apply"),&m_ABSMatrixFlag,0);
 	if (m_Input->IsA("mafVMESurface") || m_Input->IsA("mafVMEPointSet") || m_Input->IsA("mafVMEGroup"))
 		m_Gui->Enable(ID_ABS_MATRIX,true);
 	else
 		m_Gui->Enable(ID_ABS_MATRIX,false);
 
   m_Gui->Divider(2);
-  m_Gui->Label("Force UNSIGNED SHORT scalar output");
-  m_Gui->Bool(ID_FORCE_UNSIGNED_SHORT_SCALARS_OUTPUT_FOR_STRUCTURED_POINTS, "", &m_ForceUnsignedShortScalarOutputForStructuredPoints);
+  m_Gui->Label(_R("Force UNSIGNED SHORT scalar output"));
+  m_Gui->Bool(ID_FORCE_UNSIGNED_SHORT_SCALARS_OUTPUT_FOR_STRUCTURED_POINTS, _R(""), &m_ForceUnsignedShortScalarOutputForStructuredPoints);
   m_Gui->Enable(ID_FORCE_UNSIGNED_SHORT_SCALARS_OUTPUT_FOR_STRUCTURED_POINTS, isStructuredPoints ? true : false);
   m_Gui->Divider(2);
 
@@ -203,7 +203,7 @@ void medOpExporterVTKXML::ExportVTK()
     }
 		else
 		{
-			mafMessage( _("Data not present!"), _("Warning"), wxOK|wxICON_WARNING);
+			mafWarningMessage( _M(mafString(_L("Data not present!"))));
 		}
 	}
 	else
@@ -225,7 +225,7 @@ void medOpExporterVTKXML::SaveVTKData()
   {
     std::ostringstream stringStream;
     stringStream << "cannot render busy cursor..."  << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   vtkDataSet *inputData = ((mafVME *)m_Input)->GetOutput()->GetVTKData();

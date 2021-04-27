@@ -157,7 +157,7 @@ mafGUI *medPipeVectorFieldMapWithArrows::CreateGui()
   // If no fields found don't build widgets
   if (nVectors==0 && nScalars==0)
   {
-    m_Gui->Label("No vector or scalar fields to visualize.", false);
+    m_Gui->Label(_R("No vector or scalar fields to visualize."), false);
     return m_Gui;
   }
 

@@ -54,7 +54,7 @@ medOpExporterMeters::medOpExporterMeters(const mafString& label) : Superclass(la
   m_OpType = OPTYPE_EXPORTER;
   m_Canundo = true;
   
-  m_File    = "";
+  m_File    = _R("");
   m_CurrentVme = NULL;
   m_CurrentTime = -1;
   m_SubTreeExportMeter = FALSE;
@@ -113,13 +113,13 @@ void medOpExporterMeters::OpRun()
 void medOpExporterMeters::CreateGui()   
 //----------------------------------------------------------------------------
 {
-  mafString wildc = "Wrapped Meter Coordinates(*.txt)|*.txt";
-  mafString choises[4]={"Selected Meter","Classic Meters","Wrapped Meters", "All Meters"};
+  mafString wildc = _R("Wrapped Meter Coordinates(*.txt)|*.txt");
+  mafString choises[4]={_R("Selected Meter"),_R("Classic Meters"),_R("Wrapped Meters"), _R("All Meters")};
 
   m_Gui = new mafGUI(this);
-  m_Gui->Label(_("Export:"),true);
-  m_Gui->Bool(ID_SUBTREE_EXPORT_METERS, "only subtree", &m_SubTreeExportMeter,1);
-  m_Gui->Radio(ID_CHOOSE_EXPORT_VME,"",&m_ExportRadio,4,choises);
+  m_Gui->Label(_L("Export:"),true);
+  m_Gui->Bool(ID_SUBTREE_EXPORT_METERS, _R("only subtree"), &m_SubTreeExportMeter,1);
+  m_Gui->Radio(ID_CHOOSE_EXPORT_VME, _R(""),&m_ExportRadio,4,choises);
   //m_Gui->FileSave(ID_CHOOSE_FILENAME,"stl file", &m_File, wildc,"Save As...");
   m_Gui->OkCancel();
 
@@ -146,7 +146,7 @@ void medOpExporterMeters::OnEvent(mafEventBase *maf_event)
 				}
       break;
       case ID_CHOOSE_FILENAME:
-        m_Gui->Enable(wxOK,m_File != "");
+        m_Gui->Enable(wxOK,!m_File.IsEmpty());
       break;
       case wxCANCEL:
         OpStop(OP_RUN_CANCEL);
@@ -170,12 +170,12 @@ void medOpExporterMeters::OpDo()
 {
   mafString initialFileName;
   initialFileName = mafGetApplicationDirectory();
-  initialFileName.Append("\\Meter.txt");
+  initialFileName.Append(_R("\\Meter.txt"));
 
-  mafString wildc = "configuration file (*.txt)|*.txt";
-  m_File = mafGetSaveFile(initialFileName.GetCStr(), wildc);
+  mafString wildc = _R("configuration file (*.txt)|*.txt");
+  m_File = mafGetSaveFile(initialFileName, wildc);
 
-  if (m_File == "") return;
+  if (m_File.IsEmpty()) return;
 
   Export();
   
@@ -186,7 +186,7 @@ void medOpExporterMeters::Export()
 //----------------------------------------------------------------------------
 {
 
-  m_OutputFile.open(m_File, std::ios::out);
+  m_OutputFile.open(m_File.GetCStr(), std::ios::out);
 
   if (m_OutputFile.fail()) {
     wxMessageBox("Error opening configuration file");
@@ -422,7 +422,7 @@ void medOpExporterMeters::WriteOnFile()
   //name + coordinates
   for(int i=0; i< m_Meters.size(); i++)
   {
-    m_OutputFile << m_Meters[i]->GetName() << std::endl; // vme name
+    m_OutputFile << m_Meters[i]->GetName().GetCStr() << std::endl; // vme name
     WriteCoordinatesOnFile(i);
   }
 }

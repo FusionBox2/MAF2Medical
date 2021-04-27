@@ -40,7 +40,7 @@ class MED_OPERATION_EXPORT medOpExporterWrappedMeter: public mafOp
 {
 public:
   /** object constructor */
-  medOpExporterWrappedMeter(const mafString& label = "ActionLine");
+  medOpExporterWrappedMeter(const mafString& label = _R("ActionLine"));
   /** object destructor */  
   ~medOpExporterWrappedMeter(); 
 
@@ -66,7 +66,7 @@ public:
   void OpRun();
 
   /** Set the filename for the .stl to export */
-  void SetFileName(const char *file_name) {m_File = file_name;};
+  void SetFileName(const char *file_name) {m_File = _R(file_name);}
   
   /** Export the Wrapped meter coordinates in file. */
   void ExportWrappedMeterCoordinates(int index, int indexTime);

@@ -232,14 +232,14 @@ void medOpInteractiveClipSurface::CreateGui()
 {
 	m_Gui = new mafGUI(this);
 	m_Gui->Divider();
-	mafString clip_by_choices[2] = {"surface","implicit function"};
+	mafString clip_by_choices[2] = {_R("surface"),_R("implicit function")};
 
-	m_Gui->Combo(ID_CLIP_BY,_("clip by"),&m_ClipModality,2,clip_by_choices);
+	m_Gui->Combo(ID_CLIP_BY,_L("clip by"),&m_ClipModality,2,clip_by_choices);
   m_Gui->Divider(2);
 
-  m_Gui->Bool(ID_USE_GIZMO,_("use gizmo"),&m_UseGizmo,1);
-	mafString gizmo_name[3] = {"translate","rotate","scale"};
-	m_Gui->Combo(ID_CHOOSE_GIZMO,_("gizmo"),&m_GizmoType,3,gizmo_name);
+  m_Gui->Bool(ID_USE_GIZMO,_L("use gizmo"),&m_UseGizmo,1);
+	mafString gizmo_name[3] = {_R("translate"),_R("rotate"),_R("scale")};
+	m_Gui->Combo(ID_CHOOSE_GIZMO,_L("gizmo"),&m_GizmoType,3,gizmo_name);
   
   m_Gui->AddGui(m_GizmoTranslate->GetGui());
   m_Gui->AddGui(m_GizmoRotate->GetGui());
@@ -250,16 +250,16 @@ void medOpInteractiveClipSurface::CreateGui()
   m_Gui->Divider();
   m_Gui->Divider(2);
 
-  m_Gui->Button(ID_CHOOSE_CONSTRAINT_VME, "choose curve", "", "medVMEPolylineGraph constrain");
+  m_Gui->Button(ID_CHOOSE_CONSTRAINT_VME, _R("choose curve"), _R(""), _R("medVMEPolylineGraph constrain"));
   m_Gui->Divider();
   m_Gui->AddGui(m_CASH->GetGui());
   m_CASH->EnableWidgets(false);
   m_Gui->Divider();
-	m_Gui->Button(ID_CHOOSE_SURFACE,_("clipper surface"));
-	m_Gui->Bool(ID_CLIP_INSIDE,_("reverse clipping"),&m_ClipInside,1);
+	m_Gui->Button(ID_CHOOSE_SURFACE,_L("clipper surface"));
+	m_Gui->Bool(ID_CLIP_INSIDE,_L("reverse clipping"),&m_ClipInside,1);
 	
-  m_Gui->Button(ID_CLIP,_("clip"));
-	m_Gui->Button(ID_UNDO,_("undo"));
+  m_Gui->Button(ID_CLIP,_L("clip"));
+	m_Gui->Button(ID_UNDO,_L("undo"));
   m_Gui->OkCancel();
 
   GuiEnable();
@@ -287,7 +287,7 @@ void medOpInteractiveClipSurface::OnEventThis(mafEventBase *maf_event)
         {
           return;
         }
-        mafString s(_("Choose Constrain"));
+        mafString s(_R("Choose Constrain"));
         mafEvent e(this,VME_CHOOSE, &s, (long)&medOpInteractiveClipSurface::ConstrainAccept);
         mafEventMacro(e);
         mafNode *vme = e.GetVme();
@@ -301,7 +301,7 @@ void medOpInteractiveClipSurface::OnEventThis(mafEventBase *maf_event)
       break;
 		case ID_CHOOSE_SURFACE:
 			{
-				mafString title = "Choose m_Clipper Surface";
+				mafString title = _R("Choose m_Clipper Surface");
 				e->SetArg((long)&medOpInteractiveClipSurface::SurfaceAccept);
 				e->SetString(&title);
 				e->SetId(VME_CHOOSE);
@@ -553,8 +553,8 @@ void medOpInteractiveClipSurface::OnEventGizmoPlane(mafEventBase *maf_event)
               std::ostringstream stringStream;
               stringStream  << "ABS Transform Matrix" << std::endl;
               e->GetMatrix()->Print(stringStream);
-              mafLogMessage(stringStream.str().c_str());
-            }
+              mafLogMessage(_M(stringStream.str().c_str()));
+          }
 
 					mafEventMacro(mafEvent(this, CAMERA_UPDATE));
 				}
@@ -860,8 +860,8 @@ void medOpInteractiveClipSurface::ShowClipPlane(bool show)
           stringStream << "xdim: " << xdim  << std::endl;
           stringStream << "ydim: " << ydim  << std::endl;
           stringStream << "zdim: " << zdim  << std::endl;
-          mafLogMessage(stringStream.str().c_str());
-        }
+          mafLogMessage(_M(stringStream.str().c_str()));
+      }
 
       m_PlaneWidth = (b[1] - b[0]) / 4;
       m_PlaneHeight = (b[3] - b[2]) /4;
@@ -902,7 +902,7 @@ void medOpInteractiveClipSurface::ShowClipPlane(bool show)
 
       mafNEW(m_ImplicitPlaneVMEGizmo);
       m_ImplicitPlaneVMEGizmo->SetData(m_AppendPolydata->GetOutput());
-      m_ImplicitPlaneVMEGizmo->SetName("implicit plane gizmo");
+      m_ImplicitPlaneVMEGizmo->SetName(_R("implicit plane gizmo"));
       m_ImplicitPlaneVMEGizmo->ReparentTo(mafVME::SafeDownCast(m_Input->GetRoot()));
 
       // position the plane

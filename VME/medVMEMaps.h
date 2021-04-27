@@ -92,7 +92,7 @@ public:
   //virtual bool IsDataAvailable();
 
   /** Return the suggested pipe-typename for the visualization of this vme */
-  virtual mafString GetVisualPipe() {return mafString("mafPipeSurface");};
+  virtual mafString GetVisualPipe() {return mafString(_R("mafPipeSurface"));}
 
   /** Return pointer to material attribute. */
   mmaMaterial *GetMaterial();

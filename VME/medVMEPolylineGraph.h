@@ -45,7 +45,7 @@ public:
 	virtual int SetData(vtkPolyData *data, mafTimeStamp t, int mode=MAF_VME_COPY_DATA);
 
 	/** Return the suggested pipe-typename for the visualization of this vme */
-	virtual mafString GetVisualPipe() {return mafString("medVisualPipePolylineGraph");};
+	virtual mafString GetVisualPipe() {return mafString(_R("medVisualPipePolylineGraph"));}
 
 	/** return the right type of output */  
 	virtual mafVMEOutput *GetOutput();

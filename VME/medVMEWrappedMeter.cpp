@@ -67,10 +67,10 @@ medVMEWrappedMeter::medVMEWrappedMeter()
   m_WrapSide      = 0;
   m_WrapReverse   = 0;
   
-  m_StartVmeName  = "";
-  m_EndVme1Name   = "";
-  m_EndVme2Name   = "";
-  m_WrappedVmeName   = "";
+  m_StartVmeName  = _R("");
+  m_EndVme1Name   = _R("");
+  m_EndVme2Name   = _R("");
+  m_WrappedVmeName   = _R("");
 
   m_Gui = NULL;
   m_ListBox = NULL;
@@ -189,11 +189,11 @@ int medVMEWrappedMeter::InternalInitialize()
 mmaMaterial *medVMEWrappedMeter::GetMaterial()
 //-------------------------------------------------------------------------
 {
-  mmaMaterial *material = (mmaMaterial *)GetAttribute("MaterialAttributes");
+  mmaMaterial *material = (mmaMaterial *)GetAttribute(_R("MaterialAttributes"));
   if (material == NULL)
   {
     material = mmaMaterial::New();
-    SetAttribute("MaterialAttributes", material);
+    SetAttribute(_R("MaterialAttributes"), material);
   }
   return material;
 }
@@ -263,9 +263,9 @@ void medVMEWrappedMeter::InternalUpdateAutomatedIOR()
 
   if (start_vme && end_vme && wrapped_vme)
   { 
-    if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
+    if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("StartVME")) != -1)
     {
-      ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,currTs);
+      ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId(_R("StartVME")),m_StartPoint,currTs);
       mafMatrix tm;
       start_vme->GetOutput()->GetAbsMatrix(tm, currTs);
       m_TmpTransform->SetMatrix(tm);
@@ -277,9 +277,9 @@ void medVMEWrappedMeter::InternalUpdateAutomatedIOR()
       start_vme->GetOutput()->GetAbsPose(m_StartPoint, orientation, currTs);
     }
 
-    if(wrapped_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("WrappedVME") != -1)
+    if(wrapped_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("WrappedVME")) != -1)
     {
-      ((mafVMELandmarkCloud *)wrapped_vme)->GetLandmark(GetLinkSubId("WrappedVME"),m_WrappedVMECenter,currTs);
+      ((mafVMELandmarkCloud *)wrapped_vme)->GetLandmark(GetLinkSubId(_R("WrappedVME")),m_WrappedVMECenter,currTs);
       mafMatrix tm;
       wrapped_vme->GetOutput()->GetAbsMatrix(tm, currTs);
       m_TmpTransform->SetMatrix(tm);
@@ -300,9 +300,9 @@ void medVMEWrappedMeter::InternalUpdateAutomatedIOR()
       m_TmpTransform->TransformPoint(m_WrappedVMECenter,m_WrappedVMECenter);
     }
 
-    if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
+    if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME1")) != -1)
     {
-      ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,currTs);
+      ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId(_R("EndVME1")),m_EndPoint,currTs);
       mafMatrix tm;
       end_vme->GetOutput()->GetAbsMatrix(tm, currTs);
       m_TmpTransform->SetMatrix(tm);
@@ -739,8 +739,8 @@ void medVMEWrappedMeter::WrappingCore(double *init, double *center, double *end,
       
       double dot4 = -1;
 
-      mafLogMessage("DotVersorY %.2f ", dot2);
-      mafLogMessage("DotVersorZ %.2f ", dot3);
+      mafLogMessage(_M(mafString::Format(_R("DotVersorY %.2f "), dot2)));
+      mafLogMessage(_M(mafString::Format(_R("DotVersorZ %.2f "), dot3)));
 
 
       if(IsStart == false)
@@ -752,7 +752,7 @@ void medVMEWrappedMeter::WrappingCore(double *init, double *center, double *end,
         dot4 = vtkMath::Dot(insertionVector, versorZ);
       }
 
-      mafLogMessage("Z: %.2f" , dot4);
+      mafLogMessage(_M(mafString::Format(_R("Z: %.2f") , dot4)));
       if(dot4 < 0.)
       {
         if(dot2 > 0.)
@@ -816,9 +816,9 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
 
   if (start_vme && end_vme && wrapped_vme)
   { 
-    if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
+    if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("StartVME")) != -1)
     {
-      ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,currTs);
+      ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId(_R("StartVME")),m_StartPoint,currTs);
       mafMatrix tm;
       start_vme->GetOutput()->GetAbsMatrix(tm, currTs);
       m_TmpTransform->SetMatrix(tm);
@@ -830,9 +830,9 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
       start_vme->GetOutput()->GetAbsPose(m_StartPoint, orientation, currTs);
     }
 
-    if(wrapped_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("WrappedVME") != -1)
+    if(wrapped_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("WrappedVME")) != -1)
     {
-      ((mafVMELandmarkCloud *)wrapped_vme)->GetLandmark(GetLinkSubId("WrappedVME"),m_WrappedVMECenter,currTs);
+      ((mafVMELandmarkCloud *)wrapped_vme)->GetLandmark(GetLinkSubId(_R("WrappedVME")),m_WrappedVMECenter,currTs);
       mafMatrix tm;
       wrapped_vme->GetOutput()->GetAbsMatrix(tm, currTs);
       m_TmpTransform->SetMatrix(tm);
@@ -853,9 +853,9 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
       m_TmpTransform->TransformPoint(m_WrappedVMECenter,m_WrappedVMECenter);
     }
 
-    if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
+    if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME1")) != -1)
     {
-      ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,currTs);
+      ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId(_R("EndVME1")),m_EndPoint,currTs);
       mafMatrix tm;
       end_vme->GetOutput()->GetAbsMatrix(tm, currTs);
       m_TmpTransform->SetMatrix(tm);
@@ -1084,7 +1084,7 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
   numPntInt = temporaryIntersection->GetNumberOfPoints();
   if(numPntInt == 0)
   {
-    mafLogMessage("No intersection found on initial step");
+    mafLogMessage(_M("No intersection found on initial step"));
     return;
   }
 
@@ -1192,7 +1192,7 @@ void medVMEWrappedMeter::InternalUpdateAutomated()
   numPntInt = temporaryIntersection->GetNumberOfPoints();
   if(numPntInt == 0)
   {
-    mafLogMessage("No intersection found on initial step");
+    mafLogMessage(_M("No intersection found on initial step"));
     return;
   }
 
@@ -1400,9 +1400,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       /*if (mflVMELandmark *start_landmark = mflVMELandmark::SafeDownCast(start_vme))
         start_ok = start_landmark->GetLandmarkVisibility();*/
 
-      if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
+      if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("StartVME")) != -1)
       {
-        ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,currTs);
+        ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId(_R("StartVME")),m_StartPoint,currTs);
         mafMatrix tm;
         start_vme->GetOutput()->GetAbsMatrix(tm, currTs);
         m_TmpTransform->SetMatrix(tm);
@@ -1418,9 +1418,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       /*if (mflVMELandmark *end_landmark = mflVMELandmark::SafeDownCast(end_vme))
         end_ok = end_landmark->GetLandmarkVisibility();*/
 
-      if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
+      if(end_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME1")) != -1)
       {
-        ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,currTs);
+        ((mafVMELandmarkCloud *)end_vme)->GetLandmark(GetLinkSubId(_R("EndVME1")),m_EndPoint,currTs);
         mafMatrix tm;
         end_vme->GetOutput()->GetAbsMatrix(tm, currTs);
         m_TmpTransform->SetMatrix(tm);
@@ -1591,9 +1591,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       //if (mflVMELandmark *start_landmark = mflVMELandmark::SafeDownCast(start_vme))
       //  start_ok = start_landmark->GetLandmarkVisibility();
 
-      if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
+      if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("StartVME")) != -1)
       {
-        ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,-1);
+        ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId(_R("StartVME")),m_StartPoint,-1);
         m_TmpTransform->SetMatrix(*start_vme->GetOutput()->GetAbsMatrix());
         m_TmpTransform->TransformPoint(m_StartPoint,m_StartPoint);
       }
@@ -1607,9 +1607,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       //if (mflVMELandmark *end1_landmark = mflVMELandmark::SafeDownCast(end1_vme))
       //  end1_ok = end1_landmark->GetLandmarkVisibility();
 
-      if(end1_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
+      if(end1_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME1")) != -1)
       {
-        ((mafVMELandmarkCloud *)end1_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,-1);
+        ((mafVMELandmarkCloud *)end1_vme)->GetLandmark(GetLinkSubId(_R("EndVME1")),m_EndPoint,-1);
         m_TmpTransform->SetMatrix(*end1_vme->GetOutput()->GetAbsMatrix());
         m_TmpTransform->TransformPoint(m_EndPoint,m_EndPoint);
       }
@@ -1623,9 +1623,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       //if (mflVMELandmark *end2_landmark = mflVMELandmark::SafeDownCast(end2_vme))
       //  end2_ok = end2_landmark->GetLandmarkVisibility();
 
-      if(end2_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME2") != -1)
+      if(end2_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME2")) != -1)
       {
-        ((mafVMELandmarkCloud *)end2_vme)->GetLandmark(GetLinkSubId("EndVME2"),m_EndPoint2,-1);
+        ((mafVMELandmarkCloud *)end2_vme)->GetLandmark(GetLinkSubId(_R("EndVME2")),m_EndPoint2,-1);
         m_TmpTransform->SetMatrix(*end2_vme->GetOutput()->GetAbsMatrix());
         m_TmpTransform->TransformPoint(m_EndPoint2,m_EndPoint2);
       }
@@ -1726,9 +1726,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       //if (mflVMELandmark *start_landmark = mflVMELandmark::SafeDownCast(start_vme))
       //start_ok = start_landmark->GetLandmarkVisibility();
 
-      if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("StartVME") != -1)
+      if(start_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("StartVME")) != -1)
       {
-        ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId("StartVME"),m_StartPoint,-1);
+        ((mafVMELandmarkCloud *)start_vme)->GetLandmark(GetLinkSubId(_R("StartVME")),m_StartPoint,-1);
         m_TmpTransform->SetMatrix(*start_vme->GetOutput()->GetAbsMatrix());
         m_TmpTransform->TransformPoint(m_StartPoint,m_StartPoint);
       }
@@ -1741,9 +1741,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       //if(mflVMELandmark *end1_landmark = mflVMELandmark::SafeDownCast(end1_vme))
       // end1_ok = end1_landmark->GetLandmarkVisibility();
 
-      if(end1_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME1") != -1)
+      if(end1_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME1")) != -1)
       {
-        ((mafVMELandmarkCloud *)end1_vme)->GetLandmark(GetLinkSubId("EndVME1"),m_EndPoint,-1);
+        ((mafVMELandmarkCloud *)end1_vme)->GetLandmark(GetLinkSubId(_R("EndVME1")),m_EndPoint,-1);
         m_TmpTransform->SetMatrix(*end1_vme->GetOutput()->GetAbsMatrix());
         m_TmpTransform->TransformPoint(m_EndPoint,m_EndPoint);
       }
@@ -1756,9 +1756,9 @@ void medVMEWrappedMeter::InternalUpdateManual()
       //if (mflVMELandmark *end2_landmark = mflVMELandmark::SafeDownCast(end2_vme))
       //  end2_ok = end2_landmark->GetLandmarkVisibility();
 
-      if(end2_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId("EndVME2") != -1)
+      if(end2_vme->IsMAFType(mafVMELandmarkCloud) && GetLinkSubId(_R("EndVME2")) != -1)
       {
-        ((mafVMELandmarkCloud *)end2_vme)->GetLandmark(GetLinkSubId("EndVME2"),m_EndPoint2,-1);
+        ((mafVMELandmarkCloud *)end2_vme)->GetLandmark(GetLinkSubId(_R("EndVME2")),m_EndPoint2,-1);
         m_TmpTransform->SetMatrix(*end2_vme->GetOutput()->GetAbsMatrix());
         m_TmpTransform->TransformPoint(m_EndPoint2,m_EndPoint2);
       }
@@ -1847,7 +1847,7 @@ int medVMEWrappedMeter::InternalStore(mafStorageElement *parent)
 
   if (Superclass::InternalStore(parent)==MAF_OK)
   {
-    parent->StoreMatrix("Transform",&m_Transform->GetMatrix());
+    parent->StoreMatrix(_R("Transform"),&m_Transform->GetMatrix());
 		m_OrderMiddlePointsVMEList.clear();
 
 		for(int i=0; i<m_MiddlePointList.size(); i++)
@@ -1865,7 +1865,7 @@ int medVMEWrappedMeter::InternalStore(mafStorageElement *parent)
 				for(int j=0; j< lc->GetNumberOfLandmarks(); j++)
 				{
 
-          mafString name = "";
+          mafString name = _R("");
           name  = lc->GetLandmarkName(j);
           
           if(name.Equals(m_OrderMiddlePointsNameVMEList[i])) index = j;
@@ -1875,12 +1875,12 @@ int medVMEWrappedMeter::InternalStore(mafStorageElement *parent)
         PushIdVector(index);
 			}
 		}
-		parent->StoreInteger("OrderMiddlePointVmeNumberOfElements", m_OrderMiddlePointsVMEList.size());
-		parent->StoreVectorN("OrderMiddlePointVme",m_OrderMiddlePointsVMEList,m_OrderMiddlePointsVMEList.size());
+		parent->StoreInteger(_R("OrderMiddlePointVmeNumberOfElements"), m_OrderMiddlePointsVMEList.size());
+		parent->StoreVectorN(_R("OrderMiddlePointVme"),m_OrderMiddlePointsVMEList,m_OrderMiddlePointsVMEList.size());
 
-    parent->StoreInteger("WrapMode", m_WrappedMode);
-    parent->StoreInteger("WrapSide", m_WrapSide);
-    parent->StoreInteger("WrapReverse", m_WrapReverse);
+    parent->StoreInteger(_R("WrapMode"), m_WrappedMode);
+    parent->StoreInteger(_R("WrapSide"), m_WrapSide);
+    parent->StoreInteger(_R("WrapReverse"), m_WrapReverse);
 
     return MAF_OK;
   }
@@ -1893,16 +1893,16 @@ int medVMEWrappedMeter::InternalRestore(mafStorageElement *node)
   if (Superclass::InternalRestore(node)==MAF_OK)
   {
     mafMatrix matrix;
-    if (node->RestoreMatrix("Transform",&matrix)==MAF_OK)
+    if (node->RestoreMatrix(_R("Transform"),&matrix)==MAF_OK)
     {
       m_Transform->SetMatrix(matrix);
-			node->RestoreInteger("OrderMiddlePointVmeNumberOfElements", m_OrderMiddlePointsVMEListNumberOfElements);
+			node->RestoreInteger(_R("OrderMiddlePointVmeNumberOfElements"), m_OrderMiddlePointsVMEListNumberOfElements);
 			m_OrderMiddlePointsVMEList.resize(m_OrderMiddlePointsVMEListNumberOfElements);
-			node->RestoreVectorN("OrderMiddlePointVme",m_OrderMiddlePointsVMEList,m_OrderMiddlePointsVMEListNumberOfElements);
+			node->RestoreVectorN(_R("OrderMiddlePointVme"),m_OrderMiddlePointsVMEList,m_OrderMiddlePointsVMEListNumberOfElements);
 			
-      node->RestoreInteger("WrapMode", m_WrappedMode);
-      node->RestoreInteger("WrapSide", m_WrapSide);
-      node->RestoreInteger("WrapReverse", m_WrapReverse);
+      node->RestoreInteger(_R("WrapMode"), m_WrappedMode);
+      node->RestoreInteger(_R("WrapSide"), m_WrapSide);
+      node->RestoreInteger(_R("WrapReverse"), m_WrapReverse);
       return MAF_OK;
     }
   }
@@ -1930,11 +1930,11 @@ void medVMEWrappedMeter::Print(std::ostream& os, const int tabs)
 mmaMeter *medVMEWrappedMeter::GetMeterAttributes()
 //-------------------------------------------------------------------------
 {
-  mmaMeter *meter_attributes = (mmaMeter *)GetAttribute("MeterAttributes");
+  mmaMeter *meter_attributes = (mmaMeter *)GetAttribute(_R("MeterAttributes"));
   if (meter_attributes == NULL)
   {
     meter_attributes = mmaMeter::New();
-    SetAttribute("MeterAttributes", meter_attributes);
+    SetAttribute(_R("MeterAttributes"), meter_attributes);
   }
   return meter_attributes;
 }
@@ -2080,39 +2080,39 @@ mafGUI* medVMEWrappedMeter::CreateGui()
   int num_mode = 3;
 	int num_wrap = 3;
 //	const wxString mode_choices_string[] = {_("point distance"), _("line distance"), _("line angle")};;
-  const mafString wrap_choices_string[] = {_("manual"), _("automated"), _("IOR_automated")};
+  const mafString wrap_choices_string[] = {_L("manual"), _L("automated"), _L("IOR_automated")};
 
   m_Gui = mafNode::CreateGui(); // Called to show info about vmes' type and name
   m_Gui->SetListener(this);
   m_Gui->Divider();
-  m_Gui->Combo(ID_WRAPPED_METER_MODE,_("wrap"),&m_WrappedMode,num_wrap,wrap_choices_string,_("Choose the meter mode"));
+  m_Gui->Combo(ID_WRAPPED_METER_MODE,_L("wrap"),&m_WrappedMode,num_wrap,wrap_choices_string,_L("Choose the meter mode"));
 	//m_Gui->Combo(ID_METER_MODE,_("mode"),&(GetMeterAttributes()->m_MeterMode),num_mode,mode_choices_string,_("Choose the meter mode"));
   m_Gui->Divider();
   mafVME *start_vme = GetStartVME();
   if (start_vme && start_vme->IsMAFType(mafVMELandmarkCloud))
   {
-    sub_id = GetLinkSubId("StartVME");
-    m_StartVmeName = (sub_id != -1) ? ((mafVMELandmarkCloud *)start_vme)->GetLandmarkName(sub_id) : _("none");
+    sub_id = GetLinkSubId(_R("StartVME"));
+    m_StartVmeName = (sub_id != -1) ? ((mafVMELandmarkCloud *)start_vme)->GetLandmarkName(sub_id) : _L("none");
   }
   else
-    m_StartVmeName = start_vme ? start_vme->GetName() : _("none");
-  m_Gui->Button(ID_START_METER_LINK,&m_StartVmeName,_("Start"), _("Select the start vme for the meter"));
+    m_StartVmeName = start_vme ? start_vme->GetName() : _L("none");
+  m_Gui->Button(ID_START_METER_LINK,&m_StartVmeName,_L("Start"), _L("Select the start vme for the meter"));
 
   mafVME *end_vme1 = GetEnd1VME();
   if (end_vme1 && end_vme1->IsMAFType(mafVMELandmarkCloud))
   {
-    sub_id = GetLinkSubId("EndVME1");
-    m_EndVme1Name = (sub_id != -1) ? ((mafVMELandmarkCloud *)end_vme1)->GetLandmarkName(sub_id) : _("none");
+    sub_id = GetLinkSubId(_R("EndVME1"));
+    m_EndVme1Name = (sub_id != -1) ? ((mafVMELandmarkCloud *)end_vme1)->GetLandmarkName(sub_id) : _L("none");
   }
   else
-    m_EndVme1Name = end_vme1 ? end_vme1->GetName() : _("none");
-  m_Gui->Button(ID_END1_METER_LINK,&m_EndVme1Name,_("End 1"), _("Select the end vme for point distance"));
+    m_EndVme1Name = end_vme1 ? end_vme1->GetName() : _L("none");
+  m_Gui->Button(ID_END1_METER_LINK,&m_EndVme1Name,_L("End 1"), _L("Select the end vme for point distance"));
 
   mafVME *end_vme2 = GetEnd2VME();
   if (end_vme2 && end_vme2->IsMAFType(mafVMELandmarkCloud))
   {
-    sub_id = GetLinkSubId("EndVME2");
-    m_EndVme2Name = (sub_id != -1) ? ((mafVMELandmarkCloud *)end_vme2)->GetLandmarkName(sub_id) : _("none");
+    sub_id = GetLinkSubId(_R("EndVME2"));
+    m_EndVme2Name = (sub_id != -1) ? ((mafVMELandmarkCloud *)end_vme2)->GetLandmarkName(sub_id) : _L("none");
   }
 //  else
 //    m_EndVme2Name = end_vme2 ? end_vme2->GetName() : _("none");
@@ -2120,9 +2120,9 @@ mafGUI* medVMEWrappedMeter::CreateGui()
 
   
   mafVME *wrapped_vme = GetWrappedVME();
-  m_WrappedVmeName = wrapped_vme ? wrapped_vme->GetName() : _("none");
-  m_Gui->Button(ID_WRAPPED_METER_LINK,&m_WrappedVmeName,_("Wrapped"), _("Select the vme representing Vme to be wrapped"));
-  m_Gui->Bool(ID_WRAPPED_SIDE,"reverse direction", &m_WrapSide ,1);
+  m_WrappedVmeName = wrapped_vme ? wrapped_vme->GetName() : _L("none");
+  m_Gui->Button(ID_WRAPPED_METER_LINK,&m_WrappedVmeName,_L("Wrapped"), _L("Select the vme representing Vme to be wrapped"));
+  m_Gui->Bool(ID_WRAPPED_SIDE,_R("reverse direction"), &m_WrapSide ,1);
   //m_Gui->Bool(ID_WRAPPED_REVERSE,"reverse wrap", &m_WrapReverse,1);
 
  // if(GetMeterAttributes()->m_MeterMode == POINT_DISTANCE)
@@ -2132,7 +2132,7 @@ mafGUI* medVMEWrappedMeter::CreateGui()
   m_Gui->Enable(ID_WRAPPED_SIDE, m_WrappedMode == AUTOMATED_WRAP);
   m_Gui->Enable(ID_WRAPPED_REVERSE, m_WrappedMode == AUTOMATED_WRAP);
 
-  m_Gui->Label(_("MidPoints"), true);
+  m_Gui->Label(_L("MidPoints"), true);
   m_ListBox=m_Gui->ListBox(ID_LISTBOX);
 
 	//insert eventual middlepoints
@@ -2141,10 +2141,10 @@ mafGUI* medVMEWrappedMeter::CreateGui()
 	{
 		for (mafLinksMap::iterator i = GetLinks()->begin(); i != GetLinks()->end(); ++i)
 		{	
-			if(i->first.Equals("StartVME")) continue;
-			else if(i->first.Equals("EndVME1")) continue;
-			else if(i->first.Equals("EndVME2")) continue;
-      else if(i->first.Equals("WrappedVME")) continue;
+			if(i->first.Equals(_R("StartVME"))) continue;
+			else if(i->first.Equals(_R("EndVME1"))) continue;
+			else if(i->first.Equals(_R("EndVME2"))) continue;
+      else if(i->first.Equals(_R("WrappedVME"))) continue;
 			else if(i->second.m_Node->GetId() == m_OrderMiddlePointsVMEList[j])
 			{
 				if(mafVMELandmarkCloud *lc = mafVMELandmarkCloud::SafeDownCast(i->second.m_Node))
@@ -2153,23 +2153,23 @@ mafGUI* medVMEWrappedMeter::CreateGui()
 					mafVMELandmark *landmark  = lc->GetLandmark(idx);
 					if(landmark)
 					{
-				    m_ListBox->Append(landmark->GetName().GetCStr());
+				    m_ListBox->Append(landmark->GetName().toWx());
 						m_OrderMiddlePointsNameVMEList.push_back(landmark->GetName());
 					}
 				}
 				else
 				{
-				  m_ListBox->Append(i->second.m_Node->GetName().GetCStr());
+				  m_ListBox->Append(i->second.m_Node->GetName().toWx());
 					m_OrderMiddlePointsNameVMEList.push_back(i->second.m_Node->GetName());
 				}
 			}
 		}
 	}
   
-  m_Gui->Button(ID_ADD_POINT, _("Add"), "" ,"");
-  m_Gui->Button(ID_REMOVE_POINT, _("Remove"), "" ,"");
-  m_Gui->Button(ID_UP, _("Up"), "" ,"");
-  m_Gui->Button(ID_DOWN, _("Down"), "" ,"");
+  m_Gui->Button(ID_ADD_POINT, _L("Add"), _R(""), _R(""));
+  m_Gui->Button(ID_REMOVE_POINT, _L("Remove"), _R(""), _R(""));
+  m_Gui->Button(ID_UP, _L("Up"), _R(""), _R(""));
+  m_Gui->Button(ID_DOWN, _L("Down"), _R(""), _R(""));
 
   EnableManualModeWidget(m_WrappedMode == MANUAL_WRAP);
 
@@ -2198,7 +2198,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
       case ID_WRAPPED_METER_LINK:
       {
         mafID button_id = e->GetId();
-        mafString title = _("Choose meter vme link");
+        mafString title = _L("Choose meter vme link");
         e->SetId(VME_CHOOSE);
         if (button_id == ID_WRAPPED_METER_LINK)
 		  e->SetArg((long)&medVMEWrappedMeter::VMESurfaceParametricAccept);
@@ -2285,7 +2285,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
         wxMessageBox("Current max point number is one!");
         return;
         }*/
-        mafString title = _("Choose a vme");
+        mafString title = _L("Choose a vme");
         e->SetId(VME_CHOOSE);
         e->SetArg((long)&medVMEWrappedMeter::VMEAccept);
         e->SetString(&title);
@@ -2296,18 +2296,18 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
 
         wxString nameProfile ="";
         //mafString idNumber = wxString::Format(_("%d"),id);
-        nameProfile = n->GetName();
+        nameProfile = n->GetName().toWx();
 
-        if(wxNOT_FOUND != m_ListBox->FindString(n->GetName().GetCStr()))
+        if(wxNOT_FOUND != m_ListBox->FindString(n->GetName().toWx()))
         {
           wxMessageBox(_("Can't introduce vme with the same name"));
           return;
         }
 
-				if(mafString(n->GetName()) == mafString("StartVME") ||
-					mafString(n->GetName()) == mafString("EndVME1")  ||
-					mafString(n->GetName()) == mafString("EndVME2")  ||
-          mafString(n->GetName()) == mafString("WrappedVME"))
+				if(n->GetName() == _R("StartVME") ||
+					n->GetName() == _R("EndVME1") ||
+					n->GetName() == _R("EndVME2") ||
+          n->GetName() == _R("WrappedVME"))
 				{
 					wxMessageBox(_("Can't introduce vme with the name of StartVME or EndVME1 or EndVME2 or WrappedVME"));
 					return;
@@ -2339,7 +2339,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
         m_IdListBox.push_back(id);*/
 
         
-        SetMeterLink(n->GetName(),n);
+        SetMeterLink(n->GetName().GetCStr(),n);
 
         //nameProfile += idNumber;
         //m_ProfilesNameList.push_back(nameProfile);
@@ -2349,8 +2349,8 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
         mafString t;
         t = n->GetName();
         //m_ListBox->Append(_(t));
-        m_ListBox->Append(_(t));
-        m_ListBox->SetStringSelection(_(t));
+        m_ListBox->Append(_(t.toWx()));
+        m_ListBox->SetStringSelection(_(t.toWx()));
 
 				
         //m_OrderedMidPoints.push_back(_(t));
@@ -2388,7 +2388,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
 					m_OrderMiddlePointsNameVMEList.clear();
 					for(int i=0;i<m_ListBox->GetCount();i++)
 					{
-            m_OrderMiddlePointsNameVMEList.push_back(m_ListBox->GetString(i));
+            m_OrderMiddlePointsNameVMEList.push_back(mafWxToString(m_ListBox->GetString(i)));
 					}
 
           Modified();
@@ -2426,7 +2426,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
 					m_OrderMiddlePointsNameVMEList.clear();
 					for(int i=0;i<m_ListBox->GetCount();i++)
 					{
-						m_OrderMiddlePointsNameVMEList.push_back(m_ListBox->GetString(i));
+						m_OrderMiddlePointsNameVMEList.push_back(mafWxToString(m_ListBox->GetString(i)));
 					}
 
           Modified();
@@ -2464,7 +2464,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
 					m_OrderMiddlePointsNameVMEList.clear();
 					for(int i=0;i<m_ListBox->GetCount();i++)
 					{
-						m_OrderMiddlePointsNameVMEList.push_back(m_ListBox->GetString(i));
+						m_OrderMiddlePointsNameVMEList.push_back(mafWxToString(m_ListBox->GetString(i)));
 					}
           
           Modified();
@@ -2493,17 +2493,17 @@ void medVMEWrappedMeter::SetMeterLink(const char *link_name, mafNode *n)
 {
   if (n->IsMAFType(mafVMELandmark))
   {
-    SetLink(link_name,n->GetParent(),((mafVMELandmarkCloud *)n->GetParent())->FindLandmarkIndex(n->GetName()));
+    SetLink(_R(link_name),n->GetParent(),((mafVMELandmarkCloud *)n->GetParent())->FindLandmarkIndex(n->GetName()));
   }
   else
 	{
-    SetLink(link_name, n);
+    SetLink(_R(link_name), n);
 	}
 
-	if( mafString(link_name) != mafString("StartVME") &&
-		mafString(link_name) != mafString("EndVME1")  &&
-		mafString(link_name) != mafString("EndVME2")  &&
-    mafString(link_name) != mafString("WrappedVME"))
+	if( mafString(_R(link_name)) != mafString(_R("StartVME")) &&
+		mafString(_R(link_name)) != mafString(_R("EndVME1"))  &&
+		mafString(_R(link_name)) != mafString(_R("EndVME2"))  &&
+    mafString(_R(link_name)) != mafString(_R("WrappedVME")))
 	{
 		m_OrderMiddlePointsNameVMEList.push_back(n->GetName());
 	}
@@ -2525,16 +2525,16 @@ void medVMEWrappedMeter::AddMidPoint(mafNode *node)
 void medVMEWrappedMeter::RemoveLink(const char *link_name)
 //-------------------------------------------------------------------------
 {
-	Superclass::RemoveLink(link_name);
+	Superclass::RemoveLink(_R(link_name));
 
-	if( mafString(link_name) != mafString("StartVME") &&
-		mafString(link_name) != mafString("EndVME1")  &&
-		mafString(link_name) != mafString("EndVME2")  &&
-    mafString(link_name) != mafString("WrappedVME"))
+	if( mafString(_R(link_name)) != mafString(_R("StartVME")) &&
+		mafString(_R(link_name)) != mafString(_R("EndVME1"))  &&
+		mafString(_R(link_name)) != mafString(_R("EndVME2"))  &&
+    mafString(_R(link_name)) != mafString(_R("WrappedVME")))
 	{
-		for(std::vector<mafString>::iterator it = m_OrderMiddlePointsNameVMEList.begin(); it != m_OrderMiddlePointsNameVMEList.end(); it++ )
+		for(auto it = m_OrderMiddlePointsNameVMEList.begin(); it != m_OrderMiddlePointsNameVMEList.end(); it++ )
 		{
-			if(mafString(*it) == mafString(link_name))
+			if(*it == mafString(_R(link_name)))
 			{
 		    m_OrderMiddlePointsNameVMEList.erase(it);
 				break;
@@ -2546,25 +2546,25 @@ void medVMEWrappedMeter::RemoveLink(const char *link_name)
 mafVME *medVMEWrappedMeter::GetStartVME()
 //-------------------------------------------------------------------------
 {
-  return mafVME::SafeDownCast(GetLink("StartVME"));
+  return mafVME::SafeDownCast(GetLink(_R("StartVME")));
 }
 //-------------------------------------------------------------------------
 mafVME *medVMEWrappedMeter::GetEnd1VME()
 //-------------------------------------------------------------------------
 {
-  return mafVME::SafeDownCast(GetLink("EndVME1"));
+  return mafVME::SafeDownCast(GetLink(_R("EndVME1")));
 }
 //-------------------------------------------------------------------------
 mafVME *medVMEWrappedMeter::GetEnd2VME()
 //-------------------------------------------------------------------------
 {
-  return mafVME::SafeDownCast(GetLink("EndVME2"));
+  return mafVME::SafeDownCast(GetLink(_R("EndVME2")));
 }
 //-------------------------------------------------------------------------
 mafVME *medVMEWrappedMeter::GetWrappedVME()
 //-------------------------------------------------------------------------
 {
-  return mafVME::SafeDownCast(GetLink("WrappedVME"));
+  return mafVME::SafeDownCast(GetLink(_R("WrappedVME")));
 }
 //-----------------------------------------------------------------------
 mafNode::mafLinksMap *medVMEWrappedMeter::GetMidPointsLinks()
@@ -2593,15 +2593,15 @@ bool medVMEWrappedMeter::MiddlePointsControl()
   for (mafLinksMap::iterator i = GetLinks()->begin(); i != GetLinks()->end(); i++)
   {
     mafString name = i->first;
-    if(i->first.Equals("StartVME")) continue;
-    else if(i->first.Equals("EndVME1")) continue;
-		else if(i->first.Equals("EndVME2")) continue;
-    else if(i->first.Equals("WrappedVME")) continue;
+    if(i->first.Equals(_R("StartVME"))) continue;
+    else if(i->first.Equals(_R("EndVME1"))) continue;
+		else if(i->first.Equals(_R("EndVME2"))) continue;
+    else if(i->first.Equals(_R("WrappedVME"))) continue;
     else if(i->second.m_Node == NULL)
     {
       mafString message;
       message = mafString(i->first);
-      message += _("doesn't exist");
+      message += _L("doesn't exist");
       //mafLogMessage(message);
       return false;
     }
@@ -2619,10 +2619,10 @@ bool medVMEWrappedMeter::MiddlePointsControl()
     for (mafLinksMap::iterator i = GetLinks()->begin(); i != GetLinks()->end(); i++)
     {
       mafString name = i->first;
-      if(i->first.Equals("StartVME")) continue;
-      else if(i->first.Equals("EndVME1")) continue;
-			else if(i->first.Equals("EndVME2")) continue;
-      else if(i->first.Equals("WrappedVME")) continue;
+      if(i->first.Equals(_R("StartVME"))) continue;
+      else if(i->first.Equals(_R("EndVME1"))) continue;
+			else if(i->first.Equals(_R("EndVME2"))) continue;
+      else if(i->first.Equals(_R("WrappedVME"))) continue;
       else
       {
 				bool result = false;
@@ -2664,10 +2664,10 @@ void medVMEWrappedMeter::SyncronizeList()
 	{
 		for (mafLinksMap::iterator i = GetLinks()->begin(); i != GetLinks()->end(); ++i)
 		{	
-			if(i->first.Equals("StartVME")) continue;
-			else if(i->first.Equals("EndVME1")) continue;
-			else if(i->first.Equals("EndVME2")) continue;
-      else if(i->first.Equals("WrappedVME")) continue;
+			if(i->first.Equals(_R("StartVME"))) continue;
+			else if(i->first.Equals(_R("EndVME1"))) continue;
+			else if(i->first.Equals(_R("EndVME2"))) continue;
+      else if(i->first.Equals(_R("WrappedVME"))) continue;
 			else if(i->second.m_Node->GetId() == m_OrderMiddlePointsVMEList[j])
 			{
 				if(mafVMELandmarkCloud *lc = mafVMELandmarkCloud::SafeDownCast(i->second.m_Node))

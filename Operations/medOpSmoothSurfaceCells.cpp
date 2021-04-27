@@ -217,7 +217,7 @@ void medOpSmoothSurfaceCells::CreateOpDialog()
 	wxBusyCursor wait;
 
 	//===== setup interface ====
-	m_Dialog = new mafGUIDialog("Smooth Cells", mafCLOSEWINDOW | mafRESIZABLE);
+	m_Dialog = new mafGUIDialog(_R("Smooth Cells"), mafCLOSEWINDOW | mafRESIZABLE);
 
 	m_Rwi = new mafRWI(m_Dialog,ONE_LAYER,false);
 	m_Rwi->SetListener(this);
@@ -263,14 +263,14 @@ void medOpSmoothSurfaceCells::CreateOpDialog()
 
   wxStaticText *help  = new wxStaticText(m_Dialog,-1, "Use CTRL to select cells");
 
-	mafGUIButton  *unselectAllButton =    new mafGUIButton(m_Dialog, ID_UNSELECT,    "unselect all", p,wxSize(80,20));
-	mafGUIButton  *b_fit =    new mafGUIButton(m_Dialog, ID_FIT,    "reset camera", p,wxSize(80,20));
-	mafGUIButton  *smoothButton =    new mafGUIButton(m_Dialog, ID_SMOOTH, "smooth", p,wxSize(80,20));
+	mafGUIButton  *unselectAllButton =    new mafGUIButton(m_Dialog, ID_UNSELECT,    _R("unselect all"), p,wxSize(80,20));
+	mafGUIButton  *b_fit =    new mafGUIButton(m_Dialog, ID_FIT,    _R("reset camera"), p,wxSize(80,20));
+	mafGUIButton  *smoothButton =    new mafGUIButton(m_Dialog, ID_SMOOTH, _R("smooth"), p,wxSize(80,20));
 
-	mafGUIButton  *resetButton =    new mafGUIButton(m_Dialog, ID_RESET, "reset", p,wxSize(80,20));
+	mafGUIButton  *resetButton =    new mafGUIButton(m_Dialog, ID_RESET, _R("reset"), p,wxSize(80,20));
 	
-	mafGUIButton  *ok =     new mafGUIButton(m_Dialog, ID_OK,     "ok", p, wxSize(80,20));
-	mafGUIButton  *cancel = new mafGUIButton(m_Dialog, ID_CANCEL, "cancel", p, wxSize(80,20));
+	mafGUIButton  *ok =     new mafGUIButton(m_Dialog, ID_OK,     _R("ok"), p, wxSize(80,20));
+	mafGUIButton  *cancel = new mafGUIButton(m_Dialog, ID_CANCEL, _R("cancel"), p, wxSize(80,20));
 
      // AACC: 10-03-2009 please add more decimal digits...
     diameter->SetValidator(mafGUIValidator(this,ID_DIAMETER,diameter,&m_Diameter,m_MinBrushSize,m_MaxBrushMSize, 4));
@@ -587,7 +587,7 @@ void medOpSmoothSurfaceCells::MarkCellsInRadius(double radius)
 
 	if (inPts == NULL)
 	{
-		mafLogMessage("No points!");
+		mafLogMessage(_M("No points!"));
 		return;
 	}
 
@@ -596,7 +596,7 @@ void medOpSmoothSurfaceCells::MarkCellsInRadius(double radius)
 
 	if ( numPts < 1 || numCells < 1 )
 	{
-		mafLogMessage("No data to connect!");
+		mafLogMessage(_M("No data to connect!"));
 		return;
 	}
 

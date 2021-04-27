@@ -111,7 +111,7 @@ public:
   virtual bool Equals(mafVME *vme);
 
   /** Return the suggested pipe-typename for the visualization of this vme */
-  virtual mafString GetVisualPipe() {return mafString("medPipeWrappedMeter");};
+  virtual mafString GetVisualPipe() {return mafString(_R("medPipeWrappedMeter"));}
 
   /** return the right type of output */  
   medVMEOutputWrappedMeter *GetWrappedMeterOutput();

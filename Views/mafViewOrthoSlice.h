@@ -47,7 +47,7 @@ class MED_VIEWS_EXPORT mafViewOrthoSlice: public mafViewCompound
 {
 public:
   /** constructor */
-  mafViewOrthoSlice(const mafString& label = "View OrthoSlice");
+  mafViewOrthoSlice(const mafString& label = _R("View OrthoSlice"));
 
   /** destructor */
   virtual ~mafViewOrthoSlice(); 

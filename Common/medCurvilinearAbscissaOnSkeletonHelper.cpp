@@ -82,7 +82,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeleton( mafEvent *mouseEven
 
   if (DEBUG_MODE)
   {
-    mafLogMessage("Move WC Vector:") ;
+    mafLogMessage(_M("Move WC Vector:")) ;
     medCurvilinearAbscissaOnSkeletonHelper::LogVector3(inputMoveAbsVector);
   }
   
@@ -120,7 +120,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::LogVector3( double *vector , const 
   stringStream << "Vector components: [" << vector[0] << " , " << vector[1] << " , " << vector[2] << " ]" << std::endl;
   stringStream << "Vector module: " << vtkMath::Norm(vector) << std::endl; 
 
-  mafLogMessage(stringStream.str().c_str());
+  mafLogMessage(_M(stringStream.str().c_str()));
 }
 
 void medCurvilinearAbscissaOnSkeletonHelper::LogPoint( double *point, const char *logMessage )
@@ -128,7 +128,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::LogPoint( double *point, const char
   std::ostringstream stringStream;
   if (logMessage) stringStream << logMessage << std::endl;
   stringStream << "Point coordinates: [" << point[0] << " , " << point[1] << " , " << point[2] << " ]" << std::endl;
-  mafLogMessage(stringStream.str().c_str());
+  mafLogMessage(_M(stringStream.str().c_str()));
 }
 
 /** 
@@ -200,7 +200,7 @@ bool medCurvilinearAbscissaOnSkeletonHelper::IsBifurcationVertex( mafPolylineGra
         stringStream << "Vertex Degree: " << vertexDegree << "No branch change check needed!!!" << std::endl;
       }
 
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
 
     }
 
@@ -227,7 +227,7 @@ vtkIdType &outputVertexId, vtkIdType &outputEdgeID, vtkIdType &outputBranchId)
 
   if (DEBUG_MODE)
   {
-    mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   // need abs versor for each possible branch to project motion abs versor on it
@@ -244,7 +244,7 @@ vtkIdType &outputVertexId, vtkIdType &outputEdgeID, vtkIdType &outputBranchId)
 
   if (DEBUG_MODE)
   {
-    mafLogMessage("neighbors local coords and local versors:");
+      mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   for (int neighborID = 0; neighborID < radiatingPointsNumber; neighborID++) 
@@ -257,7 +257,7 @@ vtkIdType &outputVertexId, vtkIdType &outputEdgeID, vtkIdType &outputBranchId)
     {
       std::ostringstream stringStream;
       stringStream << "Near point with id: " << neighborID  << std::endl;
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
       LogPoint(localPoint, "has coordinates:");
     }
 
@@ -307,7 +307,7 @@ vtkIdType &outputVertexId, vtkIdType &outputEdgeID, vtkIdType &outputBranchId)
       << " corresponding to edge [ bifId, radId ] = ["
       << bifurcationVertexId << " , " << bifurcationArrowVertexId << " ] "
       << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
   
   vtkIdType outputVertexBifurcation = bifurcationVertexId;
@@ -346,7 +346,7 @@ vtkIdType &outputVertexId, vtkIdType &outputEdgeID, vtkIdType &outputBranchId)
     std::ostringstream stringStream;
     stringStream << " edge Id: " 
       << outputEdgeID << " on branch: " <<  newActiveBranchId << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
   
   outputVertexId = outputVertexArrow;
@@ -402,9 +402,9 @@ void medCurvilinearAbscissaOnSkeletonHelper::SetConstraintPolylineGraph( medVMEP
   if (DEBUG_MODE)
   {
     std::ostringstream stringStream;
-    stringStream << "Checking for medVMEPolylineGraph " << constraintPolylineGraph->GetName()
+    stringStream << "Checking for medVMEPolylineGraph " << constraintPolylineGraph->GetName().GetCStr()
       << " consistency..."  << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   bool isConsistent = m_ConstraintPolylineGraph->SelfCheck();
@@ -415,7 +415,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::SetConstraintPolylineGraph( medVMEP
     stringStream << "The skeleton consistency check returned: " << isConsistent  << std::endl;
     std::string resultString = isConsistent?"IS":"IS NOT";
     stringStream << "Skeleton " << resultString << " consistent" << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   if (isConsistent == false)
@@ -434,14 +434,14 @@ int medCurvilinearAbscissaOnSkeletonHelper::SetCurvilinearAbscissa( vtkIdType br
   {
     std::ostringstream stringStream;
     stringStream << " please use an integer between 0 and " << numberOfBranches - 1 << std::endl;
-    mafLogMessage(stringStream.str().c_str());
-    return MAF_ERROR;          
+    mafLogMessage(_M(stringStream.str().c_str()));
+    return MAF_ERROR;
   }
   if (branchId > numberOfBranches)
   {
     std::ostringstream stringStream;
     stringStream << "Constrain has: " << numberOfBranches  << std::endl;
-    mafLogMessage(stringStream.str().c_str());      
+    mafLogMessage(_M(stringStream.str().c_str()));
     return MAF_ERROR;
   }
 
@@ -452,7 +452,7 @@ int medCurvilinearAbscissaOnSkeletonHelper::SetCurvilinearAbscissa( vtkIdType br
     std::ostringstream stringStream;
     stringStream << "Curvilinear abscissa must be between 0 and " << length\
     << " for current to branch" << std::endl;
-    mafLogMessage(stringStream.str().c_str());          
+    mafLogMessage(_M(stringStream.str().c_str()));
     return MAF_ERROR;
   }
 
@@ -488,7 +488,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::GetAbsPose( medVMEPolylineGraph *in
   stringStream << "current branch ID: " << inBranchId << std::endl;
   stringStream << "current branch length: " << branchLength << std::endl;
 
-  mafLogMessage(stringStream.str().c_str());
+  mafLogMessage(_M(stringStream.str().c_str()));
 
   // get the two boundary vertexes in current branch
   int p0ID = -1, p1ID = -1;
@@ -586,7 +586,7 @@ double medCurvilinearAbscissaOnSkeletonHelper::CheckS( vtkIdType inputBranchId, 
     // if >= 3 then check for projection
 
     inS = 0;
-    mafLogMessage("out of constrain polyline: setting s to 0") ;    
+    mafLogMessage(_M("out of constrain polyline: setting s to 0"));
   }
   else if (inS  > branchLenght)
   {
@@ -602,7 +602,7 @@ double medCurvilinearAbscissaOnSkeletonHelper::CheckS( vtkIdType inputBranchId, 
       stringStream << "branch with ID: " << inputBranchId << " with last vertex of ID: " << 
         endVertexId << " has degree: " << endVertexDegree << std::endl;
 
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
     }
 
     if (endVertexDegree >= 3)
@@ -615,7 +615,7 @@ double medCurvilinearAbscissaOnSkeletonHelper::CheckS( vtkIdType inputBranchId, 
     }
 
     inS = branchLenght;
-    mafLogMessage("out of constrain polyline: setting s to constraint length") ;
+    mafLogMessage(_M("out of constrain polyline: setting s to constraint length")) ;
   }
   else
   { 
@@ -642,7 +642,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
     stringStream << "Active branch ID: " << inBranchId
       << " S: " << inS << " between vertices with IDMin: " << lowerSVertexID << " and IDMax: " << upperSVertexID << std::endl;
 
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   // build s local versor
@@ -670,7 +670,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
   {
     std::ostringstream stringStream;
     stringStream << "dist_P0_S: " << dist_P0_S  << "dist_S_P1: " << dist_S_P1 << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   bool isBifurcationVertex = false;
@@ -679,7 +679,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
   // if passed upper vertex
   if (inMoveAbsVector_p0p1_ProjectionValue > 0  && inMoveAbsVector_p0p1_ProjectionValue > dist_S_P1)
   {
-    mafLogMessage("passed upper vertex!!! ################################################### ");
+    mafLogMessage(_M("passed upper vertex!!! ################################################### "));
     isBifurcationVertex = IsBifurcationVertex(m_ConstraintPolylineGraph, upperSVertexID);
     if (isBifurcationVertex)
     {
@@ -689,7 +689,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
   // if passed lower vertex
   else if (inMoveAbsVector_p0p1_ProjectionValue < 0 && abs(inMoveAbsVector_p0p1_ProjectionValue) > dist_P0_S )
   {
-    mafLogMessage("passed lower vertex!!! ################################################### ");
+    mafLogMessage(_M("passed lower vertex!!! ################################################### "));
     isBifurcationVertex = IsBifurcationVertex(m_ConstraintPolylineGraph, lowerSVertexID);
     if (isBifurcationVertex)
     {
@@ -699,7 +699,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
   // no vertex passed
   else
   {
-    mafLogMessage("no vertex passed while dragging");
+    mafLogMessage(_M("no vertex passed while dragging"));
     outputS = inS + inMoveAbsVector_p0p1_ProjectionValue;
   }
 
@@ -761,13 +761,13 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
     // I can be on branch end or middle point? how can i know??
     if (bifurcationPoindID > newEndVertexId)
     {
-      mafLogMessage("going toward beginning of branch-------->BEG-------->BEG-------->");
+      mafLogMessage(_M("going toward beginning of branch-------->BEG-------->BEG-------->"));
 
       outputS = startBranch_bifurcationPoint_Length - outputS;
     }
     else if(bifurcationPoindID  <  newEndVertexId)
     {
-      mafLogMessage("going toward end of branch-------->END-------->END-------->");
+      mafLogMessage(_M("going toward end of branch-------->END-------->END-------->"));
       outputS = startBranch_bifurcationPoint_Length + outputS;
     }
 
@@ -777,7 +777,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::MoveOnSkeletonInternal( vtkIdType i
       std::ostringstream stringStream;
       stringStream << "Output s:" << outputS  << std::endl;
       stringStream << "Output branch id:" << outputBranch  << std::endl;
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
     }
   }
   else
@@ -796,7 +796,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::FindBoundaryVertices( vtkIdType inp
   {
     std::ostringstream stringStream;
     stringStream << "Finding boundary vertices for s=" << inS << " on branch with ID: " << inputSkeletonBranchId << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   const mafPolylineGraph::Branch *currentBranch = m_ConstraintPolylineGraph->GetConstBranchPtr(inputSkeletonBranchId);
@@ -805,7 +805,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::FindBoundaryVertices( vtkIdType inp
     std::ostringstream stringStream;
     stringStream << "Current Branch PrintSelf:" << std::endl;
     currentBranch->PrintSelf(stringStream, 0);
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 
   inS = CheckS(inputSkeletonBranchId, inS);
@@ -833,7 +833,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::FindBoundaryVertices( vtkIdType inp
       int numberOfIds = branchPointsIdList->GetNumberOfIds();
       std::ostringstream stringStream;
       stringStream << "branch ID: " << inputSkeletonBranchId << "of length: " << branchLength  << " has: " << numberOfIds <<  " vertices"  << std::endl;
-      mafLogMessage(stringStream.str().c_str());
+      mafLogMessage(_M(stringStream.str().c_str()));
     }
 
     vtkIdType startPBranchID = branchPointsIdList->GetId(vtkId);
@@ -860,7 +860,7 @@ void medCurvilinearAbscissaOnSkeletonHelper::FindBoundaryVertices( vtkIdType inp
     std::ostringstream stringStream;
     stringStream << "Found skeleton vertex IdMin: " << outIdMin << " IdMax: " << outIdMax << std::endl;
     stringStream << "Distance from idMin is: " << outSFromIdMin << std::endl;
-    mafLogMessage(stringStream.str().c_str());
+    mafLogMessage(_M(stringStream.str().c_str()));
   }
 }
 
@@ -881,8 +881,8 @@ void medCurvilinearAbscissaOnSkeletonHelper::CreateGui()
   m_Gui->Divider(2);
   // m_Gui->Label("skeleton gui", true);
   
-  m_Gui->Integer(ID_BRANCH, "branch id", &m_GUIActiveBranchId, 0);
-  m_Gui->Double(ID_S, "s",  &m_GUICurvilinearAbscissa, 0);
+  m_Gui->Integer(ID_BRANCH, _R("branch id"), &m_GUIActiveBranchId, 0);
+  m_Gui->Double(ID_S, _R("s"),  &m_GUICurvilinearAbscissa, 0);
   m_Gui->Divider();
   m_Gui->Update();
 }

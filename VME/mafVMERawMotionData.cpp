@@ -67,7 +67,7 @@ mafVMERawMotionData::~mafVMERawMotionData()
 void mafVMERawMotionData::SetDictionaryFileName(const char *name)
 //----------------------------------------------------------------------------
 {
-  this->m_DictionaryFileName = name;
+  this->m_DictionaryFileName = _R(name);
   this->DictionaryOn();
   this->Modified();
 }
@@ -76,7 +76,7 @@ void mafVMERawMotionData::SetDictionaryFileName(const char *name)
 void mafVMERawMotionData::SetFileName(const char *name)
 //----------------------------------------------------------------------------
 {
-  this->m_FileName = name;
+  this->m_FileName = _R(name);
   this->Modified();
 }
 
@@ -89,7 +89,7 @@ int mafVMERawMotionData::Read()
 
   vnl_matrix<double> M;
 
-  if (utils.ReadMatrix(M,this->m_FileName))
+  if (utils.ReadMatrix(M,this->m_FileName.GetCStr()))
   {
     mafErrorMacro("File does not exist!");
 	  return 1;
@@ -102,7 +102,7 @@ int mafVMERawMotionData::Read()
 
 	if (this->GetDictionary())
 	{	
-    std::ifstream v_dictionary(this->m_DictionaryFileName, std::ios::in);
+    std::ifstream v_dictionary(this->m_DictionaryFileName.GetCStr(), std::ios::in);
 
 		int v_current_col = 0;	
 
@@ -126,13 +126,13 @@ int mafVMERawMotionData::Read()
 			{
 			  v_dictionary >> v_segment_name;			
         mafVMELandmarkCloud *currentDlc;
-        currentDlc = mafVMELandmarkCloud::SafeDownCast(this->FindInTreeByName(v_segment_name.c_str()));
+        currentDlc = mafVMELandmarkCloud::SafeDownCast(this->FindInTreeByName(_R(v_segment_name.c_str())));
 			  if (currentDlc == NULL)
 			  {
 			    //Create the new cloud
 			    mafNEW(currentDlc);
 			    currentDlc->SetRadius(m_DefaultRadius);
-			    currentDlc->SetName(v_segment_name.c_str());
+			    currentDlc->SetName(_R(v_segment_name.c_str()));
 
 			    //Add new cloud to vme tree
 			    this->AddChild(currentDlc);
@@ -140,11 +140,11 @@ int mafVMERawMotionData::Read()
             currentDlc->Delete();
 			  }
 						
-				currentDlc->AppendLandmark(v_lmname.c_str());
+				currentDlc->AppendLandmark(_R(v_lmname.c_str()));
 
 				for (int i = 0; i < M.rows(); i++)
 				{ 
-				  currentDlc->SetLandmark(v_lmname.c_str(),
+				  currentDlc->SetLandmark(_R(v_lmname.c_str()),
 					                          M(i, v_current_col),						
 					                          M(i, v_current_col + 1),
 					                          M(i, v_current_col + 2), 
@@ -157,7 +157,7 @@ int mafVMERawMotionData::Read()
 							M(i, v_current_col + 2) == not_used_identifier)
 					{
 						//double value = M(i, v_current_col + 2);
-						currentDlc->SetLandmarkVisibility(v_lmname.c_str(), 0, i);
+						currentDlc->SetLandmarkVisibility(_R(v_lmname.c_str()), 0, i);
 					}
 				}	
 				v_current_col +=  3;
@@ -180,15 +180,15 @@ int mafVMERawMotionData::Read()
 		int current_lm = 0;
     mafVMELandmarkCloud *dlc;
 		mafNEW(dlc);
-    dlc->SetName("dummy segment");
+    dlc->SetName(_R("dummy segment"));
 		dlc->SetRadius(m_DefaultRadius);
     		
 	  //Create (M.columns() / 3) landmarks
 		for (int j = 0; j < M.columns(); j += 3)
 		{
       mafString lm_name;
-			lm_name ="lm_";
-      lm_name << current_lm;
+			lm_name =_R("lm_");
+      lm_name += mafToString(current_lm);
               
 			dlc->AppendLandmark(lm_name);
 			current_lm++;

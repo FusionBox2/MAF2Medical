@@ -57,7 +57,7 @@ class MED_OPERATION_EXPORT mafOpImporterRAWVolume_BES: public mafOp
 {	
 public:
 
-  mafOpImporterRAWVolume_BES(const mafString& label = "RAWImporterLargeVolume");
+  mafOpImporterRAWVolume_BES(const mafString& label = _R("RAWImporterLargeVolume"));
   virtual     ~mafOpImporterRAWVolume_BES();
   virtual void OnEvent(mafEventBase *maf_event);
 
@@ -148,7 +148,7 @@ protected:
   //returns true, if the file is large and must be imported as large volume
   //NB. standard VTK reading processes does not support large files
   inline bool IsFileLarge() {
-    return mafVMEVolumeLargeUtils::IsFileLarge(m_RawFile);
+    return mafVMEVolumeLargeUtils::IsFileLarge(m_RawFile.GetCStr());
   }
 
   //returns true, if the volume to be imported is too large

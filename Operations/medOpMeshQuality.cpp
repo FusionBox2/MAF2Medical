@@ -177,7 +177,7 @@ void medOpMeshQuality::CreateOpDialog()
 	wxBusyCursor wait;
 
 	//===== setup interface ====
-	m_Dialog = new mafGUIDialog("Check Mesh Quality", mafCLOSEWINDOW | mafRESIZABLE);
+	m_Dialog = new mafGUIDialog(_R("Check Mesh Quality"), mafCLOSEWINDOW | mafRESIZABLE);
 
 	m_Rwi = new mafRWI(m_Dialog,ONE_LAYER,false);
 	m_Rwi->SetListener(this);//SIL. 16-6-2004: 
@@ -202,7 +202,7 @@ void medOpMeshQuality::CreateOpDialog()
 
   angleText->SetValidator(mafGUIValidator(this,ID_RADIUS,angleText,&m_Angle,0.0,999.0));
 
-	mafGUIButton  *b_ok =     new mafGUIButton(m_Dialog, ID_OK,     "ok", p, wxSize(80,20));
+	mafGUIButton  *b_ok =     new mafGUIButton(m_Dialog, ID_OK,     _R("ok"), p, wxSize(80,20));
 
 	b_ok->SetValidator(mafGUIValidator(this,ID_OK,b_ok));
 

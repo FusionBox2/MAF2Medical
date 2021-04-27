@@ -41,7 +41,7 @@ This view features two Rx views and one compound view made of six CT slices.*/
 class MED_VIEWS_EXPORT mafViewRXCompound: public mafViewCompound
 {
 public:
-  mafViewRXCompound(const mafString& label = "View RXCT");
+  mafViewRXCompound(const mafString& label = _R("View RXCT"));
   virtual ~mafViewRXCompound(); 
 
   mafTypeMacro(mafViewRXCompound, mafViewCompound);

@@ -367,10 +367,10 @@ void medOpVolumeResample::InizializeVMEDummy()
 	vtkMAFSmartPointer<vtkCubeSource> cube;
 	m_VMEDummy->SetData(vtkPolyData::SafeDownCast(cube->GetOutput()),0.0);
 	m_VMEDummy->SetVisibleToTraverse(false);
-	m_VMEDummy->GetTagArray()->SetTag(mafTagItem("VISIBLE_IN_THE_TREE", 0.0));
+	m_VMEDummy->GetTagArray()->SetTag(mafTagItem(_R("VISIBLE_IN_THE_TREE"), 0.0));
 	m_VMEDummy->ReparentTo(m_Input->GetRoot());
 	m_VMEDummy->SetAbsMatrix(*(((mafVME*)m_Input)->GetOutput()->GetAbsMatrix()));
-  m_VMEDummy->SetName("Dummy");
+  m_VMEDummy->SetName(_R("Dummy"));
 }
 //----------------------------------------------------------------------------
 void medOpVolumeResample::OpRun()   
@@ -402,7 +402,7 @@ void medOpVolumeResample::Resample()
   
   mafSmartPointer<mafTransformFrame> outputToInputTransformFrame;
   
-  mafString outputVmeName = "resampled_";
+  mafString outputVmeName = _R("resampled_");
 	outputVmeName += m_Input->GetName();
 
   m_ResampledVme = (mafVMEVolumeGray *)m_Input->NewInstance();
@@ -410,16 +410,16 @@ void medOpVolumeResample::Resample()
   m_ResampledVme->GetTagArray()->DeepCopy(m_Input->GetTagArray());
   
   mafTagItem *ti = NULL;
-  ti = m_ResampledVme->GetTagArray()->GetTag("VME_NATURE");
+  ti = m_ResampledVme->GetTagArray()->GetTag(_R("VME_NATURE"));
   if(ti)
   {
-    ti->SetValue("SYNTHETIC");
+    ti->SetValue(_R("SYNTHETIC"));
   }
   else
   {
     mafTagItem tag_Nature;
-    tag_Nature.SetName("VME_NATURE");
-    tag_Nature.SetValue("SYNTHETIC");
+    tag_Nature.SetName(_R("VME_NATURE"));
+    tag_Nature.SetValue(_R("SYNTHETIC"));
 
     m_ResampledVme->GetTagArray()->SetTag(tag_Nature);
   }
@@ -509,11 +509,11 @@ void medOpVolumeResample::Resample()
         
         std::ostringstream stringStream;
         volumeResampleFilter->PrintSelf(stringStream,NULL);
-        mafLogMessage(stringStream.str().c_str());
+        mafLogMessage(_M(stringStream.str().c_str()));
 
         stringStream.str("");
         this->PrintSelf(stringStream);
-        mafLogMessage(stringStream.str().c_str());
+        mafLogMessage(_M(stringStream.str().c_str()));
 
         outputSPVtkData->SetSource(NULL);
         outputSPVtkData->SetOrigin(m_VolumeBounds[0],m_VolumeBounds[2],m_VolumeBounds[4]);
@@ -529,7 +529,7 @@ void medOpVolumeResample::Resample()
 
   std::ostringstream stringStream;
   PrintVolume(stringStream, m_Output,"Output Volume");
-  mafLogMessage(stringStream.str().c_str(), "Output Volume");
+  mafLogMessage(_M(stringStream.str().c_str()));
 }
 //----------------------------------------------------------------------------
 void medOpVolumeResample::OpUndo()
@@ -665,7 +665,7 @@ void medOpVolumeResample::CreateGui()
 
 	if (buildHelpGui.GetArg() == true)
 	{
-		m_Gui->Button(ID_HELP, "Help","");	
+		m_Gui->Button(ID_HELP, _R("Help"), _R(""));
 	}
 
   //m_Gui->Button(ID_VOLUME_VMELOCALBOUNDS,"VME Local Bounds","","set the crop bounding box to the oriented VME bounds (default option)");
@@ -673,44 +673,44 @@ void medOpVolumeResample::CreateGui()
   //m_Gui->Button(ID_VOLUME_4DBOUNDS,"VME 4D Bounds","","set the crop bounding box to the current VME 4D bounds");
   //m_Gui->Label("");
 
-	m_Gui->Bool(ID_SHOW_HANDLE,_("Show Handle"),&m_ShowHandle,1);
-	m_Gui->Bool(ID_SHOW_GIZMO_TRANSFORM,_("Show Gizmo Transform"),&m_ShowGizmoTransform,1);
+	m_Gui->Bool(ID_SHOW_HANDLE,_L("Show Handle"),&m_ShowHandle,1);
+	m_Gui->Bool(ID_SHOW_GIZMO_TRANSFORM,_L("Show Gizmo Transform"),&m_ShowGizmoTransform,1);
 
-	m_Gui->Label("ROI Selection",true);
-	m_Gui->Label("Resample Bounding Box Extent");
+	m_Gui->Label(_R("ROI Selection"),true);
+	m_Gui->Label(_R("Resample Bounding Box Extent"));
 	/*m_Gui->VectorN(ID_VOLUME_DIR_X, "X", &m_VolumeBounds[0], 2);
 	m_Gui->VectorN(ID_VOLUME_DIR_Y, "Y", &m_VolumeBounds[2], 2);
 	m_Gui->VectorN(ID_VOLUME_DIR_Z, "Z", &m_VolumeBounds[4], 2);*/
-	m_Gui->Double(ID_VOLUME_DIR_X, "X", &m_MaxBoundX,0.0001);
-	m_Gui->Double(ID_VOLUME_DIR_Y, "Y", &m_MaxBoundY,0.0001);
-	m_Gui->Double(ID_VOLUME_DIR_Z, "Z", &m_MaxBoundZ,0.0001);
-	m_Gui->Label("");
+	m_Gui->Double(ID_VOLUME_DIR_X, _R("X"), &m_MaxBoundX,0.0001);
+	m_Gui->Double(ID_VOLUME_DIR_Y, _R("Y"), &m_MaxBoundY,0.0001);
+	m_Gui->Double(ID_VOLUME_DIR_Z, _R("Z"), &m_MaxBoundZ,0.0001);
+	m_Gui->Label(_R(""));
 
-  m_Gui->Label("ROI Orientation",true);
+  m_Gui->Label(_R("ROI Orientation"),true);
 	mafString chooses_gizmo[3];
-	chooses_gizmo[0]="Translate Origin";
-	chooses_gizmo[1]="Rotate Volume";
-	m_Gui->Combo(ID_CHOOSE_GIZMO,"",&m_GizmoChoose,2,chooses_gizmo);
+	chooses_gizmo[0]=_R("Translate Origin");
+	chooses_gizmo[1]=_R("Rotate Volume");
+	m_Gui->Combo(ID_CHOOSE_GIZMO, _R(""),&m_GizmoChoose,2,chooses_gizmo);
   
-	m_Gui->Label("Bounding Box Origin");
+	m_Gui->Label(_R("Bounding Box Origin"));
 
-  m_Gui->Vector(ID_VOLUME_ORIGIN, "", m_ROIPosition,MINFLOAT,MAXFLOAT,2,"output volume origin");
+  m_Gui->Vector(ID_VOLUME_ORIGIN, _R(""), m_ROIPosition,MINFLOAT,MAXFLOAT,2,_R("output volume origin"));
 	m_Gui->Enable(ID_VOLUME_ORIGIN,m_GizmoChoose==ID_GIZMO_TRANSLATE);
   if(m_GizmoTranslate)
 		m_GizmoTranslate->Show(m_GizmoChoose==ID_GIZMO_TRANSLATE);
 
-  m_Gui->Label("Bounding Box Orientation");
-  m_Gui->Vector(ID_VOLUME_ORIENTATION, "", m_ROIOrientation,MINFLOAT,MAXFLOAT,2,"output volume orientation");
+  m_Gui->Label(_R("Bounding Box Orientation"));
+  m_Gui->Vector(ID_VOLUME_ORIENTATION, _R(""), m_ROIOrientation,MINFLOAT,MAXFLOAT,2,_R("output volume orientation"));
 	m_Gui->Enable(ID_VOLUME_ORIENTATION,m_GizmoChoose==ID_GIZMO_ROTATE);
 	if(m_GizmoRotate)
 		m_GizmoRotate->Show(m_GizmoChoose==ID_GIZMO_ROTATE);
   
-	m_Gui->Label("Volume Spacing",false);
+	m_Gui->Label(_R("Volume Spacing"),false);
 
-  m_Gui->Vector(ID_VOLUME_SPACING, "", this->m_VolumeSpacing,MINFLOAT,MAXFLOAT,4,"output volume spacing");
-  m_Gui->Button(ID_VOLUME_AUTOSPACING,"AutoSpacing","","compute auto spacing by rotating original spacing");
+  m_Gui->Vector(ID_VOLUME_SPACING, _R(""), this->m_VolumeSpacing,MINFLOAT,MAXFLOAT,4,_R("output volume spacing"));
+  m_Gui->Button(ID_VOLUME_AUTOSPACING,_R("AutoSpacing"), _R(""),_R("compute auto spacing by rotating original spacing"));
 
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
   
   /*double range[2];
   wxString str_range;
@@ -720,11 +720,11 @@ void medOpVolumeResample::CreateGui()
   m_Gui->Label("Scalar Range:");
   m_Gui->Label(str_range);*/
 
-  m_Gui->Label("");
-  m_Gui->Label("Padding Value");
-  m_Gui->Double(ID_VOLUME_ZERO_VALUE,"",&m_ZeroPadValue);
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R("Padding Value"));
+  m_Gui->Double(ID_VOLUME_ZERO_VALUE, _R(""),&m_ZeroPadValue);
 
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 
 	m_Gui->OkCancel();
 
@@ -1198,91 +1198,91 @@ void medOpVolumeResample::PrintSelf(ostream& os)
   
   mafString parameter;
   
-  parameter.Append("m_MaxBoundX = ");
-  parameter.Append(wxString::Format("%f", m_MaxBoundX));
-  parameter.Append("\n");
-  parameter.Append("m_MaxBoundY = ");
-  parameter.Append(wxString::Format("%f", m_MaxBoundY));
-  parameter.Append("\n");
-  parameter.Append("m_MaxBoundZ = ");
-  parameter.Append(wxString::Format("%f", m_MaxBoundZ));
-  parameter.Append("\n");
-  parameter.Append("m_ROIPosition[0] = ");
-  parameter.Append(wxString::Format("%f", m_ROIPosition[0]));
-  parameter.Append("\n");
-  parameter.Append("m_ROIPosition[1] = ");
-  parameter.Append(wxString::Format("%f", m_ROIPosition[1]));
-  parameter.Append("\n");
-  parameter.Append("m_ROIPosition[2] = ");
-  parameter.Append(wxString::Format("%f", m_ROIPosition[2]));
-  parameter.Append("\n");
-  parameter.Append("m_ROIOrientation[0] = ");
-  parameter.Append(wxString::Format("%f", m_ROIOrientation[0]));
-  parameter.Append("\n");
-  parameter.Append("m_ROIOrientation[1] = ");
-  parameter.Append(wxString::Format("%f", m_ROIOrientation[1]));
-  parameter.Append("\n");
-  parameter.Append("m_ROIOrientation[2] = ");
-  parameter.Append(wxString::Format("%f", m_ROIOrientation[2]));
-  parameter.Append("\n");
-  parameter.Append("m_NewVolumePosition[0] = ");
-  parameter.Append(wxString::Format("%f", m_NewVolumePosition[0]));
-  parameter.Append("\n");
-  parameter.Append("m_NewVolumePosition[1] = ");
-  parameter.Append(wxString::Format("%f", m_NewVolumePosition[1]));
-  parameter.Append("\n");
-  parameter.Append("m_NewVolumePosition[2] = ");
-  parameter.Append(wxString::Format("%f", m_NewVolumePosition[2]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeBounds[0] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeBounds[0]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeBounds[1] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeBounds[1]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeBounds[2] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeBounds[2]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeBounds[3] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeBounds[3]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeBounds[4] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeBounds[4]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeBounds[5] = ");
-  parameter.Append("\n");
-  parameter.Append(wxString::Format("%f", m_VolumeBounds[5]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeSpacing[0] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeSpacing[0]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeSpacing[1] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeSpacing[1]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeSpacing[2] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeSpacing[2]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumePosition[0] = ");
-  parameter.Append(wxString::Format("%f", m_VolumePosition[0]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumePosition[1] = ");
-  parameter.Append(wxString::Format("%f", m_VolumePosition[1]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumePosition[2] = ");
-  parameter.Append(wxString::Format("%f",m_VolumePosition[2]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeOrientation[0] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeOrientation[0]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeOrientation[1] = ");
-  parameter.Append(wxString::Format("%f", m_VolumeOrientation[1]));
-  parameter.Append("\n");
-  parameter.Append("m_VolumeOrientation[2] = ");
-  parameter.Append(wxString::Format("%f",m_VolumeOrientation[2]));
+  parameter.Append(_R("m_MaxBoundX = "));
+  parameter.Append(mafString::Format(_R("%f"), m_MaxBoundX));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_MaxBoundY = "));
+  parameter.Append(mafString::Format(_R("%f"), m_MaxBoundY));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_MaxBoundZ = "));
+  parameter.Append(mafString::Format(_R("%f"), m_MaxBoundZ));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ROIPosition[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ROIPosition[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ROIPosition[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ROIPosition[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ROIPosition[2] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ROIPosition[2]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ROIOrientation[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ROIOrientation[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ROIOrientation[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ROIOrientation[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ROIOrientation[2] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ROIOrientation[2]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_NewVolumePosition[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_NewVolumePosition[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_NewVolumePosition[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_NewVolumePosition[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_NewVolumePosition[2] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_NewVolumePosition[2]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeBounds[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeBounds[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeBounds[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeBounds[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeBounds[2] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeBounds[2]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeBounds[3] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeBounds[3]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeBounds[4] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeBounds[4]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeBounds[5] = "));
+  parameter.Append(_R("\n"));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeBounds[5]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeSpacing[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeSpacing[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeSpacing[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeSpacing[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeSpacing[2] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeSpacing[2]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumePosition[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumePosition[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumePosition[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumePosition[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumePosition[2] = "));
+  parameter.Append(mafString::Format(_R("%f"),m_VolumePosition[2]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeOrientation[0] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeOrientation[0]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeOrientation[1] = "));
+  parameter.Append(mafString::Format(_R("%f"), m_VolumeOrientation[1]));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_VolumeOrientation[2] = "));
+  parameter.Append(mafString::Format(_R("%f"),m_VolumeOrientation[2]));
 
-  parameter.Append("\n");
-  parameter.Append("m_ZeroPadValue = ");
-  parameter.Append(wxString::Format("%f", m_ZeroPadValue));
+  parameter.Append(_R("\n"));
+  parameter.Append(_R("m_ZeroPadValue = "));
+  parameter.Append(mafString::Format(_R("%f"), m_ZeroPadValue));
 
   os << parameter.GetCStr();
   os << std::endl;

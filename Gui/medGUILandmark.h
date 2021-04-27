@@ -90,8 +90,8 @@ public:
     
   mafGUI *GetGui() {return m_Gui;};
 
-  void SetLMCloudName(const char *name) {m_LMCloudName = name;};
-  const char *GetLMCloudName() {return m_LMCloudName.GetCStr();};
+  void SetLMCloudName(const mafString& name) {m_LMCloudName = name;}
+  const mafString& GetLMCloudName() {return m_LMCloudName;}
 
   void SpawnLMOn() {m_SpawnLM = 1;};
   void SpawnLMOff() {m_SpawnLM = 0;};

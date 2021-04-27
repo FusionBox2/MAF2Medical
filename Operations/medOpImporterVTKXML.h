@@ -44,7 +44,7 @@ class MED_OPERATION_EXPORT medOpImporterVTKXML: public mafOp
 {
 public:
   /** constructor */
-  medOpImporterVTKXML(const mafString &label = "medImporter VTK XML");
+  medOpImporterVTKXML(const mafString &label = _R("medImporter VTK XML"));
   /** destructor */
   ~medOpImporterVTKXML(); 
 

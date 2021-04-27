@@ -54,7 +54,7 @@ class vtkMAFClipSurfaceBoundingBox;
 class MED_OPERATION_EXPORT medOpSplitSurface: public mafOp
 {
 public:
-  medOpSplitSurface(const mafString& label = "ClipSurface");
+  medOpSplitSurface(const mafString& label = _R("ClipSurface"));
   ~medOpSplitSurface(); 
 	virtual void OnEvent(mafEventBase *maf_event);
 

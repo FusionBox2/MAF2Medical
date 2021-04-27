@@ -279,70 +279,70 @@ void medVisualPipePolylineGraph::InitializeFromTag()
 //----------------------------------------------------------------------------
 {
   mafTagItem *item = NULL;
-  if (!m_Vme->GetTagArray()->GetTag("REPRESENTATION"))
+  if (!m_Vme->GetTagArray()->GetTag(_R("REPRESENTATION")))
   {
     item = new mafTagItem();
-    item->SetName("REPRESENTATION");
+    item->SetName(_R("REPRESENTATION"));
     item->SetValue(0);
     m_Vme->GetTagArray()->SetTag(*item);
     cppDEL(item);
   }
-  item = m_Vme->GetTagArray()->GetTag("REPRESENTATION");
+  item = m_Vme->GetTagArray()->GetTag(_R("REPRESENTATION"));
   m_Representation = (int)item->GetValueAsDouble();
 
-  if (!m_Vme->GetTagArray()->GetTag("SPHERE_RADIUS"))
+  if (!m_Vme->GetTagArray()->GetTag(_R("SPHERE_RADIUS")))
   {
     item = new mafTagItem();
-    item->SetName("SPHERE_RADIUS");
+    item->SetName(_R("SPHERE_RADIUS"));
     item->SetValue(1.0);
     m_Vme->GetTagArray()->SetTag(*item);
     cppDEL(item);
   }
-  item = m_Vme->GetTagArray()->GetTag("SPHERE_RADIUS");
+  item = m_Vme->GetTagArray()->GetTag(_R("SPHERE_RADIUS"));
   m_SphereRadius = item->GetValueAsDouble();
 
-  if (!m_Vme->GetTagArray()->GetTag("SPHERE_RESOLUTION"))
+  if (!m_Vme->GetTagArray()->GetTag(_R("SPHERE_RESOLUTION")))
   {
     item = new mafTagItem();
-    item->SetName("SPHERE_RESOLUTION");
+    item->SetName(_R("SPHERE_RESOLUTION"));
     item->SetValue(10.0);
     m_Vme->GetTagArray()->SetTag(*item);
     cppDEL(item);
   }
-  item = m_Vme->GetTagArray()->GetTag("SPHERE_RESOLUTION");
+  item = m_Vme->GetTagArray()->GetTag(_R("SPHERE_RESOLUTION"));
   m_SphereResolution = item->GetValueAsDouble();
 
-  if (!m_Vme->GetTagArray()->GetTag("TUBE_RADIUS"))
+  if (!m_Vme->GetTagArray()->GetTag(_R("TUBE_RADIUS")))
   {
     item = new mafTagItem();
-    item->SetName("TUBE_RADIUS");
+    item->SetName(_R("TUBE_RADIUS"));
     item->SetValue(1.0);
     m_Vme->GetTagArray()->SetTag(*item);
     cppDEL(item);
   }
-  item = m_Vme->GetTagArray()->GetTag("TUBE_RADIUS");
+  item = m_Vme->GetTagArray()->GetTag(_R("TUBE_RADIUS"));
   m_TubeRadius = item->GetValueAsDouble();
 
-  if (!m_Vme->GetTagArray()->GetTag("TUBE_RESOLUTION"))
+  if (!m_Vme->GetTagArray()->GetTag(_R("TUBE_RESOLUTION")))
   {
     item = new mafTagItem();
-    item->SetName("TUBE_RESOLUTION");
+    item->SetName(_R("TUBE_RESOLUTION"));
     item->SetValue(10.0);
     m_Vme->GetTagArray()->SetTag(*item);
     cppDEL(item);
   }
-  item = m_Vme->GetTagArray()->GetTag("TUBE_RESOLUTION");
+  item = m_Vme->GetTagArray()->GetTag(_R("TUBE_RESOLUTION"));
   m_TubeResolution = item->GetValueAsDouble();
 
-  if (!m_Vme->GetTagArray()->GetTag("TUBE_CAPPING"))
+  if (!m_Vme->GetTagArray()->GetTag(_R("TUBE_CAPPING")))
   {
     item = new mafTagItem();
-    item->SetName("TUBE_CAPPING");
+    item->SetName(_R("TUBE_CAPPING"));
     item->SetValue(0);
     m_Vme->GetTagArray()->SetTag(*item);
     cppDEL(item);
   }
-  item = m_Vme->GetTagArray()->GetTag("TUBE_CAPPING");
+  item = m_Vme->GetTagArray()->GetTag(_R("TUBE_CAPPING"));
   m_Capping = (int)item->GetValueAsDouble();
 }
 //----------------------------------------------------------------------------
@@ -501,27 +501,27 @@ mafGUI *medVisualPipePolylineGraph::CreateGui()
   assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
 
-  m_Gui->Bool(ID_SHOW_BRANCH_ID,_("show branch id"),&m_ShowBranchId,1);
+  m_Gui->Bool(ID_SHOW_BRANCH_ID,_L("show branch id"),&m_ShowBranchId,1);
   m_Gui->Divider(2);
-  const mafString representation_string[] = {_("line"), _("tube"), _("sphere"), _("unconnected sphere")};
+  const mafString representation_string[] = {_L("line"), _L("tube"), _L("sphere"), _L("unconnected sphere")};
   int num_choices = 4;
-  m_Gui->Combo(ID_POLYLINE_REPRESENTATION,"",&m_Representation,num_choices,representation_string);
+  m_Gui->Combo(ID_POLYLINE_REPRESENTATION, _R(""),&m_Representation,num_choices,representation_string);
 
-  m_Gui->Combo(ID_SCALARS,"",&m_ScalarIndex,m_NumberOfArrays,m_ScalarsName);	
+  m_Gui->Combo(ID_SCALARS, _R(""),&m_ScalarIndex,m_NumberOfArrays,m_ScalarsName);
   if (m_NumberOfArrays==0)
   {
     m_Gui->Enable(ID_SCALARS,false);
   }
   
-  m_Gui->Label(_("sphere"));
-  m_Gui->Bool(ID_SCALAR_DIMENSION,_("scalar dim."),&m_ScalarDim,0,_("Check to scale the sphere radius proportional to the selected scalars"));
-  m_Gui->Double(ID_SPHERE_RADIUS,_("radius"),&m_SphereRadius,0);
-  m_Gui->Double(ID_SPHERE_RESOLUTION,_("resolution"),&m_SphereResolution,0);
+  m_Gui->Label(_L("sphere"));
+  m_Gui->Bool(ID_SCALAR_DIMENSION,_L("scalar dim."),&m_ScalarDim,0,_L("Check to scale the sphere radius proportional to the selected scalars"));
+  m_Gui->Double(ID_SPHERE_RADIUS,_L("radius"),&m_SphereRadius,0);
+  m_Gui->Double(ID_SPHERE_RESOLUTION,_L("resolution"),&m_SphereResolution,0);
 
-  m_Gui->Label(_("tube"));
-  m_Gui->Double(ID_TUBE_RADIUS,_("radius"),&m_TubeRadius,0);
-  m_Gui->Double(ID_TUBE_RESOLUTION,_("resolution"),&m_TubeResolution,0);
-  m_Gui->Bool(ID_TUBE_CAPPING,_("capping"),&m_Capping);
+  m_Gui->Label(_L("tube"));
+  m_Gui->Double(ID_TUBE_RADIUS,_L("radius"),&m_TubeRadius,0);
+  m_Gui->Double(ID_TUBE_RESOLUTION,_L("resolution"),&m_TubeResolution,0);
+  m_Gui->Bool(ID_TUBE_CAPPING,_L("capping"),&m_Capping);
   m_Gui->Divider(2);
 
   m_Gui->Enable(ID_TUBE_RADIUS, m_Representation == TUBE);
@@ -531,7 +531,7 @@ mafGUI *medVisualPipePolylineGraph::CreateGui()
   m_Gui->Enable(ID_SPHERE_RESOLUTION, m_Representation == GLYPH || m_Representation == GLYPH_UNCONNECTED);
 
   m_Gui->Divider();
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
   m_Gui->Update();
   return m_Gui;
 }
@@ -577,7 +577,7 @@ void medVisualPipePolylineGraph::OnEvent(mafEventBase *maf_event)
     case ID_TUBE_RADIUS:
       {
         m_Tube->SetRadius(m_TubeRadius);
-        mafTagItem *item = m_Vme->GetTagArray()->GetTag("TUBE_RADIUS");
+        mafTagItem *item = m_Vme->GetTagArray()->GetTag(_R("TUBE_RADIUS"));
         item->SetValue(m_TubeRadius);
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
       }
@@ -585,7 +585,7 @@ void medVisualPipePolylineGraph::OnEvent(mafEventBase *maf_event)
     case ID_TUBE_CAPPING:
       {
         m_Tube->SetCapping(m_Capping);
-        mafTagItem *item = m_Vme->GetTagArray()->GetTag("TUBE_CAPPING");
+        mafTagItem *item = m_Vme->GetTagArray()->GetTag(_R("TUBE_CAPPING"));
         item->SetValue(m_Capping);
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
       }
@@ -593,7 +593,7 @@ void medVisualPipePolylineGraph::OnEvent(mafEventBase *maf_event)
     case ID_TUBE_RESOLUTION:
       {
         m_Tube->SetNumberOfSides(m_TubeResolution);
-        mafTagItem *item = m_Vme->GetTagArray()->GetTag("TUBE_RESOLUTION");
+        mafTagItem *item = m_Vme->GetTagArray()->GetTag(_R("TUBE_RESOLUTION"));
         item->SetValue(m_TubeResolution);
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
       }
@@ -601,7 +601,7 @@ void medVisualPipePolylineGraph::OnEvent(mafEventBase *maf_event)
     case ID_SPHERE_RADIUS:
       {
         m_Sphere->SetRadius(m_SphereRadius);
-        mafTagItem *item = m_Vme->GetTagArray()->GetTag("SPHERE_RADIUS");
+        mafTagItem *item = m_Vme->GetTagArray()->GetTag(_R("SPHERE_RADIUS"));
         item->SetValue(m_SphereRadius);
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
       }
@@ -610,7 +610,7 @@ void medVisualPipePolylineGraph::OnEvent(mafEventBase *maf_event)
       {
         m_Sphere->SetPhiResolution(m_SphereResolution);
         m_Sphere->SetThetaResolution(m_SphereResolution);
-        mafTagItem *item = m_Vme->GetTagArray()->GetTag("SPHERE_RESOLUTION");
+        mafTagItem *item = m_Vme->GetTagArray()->GetTag(_R("SPHERE_RESOLUTION"));
         item->SetValue(m_SphereResolution);
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
       }
@@ -618,7 +618,7 @@ void medVisualPipePolylineGraph::OnEvent(mafEventBase *maf_event)
     case ID_POLYLINE_REPRESENTATION:
       {
         SetRepresentation(m_Representation);
-        mafTagItem *item = m_Vme->GetTagArray()->GetTag("REPRESENTATION");
+        mafTagItem *item = m_Vme->GetTagArray()->GetTag(_R("REPRESENTATION"));
         item->SetValue(m_Representation);
         mafEventMacro(mafEvent(this,CAMERA_UPDATE));
       }
@@ -775,7 +775,7 @@ void medVisualPipePolylineGraph::CreateFieldDataControlArrays()
     if(strcmp(m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetArrayName(pointArrayNumber),"")!=0)
     {
       count++;
-      tempScalarsPointsName[count-1]=m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetArrayName(pointArrayNumber);
+      tempScalarsPointsName[count-1]=_R(m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetArrayName(pointArrayNumber));
     }
   }
   for(int cellArrayNumber=0;cellArrayNumber<numCellScalars;cellArrayNumber++)
@@ -783,7 +783,7 @@ void medVisualPipePolylineGraph::CreateFieldDataControlArrays()
     if(strcmp(m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetArrayName(cellArrayNumber),"")!=0)
     {
       count++;
-      tempScalarsPointsName[count-1]=m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetArrayName(cellArrayNumber);
+      tempScalarsPointsName[count-1]=_R(m_Vme->GetOutput()->GetVTKData()->GetCellData()->GetArrayName(cellArrayNumber));
     }
   }
 
@@ -794,9 +794,9 @@ void medVisualPipePolylineGraph::CreateFieldDataControlArrays()
   {
     m_ScalarsVTKName[j]=tempScalarsPointsName[j];
     if(j<pointArrayNumber)
-      m_ScalarsName[j]="[POINT] " + tempScalarsPointsName[j];
+      m_ScalarsName[j]=_R("[POINT] ") + tempScalarsPointsName[j];
     else
-      m_ScalarsName[j]="[CELL] " + tempScalarsPointsName[j];
+      m_ScalarsName[j]=_R("[CELL] ") + tempScalarsPointsName[j];
   }
 
   m_PointCellArraySeparation = pointArrayNumber;

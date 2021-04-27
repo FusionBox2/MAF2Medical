@@ -66,7 +66,7 @@ const bool DEBUG_MODE = true;
 
 medDicomCardiacMRIHelper::medDicomCardiacMRIHelper()
 {
-  m_InputDicomDirectoryABSPath = "UNDEFINED_m_InputDicomDirectoryABSPath";
+  m_InputDicomDirectoryABSPath = _R("UNDEFINED_m_InputDicomDirectoryABSPath");
   m_TestMode = false;
   m_Mode = DICOM_DIRECTORY_ABS_PATH;
 }
@@ -83,7 +83,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
   
   long int timeFrames = -1;
   DcmDataset *dicomDataset = NULL;
-  wxString dicomDir = "UNDEFINED";
+  mafString dicomDir = _R("UNDEFINED");
   DcmFileFormat dicomFileHandler;
   vector<string> dicomABSFileNamesVector;
   vtkDirectory *directoryReader = NULL;
@@ -95,11 +95,11 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
   {
 	  dicomDir = m_InputDicomDirectoryABSPath;
 
-	  assert(wxDirExists(dicomDir));
+	  assert(mafDirExists(dicomDir));
 	  directoryReader = vtkDirectory::New();
-	  directoryReader->Open(dicomDir);
+	  directoryReader->Open(dicomDir.GetCStr());
 
-	  wxString localFileName = "UNSET";
+	  mafString localFileName = _R("UNSET");
 
 	  int firstDicomSliceFileIndex = -1;
 
@@ -112,8 +112,8 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
 		  }
 		  else
 		  {
-			  localFileName = directoryReader->GetFile(i);
-			  dicomABSFileNamesVector.push_back((dicomDir + localFileName).c_str());
+			  localFileName = _R(directoryReader->GetFile(i));
+			  dicomABSFileNamesVector.push_back((dicomDir + localFileName).toStd());
 		  }
 	  }
   }
@@ -126,15 +126,15 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
   { 
 	  std::ostringstream stringStream;
 	  stringStream << "Unsupported mode: " << m_Mode << std::endl;          
-	  mafLogMessage(stringStream.str().c_str());
-	  return MAF_ERROR;
+      mafLogMessage(_M(stringStream.str().c_str()));
+      return MAF_ERROR;
   }
   
-  wxString file1ABSFileName = dicomABSFileNamesVector[0].c_str();
+  mafString file1ABSFileName = _R(dicomABSFileNamesVector[0].c_str());
 
-  assert(wxFileExists(file1ABSFileName));
+  assert(mafFileExists(file1ABSFileName));
 
-  OFCondition status = dicomFileHandler.loadFile(file1ABSFileName.c_str());
+  OFCondition status = dicomFileHandler.loadFile(file1ABSFileName.toStd().c_str());
 
   assert(status.good());
 
@@ -210,15 +210,15 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
       }
     }
   
-    wxString currentSliceABSFileName = dicomABSFileNamesVector[i].c_str();
+    mafString currentSliceABSFileName = _R(dicomABSFileNamesVector[i].c_str());
 
 	  std::ostringstream stringStream;
-	  stringStream << "Parsing " << currentSliceABSFileName.c_str() << " file with Id " << i << " , number " << i+1 << " of " << timeFrames*planesPerFrame << std::endl;          
-	  mafLogMessage(stringStream.str().c_str());
+	  stringStream << "Parsing " << currentSliceABSFileName.GetCStr() << " file with Id " << i << " , number " << i+1 << " of " << timeFrames*planesPerFrame << std::endl;          
+      mafLogMessage(_M(stringStream.str().c_str()));
 
-    assert(wxFileExists(currentSliceABSFileName));
+    assert(mafFileExists(currentSliceABSFileName));
 
-    OFCondition status = dicomFileHandler.loadFile(currentSliceABSFileName.c_str());
+    OFCondition status = dicomFileHandler.loadFile(currentSliceABSFileName.toStd().c_str());
     
     DcmDataset *dicomDataset = dicomFileHandler.getDataset();
 
@@ -244,7 +244,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
     seriesNumbers.push_back(dcmSeriesNumber);
 
 #ifdef _DEBUG
-    mafLogMessage("DEBUG >>>>>>>>> Series Number Found %ld",dcmSeriesNumber);
+    mafLogMessage(_M(_R("DEBUG >>>>>>>>> Series Number Found ") + mafToString(dcmSeriesNumber)));
 #endif // _DEBUG
     
 
@@ -522,7 +522,7 @@ int medDicomCardiacMRIHelper::ParseDicomDirectory()
       int row = seriesNumbers[i] - minSeriesNumber;
 
 #ifdef _DEBUG
-      mafLogMessage("DEBUG >>>>>>>>> Row from %d began %d",row,series[seriesNumbers[i]]);
+      mafLogMessage(_M(_R("DEBUG >>>>>>>>> Row from ") + mafToString(row) + _R(" began ") + mafToString(series[seriesNumbers[i]])));
 #endif // _DEBUG
 
       row = series[seriesNumbers[i]];

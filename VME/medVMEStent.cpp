@@ -163,38 +163,38 @@ mafGUI* medVMEStent::CreateGui()
   mafVME::CreateGui();
   if(m_Gui)
   {
-    m_Gui->Label("Stent");
+    m_Gui->Label(_R("Stent"));
 
     //mafString stentType[3] = {"normal", "ABBott","Bard"};
     //m_Gui->Combo(CHANGE_STENT_TYPE, "Type", &m_Id_Stent_Type, 3, stentType);
 
 
-    m_Gui->Double(CHANGED_STENT_PARAM,_("Diameter"), &m_Stent_Diameter, 0, 10000,-1,_("The length of the stent (mm)"));
-    m_Gui->Double(CHANGED_STENT_PARAM,_("Crown Len"), &m_Crown_Length, 0, 10000,-1,_("The length of the Crown (mm)"));
-    m_Gui->Integer(CHANGED_STENT_PARAM,_("Crown num"), &m_NumberOfCrowns, 0, 10000,-1,_("The number of the Crowns"));
+    m_Gui->Double(CHANGED_STENT_PARAM,_L("Diameter"), &m_Stent_Diameter, 0, 10000,-1,_L("The length of the stent (mm)"));
+    m_Gui->Double(CHANGED_STENT_PARAM,_L("Crown Len"), &m_Crown_Length, 0, 10000,-1,_L("The length of the Crown (mm)"));
+    m_Gui->Integer(CHANGED_STENT_PARAM,_L("Crown num"), &m_NumberOfCrowns, 0, 10000,_L("The number of the Crowns"));
     //m_Gui->Double(CHANGED_STENT_PARAM,_("Angle"), &m_Strut_Angle,0,360,-1,_("strut angle (deg)"));
     //m_Gui->Double(CHANGED_STENT_PARAM,_("Thickness"), &m_Strut_Thickness,0,10,-1,_("strut thickness (mm)"));
 
     m_Gui->Divider(2);
-    mafString stentConfiguration[2] = {"in phase", "out of phase"};
-    m_Gui->Combo(CHANGED_STENT_PARAM, "Config.", &m_Id_Stent_Configuration, 2, stentConfiguration);
+    mafString stentConfiguration[2] = {_R("in phase"), _R("out of phase")};
+    m_Gui->Combo(CHANGED_STENT_PARAM, _R("Config."), &m_Id_Stent_Configuration, 2, stentConfiguration);
 
     m_Gui->Divider(2);   
-    m_Gui->Label("Link");
-    mafString linkConnection[4] = {"peak-to-valley", "valley-to-peak", "peak-to-peak", "valley-to-valley"};
-    m_Gui->Combo(CHANGED_STENT_PARAM, "Connection", &m_Id_Link_Connection, 4, linkConnection);
-    m_Gui->Double(CHANGED_STENT_PARAM,_("Length"), &m_Link_Length, 0, 10000,-1,_("Link length(longitudinal direction (mm))"));
-    mafString linkAlignment[3] = {"+0", "+1","+2"};
-    m_Gui->Combo(CHANGED_STENT_PARAM, "alignment", &m_Link_Alignment, 3, linkAlignment);
+    m_Gui->Label(_R("Link"));
+    mafString linkConnection[4] = {_R("peak-to-valley"), _R("valley-to-peak"), _R("peak-to-peak"), _R("valley-to-valley")};
+    m_Gui->Combo(CHANGED_STENT_PARAM, _R("Connection"), &m_Id_Link_Connection, 4, linkConnection);
+    m_Gui->Double(CHANGED_STENT_PARAM,_L("Length"), &m_Link_Length, 0, 10000,-1,_L("Link length(longitudinal direction (mm))"));
+    mafString linkAlignment[3] = {_R("+0"), _R("+1"),_R("+2")};
+    m_Gui->Combo(CHANGED_STENT_PARAM, _R("alignment"), &m_Link_Alignment, 3, linkAlignment);
 
     m_Gui->Divider(2);
-    mafString linkOrientation[3] = {"+0", "+1","-1"};
-    m_Gui->Combo(CHANGED_STENT_PARAM, "Orientation", &m_Link_Orientation, 3, linkOrientation);	  
+    mafString linkOrientation[3] = {_R("+0"), _R("+1"),_R("-1")};
+    m_Gui->Combo(CHANGED_STENT_PARAM, _R("Orientation"), &m_Link_Orientation, 3, linkOrientation);	  
 
     m_Gui->Divider(2);
 
-    m_Gui->Button(ID_CENTERLINE, _("center line"), _(""), _("Select the centerline for creating stent"));
-    m_Gui->Button(ID_CONSTRAINT_SURFACE, _("vessel surface"), _(""), _("Select the vessel surface for deploying stent"));
+    m_Gui->Button(ID_CENTERLINE, _L("center line"), _L(""), _L("Select the centerline for creating stent"));
+    m_Gui->Button(ID_CONSTRAINT_SURFACE, _L("vessel surface"), _L(""), _L("Select the vessel surface for deploying stent"));
 
     m_Gui->FitGui();
     m_Gui->Update();
@@ -382,48 +382,48 @@ int medVMEStent::InternalStore(mafStorageElement *node)
   if (Superclass::InternalStore(node)==MAF_OK)
   {
     // parameters
-    if (node->StoreText("ModelName",m_ModelName) != MAF_OK) return MAF_ERROR;
-    if (node->StoreText("CompanyName",m_CompanyName) != MAF_OK) return MAF_ERROR;
-    if (node->StoreText("Material",m_Material) != MAF_OK) return MAF_ERROR;
-    if (node->StoreDouble("DeliverySystem",m_DeliverySystem) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("StentType",m_Stent_Type) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreDouble("Diameter",m_Stent_Diameter) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreDouble("DBDiameter",m_Stent_DBDiameter) != MAF_OK) return MAF_ERROR;
-    if (node->StoreDouble("CrownLength",m_Crown_Length) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreDouble("StrutLength",m_Strut_Length) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreDouble("StrutAngle",m_Strut_Angle) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreDouble("LinkLength",m_Link_Length) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("NumberOfStruts",m_StrutPairsPerCrown) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("NumberOfCrowns",m_NumberOfCrowns) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("NumberOfLinks",m_Link_Number) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("IdLinkConnection",m_Id_Link_Connection) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("IdStentConfig",m_Id_Stent_Configuration) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("LinkOrientation",m_Link_Orientation) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("LinkAlignment",m_Link_Alignment) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreDouble("StrutThickness",m_Strut_Thickness) != MAF_OK) return MAF_ERROR;  
-    if (node->StoreDouble("DLength",m_Stent_DBLength) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("ComputedNumberOfCrowns",m_ComputedCrownNumber) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreText(_R("ModelName"),m_ModelName) != MAF_OK) return MAF_ERROR;
+    if (node->StoreText(_R("CompanyName"),m_CompanyName) != MAF_OK) return MAF_ERROR;
+    if (node->StoreText(_R("Material"),m_Material) != MAF_OK) return MAF_ERROR;
+    if (node->StoreDouble(_R("DeliverySystem"),m_DeliverySystem) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("StentType"),m_Stent_Type) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreDouble(_R("Diameter"),m_Stent_Diameter) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreDouble(_R("DBDiameter"),m_Stent_DBDiameter) != MAF_OK) return MAF_ERROR;
+    if (node->StoreDouble(_R("CrownLength"),m_Crown_Length) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreDouble(_R("StrutLength"),m_Strut_Length) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreDouble(_R("StrutAngle"),m_Strut_Angle) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreDouble(_R("LinkLength"),m_Link_Length) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("NumberOfStruts"),m_StrutPairsPerCrown) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("NumberOfCrowns"),m_NumberOfCrowns) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("NumberOfLinks"),m_Link_Number) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("IdLinkConnection"),m_Id_Link_Connection) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("IdStentConfig"),m_Id_Stent_Configuration) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("LinkOrientation"),m_Link_Orientation) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("LinkAlignment"),m_Link_Alignment) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreDouble(_R("StrutThickness"),m_Strut_Thickness) != MAF_OK) return MAF_ERROR;  
+    if (node->StoreDouble(_R("DLength"),m_Stent_DBLength) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("ComputedNumberOfCrowns"),m_ComputedCrownNumber) != MAF_OK) return MAF_ERROR; 
 	//
-	if (node->StoreInteger("MaxRisk",m_MaxRisk) != MAF_OK) return MAF_ERROR;
-	if (node->StoreDouble("FatigueBending",m_FatigueBending) != MAF_OK) return MAF_ERROR;
-	if (node->StoreVectorN("TubeInitialStretching",m_TubeInitialStretching,m_TubeInitialStretching.size()) != MAF_OK) return MAF_ERROR;
-	if (node->StoreVectorN("TubeFinalStretching",m_TubeFinalStretching,m_TubeFinalStretching.size()) != MAF_OK) return MAF_ERROR;
-	if (node->StoreVectorN("TubeYoungModulus",m_TubeYoungModulus,m_TubeYoungModulus.size()) != MAF_OK) return MAF_ERROR;
-	if (node->StoreVectorN("TubeDiameter",m_TubeDiameter,m_TubeDiameter.size()) != MAF_OK) return MAF_ERROR;
+	if (node->StoreInteger(_R("MaxRisk"),m_MaxRisk) != MAF_OK) return MAF_ERROR;
+	if (node->StoreDouble(_R("FatigueBending"),m_FatigueBending) != MAF_OK) return MAF_ERROR;
+	if (node->StoreVectorN(_R("TubeInitialStretching"),m_TubeInitialStretching,m_TubeInitialStretching.size()) != MAF_OK) return MAF_ERROR;
+	if (node->StoreVectorN(_R("TubeFinalStretching"),m_TubeFinalStretching,m_TubeFinalStretching.size()) != MAF_OK) return MAF_ERROR;
+	if (node->StoreVectorN(_R("TubeYoungModulus"),m_TubeYoungModulus,m_TubeYoungModulus.size()) != MAF_OK) return MAF_ERROR;
+	if (node->StoreVectorN(_R("TubeDiameter"),m_TubeDiameter,m_TubeDiameter.size()) != MAF_OK) return MAF_ERROR;
 
     // vessel
-    if (node->StoreInteger("VesselNodeId", m_VesselNodeID) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("VesselNodeId"), m_VesselNodeID) != MAF_OK) return MAF_ERROR; 
 
     // center line
-    if (node->StoreInteger("CenterLineNodeId", m_CenterLineNodeID) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("StartPos", m_StentStartPosId) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("CenterLineNodeId"), m_CenterLineNodeID) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("StartPos"), m_StentStartPosId) != MAF_OK) return MAF_ERROR; 
 
     // stent
-    if (node->StoreInteger("StentLength", m_StentLength) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("StentLength"), m_StentLength) != MAF_OK) return MAF_ERROR; 
 
     // deployed stent polydata
-    if (node->StoreInteger("DeployedPDStatus", m_DeployedPolydataStatus) != MAF_OK) return MAF_ERROR; 
-    if (node->StoreInteger("DeployedPDNodeId", m_DeployedPolydataNodeID) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("DeployedPDStatus"), m_DeployedPolydataStatus) != MAF_OK) return MAF_ERROR; 
+    if (node->StoreInteger(_R("DeployedPDNodeId"), m_DeployedPolydataNodeID) != MAF_OK) return MAF_ERROR; 
 
     return MAF_OK;
   }
@@ -443,42 +443,42 @@ int medVMEStent::InternalRestore(mafStorageElement *node)
     mafString material;
     mafString modelname;
     mafString companyname;
-    if (node->RestoreText("ModelName",modelname) != MAF_OK) return MAF_ERROR;
+    if (node->RestoreText(_R("ModelName"),modelname) != MAF_OK) return MAF_ERROR;
     m_ModelName = modelname;
-    if (node->RestoreText("CompanyName",companyname) != MAF_OK) return MAF_ERROR;
+    if (node->RestoreText(_R("CompanyName"),companyname) != MAF_OK) return MAF_ERROR;
     m_CompanyName = companyname;
-    if (node->RestoreText("Material",material) != MAF_OK) return MAF_ERROR;
+    if (node->RestoreText(_R("Material"),material) != MAF_OK) return MAF_ERROR;
     m_Material = material;
-    if (node->RestoreDouble("DeliverySystem",m_DeliverySystem) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("StentType",m_Stent_Type) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreDouble("Diameter",m_Stent_Diameter) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreDouble("DBDiameter",m_Stent_DBDiameter) != MAF_OK) return MAF_ERROR;
-    if (node->RestoreDouble("CrownLength",m_Crown_Length) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreDouble("StrutLength",m_Strut_Length) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreDouble("StrutAngle",m_Strut_Angle) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreDouble("LinkLength",m_Link_Length) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("NumberOfStruts",m_StrutPairsPerCrown) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("NumberOfCrowns",m_NumberOfCrowns) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("NumberOfLinks",m_Link_Number) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("IdLinkConnection",m_Id_Link_Connection) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("IdStentConfig",m_Id_Stent_Configuration) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("LinkOrientation",m_Link_Orientation) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("LinkAlignment",m_Link_Alignment) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreDouble("StrutThickness",m_Strut_Thickness) != MAF_OK) return MAF_ERROR;  
-    if (node->RestoreDouble("DLength",m_Stent_DBLength) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("ComputedNumberOfCrowns",m_ComputedCrownNumber) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("DeliverySystem"),m_DeliverySystem) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("StentType"),m_Stent_Type) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("Diameter"),m_Stent_Diameter) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("DBDiameter"),m_Stent_DBDiameter) != MAF_OK) return MAF_ERROR;
+    if (node->RestoreDouble(_R("CrownLength"),m_Crown_Length) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("StrutLength"),m_Strut_Length) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("StrutAngle"),m_Strut_Angle) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("LinkLength"),m_Link_Length) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("NumberOfStruts"),m_StrutPairsPerCrown) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("NumberOfCrowns"),m_NumberOfCrowns) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("NumberOfLinks"),m_Link_Number) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("IdLinkConnection"),m_Id_Link_Connection) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("IdStentConfig"),m_Id_Stent_Configuration) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("LinkOrientation"),m_Link_Orientation) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("LinkAlignment"),m_Link_Alignment) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreDouble(_R("StrutThickness"),m_Strut_Thickness) != MAF_OK) return MAF_ERROR;  
+    if (node->RestoreDouble(_R("DLength"),m_Stent_DBLength) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("ComputedNumberOfCrowns"),m_ComputedCrownNumber) != MAF_OK) return MAF_ERROR; 
     m_StentParamsModified = true ;
 
 
     // vessel
-    if (node->RestoreInteger("VesselNodeId", m_VesselNodeID) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("VesselNodeId"), m_VesselNodeID) != MAF_OK) return MAF_ERROR; 
 
     // vessel centerline
-    if (node->RestoreInteger("StartPos", m_StentStartPosId) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("CenterLineNodeId", m_CenterLineNodeID) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("StartPos"), m_StentStartPosId) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("CenterLineNodeId"), m_CenterLineNodeID) != MAF_OK) return MAF_ERROR; 
 
     // stent
-    if (node->RestoreInteger("StentLength", m_StentLength) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("StentLength"), m_StentLength) != MAF_OK) return MAF_ERROR; 
     m_StentCenterLineModified = true ;
     m_StentLengthModified = true ;
 
@@ -486,8 +486,8 @@ int medVMEStent::InternalRestore(mafStorageElement *node)
     m_SimplexMeshModified = true ;
 
     // deployed stent polydata
-    if (node->RestoreInteger("DeployedPDStatus", m_DeployedPolydataStatus) != MAF_OK) return MAF_ERROR; 
-    if (node->RestoreInteger("DeployedPDNodeId", m_DeployedPolydataNodeID) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("DeployedPDStatus"), m_DeployedPolydataStatus) != MAF_OK) return MAF_ERROR; 
+    if (node->RestoreInteger(_R("DeployedPDNodeId"), m_DeployedPolydataNodeID) != MAF_OK) return MAF_ERROR; 
     if (m_DeployedPolydataStatus == DEPLOYED_PD_OK)
       m_DeployedPolydataStatus = DEPLOYED_PD_NOT_LOADED ;
 
@@ -498,12 +498,12 @@ int medVMEStent::InternalRestore(mafStorageElement *node)
 		m_TubeFinalStretching.resize(GetNumberOfUnits());
 		m_TubeYoungModulus.resize(GetNumberOfUnits());
 		m_TubeDiameter.resize(GetNumberOfUnits());
-		if (node->RestoreInteger("MaxRisk",m_MaxRisk) != MAF_OK) return MAF_ERROR;
-		if (node->RestoreDouble("FatigueBending",m_FatigueBending) != MAF_OK) return MAF_ERROR;
-		if (node->RestoreVectorN("TubeInitialStretching",m_TubeInitialStretching,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
-		if (node->RestoreVectorN("TubeFinalStretching",m_TubeFinalStretching,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
-		if (node->RestoreVectorN("TubeYoungModulus",m_TubeYoungModulus,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
-		if (node->RestoreVectorN("TubeDiameter",m_TubeDiameter,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
+		if (node->RestoreInteger(_R("MaxRisk"),m_MaxRisk) != MAF_OK) return MAF_ERROR;
+		if (node->RestoreDouble(_R("FatigueBending"),m_FatigueBending) != MAF_OK) return MAF_ERROR;
+		if (node->RestoreVectorN(_R("TubeInitialStretching"),m_TubeInitialStretching,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
+		if (node->RestoreVectorN(_R("TubeFinalStretching"),m_TubeFinalStretching,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
+		if (node->RestoreVectorN(_R("TubeYoungModulus"),m_TubeYoungModulus,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
+		if (node->RestoreVectorN(_R("TubeDiameter"),m_TubeDiameter,GetNumberOfUnits()) != MAF_OK) return MAF_ERROR;
 	}
 
 
@@ -1301,17 +1301,17 @@ mafNode* medVMEStent::FindTaggedCenterLineVME(mafNode* inputNode)
   mafNode* parentNode = inputNode->GetParent() ;
 
   // search tree for tagged item
-  if (parentNode->GetTagArray()->GetTag("RT3S_CENTER_LINE"))
+  if (parentNode->GetTagArray()->GetTag(_R("RT3S_CENTER_LINE")))
     return parentNode ;
 
   for (int i = 0 ;  i < parentNode->GetNumberOfChildren() ;  i++){
     mafNode* childNode = parentNode->GetChild(i) ;
-    if (childNode->GetTagArray()->GetTag("RT3S_CENTER_LINE"))
+    if (childNode->GetTagArray()->GetTag(_R("RT3S_CENTER_LINE")))
       return childNode ;
 
     for (int j = 0 ;  j < childNode->GetNumberOfChildren() ;  j++){
       mafNode* grandChildNode = childNode->GetChild(j) ;
-      if (grandChildNode->GetTagArray()->GetTag("RT3S_CENTER_LINE"))
+      if (grandChildNode->GetTagArray()->GetTag(_R("RT3S_CENTER_LINE")))
         return grandChildNode ;
     }
   }
@@ -1330,17 +1330,17 @@ mafNode* medVMEStent::FindTaggedVesselVME(mafNode* inputNode)
   mafNode* parentNode = inputNode->GetParent() ;
 
   // search tree for tagged item
-  if (parentNode->GetTagArray()->GetTag("RT3S_VESSEL"))
+  if (parentNode->GetTagArray()->GetTag(_R("RT3S_VESSEL")))
     return parentNode ;
 
   for (int i = 0 ;  i < parentNode->GetNumberOfChildren() ;  i++){
     mafNode* childNode = parentNode->GetChild(i) ;
-    if (childNode->GetTagArray()->GetTag("RT3S_VESSEL"))
+    if (childNode->GetTagArray()->GetTag(_R("RT3S_VESSEL")))
       return childNode ;
 
     for (int j = 0 ;  j < childNode->GetNumberOfChildren() ;  j++){
       mafNode* grandChildNode = childNode->GetChild(j) ;
-      if (grandChildNode->GetTagArray()->GetTag("RT3S_VESSEL"))
+      if (grandChildNode->GetTagArray()->GetTag(_R("RT3S_VESSEL")))
         return grandChildNode ;
     }
   }
@@ -1372,15 +1372,15 @@ mafNode* medVMEStent::FindOrSelectCenterLineVME(mafNode* inputNode)
 
   // can't find tagged vme so launch user select
   mafEvent e(this, VME_CHOOSE) ;
-  mafString title = _("Select centerline vme");
+  mafString title = _L("Select centerline vme");
   e.SetString(&title);
   ForwardUpEvent(e);
   node = e.GetVme();
 
   if (node != NULL){
-    mafLogMessage("Adding tag to centerline vme...\n") ;
+    mafLogMessage(_M("Adding tag to centerline vme...\n")) ;
     mafVME* vme = mafVME::SafeDownCast(node) ;
-    vme->GetTagArray()->SetTag(mafTagItem("RT3S_CENTER_LINE","Polyline"));
+    vme->GetTagArray()->SetTag(mafTagItem(_R("RT3S_CENTER_LINE"),_R("Polyline")));
   }
 
   if (node == NULL){
@@ -1415,15 +1415,15 @@ mafNode* medVMEStent::FindOrSelectVesselVME(mafNode* inputNode)
 
   // can't find tagged vme so launch user select
   mafEvent e(this, VME_CHOOSE) ;
-  mafString title = _("Select vessel vme");
+  mafString title = _L("Select vessel vme");
   e.SetString(&title);
   ForwardUpEvent(e);
   node = e.GetVme();
 
   if (node != NULL){
-    mafLogMessage("Adding tag to vessel vme...\n") ;
+    mafLogMessage(_M("Adding tag to vessel vme...\n")) ;
     mafVME* vme = mafVME::SafeDownCast(node) ;
-    vme->GetTagArray()->SetTag(mafTagItem("RT3S_VESSEL","Surface"));
+    vme->GetTagArray()->SetTag(mafTagItem(_R("RT3S_VESSEL"),_R("Surface")));
   }
 
   if (node == NULL){
@@ -2139,12 +2139,12 @@ double medVMEStent::GetLengthOfUnit()
 {
   double len ;
 
-  wxString model = GetStentModelName() ;
-  if (model == "MARIS PLUS"){
+  mafString model = GetStentModelName() ;
+  if (model == _R("MARIS PLUS")){
     // Maris unit is HL-C-L-C-HL where HL is half-link
     len = 2.0*m_Crown_Length + 2.0*m_Link_Length ;
   }
-  else if (model == "ABSOLUTE PRO"){
+  else if (model == _R("ABSOLUTE PRO")){
     // Abbott stent is PC-L-C-L-PC where PC is part-crown.  Crowns overlap.
     len = 2.0*m_Link_Length ;
   }

@@ -38,7 +38,7 @@ refactored incrementally to ease interaction stuff debug */
 class MED_OPERATION_EXPORT medOpInteractionDebugger: public mafOp
 {
 public:
-	medOpInteractionDebugger(const mafString& label = "medOpInteractionDebugger");
+	medOpInteractionDebugger(const mafString& label = _R("medOpInteractionDebugger"));
 	~medOpInteractionDebugger(); 
 	
   mafTypeMacro(medOpInteractionDebugger, mafOp);

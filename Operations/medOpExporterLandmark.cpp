@@ -44,8 +44,8 @@ medOpExporterLandmark::medOpExporterLandmark(const mafString& label) : Superclas
 {
   m_OpType = OPTYPE_EXPORTER;
   m_Canundo = true;
-  m_File = "";
-  m_FileDir = "";
+  m_File = _R("");
+  m_FileDir = _R("");
   m_Input   = NULL;
   m_GlobalPos = true;
 }
@@ -73,8 +73,8 @@ void medOpExporterLandmark::OpRun()
 //----------------------------------------------------------------------------
 {
   m_Gui = new mafGUI(this);
-  m_Gui->Label("absolute matrix",true);
-  m_Gui->Bool(ID_ABS_POSITION,"apply",&m_GlobalPos,0);
+  m_Gui->Label(_R("absolute matrix"),true);
+  m_Gui->Bool(ID_ABS_POSITION,_R("apply"),&m_GlobalPos,0);
   m_Gui->OkCancel();
   m_Gui->Divider();
   ShowGui();
@@ -111,17 +111,17 @@ void medOpExporterLandmark::OnEvent(mafEventBase *maf_event)
         m_Gui->Enable(wxCANCEL, false);
 
         assert(m_Input);
-        wxString proposed = (mafGetApplicationDirectory() + "/Data/External/").c_str();
+        mafString proposed = mafGetApplicationDirectory() + _R("/Data/External/");
 
         if(m_Input->IsMAFType(mafVMELandmarkCloud))
         {
           proposed += m_Input->GetName();
-          proposed += ".txt";
-          wxString wildc = "ascii file (*.txt)|*.txt";
+          proposed += _R(".txt");
+          mafString wildc = _R("ascii file (*.txt)|*.txt");
 
-          wxString f = mafGetSaveFile(proposed,wildc).GetCStr(); 
+          mafString f = mafGetSaveFile(proposed,wildc); 
 
-          if(f != "") 
+          if(!f.IsEmpty()) 
           {
             m_File = f;
             ExportLandmark();
@@ -149,9 +149,9 @@ void medOpExporterLandmark::OnEvent(mafEventBase *maf_event)
           }
           else*/
           {
-            wxString f = mafGetDirName(proposed).GetCStr();
+            mafString f = mafGetDirName(proposed);
 
-            if(f != "") 
+            if(!f.IsEmpty()) 
             {
               m_FileDir = f;
               ExportLandmark();
@@ -187,7 +187,7 @@ void medOpExporterLandmark::ExportOneCloud(std::ostream &out, mafVMELandmarkClou
   if(!initState)
     cloud->Open();
 
-  mafString lmName = "";
+  mafString lmName;
   double pos[3] = {0.0,0.0,0.0};
   double ori[3] = {0.0,0.0,0.0};
   double t;
@@ -238,7 +238,7 @@ void medOpExporterLandmark::ExportOneCloud(std::ostream &out, mafVMELandmarkClou
           cloud->GetLandmark(j)->GetOutput()->GetAbsPose(pos,ori,t);
         else
           cloud->GetLandmarkPosition(j, pos, t);*/
-        out << lmName;
+        out << lmName.GetCStr();
         int curL = lmName.Length();
         for (int i = 0; i < nmLength - curL; i++)
         {
@@ -294,7 +294,7 @@ void medOpExporterLandmark::ExportOneCloud(std::ostream &out, mafVMELandmarkClou
       cloud->GetLandmark(j)->GetOutput()->GetAbsPose(pos,ori,t);
       else
       cloud->GetLandmarkPosition(j, pos, t);*/
-      out << lmName;
+      out << lmName.GetCStr();
       int curL = lmName.Length();
       for (int i = 0; i < nmLength - curL; i++)
       {
@@ -348,8 +348,8 @@ void medOpExporterLandmark::ExportingTraverse(std::ostream &out, const char *dir
       ExportOneCloud(out, mafVMELandmarkCloud::SafeDownCast(node));
     else*/
     {
-      wxString intpath;
-      wxString fn = dirName;
+      mafString intpath;
+      mafString fn = _R(dirName);
       intpath = node->GetName();
       mafNode *nd = node;
       do 
@@ -357,24 +357,24 @@ void medOpExporterLandmark::ExportingTraverse(std::ostream &out, const char *dir
         nd = nd->GetParent();
         if(nd != NULL)
         {
-          wxString tmp;
+          mafString tmp;
           tmp     = nd->GetName();
-          tmp    += "_";
+          tmp    += _R("_");
           tmp    += intpath;
           intpath = tmp;
         }
       }
       while(nd != NULL && nd!= m_Input);
-      fn += "\\";
+      fn += _R("\\");
       fn += intpath;//node->GetName();
       /*if(node->GetParent() != NULL)
       {
       fn += "_";
       fn += node->GetParent()->GetName();
       }*/
-      fn += ".txt";
+      fn += _R(".txt");
       std::ofstream outF;
-      outF.open(fn.c_str());
+      outF.open(fn.GetCStr());
       ExportOneCloud(outF, mafVMELandmarkCloud::SafeDownCast(node));
       outF.close();
     }
@@ -396,12 +396,11 @@ void medOpExporterLandmark::ExportLandmark()
     wait = new wxBusyInfo("Please wait, exporting...");
   }
   //file creation
-  const char    *fileName = (m_File);
   std::ofstream f_Out;
 
   if(m_Input->IsMAFType(mafVMELandmarkCloud))
   {
-    f_Out.open(fileName);
+    f_Out.open(m_File.GetCStr());
     ExportOneCloud(f_Out, mafVMELandmarkCloud::SafeDownCast(m_Input));
     f_Out.close();
   }

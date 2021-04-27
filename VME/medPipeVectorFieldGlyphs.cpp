@@ -413,7 +413,7 @@ mafGUI *medPipeVectorFieldGlyphs::CreateGui()
     bSizer4311->Add( m_GlyphMaterialButton, 0, wxALL, 0 );
 
     m_GlyphMaterialLabel = new wxStaticText( m_Gui, ID_GLYPH_MATERIAL_LABEL, 
-      m_GlyphMaterial->GetMaterial()->m_MaterialName.GetCStr(), wxDefaultPosition, wxDefaultSize, 0 );        
+      m_GlyphMaterial->GetMaterial()->m_MaterialName.toWx(), wxDefaultPosition, wxDefaultSize, 0 );        
     bSizer4311->Add( m_GlyphMaterialLabel, 1, wxALL, 5 );
     sbSizer65->Add( bSizer4311, 0, wxEXPAND, 5 );
 
@@ -502,14 +502,14 @@ void medPipeVectorFieldGlyphs::InitFilterList(int nScalars)
 	for (mafNode::mafLinksMap::iterator i = pLinks->begin(); i != pLinks->end(); i++)
 	{
 		mafString linkName = i->first;
-		if (linkName.StartsWith(FILTER_LINK_NAME))
+		if (linkName.StartsWith(_R(FILTER_LINK_NAME)))
 		{
 			//------insert item----
       //format--"filter-link0:aa:0.100:1.214"
 			FILTER_ITEM* pItem = new FILTER_ITEM;
 			memset(pItem, 0, sizeof(FILTER_ITEM));
 
-			wxStringTokenizer tkz(wxT(linkName.GetCStr()), wxT(":"));
+			wxStringTokenizer tkz(linkName.toWx(), wxT(":"));
 			int j=0;
 			while ( tkz.HasMoreTokens() )
 			{
@@ -539,14 +539,14 @@ void medPipeVectorFieldGlyphs::InitFilterList(int nScalars)
 			m_RangeCtrl->SetItemData(idx1 , (long)pItem);
 			idx1++;
 
-		}else if (linkName.StartsWith(FILTER_LINK_NAME2) &&  nScalars>0)
+		}else if (linkName.StartsWith(_R(FILTER_LINK_NAME2)) &&  nScalars>0)
 		{
 			//------insert item----
       //format--"filter-link0:aa:0.100:1.214"
 			FILTER_ITEM* pItem = new FILTER_ITEM;
 			memset(pItem, 0, sizeof(FILTER_ITEM));
 
-			wxStringTokenizer tkz(wxT(linkName.GetCStr()), wxT(":"));
+			wxStringTokenizer tkz(linkName.toWx(), wxT(":"));
 			int j=0;
 			while ( tkz.HasMoreTokens() )
 			{
@@ -729,7 +729,7 @@ void medPipeVectorFieldGlyphs::StoreFilterLinks()
 		bNeedRestart = false;
 		for (mafNode::mafLinksMap::iterator i = pLinks->begin(); i != pLinks->end(); i++)
 		{
-			if (i->first.StartsWith(FILTER_LINK_NAME))
+			if (i->first.StartsWith(_R(FILTER_LINK_NAME)))
 			{
 				m_Vme->RemoveLink(i->first);
 				bNeedRestart = true;
@@ -749,13 +749,13 @@ void medPipeVectorFieldGlyphs::StoreFilterLinks()
 			itemName = m_RangeCtrl->GetItemText(i);
 			FILTER_ITEM* pItem = (FILTER_ITEM*)m_RangeCtrl->GetItemData(i);
 			mafString szName;
-			szName = wxString::Format("%s%d",FILTER_LINK_NAME,i);
-			szName += ":";
-			szName += itemName;
-			szName += ":";
-			szName +=   wxString::Format("%.4f",pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
-			szName += ":";
-			szName +=  wxString::Format("%.4f",pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
+			szName = _R(FILTER_LINK_NAME) + mafToString(i);
+			szName += _R(":");
+			szName += mafWxToString(itemName);
+			szName += _R(":");
+			szName += mafString::Format(_R("%.4f"),pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
+			szName += _R(":");
+			szName += mafString::Format(_R("%.4f"),pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
 			
 			m_Vme->SetLink(szName,m_Vme);
 		}
@@ -773,9 +773,9 @@ void medPipeVectorFieldGlyphs::StoreFilterLinks2()
 	do
 	{
 		bNeedRestart = false;
-		for (mafNode::mafLinksMap::iterator i = pLinks->begin(); i != pLinks->end(); i++)
+		for (auto i = pLinks->begin(); i != pLinks->end(); i++)
 		{
-			if (i->first.StartsWith(FILTER_LINK_NAME2))
+			if (i->first.StartsWith(_R(FILTER_LINK_NAME2)))
 			{
 				m_Vme->RemoveLink(i->first);
 				bNeedRestart = true;
@@ -795,13 +795,13 @@ void medPipeVectorFieldGlyphs::StoreFilterLinks2()
 			itemName = m_RangeCtrl2->GetItemText(i);
 			FILTER_ITEM* pItem = (FILTER_ITEM*)m_RangeCtrl2->GetItemData(i);
 			mafString szName;
-			szName = wxString::Format("%s%d",FILTER_LINK_NAME2,i);
-			szName += ":";
-			szName += itemName;
-			szName += ":";
-			szName +=   wxString::Format("%.4f",pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
-			szName += ":";
-			szName +=  wxString::Format("%.4f",pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
+			szName = _R(FILTER_LINK_NAME2) + mafToString(i);
+			szName += _R(":");
+			szName += mafWxToString(itemName);
+			szName += _R(":");
+			szName +=  mafString::Format(_R("%.4f"),pItem->value[0]);//wxString::Format("%.3f%d",szName,pItem->value[0]);
+			szName += _R(":");
+			szName +=  mafString::Format(_R("%.4f"),pItem->value[1]);//wxString::Format("%s%.3f",szName,pItem->value[1]);
 
 			m_Vme->SetLink(szName,m_Vme);
 		}
@@ -927,7 +927,7 @@ bool medPipeVectorFieldGlyphs::AddItem2()
 		m_RangeCtrl2->SetItemData(nListCount, (long)pItem);
 		rtn = true;
 	}else{
-		mafMessage("invalid value,please check");
+		mafMessage(_M("invalid value,please check"));
 		rtn = false;
 	}
 	return rtn;
@@ -975,7 +975,7 @@ bool medPipeVectorFieldGlyphs::AddItem()
 		m_RangeCtrl->SetItemData(nListCount, (long)pItem);
 		rtn = true;
 	}else{
-		mafMessage("invalid value,please check");
+		mafMessage(_M("invalid value,please check"));
 		rtn = false;
 	}
 	return rtn;
@@ -988,7 +988,7 @@ void medPipeVectorFieldGlyphs::CreateAddItemDlg(int idx)
 	/*vtkDataArray *dataArr = m_Vme->GetOutput()->GetVTKData()->GetPointData()->GetScalars();
 	double range[2];
 	dataArr->GetRange(range);*/
-	wxString dlgName = "";
+	mafString dlgName = _R("");
 	int okBtn =0;
 	int canBtn = 0;
 	int rName = 0;
@@ -997,7 +997,7 @@ void medPipeVectorFieldGlyphs::CreateAddItemDlg(int idx)
 	m_FilterName = "";
 
 	if(idx==1){
-		dlgName = "magnitude filter editor";
+		dlgName = _R("magnitude filter editor");
 		m_FilterValue1 = wxString::Format("%.4f",m_Sr[0]);
 		m_FilterValue2 = wxString::Format("%.4f",m_Sr[1]);
 		okBtn = ID_ITEM_OK;
@@ -1008,7 +1008,7 @@ void medPipeVectorFieldGlyphs::CreateAddItemDlg(int idx)
 
 	}else if (idx==2)
 	{
-		dlgName = "scalar filter editor";
+		dlgName = _R("scalar filter editor");
 		m_FilterValue1 = wxString::Format("%.4f",m_Sr2[0]);
 		m_FilterValue2 = wxString::Format("%.4f",m_Sr2[1]);
 		okBtn = ID_ITEM_OK2;
@@ -1051,11 +1051,11 @@ void medPipeVectorFieldGlyphs::CreateAddItemDlg(int idx)
 	if (idx==1)
 	{
 		// ok/cancel buttons
-		m_ItemOK = new mafGUIButton(m_AddItemDlg, okBtn, "OK", wxPoint(0,0), wxSize(50,20));
+		m_ItemOK = new mafGUIButton(m_AddItemDlg, okBtn, _R("OK"), wxPoint(0,0), wxSize(50,20));
 		m_ItemOK->SetListener(this);
 		m_ItemOK->Enable(false);
 
-		mafGUIButton *b_cancel = new mafGUIButton(m_AddItemDlg, canBtn, "CANCEL", wxPoint(0,0), wxSize(50,20));
+		mafGUIButton *b_cancel = new mafGUIButton(m_AddItemDlg, canBtn, _R("CANCEL"), wxPoint(0,0), wxSize(50,20));
 		b_cancel->SetListener(this);
 		
 		hs_b->Add(m_ItemOK,0);
@@ -1064,11 +1064,11 @@ void medPipeVectorFieldGlyphs::CreateAddItemDlg(int idx)
 	}else if (idx==2)
 	{
 		// ok/cancel buttons
-		m_ItemOK2 = new mafGUIButton(m_AddItemDlg, okBtn, "OK", wxPoint(0,0), wxSize(50,20));
+		m_ItemOK2 = new mafGUIButton(m_AddItemDlg, okBtn, _R("OK"), wxPoint(0,0), wxSize(50,20));
 		m_ItemOK2->SetListener(this);
 		m_ItemOK2->Enable(false);
 
-		mafGUIButton *b_cancel2 = new mafGUIButton(m_AddItemDlg, canBtn, "CANCEL", wxPoint(0,0), wxSize(50,20));
+		mafGUIButton *b_cancel2 = new mafGUIButton(m_AddItemDlg, canBtn, _R("CANCEL"), wxPoint(0,0), wxSize(50,20));
 		b_cancel2->SetListener(this);
 
 		hs_b->Add(m_ItemOK2,0);
@@ -1105,7 +1105,7 @@ void medPipeVectorFieldGlyphs::CreateAddItemDlg(int idx)
   {
     //set new material label
     mmaMaterial* mat = m_GlyphMaterial->GetMaterial();     
-    m_GlyphMaterialLabel->SetLabel(mat->m_MaterialName.GetCStr());
+    m_GlyphMaterialLabel->SetLabel(mat->m_MaterialName.toWx());
 
     //and set a new material icon
     cppDEL(mat->m_Icon); mat->MakeIcon();
@@ -1191,8 +1191,8 @@ void medPipeVectorFieldGlyphs::DoFilter(int mode ,double *rangeValue,double *ran
 		
 		//vtkImageData* pImgData = GetImageData(orgDataR);
 		
-		mafString logFname2 = "coordFile.txt";//debug
-		std::ofstream outputFile2(logFname2, std::ios::out|std::ios::app);//debug
+		mafString logFname2 = _R("coordFile.txt");//debug
+		std::ofstream outputFile2(logFname2.GetCStr(), std::ios::out|std::ios::app);//debug
 		outputFile2.clear();//debug
 		outputFile2<<"---------------begin--------------------------------"<<std::endl;//debug
 		int dim[3];

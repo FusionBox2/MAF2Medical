@@ -271,13 +271,13 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
 //----------------------------------------------------------------------------
 {
   
-  mafString pipe_name = "";
+  mafString pipe_name = _R("");
   GetVisualPipeName(vme, pipe_name);
 
   mafSceneNode *n = m_Sg->Vme2Node(vme);
   assert(n && !n->m_Pipe);
 
-  if (pipe_name != "")
+  if (!pipe_name.IsEmpty())
   {
     if((vme->IsMAFType(mafVMELandmarkCloud) && ((mafVMELandmarkCloud*)vme)->IsOpen()) || 
       vme->IsMAFType(mafVMELandmark) && m_NumberOfVisibleVme == 1) {
@@ -289,7 +289,7 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
     mafPipeFactory *pipe_factory  = mafPipeFactory::GetInstance();
     assert(pipe_factory!=NULL);
     mafObject *obj= NULL;
-    obj = pipe_factory->CreateInstance(pipe_name);
+    obj = pipe_factory->CreateInstance(pipe_name.GetCStr());
     mafPipe *pipe = (mafPipe*)obj;
     if (pipe != NULL)
     {
@@ -380,7 +380,7 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
           //mafPipeSurfaceSlice_BES, mafPipePolylineSlice_BES and mafPipeMeshSlice_BES
           //are committed down and instead of it, the code above should work (after _BES suffices are stripped)
 
-          if(pipe_name.Equals("mafPipeSurfaceSlice"))
+          if(pipe_name.Equals(_R("mafPipeSurfaceSlice")))
           {
             double normal[3];
             switch(m_CameraPositionId)
@@ -422,7 +422,7 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
             ((mafPipeSurfaceSlice *)pipe)->SetNormal(normal);
 
           }
-          else if(pipe_name.Equals("mafPipePolylineSlice"))
+          else if(pipe_name.Equals(_R("mafPipePolylineSlice")))
           {
             double normal[3];
             switch(m_CameraPositionId)
@@ -464,7 +464,7 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
             ((mafPipePolylineSlice *)pipe)->SetSlice(positionSlice);
             ((mafPipePolylineSlice *)pipe)->SetNormal(normal);
           }          
-          else if(pipe_name.Equals("mafPipeMeshSlice"))
+          else if(pipe_name.Equals(_R("mafPipeMeshSlice")))
           {
             double normal[3];
             switch(m_CameraPositionId)
@@ -513,7 +513,7 @@ void mafViewSlice::VmeCreatePipe(mafNode *vme)
       n->m_Pipe = (mafPipe*)pipe;
     }
     else
-      mafErrorMessage("Cannot create visual pipe object of type \"%s\"!",pipe_name.GetCStr());
+      mafErrorMessage(_M(_R("Cannot create visual pipe object of type \"") + pipe_name + _R("\"!")));
   }
 }
 
@@ -592,7 +592,7 @@ mafGUI *mafViewSlice::CreateGui()
   };
    m_Gui->Divider(1);
   //m_Gui->Bool(ID_ENABLE_GPU,"Enable GPU",&m_EnableGPU,1);
-   m_Gui->Bool(ID_TRILINEAR_INTERPOLATION,"Interpolation",&m_TrilinearInterpolationOn,1);
+   m_Gui->Bool(ID_TRILINEAR_INTERPOLATION,_R("Interpolation"),&m_TrilinearInterpolationOn,1);
 
 	m_Gui->Divider();
   return m_Gui;
@@ -944,7 +944,7 @@ void mafViewSlice::Print(std::ostream& os, const int tabs)// const
   mafIndent indent(tabs);
 
   os << indent << "mafViewSlice" << '\t' << this << std::endl;
-  os << indent << "Name" << '\t' << GetLabel() << std::endl;
+  os << indent << "Name" << '\t' << GetLabel().GetCStr() << std::endl;
   os << std::endl;
   m_Sg->Print(os,1);
 }
@@ -982,15 +982,15 @@ void mafViewSlice::CameraUpdate()
     mafVME *volume = mafVME::SafeDownCast(m_CurrentVolume->m_Vme);
     
     std::ostringstream stringStream;
-    stringStream << "VME " << volume->GetName() << " ABS matrix:" << std::endl;
+    stringStream << "VME " << volume->GetName().GetCStr() << " ABS matrix:" << std::endl;
 
     volume->GetAbsMatrixPipe()->GetMatrixPointer()->Print(stringStream);
     
     m_NewABSPose = volume->GetAbsMatrixPipe()->GetMatrix();
     
     if (DEBUG_MODE == true)
-      mafLogMessage(stringStream.str().c_str());
-    
+        mafLogMessage(_M(stringStream.str().c_str()));
+
     // Fix bug #2085: Added by Losi 05.11.2010
     // Avoid pan & zoom reset while changing timestamp
     mafMatrix oldABSPoseForEquals;
@@ -1000,14 +1000,14 @@ void mafViewSlice::CameraUpdate()
     if (m_NewABSPose.Equals(&oldABSPoseForEquals))
     { 
       if (DEBUG_MODE == true)
-        mafLogMessage("Calling Superclass Camera Update ");
+        mafLogMessage(_M("Calling Superclass Camera Update "));
       
       Superclass::CameraUpdate();
     }
     else
     {
       if (DEBUG_MODE == true)
-        mafLogMessage("Calling Rotated Volumes Camera Update ");
+        mafLogMessage(_M("Calling Rotated Volumes Camera Update "));
       m_OldABSPose = m_NewABSPose;
       CameraUpdateForRotatedVolumes();
     }
@@ -1016,7 +1016,7 @@ void mafViewSlice::CameraUpdate()
   {
 
     if (DEBUG_MODE == true)
-      mafLogMessage("Calling Superclass Camera Update ");
+      mafLogMessage(_M("Calling Superclass Camera Update "));
   
     Superclass::CameraUpdate();
   }

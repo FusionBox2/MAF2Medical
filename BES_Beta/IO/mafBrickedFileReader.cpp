@@ -94,7 +94,7 @@ void mafBrickedFileReader::SetOutputRLGDataSet(vtkRectilinearGrid* ds)
 	CloseBrickFile();
 
   m_BrickFile = vtkMAFFile2::New();
-	m_BrickFile->Open(m_BrickFileName);
+	m_BrickFile->Open(m_BrickFileName.GetCStr());
 	m_BrickFile->Read(&m_FileHeader, sizeof(m_FileHeader));
 	if (m_FileHeader.signature != mafBrickedFile::m_Signature) {
 		m_BrickFile->Close();
@@ -576,7 +576,7 @@ void mafBrickedFileReader::GetBricksExtent(int VOI[6], int inBExt[6], int bndBEx
 
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SHOW, this));
 
-	mafString szMsg = _("Retrieving data ...");
+	mafString szMsg = _L("Retrieving data ...");
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
 

@@ -54,7 +54,7 @@ performing mouse dragging.
 class MED_OPERATION_EXPORT medOpExtrusionHoles: public mafOp
 {
 public:
-	medOpExtrusionHoles(const mafString& label = "Extrude Holes");
+	medOpExtrusionHoles(const mafString& label = _R("Extrude Holes"));
 	~medOpExtrusionHoles(); 
 
 	virtual void OnEvent(mafEventBase *maf_event);

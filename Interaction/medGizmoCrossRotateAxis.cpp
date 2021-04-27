@@ -115,7 +115,7 @@ medGizmoCrossRotateAxis::medGizmoCrossRotateAxis(mafVME *input, mafBaseEventHand
 
 	// the circle gizmo
 	m_GizmoCross = mafVMEGizmo::New();
-	m_GizmoCross->SetName("rotate cross");
+	m_GizmoCross->SetName(_R("rotate cross"));
 	m_GizmoCross->SetData(m_LinesRotatePDF->GetOutput());
 
 	medGizmoCrossRotateFan *rotateFan = NULL;
@@ -547,7 +547,7 @@ void medGizmoCrossRotateAxis::CreateFeedbackGizmoPipeline()
 	m_FeedbackStuffAppendPolydata->Update();
 
 	m_RotationFeedbackGizmo = mafVMEGizmo::New();
-	m_RotationFeedbackGizmo->SetName("AxisRotationFeedbackGizmo");
+	m_RotationFeedbackGizmo->SetName(_R("AxisRotationFeedbackGizmo"));
 
 	medGizmoCrossRotateFan *rotateFan = NULL;
 	rotateFan = dynamic_cast<medGizmoCrossRotateFan *>(GetListener());

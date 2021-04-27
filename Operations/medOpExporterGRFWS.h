@@ -56,7 +56,7 @@ class MED_OPERATION_EXPORT medOpExporterGRFWS : public mafOp
 {
 public:
   mafTypeMacro(medOpExporterGRFWS,mafOp)
-	medOpExporterGRFWS(const mafString& label = "GRF Exporter");
+	medOpExporterGRFWS(const mafString& label = _R("GRF Exporter"));
 	~medOpExporterGRFWS(); 
 	
   /** Copy the operation. */
@@ -184,10 +184,10 @@ protected:
 
   mafGUI* m_AdvanceSettings;
 
-	wxString m_File;
-  wxString m_File_temp1;
-  wxString m_File_temp2;
-  wxString m_File_temp3;
-  wxString m_File_temp4;
+	mafString m_File;
+  mafString m_File_temp1;
+  mafString m_File_temp2;
+  mafString m_File_temp3;
+  mafString m_File_temp4;
 };
 #endif

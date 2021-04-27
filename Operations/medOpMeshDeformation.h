@@ -139,7 +139,7 @@ protected:
 #pragma endregion //Help structures
 
 public:
-	medOpMeshDeformation(const mafString& label = "Mesh deformation");
+	medOpMeshDeformation(const mafString& label = _R("Mesh deformation"));
 	~medOpMeshDeformation(); 
 
 	/*virtual*/ void OnEvent(mafEventBase *maf_event);

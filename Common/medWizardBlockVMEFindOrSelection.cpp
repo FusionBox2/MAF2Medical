@@ -85,7 +85,7 @@ void medWizardBlockVMEFindOrSelection::ExcutionBegin()
 	  // if there are many acceptable volume we tell the user to select it
 	  if (VMENumber > 1)
 	  {
-		  mafString title = m_Title.c_str();
+		  mafString title = mafWxToString(m_Title);
 		  mafEvent e(this,VME_CHOOSE);
 		  e.SetString(&title);
 		  e.SetArg((long)(&VMEAccept)); 

@@ -89,7 +89,7 @@ medGUIWizardPageNew::medGUIWizardPageNew(medGUIWizard *wizardParent,long style, 
     m_GuiView->Add(m_LutSlider);
     if (ZCrop)
     {
-      m_ZCropSlider = new mafGUILutSlider(this,-1,wxPoint(0,0),wxSize(300,24),0,"Z crop");
+      m_ZCropSlider = new mafGUILutSlider(this,-1,wxPoint(0,0),wxSize(300,24),0,_R("Z crop"));
       m_ZCropSlider->SetListener(this);
       m_GuiView->Add(m_ZCropSlider);
       m_ZCropOn = true;

@@ -68,7 +68,7 @@ public:
   void OnPOperationButton();
   void Update();
   bool SetUpWidget();
-  medOpMML(const mafString& label = "");
+  medOpMML(const mafString& label = _R(""));
   virtual ~medOpMML(); 
   void   OnEvent(mafEventBase *e);
   mafOp* Copy();
@@ -149,8 +149,8 @@ protected:
   int             m_ShowAxes;
   int             m_ContourVisibility ;
 
-  wxString             m_VolName;
-  wxString             m_SurfaceName;
+  mafString             m_VolName;
+  mafString             m_SurfaceName;
 
   // msf file sections
   wxString			   m_AtlasMSFSectionName;

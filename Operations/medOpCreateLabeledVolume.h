@@ -40,7 +40,7 @@ class MED_OPERATION_EXPORT medOpCreateLabeledVolume: public mafOp
 {
 public:
   /** constructor */
-  medOpCreateLabeledVolume(const mafString& label = "Create labeled volume");
+  medOpCreateLabeledVolume(const mafString& label = _R("Create labeled volume"));
   /** destructor */
   ~medOpCreateLabeledVolume(); 
 

@@ -165,9 +165,9 @@ mafGUI* medVMEMaps::CreateGui()
   m_Gui->Divider();
 
   mafString m_Choices[2];
-  m_Choices[0]="Distance";
-  m_Choices[1]="Density";
-  m_Gui->Radio(ID_DENSITY_DISTANCE,"",&m_DensityDistance,2,m_Choices);
+  m_Choices[0]=_R("Distance");
+  m_Choices[1]=_R("Density");
+  m_Gui->Radio(ID_DENSITY_DISTANCE, _R(""),&m_DensityDistance,2,m_Choices);
 
   if(!m_Volume)
   {
@@ -323,7 +323,7 @@ void medVMEMaps::InternalPreUpdate()
   }
 
   mafVME *vol = mafVME::SafeDownCast(GetMappedVMELink());
-  m_MappedName = vol ? vol->GetName() : _("none");
+  m_MappedName = vol ? vol->GetName() : _L("none");
 }
 
 
@@ -364,7 +364,7 @@ int medVMEMaps::InternalStore(mafStorageElement *parent)
 {  
   if (Superclass::InternalStore(parent)==MAF_OK)
   {
-    parent->StoreMatrix("Transform",&m_Transform->GetMatrix());
+    parent->StoreMatrix(_R("Transform"),&m_Transform->GetMatrix());
     return MAF_OK;
   }
   return MAF_ERROR;
@@ -377,7 +377,7 @@ int medVMEMaps::InternalRestore(mafStorageElement *node)
   if (Superclass::InternalRestore(node)==MAF_OK)
   {
     mafMatrix matrix;
-    if (node->RestoreMatrix("Transform",&matrix)==MAF_OK)
+    if (node->RestoreMatrix(_R("Transform"),&matrix)==MAF_OK)
     {
       m_Transform->SetMatrix(matrix);
 
@@ -392,11 +392,11 @@ int medVMEMaps::InternalRestore(mafStorageElement *node)
 mmaMaterial *medVMEMaps::GetMaterial()
 //-------------------------------------------------------------------------
 {
-  mmaMaterial *material = (mmaMaterial *)GetAttribute("MaterialAttributes");
+  mmaMaterial *material = (mmaMaterial *)GetAttribute(_R("MaterialAttributes"));
   if (material == NULL)
   {
     material = mmaMaterial::New();
-    SetAttribute("MaterialAttributes", material);
+    SetAttribute(_R("MaterialAttributes"), material);
     lutPreset(14,GetMaterial()->m_ColorLut);
     //material->m_ColorLut = CreateTable();
     material->UpdateFromLut();
@@ -492,13 +492,13 @@ void medVMEMaps::SetMaxDistance(int maxDistance)
 mafNode *medVMEMaps::GetMappedVMELink()
 //-----------------------------------------------------------------------
 {
-  return mafNode::SafeDownCast(GetLink("MappedVME"));
+  return mafNode::SafeDownCast(GetLink(_R("MappedVME")));
 }
 //-----------------------------------------------------------------------
 void medVMEMaps::SetMappedVMELink(mafNode *node)
 //-----------------------------------------------------------------------
 {
-  SetLink("MappedVME", node);
+  SetLink(_R("MappedVME"), node);
   Modified();
 }
 
@@ -506,14 +506,14 @@ void medVMEMaps::SetMappedVMELink(mafNode *node)
 mafNode *medVMEMaps::GetSourceVMELink()
 //-----------------------------------------------------------------------
 {
-  return mafNode::SafeDownCast(GetLink("SourceVME"));
+  return mafNode::SafeDownCast(GetLink(_R("SourceVME")));
 }
 
 //-----------------------------------------------------------------------
 void medVMEMaps::SetSourceVMELink(mafNode *node)
 //-----------------------------------------------------------------------
 {
-  SetLink("SourceVME", node);
+  SetLink(_R("SourceVME"), node);
   Modified();
 }
 

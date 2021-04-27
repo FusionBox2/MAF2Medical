@@ -142,7 +142,7 @@ public:
 
   /** Gets the currently associated name with the GUI. */
   inline const char* GetName() {
-    return m_Name;
+    return m_Name.GetCStr();
   }
 
   /** Sets a new name associated with the GUI. */

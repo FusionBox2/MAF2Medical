@@ -35,7 +35,7 @@
 			ev.SetArg(0);
       InvokeEvent(&ev);
 
-      mafString szStr = caller->GetClassName(); //"Processing ";
+      mafString szStr = _R(caller->GetClassName()); //"Processing ";
 			ev.SetId(PROGRESSBAR_SET_TEXT);
 			ev.SetString(&szStr);
 		}

@@ -699,28 +699,28 @@ mafGUI *mafPipeVolumeSlice_BES::CreateGui()
   assert(m_Gui == NULL);
   double b[6] = {-1,1,-1,1,-1,1};
   m_Gui = new mafGUI(this);
-  m_Gui->Lut(ID_LUT_CHOOSER,"lut",m_ColorLUT);
-	m_Gui->FloatSlider(ID_OPACITY_SLIDER,"opacity",&m_SliceOpacity,0.1,1.0);
+  m_Gui->Lut(ID_LUT_CHOOSER,_R("lut"),m_ColorLUT);
+	m_Gui->FloatSlider(ID_OPACITY_SLIDER,_R("opacity"),&m_SliceOpacity,0.1,1.0);
   m_Vme->GetOutput()->GetVMELocalBounds(b);
 	if(m_ShowSlider)
 	{
 		if (m_SliceDirection == SLICE_X || m_SliceDirection == SLICE_ORTHO)
 		{
-			m_SliceSlider[0] = m_Gui->FloatSlider(ID_SLICE_SLIDER_X,"x",&m_Origin[0],b[0],b[1]);
+			m_SliceSlider[0] = m_Gui->FloatSlider(ID_SLICE_SLIDER_X,_R("x"),&m_Origin[0],b[0],b[1]);
 		}
 		if (m_SliceDirection == SLICE_Y || m_SliceDirection == SLICE_ORTHO)
 		{
-			m_SliceSlider[1] = m_Gui->FloatSlider(ID_SLICE_SLIDER_Y,"y",&m_Origin[1],b[2],b[3]);
+			m_SliceSlider[1] = m_Gui->FloatSlider(ID_SLICE_SLIDER_Y,_R("y"),&m_Origin[1],b[2],b[3]);
 		}
 		if (m_SliceDirection == SLICE_Z || m_SliceDirection == SLICE_ORTHO)
 		{
-			m_SliceSlider[2] = m_Gui->FloatSlider(ID_SLICE_SLIDER_Z,"z",&m_Origin[2],b[4],b[5]);
+			m_SliceSlider[2] = m_Gui->FloatSlider(ID_SLICE_SLIDER_Z,_R("z"),&m_Origin[2],b[4],b[5]);
 		}
 	}
 	m_Gui->Divider();
 //   m_Gui->Bool(ID_ENABLE_GPU, "Enable GPU", &m_EnableGPU, 1, 
 //     _("Enables / disables GPU support for slicing. GPU slicing is typically faster but may produce wrong results on some hardware."));
-  m_Gui->Bool(ID_ENABLE_TRILINEAR_INTERPOLATION,"Interpolation",&m_TrilinearInterpolationOn,1,"Enable/Disable tri-linear interpolation on slices");
+  m_Gui->Bool(ID_ENABLE_TRILINEAR_INTERPOLATION,_R("Interpolation"),&m_TrilinearInterpolationOn,1,_R("Enable/Disable tri-linear interpolation on slices"));
   return m_Gui;
 }
 //----------------------------------------------------------------------------

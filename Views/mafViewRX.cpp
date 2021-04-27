@@ -101,13 +101,13 @@ void mafViewRX::Create()
 void mafViewRX::VmeCreatePipe(mafNode *vme)
 //----------------------------------------------------------------------------
 {
-  mafString pipe_name = "";
+  mafString pipe_name = _R("");
   GetVisualPipeName(vme, pipe_name);
 
   mafSceneNode *n = m_Sg->Vme2Node(vme);
   assert(n && !n->m_Pipe);
 
-  if (pipe_name != "")
+  if (!pipe_name.IsEmpty())
   {
     if((vme->IsMAFType(mafVMELandmarkCloud) && ((mafVMELandmarkCloud*)vme)->IsOpen()) || vme->IsMAFType(mafVMELandmark) && m_NumberOfVisibleVme == 1)
     {
@@ -120,12 +120,12 @@ void mafViewRX::VmeCreatePipe(mafNode *vme)
     mafPipeFactory *pipe_factory  = mafPipeFactory::GetInstance();
     assert(pipe_factory!=NULL);
     mafObject *obj= NULL;
-    obj = pipe_factory->CreateInstance(pipe_name);
+    obj = pipe_factory->CreateInstance(pipe_name.GetCStr());
     mafPipe *pipe = (mafPipe*)obj;
     if (pipe)
     {
       pipe->SetListener(this);
-      if (pipe_name.Equals("mafPipeVolumeProjected"))
+      if (pipe_name.Equals(_R("mafPipeVolumeProjected")))
       {
         ((mafPipeVolumeProjected *)pipe)->InitializeProjectParameters(m_CameraPositionId);
         m_CurrentVolume = n;
@@ -135,7 +135,7 @@ void mafViewRX::VmeCreatePipe(mafNode *vme)
           CameraUpdate();
         }
       }
-      else if(pipe_name.Equals("mafPipeSurfaceSlice"))
+      else if(pipe_name.Equals(_R("mafPipeSurfaceSlice")))
       {
         double normal[3];
         switch(m_CameraPositionId)
@@ -173,7 +173,7 @@ void mafViewRX::VmeCreatePipe(mafNode *vme)
         ((mafPipeSurfaceSlice *)pipe)->SetNormal(normal);
 
       }
-      else if(pipe_name.Equals("medVisualPipeSlicerSlice"))
+      else if(pipe_name.Equals(_R("medVisualPipeSlicerSlice")))
       {
         double normal[3];
         switch(m_CameraPositionId)
@@ -247,7 +247,7 @@ void mafViewRX::VmeCreatePipe(mafNode *vme)
       n->m_Pipe = (mafPipe*)pipe;
     }
     else
-      mafErrorMessage("Cannot create visual pipe object of type \"%s\"!",pipe_name.GetCStr());
+      mafErrorMessage(_M(_R("Cannot create visual pipe object of type \"") + pipe_name + _R("\"!")));
   }
 }
 //----------------------------------------------------------------------------
@@ -339,8 +339,8 @@ void mafViewRX::SetLutRange(double low_val, double high_val)
 {
   if(!m_CurrentVolume) 
     return;
-  mafString pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-  if (pipe_name.Equals("mafPipeVolumeProjected"))
+  mafString pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+  if (pipe_name.Equals(_R("mafPipeVolumeProjected")))
   {
     mafPipeVolumeProjected *pipe = (mafPipeVolumeProjected *)m_CurrentVolume->m_Pipe;
     pipe->SetLutRange(low_val, high_val); 
@@ -352,8 +352,8 @@ void mafViewRX::GetLutRange(double minMax[2])
 {
   if(!m_CurrentVolume) 
     return;
-  mafString pipe_name = m_CurrentVolume->m_Pipe->GetTypeName();
-  if (pipe_name.Equals("mafPipeVolumeProjected"))
+  mafString pipe_name = _R(m_CurrentVolume->m_Pipe->GetTypeName());
+  if (pipe_name.Equals(_R("mafPipeVolumeProjected")))
   {
     mafPipeVolumeProjected *pipe = (mafPipeVolumeProjected *)m_CurrentVolume->m_Pipe;
     pipe->GetLutRange(minMax); 
@@ -368,26 +368,26 @@ void mafViewRX::CameraUpdate()
     mafVME *volume = mafVME::SafeDownCast(m_CurrentVolume->m_Vme);
 
     std::ostringstream stringStream;
-    stringStream << "VME " << volume->GetName() << " ABS matrix:" << std::endl;
+    stringStream << "VME " << volume->GetName().GetCStr() << " ABS matrix:" << std::endl;
 
     volume->GetAbsMatrixPipe()->GetMatrixPointer()->Print(stringStream);
 
     m_NewABSPose = volume->GetAbsMatrixPipe()->GetMatrix();
 
     if (DEBUG_MODE == true)
-      mafLogMessage(stringStream.str().c_str());
+        mafLogMessage(_M(stringStream.str().c_str()));
 
     if (m_NewABSPose.Equals(&m_OldABSPose))
     { 
       if (DEBUG_MODE == true)
-        mafLogMessage("Calling Superclass Camera Update ");
+        mafLogMessage(_M("Calling Superclass Camera Update "));
 
       Superclass::CameraUpdate();
     }
     else
     {
       if (DEBUG_MODE == true)
-        mafLogMessage("Calling Rotated Volumes Camera Update ");
+        mafLogMessage(_M("Calling Rotated Volumes Camera Update "));
       m_OldABSPose = m_NewABSPose;
       CameraUpdateForRotatedVolumes();
     }
@@ -396,7 +396,7 @@ void mafViewRX::CameraUpdate()
   {
 
     if (DEBUG_MODE == true)
-      mafLogMessage("Calling Superclass Camera Update ");
+      mafLogMessage(_M("Calling Superclass Camera Update "));
     
     Superclass::CameraUpdate();
   

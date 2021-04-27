@@ -41,11 +41,11 @@ void medGUISettingsAdvanced::CreateGui()
 {
   m_Gui = new mafGUI(this);
 
-  mafString choices_conversion[2] = {"NONE","mm2m"};
-  m_Gui->Label(_("Convert Data in SI units"));
-  m_Gui->Combo(ID_CONVERSION_UNITS,"",&m_ConversionUnits,2,choices_conversion);
+  mafString choices_conversion[2] = {_R("NONE"),_R("mm2m")};
+  m_Gui->Label(_L("Convert Data in SI units"));
+  m_Gui->Combo(ID_CONVERSION_UNITS, _R(""),&m_ConversionUnits,2,choices_conversion);
   
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
 }
 //----------------------------------------------------------------------------
 medGUISettingsAdvanced::~medGUISettingsAdvanced() 

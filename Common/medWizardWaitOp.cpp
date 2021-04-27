@@ -70,17 +70,17 @@ void medWizardWaitOp::OpRun()
   m_Gui = new mafGUI(this);
   m_Gui->Divider();
   
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
 
   //exit op button
-  m_Gui->TwoButtons(wxCANCEL,wxOK,"Cancel","To next step");
+  m_Gui->TwoButtons(wxCANCEL,wxOK,_R("Cancel"),_R("To next step"));
     
   m_Gui->Divider();
 

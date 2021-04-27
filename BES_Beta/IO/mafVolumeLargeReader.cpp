@@ -86,26 +86,26 @@ void mafVolumeLargeReader::SetOutputRLGDataSet(vtkRectilinearGrid* ds)
 //Creates all levels
 /*virtual*/ void mafVolumeLargeReader::CreateLODs() throw(...)
 {
-	wxString szPath, szFile, szExt;
-	wxSplitPath(m_BrickFileName, &szPath, &szFile, &szExt);
+	mafString szPath, szFile, szExt;
+	mafSplitPath(m_BrickFileName, &szPath, &szFile, &szExt);
 
-	wxString szFNamePrefix = szPath;
-	if (!wxEndsWithPathSeparator(szPath))
-		szFNamePrefix += wxFILE_SEP_PATH;
-	szFNamePrefix += szFile;	
+	mafString szFNamePrefix = szPath;
+	if (!wxEndsWithPathSeparator(szFNamePrefix.toWx()))
+		szFNamePrefix += mafWxToString(wxFILE_SEP_PATH);
+	szFNamePrefix += szFile;
 	
-	wxString szFName = szFNamePrefix + "_01.bbf";
-	if (!::wxFileExists(szFName)) 
+	mafString szFName = szFNamePrefix + _R("_01.bbf");
+	if (!mafFileExists(szFName)) 
 	{
 		//error, there should be at least high resolution file
-		throw std::ios::failure(wxString::Format(
-			_("Highest resolution bricked file not found.\nFileName='%s'"), szFName).c_str());
+		throw std::ios::failure((mafString::Format(
+			_L("Highest resolution bricked file not found.\nFileName='")) + szFName + mafString::Format(_L("'"))).GetCStr());
 	}
 			
 	//detect the coarsest level we have
 	m_NLevels = 99;
-	while (!::wxFileExists(wxString::Format("%s_%02d.bbf",
-		szFNamePrefix, m_NLevels))) {
+	while (!mafFileExists(szFNamePrefix + mafString::Format(_R("_%02d.bbf"),
+		m_NLevels))) {
 			m_NLevels--;
 	}
 	
@@ -114,11 +114,11 @@ void mafVolumeLargeReader::SetOutputRLGDataSet(vtkRectilinearGrid* ds)
 	memset(m_PLevels, 0, m_NLevels*sizeof(m_PLevels[0]));
 	for (int i = 1; i < m_NLevels; i++)
 	{
-		szFName = wxString::Format("%s_%02d.bbf", szFNamePrefix, i);
-		if (::wxFileExists(szFName))
+		szFName = szFNamePrefix + mafString::Format(_R("_%02d.bbf"), i);
+		if (mafFileExists(szFName))
 		{
 			m_PLevels[i] = new mafBrickedFileReader();
-			m_PLevels[i]->SetFileName(szFName);
+			m_PLevels[i]->SetFileName(szFName.GetCStr());
 			m_PLevels[i]->SetEmptyVOI();
 			m_PLevels[i]->Update();				//force the validation
 		}
@@ -294,7 +294,7 @@ vtkIdType64 mafVolumeLargeReader::GetLevelFilesSize()
 	{
 		if (m_PLevels[i] != NULL)
 		{
-			nRet += vtkMAFFile::GetFileSize(m_PLevels[i]->GetFileName());
+			nRet += vtkMAFFile::GetFileSize(m_PLevels[i]->GetFileName().GetCStr());
 		}
 	}
 

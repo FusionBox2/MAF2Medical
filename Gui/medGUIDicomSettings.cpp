@@ -62,11 +62,11 @@ mafGUISettings(Listener, label)
   m_OutputType = 0;
   m_ScalarDistanceTolerance = 0.3;
   m_PercentageDistanceTolerance = 88;
-  m_LastDicomDir = "UNEDFINED_m_LastDicomDir";
+  m_LastDicomDir = _R("UNEDFINED_m_LastDicomDir");
   m_Step = ID_1X;
   m_OutputNameType = TRADITIONAL;
   m_ShowAdvancedOptionOfSorting = TRUE;
-  m_DicomFolder = "UNEDFINED_DicomFolder";
+  m_DicomFolder = _R("UNEDFINED_DicomFolder");
   m_UseDefaultDicomFolder = FALSE;
 
   m_DCM_ImagePositionPatientchoice = 0;
@@ -84,41 +84,41 @@ void medGUIDicomSettings::CreateGui()
 //----------------------------------------------------------------------------
 {
 	m_Gui = new mafGUI(this);
-  m_Gui->Bool(ID_USE_DEFAULT_DICOM_FOLDER,_("Use Default DICOM Folder"),&m_UseDefaultDicomFolder,1);
-  m_Gui->DirOpen(ID_DICOM_FOLDER,_("Folder"),&m_DicomFolder,_("Folder where are placed DICOM files"));
+  m_Gui->Bool(ID_USE_DEFAULT_DICOM_FOLDER,_L("Use Default DICOM Folder"),&m_UseDefaultDicomFolder,1);
+  m_Gui->DirOpen(ID_DICOM_FOLDER,_L("Folder"),&m_DicomFolder,_L("Folder where are placed DICOM files"));
 	// m_Gui->FileOpen(ID_DICTONARY,_("Dictionary"),&m_Dictionary); Remove dictionary selection (Losi 25.11.2009)
-	m_Gui->Bool(ID_AUTO_POS_CROP,_("Auto Crop"),&m_AutoCropPos,1);
-  m_Gui->Bool(ID_ENALBLE_TIME_BAR,_("Enable Time Bar"),&m_EnableNumberOfTime,1);
-	m_Gui->Bool(ID_ENALBLE_NUMBER_OF_SLICE,_("Enable Number of Slice"),&m_EnableNumberOfSlice,1);
-  m_Gui->Bool(ID_SIDE,_("Enable Change Side"),&m_EnableChangeSide,1);
-  m_Gui->Bool(ID_DISCARD_ORIGIN,_("Enable Discard Origin"),&m_EnableDiscardPosition,1);
-  m_Gui->Bool(ID_RESAMPLE_VOLUME,_("Enable Resample Volume"),&m_EnableResampleVolume,1);
-  m_Gui->Bool(ID_RESCALE_TO_16_BIT,_("Enable Rescaling to 16 Bit"),&m_EnableRescaleTo16Bit,1);
-  m_Gui->Bool(ID_Z_CROP,_("Enable Z-direction Crop"),&m_EnableZCrop,1);
-  m_Gui->Bool(ID_SHOW_ADVANCED_OPTION_SORTING,_("Show adv setting of sorting"),&m_ShowAdvancedOptionOfSorting,1);
-  m_Gui->Bool(ID_ENABLE_POS_INFO,_("Visualize Position and Orientation"),&m_VisualizePosition,1);
+	m_Gui->Bool(ID_AUTO_POS_CROP,_L("Auto Crop"),&m_AutoCropPos,1);
+  m_Gui->Bool(ID_ENALBLE_TIME_BAR,_L("Enable Time Bar"),&m_EnableNumberOfTime,1);
+	m_Gui->Bool(ID_ENALBLE_NUMBER_OF_SLICE,_L("Enable Number of Slice"),&m_EnableNumberOfSlice,1);
+  m_Gui->Bool(ID_SIDE,_L("Enable Change Side"),&m_EnableChangeSide,1);
+  m_Gui->Bool(ID_DISCARD_ORIGIN,_L("Enable Discard Origin"),&m_EnableDiscardPosition,1);
+  m_Gui->Bool(ID_RESAMPLE_VOLUME,_L("Enable Resample Volume"),&m_EnableResampleVolume,1);
+  m_Gui->Bool(ID_RESCALE_TO_16_BIT,_L("Enable Rescaling to 16 Bit"),&m_EnableRescaleTo16Bit,1);
+  m_Gui->Bool(ID_Z_CROP,_L("Enable Z-direction Crop"),&m_EnableZCrop,1);
+  m_Gui->Bool(ID_SHOW_ADVANCED_OPTION_SORTING,_L("Show adv setting of sorting"),&m_ShowAdvancedOptionOfSorting,1);
+  m_Gui->Bool(ID_ENABLE_POS_INFO,_L("Visualize Position and Orientation"),&m_VisualizePosition,1);
 
-  m_Gui->Bool(ID_SCALAR_DISTANCE_TOLERANCE,_("Scalar distance tolerance"),&m_ScalarTolerance,1);
-  m_Gui->Double(ID_SCALAR_TOLERANCE,_("Value"),&m_ScalarDistanceTolerance,0,MAXDOUBLE,5,"Value in millimeter");
+  m_Gui->Bool(ID_SCALAR_DISTANCE_TOLERANCE,_L("Scalar distance tolerance"),&m_ScalarTolerance,1);
+  m_Gui->Double(ID_SCALAR_TOLERANCE,_L("Value"),&m_ScalarDistanceTolerance,0,MAXDOUBLE,5,_R("Value in millimeter"));
 
-  m_Gui->Bool(ID_PERCENTAGE_DISTANCE_TOLERANCE,_("Percentage distance tolerance"),&m_PercentageTolerance,1);
-  m_Gui->Double(ID_PERCENTAGE_TOLERANCE,_("Value"),&m_PercentageDistanceTolerance,0,MAXDOUBLE,2,"Value in percentage");
+  m_Gui->Bool(ID_PERCENTAGE_DISTANCE_TOLERANCE,_L("Percentage distance tolerance"),&m_PercentageTolerance,1);
+  m_Gui->Double(ID_PERCENTAGE_TOLERANCE,_L("Value"),&m_PercentageDistanceTolerance,0,MAXDOUBLE,2,_R("Value in percentage"));
 
-  mafString DCM_IMGchoices[2]={_("Skip All"),_("Set Default position")};
-  m_Gui->Label("Dicom image position patient exception handling");
-  m_Gui->Combo(ID_DCM_POSITION_PATIENT_CHOICE,_("        "),&m_DCM_ImagePositionPatientchoice,2,DCM_IMGchoices);
+  mafString DCM_IMGchoices[2]={_L("Skip All"),_L("Set Default position")};
+  m_Gui->Label(_R("Dicom image position patient exception handling"));
+  m_Gui->Combo(ID_DCM_POSITION_PATIENT_CHOICE,_L("        "),&m_DCM_ImagePositionPatientchoice,2,DCM_IMGchoices);
 
   m_Gui->Divider();
   m_Gui->Divider(1);
   m_Gui->Divider();
   
-  m_Gui->Bool(ID_AUTO_VME_TYPE,_("Auto VME Type"),&m_AutoVMEType,1);
-  mafString typeArray[3] = {_("Volume"),_("Mesh"),_("Image")};
-  m_Gui->Radio(ID_SETTING_VME_TYPE, "VME output", &m_OutputType, 3, typeArray, 1, ""/*, wxRA_SPECIFY_ROWS*/);
+  m_Gui->Bool(ID_AUTO_VME_TYPE,_L("Auto VME Type"),&m_AutoVMEType,1);
+  mafString typeArray[3] = {_L("Volume"),_L("Mesh"),_L("Image")};
+  m_Gui->Radio(ID_SETTING_VME_TYPE, _R("VME output"), &m_OutputType, 3, typeArray, 1, _R("")/*, wxRA_SPECIFY_ROWS*/);
 
   m_Gui->Divider();
 
-  m_DicomVmeTypeListBox=m_Gui->CheckList(ID_VME_TYPE,_("VME Type"));
+  m_DicomVmeTypeListBox=m_Gui->CheckList(ID_VME_TYPE,_L("VME Type"));
 	m_DicomVmeTypeListBox->AddItem(ID_VOLUME,_("Volume"),m_CheckOnOffVmeType[0] != 0);
 	m_DicomVmeTypeListBox->AddItem(ID_MESH,_("Mesh"),m_CheckOnOffVmeType[1] != 0);
 	m_DicomVmeTypeListBox->AddItem(ID_IMAGE,_("Image"),m_CheckOnOffVmeType[2] != 0);
@@ -127,9 +127,9 @@ void medGUIDicomSettings::CreateGui()
   m_Gui->Divider(1);
   m_Gui->Divider();
 
-	mafString choices[4]={_("1x"),_("2x"),_("3x"),_("4x")};
-	m_Gui->Combo(ID_STEP,_("Build Step"),&m_Step,4,choices);
-	m_DicomModalityListBox=m_Gui->CheckList(ID_TYPE_DICOM,_("Modality"));
+	mafString choices[4]={_L("1x"),_L("2x"),_L("3x"),_L("4x")};
+	m_Gui->Combo(ID_STEP,_L("Build Step"),&m_Step,4,choices);
+	m_DicomModalityListBox=m_Gui->CheckList(ID_TYPE_DICOM,_L("Modality"));
 	m_DicomModalityListBox->AddItem(ID_CT_MODALITY,_("CT"),m_CheckOnOff[0] != 0);
 	m_DicomModalityListBox->AddItem(ID_SC_MODALITY,_("SC"),m_CheckOnOff[1] != 0);
 	m_DicomModalityListBox->AddItem(ID_MRI_MODALITY,_("MRI"),m_CheckOnOff[2] != 0);
@@ -141,9 +141,9 @@ void medGUIDicomSettings::CreateGui()
 	m_Gui->Divider(1);
 
 
-  mafString outputNameTypeChoices[3] = {_("Traditional format"),_("Format : 'description_numslices'"),_("Custom")};
-  m_Gui->Radio(ID_OUTPUT_NAME,_("Output name"),&m_OutputNameType,3,outputNameTypeChoices);
-  m_NameCompositorList = m_Gui->CheckList(ID_NAME_COMPOSITOR,"");
+  mafString outputNameTypeChoices[3] = {_L("Traditional format"),_L("Format : 'description_numslices'"),_L("Custom")};
+  m_Gui->Radio(ID_OUTPUT_NAME,_L("Output name"),&m_OutputNameType,3,outputNameTypeChoices);
+  m_NameCompositorList = m_Gui->CheckList(ID_NAME_COMPOSITOR, _R(""));
  // m_NameCompositorList->AddItem(ID_SERIES,_("Series"),m_CheckNameCompositor[ID_SERIES]);
   m_NameCompositorList->AddItem(ID_DESCRIPTION,_("Description"),m_CheckNameCompositor[ID_DESCRIPTION]);
   m_NameCompositorList->AddItem(ID_PATIENT_NAME,_("Patient Name"),m_CheckNameCompositor[ID_PATIENT_NAME]);
@@ -195,7 +195,7 @@ void medGUIDicomSettings::OnEvent(mafEventBase *maf_event)
     break;
   case ID_DICOM_FOLDER:
     {
-      m_Config->Write("DicomFolder",m_DicomFolder.GetCStr());
+      m_Config->Write("DicomFolder",m_DicomFolder.toWx());
     }
     break;
   case ID_SHOW_ADVANCED_OPTION_SORTING:
@@ -356,7 +356,7 @@ void medGUIDicomSettings::OnEvent(mafEventBase *maf_event)
 void medGUIDicomSettings::InitializeSettings()
 //----------------------------------------------------------------------------
 {
-	wxString string_item;
+	wxString string_item_;
 	long long_item;
 	double double_item;
 
@@ -433,13 +433,13 @@ void medGUIDicomSettings::InitializeSettings()
 		m_Config->Write("StepOfBuild",m_Step);
 	}
 
-	if(m_Config->Read("LastDicomDir", &string_item))
+	if(m_Config->Read("LastDicomDir", &string_item_))
 	{
-		m_LastDicomDir=string_item.c_str();
+		m_LastDicomDir=mafWxToString(string_item_);
 	}
 	else
 	{
-		m_Config->Write("LastDicomDir",m_LastDicomDir.c_str());
+		m_Config->Write("LastDicomDir",m_LastDicomDir.toWx());
 	}
 
 	if(m_Config->Read("EnableReadCT", &long_item))
@@ -622,13 +622,13 @@ void medGUIDicomSettings::InitializeSettings()
     m_Config->Write("ShowAdvancedOptionOfSorting",m_ShowAdvancedOptionOfSorting);
   }
 
-  if(m_Config->Read("DicomFolder", &string_item))
+  if(m_Config->Read("DicomFolder", &string_item_))
   {
-    m_DicomFolder=string_item;
+    m_DicomFolder= mafWxToString(string_item_);
   }
   else
   {
-    m_Config->Write("DicomFolder",m_DicomFolder.GetCStr());
+    m_Config->Write("DicomFolder",m_DicomFolder.toWx());
   }
 
   if(m_Config->Read("UseDefaultDicomFolder", &long_item))
@@ -861,11 +861,11 @@ bool medGUIDicomSettings::EnableToRead(char* type)
   }
 }
 
-void medGUIDicomSettings::SetLastDicomDir( wxString lastDicomDir )
+void medGUIDicomSettings::SetLastDicomDir( mafString lastDicomDir )
 {
   m_LastDicomDir = lastDicomDir;
   assert(m_Config);
-  m_Config->Write("LastDicomDir",m_LastDicomDir.c_str());
+  m_Config->Write("LastDicomDir",m_LastDicomDir.toWx());
 
 }
 

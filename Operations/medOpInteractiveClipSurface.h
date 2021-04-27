@@ -59,7 +59,7 @@ class vtkMAFClipSurfaceBoundingBox;
 class MED_OPERATION_EXPORT medOpInteractiveClipSurface: public mafOp
 {
 public:
-  medOpInteractiveClipSurface(const mafString& label = "medOpInteractiveClipSurface");
+  medOpInteractiveClipSurface(const mafString& label = _R("medOpInteractiveClipSurface"));
   ~medOpInteractiveClipSurface(); 
 	virtual void OnEvent(mafEventBase *maf_event);
 

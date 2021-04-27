@@ -215,7 +215,7 @@ void mafViewGlobalSlice::Create()
   m_Sg->SetListener(this);
   m_Rwi->m_Sg = m_Sg;
 
-	m_Text = "";
+	m_Text = _R("");
 	m_TextMapper = vtkTextMapper::New();
 	m_TextMapper->SetInput(m_Text.GetCStr());
 	m_TextMapper->GetTextProperty()->AntiAliasingOff();
@@ -320,7 +320,7 @@ void mafViewGlobalSlice::VmeSelect(mafNode *node,bool select)
 void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
 //----------------------------------------------------------------------------
 {
-  mafString pipe_name = "";
+  mafString pipe_name = _R("");
   GetVisualPipeName(node, pipe_name);
 
   std::pair<mafID,int> pair(node->GetId(),m_NumberOfVmeInstantiated);
@@ -360,7 +360,7 @@ void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
   transform->TransformNormal(m_SliceXVector, applied_xVector);
   transform->TransformNormal(m_SliceYVector, applied_yVector);
 
-  if (pipe_name != "")
+  if (!pipe_name.IsEmpty())
   {
     if((vme->IsMAFType(mafVMELandmarkCloud) && ((mafVMELandmarkCloud*)vme)->IsOpen()) || vme->IsMAFType(mafVMELandmark) && m_NumberOfVisibleVme == 1)
     {
@@ -373,16 +373,16 @@ void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
     mafPipeFactory *pipe_factory  = mafPipeFactory::GetInstance();
     assert(pipe_factory!=NULL);
     mafObject *obj= NULL;
-    obj = pipe_factory->CreateInstance(pipe_name);
+    obj = pipe_factory->CreateInstance(pipe_name.GetCStr());
     mafPipe *pipe = (mafPipe*)obj;
     if (pipe)
     {
       pipe->SetListener(this);
-      if (pipe_name.Equals("mafPipeVolumeSlice"))
+      if (pipe_name.Equals(_R("mafPipeVolumeSlice")))
       {
         ((mafPipeVolumeSlice *)pipe)->InitializeSliceParameters(m_SliceMode,applied_origin,applied_xVector,applied_yVector,true,false);
 			}
-      else if(pipe_name.Equals("mafPipeSurfaceSlice"))
+      else if(pipe_name.Equals(_R("mafPipeSurfaceSlice")))
       {
 				((mafPipeSurfaceSlice *)pipe)->ShowBoxSelectionOn();
         ((mafPipeSurfaceSlice *)pipe)->SetSlice(m_SliceOrigin);
@@ -392,7 +392,7 @@ void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
 				DoubleNormal[2]=(double)m_SliceNormal[2];
 				((mafPipeSurfaceSlice *)pipe)->SetNormal(DoubleNormal);
 			}
-      else if(pipe_name.Equals("mafPipeMeshSlice"))
+      else if(pipe_name.Equals(_R("mafPipeMeshSlice")))
       {
         double DoubleNormal[3];
         DoubleNormal[0]=(double)m_SliceNormal[0];
@@ -408,7 +408,7 @@ void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
       pipe->Create(node, this);
 			n->m_Pipe = (mafPipe*)pipe;
 
-			if (pipe_name.Equals("mafPipeVolumeSlice"))
+			if (pipe_name.Equals(_R("mafPipeVolumeSlice")))
 			{
 				((mafPipeVolumeSlice *)pipe)->HideSlider();
 			}
@@ -432,7 +432,7 @@ void mafViewGlobalSlice::VmeCreatePipe(mafNode *node)
       }
     }
     else
-      mafErrorMessage("Cannot create visual pipe object of type \"%s\"!",pipe_name.GetCStr());
+      mafErrorMessage(_M(_R("Cannot create visual pipe object of type \"") + pipe_name + _R("\"!")));
   }
 	transform->Delete();
   transform = NULL;
@@ -601,14 +601,14 @@ void mafViewGlobalSlice::UpdateSliceParameters()
 mafGUI* mafViewGlobalSlice::CreateGui()
 //----------------------------------------------------------------------------
 {
-	mafString Views[3] = {"XY","XZ","YZ"};
+	mafString Views[3] = {_R("XY"),_R("XZ"),_R("YZ")};
 
 	assert(m_Gui == NULL);
   m_Gui = new mafGUI(this);
 	
-	m_GlobalSlider = m_Gui->FloatSlider(ID_POS_SLIDER,"pos.",&m_SliderOrigin,m_GlobalBounds[4],m_GlobalBounds[5]);
-	m_Gui->Combo(ID_CHANGE_VIEW,"view",&m_ViewIndex,3,Views);
-	m_OpacitySlider = m_Gui->FloatSlider(ID_OPACITY_SLIDER,"opacity",&m_Opacity,0.1,1.0);
+	m_GlobalSlider = m_Gui->FloatSlider(ID_POS_SLIDER,_R("pos."),&m_SliderOrigin,m_GlobalBounds[4],m_GlobalBounds[5]);
+	m_Gui->Combo(ID_CHANGE_VIEW,_R("view"),&m_ViewIndex,3,Views);
+	m_OpacitySlider = m_Gui->FloatSlider(ID_OPACITY_SLIDER,_R("opacity"),&m_Opacity,0.1,1.0);
 
 	bool Enable = false;
   mafNode *selVME = m_Sg->GetSelectedVme();
@@ -625,7 +625,7 @@ mafGUI* mafViewGlobalSlice::CreateGui()
 
   m_SliderOldOrigin = m_SliderOrigin;
 
-  m_Gui->Bool(ID_TRILINEAR_INTERPOLATION_ON,"Interpolation",&m_TrilinearInterpolationOn,1);
+  m_Gui->Bool(ID_TRILINEAR_INTERPOLATION_ON,_R("Interpolation"),&m_TrilinearInterpolationOn,1);
 	m_Gui->Divider();
 	m_Gui->Update();
   return m_Gui;
@@ -805,7 +805,7 @@ void mafViewGlobalSlice::SetSlice(double origin[3], double dn)
 void mafViewGlobalSlice::UpdateText()
 //----------------------------------------------------------------------------
 {
-	m_Text = wxString::Format("o = [%.1f %.1f %.1f]  n = [%.1f %.1f %.1f]",m_SliceOrigin[0],m_SliceOrigin[1],m_SliceOrigin[2],m_SliceNormal[0],m_SliceNormal[1],m_SliceNormal[2]);
+	m_Text = mafString::Format(_R("o = [%.1f %.1f %.1f]  n = [%.1f %.1f %.1f]"),m_SliceOrigin[0],m_SliceOrigin[1],m_SliceOrigin[2],m_SliceNormal[0],m_SliceNormal[1],m_SliceNormal[2]);
 	m_TextMapper->SetInput(m_Text.GetCStr());
 	m_TextMapper->Modified();
 }

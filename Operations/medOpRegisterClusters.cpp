@@ -76,9 +76,9 @@ medOpRegisterClusters::medOpRegisterClusters(const mafString& label) : Superclas
   m_PointsTarget		= NULL;
 
 
-	m_SourceName			="none";
-  m_TargetName			="none";
-	m_FollowerName		="none";
+	m_SourceName			=_R("none");
+  m_TargetName			=_R("none");
+	m_FollowerName		=_R("none");
 	m_Apply						= 0;
 	m_MultiTime				= 0;
 	m_RegistrationMode = RIGID;
@@ -154,34 +154,34 @@ void medOpRegisterClusters::OpRun()
   if(!m_TestMode)
   {
     int num_choices = 3;
-    const mafString choices_string[] = {_("rigid"), _("similarity"), _("affine")}; 
-    mafString wildcard = "Dictionary (*.txt)|*.txt|All Files (*.*)|*.*";
+    const mafString choices_string[] = {_L("rigid"), _L("similarity"), _L("affine")}; 
+    mafString wildcard = _R("Dictionary (*.txt)|*.txt|All Files (*.*)|*.*");
 
     m_Gui = new mafGUI(this);
     m_Gui->SetListener(this);
 
-    m_Gui->Label(_("source :"),true);
+    m_Gui->Label(_L("source :"),true);
     m_Gui->Label(&m_SourceName);
 
-    m_Gui->Label(_("target :"),true);
+    m_Gui->Label(_L("target :"),true);
     m_Gui->Label(&m_TargetName);
 
-    m_Gui->Label(_("follower surface:"),true);
+    m_Gui->Label(_L("follower surface:"),true);
     m_Gui->Label(&m_FollowerName);
 
-    m_Gui->Button(ID_CHOOSE,_("target "));
-    m_Gui->Button(ID_CHOOSE_SURFACE,_("follower surface"));
+    m_Gui->Button(ID_CHOOSE,_L("target "));
+    m_Gui->Button(ID_CHOOSE_SURFACE,_L("follower surface"));
 
-    m_Gui->Button(ID_WEIGHT,_("weighted registration"));
+    m_Gui->Button(ID_WEIGHT,_L("weighted registration"));
     m_Gui->Enable(ID_WEIGHT,false);
 
-    m_Gui->Combo(ID_REGTYPE, _("reg. type"), &m_RegistrationMode, num_choices, choices_string); 
+    m_Gui->Combo(ID_REGTYPE, _L("reg. type"), &m_RegistrationMode, num_choices, choices_string); 
 
-    m_Gui->Bool(ID_MULTIPLE_TIME_REGISTRATION,_("multi-time"),&m_MultiTime,1);
+    m_Gui->Bool(ID_MULTIPLE_TIME_REGISTRATION,_L("multi-time"),&m_MultiTime,1);
     m_Gui->Enable(ID_MULTIPLE_TIME_REGISTRATION,false);
 
-    m_Gui->Label(_("Apply registration matrix to landmarks"));
-    m_Gui->Bool(ID_APPLY_REGISTRATION,_("Apply"),&m_Apply,1);
+    m_Gui->Label(_L("Apply registration matrix to landmarks"));
+    m_Gui->Bool(ID_APPLY_REGISTRATION,_L("Apply"),&m_Apply,1);
     m_Gui->Enable(ID_APPLY_REGISTRATION,false);
 
     m_Gui->OkCancel();
@@ -206,7 +206,7 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
     {
 		  case ID_CHOOSE:
 		  {
-			  mafString s(_("Choose cloud"));
+			  mafString s(_L("Choose cloud"));
         mafEvent e(this,VME_CHOOSE, &s, (long)&medOpRegisterClusters::ClosedCloudAccept);
 			  mafEventMacro(e);
 			  mafNode *vme = e.GetVme();
@@ -217,7 +217,7 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
 		  break;
 		  case ID_CHOOSE_SURFACE:
 		  {
-			  mafString s(_("Choose surface"));
+			  mafString s(_L("Choose surface"));
         mafEvent e(this,VME_CHOOSE, &s, (long)&medOpRegisterClusters::SurfaceAccept);
 			  mafEventMacro(e);
 			  mafNode *vme = e.GetVme();
@@ -237,7 +237,7 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
 				  x_init = mafGetFrame()->GetPosition().x;
 				  y_init = mafGetFrame()->GetPosition().y;
 
-          m_Dialog = new mafGUIDialog(_("setting weights"), mafCLOSEWINDOW);
+          m_Dialog = new mafGUIDialog(_L("setting weights"), mafCLOSEWINDOW);
 				  m_Dialog->SetSize(x_init+40,y_init+40,220,220);
   				
 				  m_GuiSetWeights = new mafGUI(this);
@@ -248,7 +248,6 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
 				  {
 					  mafVMELandmark *lmk;
 					  m_CommonPoints->Open();
-					  const char *name_lmk;
 					  int number = m_CommonPoints->GetNumberOfLandmarks();
 
 					  if(!m_Weight)
@@ -262,9 +261,9 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
 					  for (int i=0; i <number; i++)
 					  {
 						  lmk = m_CommonPoints->GetLandmark(i);
-						  name_lmk = lmk->GetName();
+						  mafString name_lmk = lmk->GetName();
 						  m_GuiSetWeights->Label(name_lmk);
-						  m_GuiSetWeights->Double(-1,"",&m_Weight[i]);
+						  m_GuiSetWeights->Double(-1, _R(""),&m_Weight[i]);
 					  }
 					  m_CommonPoints->Close();
 				  }
@@ -319,9 +318,9 @@ void medOpRegisterClusters::OpDo()
 	  wxBusyInfo wait(_("Please wait, working..."));
 
   mafNEW(m_Info);
-  wxString name = wxString::Format("Info for registration %s into %s",m_Source->GetName().GetCStr(), m_Target->GetName().GetCStr());
+  mafString name = _R("Info for registration ") + m_Source->GetName() + _R(" into ") + m_Target->GetName();
   m_Info->SetName(name);
-  m_Info->SetPosLabel("Registration residual: ", 0);
+  m_Info->SetPosLabel(_R("Registration residual: "), 0);
   m_Info->SetPosShow(true, 0);
   mafEventMacro(mafEvent(this, VME_ADD, m_Info));
 
@@ -368,7 +367,7 @@ void medOpRegisterClusters::OpDo()
   if(m_Registered || m_Follower)
   {
     mafNEW(m_Result);
-    wxString name = wxString::Format("%s registered into %s",m_Source->GetName().GetCStr(), m_Target->GetName().GetCStr());
+    mafString name = m_Source->GetName() + _R(" registered into ") + m_Target->GetName();
     m_Result->SetName(name);
     mafEventMacro(mafEvent(this, VME_ADD, m_Result));
     m_Info->ReparentTo(m_Result);
@@ -577,7 +576,7 @@ void medOpRegisterClusters::OpDo()
 	
 	if(m_Follower)
 	{
-		wxString name = wxString::Format("%s registered on %s",m_Follower->GetName().GetCStr(), m_Target->GetName().GetCStr());
+		mafString name = m_Follower->GetName() + _R(" registered on ") + m_Target->GetName();
 		m_Follower->SetName(name);
 		mafEventMacro(mafEvent(this, VME_ADD, m_Follower));
     m_Follower->ReparentTo(m_Result);
@@ -632,13 +631,13 @@ int medOpRegisterClusters::ExtractMatchingPoints(double time)
 
 	for(i=0;i<npSource;i++)
 	{
-		wxString SourceLandmarkName = m_Source->GetLandmarkName(i);
+		mafString SourceLandmarkName = m_Source->GetLandmarkName(i);
 
 		bool found = false;
 		for(j=0;j<npTarget;j++)
 		{
-			wxString TargetLandmarkName = m_Target->GetLandmarkName(j);
-			if(mafString(SourceLandmarkName) == mafString(TargetLandmarkName))
+			mafString TargetLandmarkName = m_Target->GetLandmarkName(j);
+			if(SourceLandmarkName == TargetLandmarkName)
 			{
 				found = true;
 				found_one = true;
@@ -716,7 +715,7 @@ double medOpRegisterClusters::RegisterPoints(double currTime)
 
   if(m_Registered == NULL )
 	{
-		wxString name = wxString::Format("%s registered on %s",m_Source->GetName().GetCStr(), m_Target->GetName().GetCStr());
+		mafString name = m_Source->GetName() + _R(" registered on ") + m_Target->GetName();
 		mafNEW(m_Registered);
 		m_Registered->DeepCopy(m_Source);
 		m_Registered->SetName(name);

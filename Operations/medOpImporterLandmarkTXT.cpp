@@ -60,8 +60,8 @@ medOpImporterLandmarkTXT::medOpImporterLandmarkTXT(const mafString& label) : Sup
 {
 	m_OpType	= OPTYPE_IMPORTER;
 	m_Canundo	= true;
-	m_File		= "";
-	m_FileDir = (mafGetApplicationDirectory() + "/Data/External/").c_str();
+	m_File		= _R("");
+	m_FileDir = mafGetApplicationDirectory() + _R("/Data/External/");
 	
 	m_VmeCloud		= NULL;
   m_Start = 1;
@@ -93,22 +93,22 @@ void medOpImporterLandmarkTXT::OpRun()
 {
 
 	int result = OP_RUN_CANCEL;
-	m_File = "";
-	wxString pgd_wildc	= "Landmark (*.*)|*.*";
-  wxString f;
+	m_File = _R("");
+	mafString pgd_wildc	= _R("Landmark (*.*)|*.*");
+  mafString f;
   if (!m_TestMode)
   {
-    f = mafGetOpenFile(m_FileDir,pgd_wildc).GetCStr(); 
+    f = mafGetOpenFile(m_FileDir,pgd_wildc); 
   }
 	
-	if(!f.IsEmpty() && wxFileExists(f))
+	if(!f.IsEmpty() && mafFileExists(f))
 	{
 	  m_File = f;
     
     if (!m_TestMode)
     {
       m_Gui = new mafGUI(this);
-      m_Gui->Integer(ID_TYPE_FILE,"Skip Col",&m_Start,0,MAXINT,"Number of column to skip");
+      m_Gui->Integer(ID_TYPE_FILE,_R("Skip Col"),&m_Start,0,MAXINT,_R("Number of column to skip"));
       m_Gui->OkCancel();
 	    m_Gui->Update();
       ShowGui();
@@ -157,13 +157,13 @@ void medOpImporterLandmarkTXT::Read()
   }
   mafNEW(m_VmeCloud);
 
-  wxString path, name, ext;
-  wxSplitPath(m_File.c_str(),&path,&name,&ext);
+  mafString path, name, ext;
+  mafSplitPath(m_File,&path,&name,&ext);
   m_VmeCloud->SetName(name);
 
   mafTagItem tag_Nature;
-  tag_Nature.SetName("VME_NATURE");
-  tag_Nature.SetValue("NATURAL");
+  tag_Nature.SetName(_R("VME_NATURE"));
+  tag_Nature.SetValue(_R("NATURAL"));
 
   m_VmeCloud->GetTagArray()->SetTag(tag_Nature);
 
@@ -181,7 +181,7 @@ void medOpImporterLandmarkTXT::Read()
   
   std::vector<int> lm_idx;
 
-  wxFileInputStream inputFile( m_File );
+  wxFileInputStream inputFile( m_File.toWx() );
   wxTextInputStream text( inputFile );
 
   wxString line;
@@ -194,7 +194,7 @@ void medOpImporterLandmarkTXT::Read()
   mafString lm_name;
   for (int i=0;i<numland;i++)
   {
-    lm_name = "lm_" + mafString(i);
+    lm_name = _R("lm_") + mafToString(i);
     lm_idx.push_back(m_VmeCloud->AppendLandmark(lm_name));
   }
 
@@ -205,19 +205,19 @@ void medOpImporterLandmarkTXT::Read()
     {
       skipc=tkz.GetNextToken();
     }
-    time = tkz.GetNextToken().c_str();
+    time = mafWxToString(tkz.GetNextToken());
     
     long counter = 0;
 
     while (tkz.HasMoreTokens())
     {
-      x = tkz.GetNextToken().c_str();
-      y = tkz.GetNextToken().c_str();
-      z = tkz.GetNextToken().c_str();
-      xval = atof(x);
-      yval = atof(y);
-      zval = atof(z);
-      tval = atof(time);
+      x = mafWxToString(tkz.GetNextToken());
+      y = mafWxToString(tkz.GetNextToken());
+      z = mafWxToString(tkz.GetNextToken());
+      xval = atof(x.GetCStr());
+      yval = atof(y.GetCStr());
+      zval = atof(z.GetCStr());
+      tval = atof(time.GetCStr());
 
       if(x.IsEmpty() && y.IsEmpty() && z.IsEmpty() )
       {

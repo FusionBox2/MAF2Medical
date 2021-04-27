@@ -50,7 +50,7 @@ class MED_VIEWS_EXPORT mafViewArbitrarySlice: public medViewCompoundWindowing
 {
 public:
 	/** constructor*/
-	mafViewArbitrarySlice(const mafString& label = "View Arbitrary Slice with Windowing", bool show_ruler = false);
+	mafViewArbitrarySlice(const mafString& label = _R("View Arbitrary Slice with Windowing"), bool show_ruler = false);
 
 	/** destructor*/
 	virtual ~mafViewArbitrarySlice(); 

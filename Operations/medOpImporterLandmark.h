@@ -39,7 +39,7 @@ class MED_OPERATION_EXPORT medOpImporterLandmark : public mafOp
 {
 public:
   mafTypeMacro(medOpImporterLandmark, mafOp)
-  medOpImporterLandmark(const mafString& label = "");
+  medOpImporterLandmark(const mafString& label = _R(""));
   ~medOpImporterLandmark(); 
   mafOp* Copy();
   virtual void OnEvent(mafEventBase *maf_event);
@@ -58,7 +58,7 @@ public:
 
 
   /** Set the filename for the file to import */
-  void SetFileName(const char *file_name){m_Files.resize(1);m_Files[0] = file_name;};
+  void SetFileName(const char *file_name){m_Files.resize(1);m_Files[0] = _R(file_name);}
 
   /** Import data. */
   bool Read();

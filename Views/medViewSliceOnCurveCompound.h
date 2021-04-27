@@ -48,7 +48,7 @@ class MED_VIEWS_EXPORT medViewSliceOnCurveCompound: public medViewCompoundWindow
 {
 public:
 
-  medViewSliceOnCurveCompound(const mafString& label = "View Slice on Curve");
+  medViewSliceOnCurveCompound(const mafString& label = _R("View Slice on Curve"));
   virtual ~medViewSliceOnCurveCompound(); 
 
   mafTypeMacro(medViewSliceOnCurveCompound, medViewCompoundWindowing);

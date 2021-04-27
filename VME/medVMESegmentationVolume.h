@@ -68,7 +68,7 @@ public:
   };
 
   /** Return the suggested pipe-typename for the visualization of this vme */
-  /*virtual*/ mafString GetVisualPipe() {return mafString("mafPipeBox");};
+  /*virtual*/ mafString GetVisualPipe() {return mafString(_R("mafPipeBox"));}
 
   /** Precess events coming from other objects */ 
   /*virtual*/ void OnEvent(mafEventBase *maf_event);

@@ -208,37 +208,37 @@ mafGUI *medPipeRayCast::CreateGui()
   m_MRSliders = new mafGUI(this);
 
   //Creating Gui
-  m_Gui->Label("");
-  m_Gui->Label(" Layers ", "", true );
+  m_Gui->Label(_R(""));
+  m_Gui->Label(mafString(_R(" Layers ")), mafString(_R("")), true );
   m_Gui->Divider(2);
   //Set Layer type to visualize
-  mafString layersType[4] = {"Default", "Muscular System", "Circulatory System", "Skeleton"};
-  m_Gui->Combo(ID_CHANGE_OPACITY, "", &m_Preset, 4, layersType);
+  mafString layersType[4] = {_R("Default"), _R("Muscular System"), _R("Circulatory System"), _R("Skeleton")};
+  m_Gui->Combo(ID_CHANGE_OPACITY, _R(""), &m_Preset, 4, layersType);
 
   //Advanced 
-  m_Gui->Label("");
-  m_Gui->Label(" Advanced ", "", true );
+  m_Gui->Label(_R(""));
+  m_Gui->Label(mafString(_R(" Advanced ")), mafString(_R("")), true );
   m_Gui->Divider(2);
   
-  mafString modalities[2] = {"CT view", "MR view"};
-  m_Gui->Combo(ID_CHANGE_MODALITY, "", &m_Modality, 2, modalities);
+  mafString modalities[2] = {_R("CT view"), _R("MR view")};
+  m_Gui->Combo(ID_CHANGE_MODALITY, _R(""), &m_Modality, 2, modalities);
 	
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
 
-  m_CTSliders->FloatSlider(ID_OPACITY_SLIDERS,"Skin",&m_SkinOpacity,0.0,1.0);
-  m_CTSliders->FloatSlider(ID_OPACITY_SLIDERS,"Fat Mass",&m_FatMassOpacity,0.0,1.0);
+  m_CTSliders->FloatSlider(ID_OPACITY_SLIDERS,_R("Skin"),&m_SkinOpacity,0.0,1.0);
+  m_CTSliders->FloatSlider(ID_OPACITY_SLIDERS,_R("Fat Mass"),&m_FatMassOpacity,0.0,1.0);
   m_Gui->Add(m_CTSliders);
   m_CTSliders->Update();
-  m_Gui->FloatSlider(ID_OPACITY_SLIDERS,"Muscle",&m_MuscleOpacity,0.0,1.0);
-  m_Gui->FloatSlider(ID_OPACITY_SLIDERS,"Bone",&m_BoneOpacity,0.0,1.0);
-  m_Gui->FloatSlider(ID_OPACITY_SLIDERS,"Blood",&m_BloodOpacity,0.0,1.0);
+  m_Gui->FloatSlider(ID_OPACITY_SLIDERS,_R("Muscle"),&m_MuscleOpacity,0.0,1.0);
+  m_Gui->FloatSlider(ID_OPACITY_SLIDERS,_R("Bone"),&m_BoneOpacity,0.0,1.0);
+  m_Gui->FloatSlider(ID_OPACITY_SLIDERS,_R("Blood"),&m_BloodOpacity,0.0,1.0);
   m_Gui->Divider(1);
-  m_MRSliders->FloatSlider(ID_OPACITY_SLIDERS,"Blood focus",&m_BloodFocus,0.0,1.0);
+  m_MRSliders->FloatSlider(ID_OPACITY_SLIDERS,_R("Blood focus"),&m_BloodFocus,0.0,1.0);
   m_Gui->Add(m_MRSliders);
   m_MRSliders->Update();
-  m_Gui->Label("");
-  m_Gui->Label("");
-  m_Gui->Label("");
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
+  m_Gui->Label(_R(""));
 
   ShowHideSliders();
 
@@ -628,17 +628,17 @@ void medPipeRayCast::DetectModality()
 {
   
   mafTagItem *item=NULL;
-  wxString tagModality;
+  mafString tagModality;
 
   //getting modality tags
-  item = m_Vme->GetTagArray()->GetTag("Modality");
+  item = m_Vme->GetTagArray()->GetTag(_R("Modality"));
   if (item != NULL )
     tagModality = item->GetValue();
 
   //if modality tag is set to ct we use CT_MODALITY
   //if modality tag is set to mr we use MR_MODALITY
   //if both tags are not set we use an heuristic, 
-  if (strcmp(tagModality,"CT")==0 || (strcmp(tagModality,"MR")!=0 && m_ScalarRange[0]<0) )
+  if (tagModality == _R("CT") || (tagModality != _R("MR") && m_ScalarRange[0]<0) )
     m_Modality=CT_MODALITY;
   else
     m_Modality=MR_MODALITY;

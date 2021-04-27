@@ -326,7 +326,7 @@ mafGUI* medViewSliceOnCurveCompound::CreateGui()
   assert(m_Gui == NULL);
   mafView::CreateGui();  
 
-  wxComboBox* combo = m_Gui->Combo(ID_LAYOUT_CHOOSER,_("Layout"), &m_LayoutConfiguration);
+  wxComboBox* combo = m_Gui->Combo(ID_LAYOUT_CHOOSER,_L("Layout"), &m_LayoutConfiguration);
   const char** layouts = GetLayoutsNames();
   while (*layouts != NULL)
   {
@@ -337,7 +337,7 @@ mafGUI* medViewSliceOnCurveCompound::CreateGui()
   m_Gui->Divider(2);
 
   //setup volume pipes
-  combo = m_Gui->Combo(ID_VOL_PIPE,_("Volume pipe"), &m_VolumePipeConfiguration);
+  combo = m_Gui->Combo(ID_VOL_PIPE,_L("Volume pipe"), &m_VolumePipeConfiguration);
   const VPIPE_ENTRY* pVolPipes = GetVolumePipesDesc();
   while (pVolPipes->szClassName != NULL)
   {
@@ -350,10 +350,10 @@ mafGUI* medViewSliceOnCurveCompound::CreateGui()
     "see Visual Properties tab in Data Tree."));
 
   m_Gui->Divider(1);  
-  m_Gui->Bool(ID_SHOW_POLYLINE_IN_MAINVIEW,_("Show Gizmo in the main view"), &m_ShowPolylineInMainView, 1, 
-    _("Selects whether the polyline (curve) and the gizmo should be displayed also in the main view"));
-  m_Gui->Bool(ID_SHOW_GIZMOCOORDS, _("Show Gizmo coords"), &m_ShowGizmoCoords, 1,
-    _("If checked, the gizmo coordinates are displayed."));
+  m_Gui->Bool(ID_SHOW_POLYLINE_IN_MAINVIEW,_L("Show Gizmo in the main view"), &m_ShowPolylineInMainView, 1, 
+    _L("Selects whether the polyline (curve) and the gizmo should be displayed also in the main view"));
+  m_Gui->Bool(ID_SHOW_GIZMOCOORDS, _L("Show Gizmo coords"), &m_ShowGizmoCoords, 1,
+    _L("If checked, the gizmo coordinates are displayed."));
 
 #ifdef GIZMO_PATH
   m_Gui->FloatSlider(ID_TRACKER, "Position", &m_GizmoPos, 0, 1);
@@ -361,14 +361,14 @@ mafGUI* medViewSliceOnCurveCompound::CreateGui()
 
   m_Gui->Divider(1);
 
-  m_Gui->Bool(ID_SLICECAMERA_AUTOFOCUS, "AutoFocus", &m_SliceCameraAutoFocus, 1,
-    _("Toggles automatic focus of the camera in the slice view"));
+  m_Gui->Bool(ID_SLICECAMERA_AUTOFOCUS, _R("AutoFocus"), &m_SliceCameraAutoFocus, 1,
+    _L("Toggles automatic focus of the camera in the slice view"));
 
-  m_Gui->Bool(ID_SLICECAMERA_AUTOROTATE, "AutoRotate", &m_SliceCameraAutoRotate, 1,
-    _("Toggles automatic rotation of the camera in the slice view"));
+  m_Gui->Bool(ID_SLICECAMERA_AUTOROTATE, _R("AutoRotate"), &m_SliceCameraAutoRotate, 1,
+    _L("Toggles automatic rotation of the camera in the slice view"));
 
-  m_Gui->Bool(ID_SLICECAMERA_NAVIGATE_3D, _("Navigate 3D"), &m_SliceCameraNavigate3D, 1, 
-    _("Toggles automatic navigation in the 3D view"));
+  m_Gui->Bool(ID_SLICECAMERA_NAVIGATE_3D, _L("Navigate 3D"), &m_SliceCameraNavigate3D, 1, 
+    _L("Toggles automatic navigation in the 3D view"));
 
   m_Gui->Divider();
 
@@ -529,7 +529,7 @@ void medViewSliceOnCurveCompound::OnEvent(mafEventBase *maf_event)
 
   if (polyline == NULL && polyline_gr == NULL)
   {
-    mafLogMessage("Unsupported VME for medViewSliceOnCurveCompound::CreateGizmo");
+    mafLogMessage(_M("Unsupported VME for medViewSliceOnCurveCompound::CreateGizmo"));
     return;
   }     
 
@@ -716,8 +716,8 @@ void medViewSliceOnCurveCompound::OnEvent(mafEventBase *maf_event)
       if (vtkMath::Norm(lvect)>0.3)
       {
         camera->SetPosition(m_OldPos);
-        mafLogMessage("Camera position: %f, %f, %f ",m_OldPos[0],m_OldPos[1],m_OldPos[2]);
-        mafLogMessage("Focal position: %f, %f, %f ",pos[0],pos[1],pos[2]);
+        mafLogMessage(_M(mafString::Format(_R("Camera position: %f, %f, %f "),m_OldPos[0],m_OldPos[1],m_OldPos[2])));
+        mafLogMessage(_M(mafString::Format(_R("Focal position: %f, %f, %f "),pos[0],pos[1],pos[2])));
         camera->SetFocalPoint(pos);
         camera->SetViewAngle(90.);
         mv->CameraUpdate();
@@ -759,9 +759,9 @@ void medViewSliceOnCurveCompound::SetSlicePosition(double abscisa, vtkIdType bra
 //----------------------------------------------------------------------------
 {
   //create child views
-  PlugChildView(new mafViewVTK(_("main"), CAMERA_PERSPECTIVE));		//main 3D view	
-  PlugChildView(new mafViewVTK(_("main"), CAMERA_PERSPECTIVE));		//polyline curve view
-  PlugChildView(new mafViewSlice(_("slice"), CAMERA_PERSPECTIVE, true /*CAMERA_OS_Z*/));			//slice view
+  PlugChildView(new mafViewVTK(_L("main"), CAMERA_PERSPECTIVE));		//main 3D view	
+  PlugChildView(new mafViewVTK(_L("main"), CAMERA_PERSPECTIVE));		//polyline curve view
+  PlugChildView(new mafViewSlice(_L("slice"), CAMERA_PERSPECTIVE, true /*CAMERA_OS_Z*/));			//slice view
 
   //Plug visualization pipes to all views
   PlugVolumePipe();
@@ -779,20 +779,20 @@ void medViewSliceOnCurveCompound::SetSlicePosition(double abscisa, vtkIdType bra
     if (MAIN_VIEW < vws.size())
     {
       mafViewVTK* v = ((mafViewVTK*)vws[MAIN_VIEW]);
-      v->PlugVisualPipe("mafVMEVolumeGray", GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName, MUTEX);	
-      v->PlugVisualPipe("medVMELabeledVolume", GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName, MUTEX);
-      v->PlugVisualPipe("mafVMEVolumeRGB", GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName, MUTEX);
-      v->PlugVisualPipe("mafVMEVolumeLarge", GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName, MUTEX);
+      v->PlugVisualPipe(_R("mafVMEVolumeGray"), _R(GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName), MUTEX);	
+      v->PlugVisualPipe(_R("medVMELabeledVolume"), _R(GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName), MUTEX);
+      v->PlugVisualPipe(_R("mafVMEVolumeRGB"), _R(GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName), MUTEX);
+      v->PlugVisualPipe(_R("mafVMEVolumeLarge"), _R(GetVolumePipesDesc()[m_VolumePipeConfiguration].szClassName), MUTEX);
     }
 
     if (SLICE_VIEW < vws.size())
     {	
         mafViewVTK* vs = ((mafViewVTK*)vws[SLICE_VIEW]);
 
-        vs->PlugVisualPipe("mafVMEVolumeGray", "mafPipeVolumeSlice_BES", MUTEX);
-        vs->PlugVisualPipe("medVMELabeledVolume", "mafPipeVolumeSlice_BES", MUTEX);
-        vs->PlugVisualPipe("mafVMEVolumeRGB", "mafPipeVolumeSlice_BES", MUTEX);
-        vs->PlugVisualPipe("mafVMEVolumeLarge", "mafPipeVolumeSlice_BES", MUTEX);
+        vs->PlugVisualPipe(_R("mafVMEVolumeGray"), _R("mafPipeVolumeSlice_BES"), MUTEX);
+        vs->PlugVisualPipe(_R("medVMELabeledVolume"), _R("mafPipeVolumeSlice_BES"), MUTEX);
+        vs->PlugVisualPipe(_R("mafVMEVolumeRGB"), _R("mafPipeVolumeSlice_BES"), MUTEX);
+        vs->PlugVisualPipe(_R("mafVMEVolumeLarge"), _R("mafPipeVolumeSlice_BES"), MUTEX);
     }
   }
 }
@@ -806,8 +806,8 @@ void medViewSliceOnCurveCompound::SetSlicePosition(double abscisa, vtkIdType bra
     if (SLICE_VIEW < vws.size())
     {	
       mafViewVTK* vs = ((mafViewVTK*)vws[SLICE_VIEW]);
-      vs->PlugVisualPipe("mafVMESurface", "mafPipeSurfaceSlice_BES");
-      vs->PlugVisualPipe("mafVMESurfaceParametric", "mafPipeSurfaceSlice_BES");
+      vs->PlugVisualPipe(_R("mafVMESurface"), _R("mafPipeSurfaceSlice_BES"));
+      vs->PlugVisualPipe(_R("mafVMESurfaceParametric"), _R("mafPipeSurfaceSlice_BES"));
     }
   }
 }
@@ -821,7 +821,7 @@ void medViewSliceOnCurveCompound::SetSlicePosition(double abscisa, vtkIdType bra
     if (SLICE_VIEW < vws.size())
     {	
       mafViewVTK* vs = ((mafViewVTK*)vws[SLICE_VIEW]);
-      vs->PlugVisualPipe("mafVMEMesh", "mafPipeMeshSlice_BES");
+      vs->PlugVisualPipe(_R("mafVMEMesh"), _R("mafPipeMeshSlice_BES"));
     }
   }
 }
@@ -838,8 +838,8 @@ void medViewSliceOnCurveCompound::SetSlicePosition(double abscisa, vtkIdType bra
     if (POLYLINE_VIEW < vws.size())
     {	
       mafViewVTK* vs = ((mafViewVTK*)vws[POLYLINE_VIEW]);
-      vs->PlugVisualPipe("mafVMEPolyline", "mafPipePolyline", MUTEX);	  
-      vs->PlugVisualPipe("medVMEPolylineGraph", "medVisualPipePolylineGraph", MUTEX);	
+      vs->PlugVisualPipe(_R("mafVMEPolyline"), _R("mafPipePolyline"), MUTEX);	  
+      vs->PlugVisualPipe(_R("medVMEPolylineGraph"), _R("medVisualPipePolylineGraph"), MUTEX);	
     }
   }
 }

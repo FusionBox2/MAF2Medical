@@ -79,8 +79,8 @@ public:
 
 	//Sets a new  associated brick file
 	inline void SetFileName(const char* filename) {
-		if (!m_BrickFileName.Equals(filename)) {
-			m_BrickFileName = filename;
+		if (!m_BrickFileName.Equals(_R(filename))) {
+			m_BrickFileName = _R(filename);
 			DestroyLODs();		//we will have to recreate it
 			this->Modified();
 		}

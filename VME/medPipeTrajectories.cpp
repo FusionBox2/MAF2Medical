@@ -111,9 +111,8 @@ void medPipeTrajectories::Create(mafNode *node, mafView *view)
   m_Caption->SetHeight(0.05);
   m_Caption->SetWidth(0.35);
   m_Caption->BorderOff();
-  wxString dis;
-  dis = wxString::Format("%s",m_Landmark->GetName().GetCStr());
-  m_Caption->SetCaption(dis.c_str());
+  mafString dis = m_Landmark->GetName();
+  m_Caption->SetCaption(dis.GetCStr());
 
   if(m_Labels && m_Landmark->GetLandmarkVisibility())
     m_Caption->SetVisibility(1);
@@ -201,11 +200,11 @@ mafGUI *medPipeTrajectories::CreateGui()
 {
   
   m_Gui = new mafGUI(this);
-  m_Gui->Integer(ID_INTERVAL,"Interval:",&m_Interval,0,(m_TimeVector.size()),"Interval of frames to visualize");
+  m_Gui->Integer(ID_INTERVAL,_R("Interval:"),&m_Interval,0,(m_TimeVector.size()),_R("Interval of frames to visualize"));
 
   if(m_Vme && m_Vme->IsMAFType(mafVMELandmark))
   {
-      m_Gui->Bool(ID_LABELS, _("label"), &m_Labels);
+      m_Gui->Bool(ID_LABELS, _L("label"), &m_Labels);
   }
    m_Gui->Divider();
 

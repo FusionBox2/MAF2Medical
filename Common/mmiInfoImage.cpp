@@ -128,7 +128,7 @@ void mmiInfoImage::OnEvent(mafEventBase *event)
               v = vc->GetSubView();
             }
             mafString info;
-            info = "";
+            info = _R("");
             if(v->Pick((int)pos[0], (int)pos[1]))
             {
               mafVME *picked_vme = v->GetPickedVme();
@@ -140,7 +140,7 @@ void mmiInfoImage::OnEvent(mafEventBase *event)
                 int pid = data->FindPoint(picked_pos);
                 vtkDataArray *scalars = data->GetPointData()->GetScalars();
                 scalars->GetTuple(pid,&iso_value);
-                info << "x = " << (int)picked_pos[0] << " y = " << (int)picked_pos[1] << " z = " << (int)picked_pos[2] << " d = " << iso_value;
+                info += _R("x = ") + mafToString((int)picked_pos[0]) + _R(" y = ") + mafToString((int)picked_pos[1]) + _R(" z = ") + mafToString((int)picked_pos[2]) + _R(" d = ") + mafToString(iso_value);
                 mafEventMacro(mafEvent(this,PROGRESSBAR_SET_TEXT,&info));
               }
             }

@@ -59,7 +59,7 @@ medOpExporterWrappedMeter::medOpExporterWrappedMeter(const mafString& label) : S
   m_OpType = OPTYPE_EXPORTER;
   m_Canundo = true;
   
-  m_File    = "";
+  m_File    = _R("");
 }
 //----------------------------------------------------------------------------
 medOpExporterWrappedMeter::~medOpExporterWrappedMeter( ) 
@@ -91,7 +91,7 @@ enum WRAPPED_METER_EXPORTER_ID
 void medOpExporterWrappedMeter::OpRun()   
 //----------------------------------------------------------------------------
 {
-  mafString wildc = "Wrapped Meter Coordinates(*.txt)|*.txt";
+  mafString wildc = _R("Wrapped Meter Coordinates(*.txt)|*.txt");
 
   m_Gui = new mafGUI(this);
 	//m_Gui->FileSave(ID_CHOOSE_FILENAME,"stl file", &m_File, wildc,"Save As...");
@@ -113,12 +113,12 @@ void medOpExporterWrappedMeter::OnEvent(mafEventBase *maf_event)
 				{
 				  mafString initialFileName;
 				  initialFileName = mafGetApplicationDirectory();
-				  initialFileName.Append("\\ActionLine.txt");
+				  initialFileName.Append(_R("\\ActionLine.txt"));
 
-				  mafString wildc = "configuration file (*.txt)|*.txt";
-				  m_File = mafGetSaveFile(initialFileName.GetCStr(), wildc);
+				  mafString wildc = _R("configuration file (*.txt)|*.txt");
+				  m_File = mafGetSaveFile(initialFileName, wildc);
 
-				  if (m_File == "") return;
+				  if (m_File.IsEmpty()) return;
 
 				  //Test();		  //using this method to try test case
 				  Export();
@@ -127,7 +127,7 @@ void medOpExporterWrappedMeter::OnEvent(mafEventBase *maf_event)
 				}
       break;
       case ID_CHOOSE_FILENAME:
-        m_Gui->Enable(wxOK,m_File != "");
+        m_Gui->Enable(wxOK,!m_File.IsEmpty());
       break;
       case wxCANCEL:
         OpStop(OP_RUN_CANCEL);
@@ -158,7 +158,7 @@ void medOpExporterWrappedMeter::Export()
 	}
 
 
-	m_OutputFile.open(m_File, std::ios::out);
+	m_OutputFile.open(m_File.GetCStr(), std::ios::out);
 	if (m_OutputFile.fail()) {
 		wxMessageBox("Error opening configuration file");
 		return ;
@@ -306,7 +306,7 @@ void medOpExporterWrappedMeter::WriteOnFile()
 
 	for(int i=0; i< m_Meters.size(); i++)
 	{
-		m_OutputFile << m_Meters[i]->GetName() << std::endl; // vme name
+		m_OutputFile << m_Meters[i]->GetName().GetCStr() << std::endl; // vme name
 		m_OutputFile << std::setw(6)<<"time"<<std::setw(4)<<std::setw(30)<<"origin"<< std::setw(30)<< "viaPoint1"<< std::setw(30)<<"viaPoint2"<< std::setw(30)<<"viaPoint3"<< std::setw(30)<<"viaPoint4"<< std::setw(30)<<"insertion"<<'\t'<<std::endl;
 		columns = m_MetersCoordinatesList[i].columns();
 		rows = m_MetersCoordinatesList[i].rows();
@@ -462,11 +462,11 @@ void medOpExporterWrappedMeter::Test()
 
 */
 	//create landmarks and relative landmark cloud
-	medOpImporterLandmark *importer=new medOpImporterLandmark("importer");
+	medOpImporterLandmark *importer=new medOpImporterLandmark(_R("importer"));
 	importer->TestModeOn();
 	//importer->SetInput(storage->GetRoot());
 	//mafString filename=MED_DATA_ROOT;
-	mafString filename = "C:\\MAF\\Medical\\Testing\\unittestData\\RAW_MAL\\cloud_to_be_imported";
+	mafString filename = _R("C:\\MAF\\Medical\\Testing\\unittestData\\RAW_MAL\\cloud_to_be_imported");
 	//filename<<"../unittestData";
 	//filename<<"/RAW_MAL/cloud_to_be_imported";
 	importer->SetFileName(filename.GetCStr());
@@ -484,9 +484,9 @@ void medOpExporterWrappedMeter::Test()
 	wrappedMeter->SetMeterLink("StartVME",cloud->GetLandmark(0));
 	wrappedMeter->SetMeterLink("EndVME1",cloud->GetLandmark(1));
 
-	wrappedMeter->SetMeterLink(cloud->GetLandmark(2)->GetName(),cloud->GetLandmark(2));
-	wrappedMeter->SetMeterLink(cloud->GetLandmark(3)->GetName(),cloud->GetLandmark(3));
-	wrappedMeter->SetMeterLink(cloud->GetLandmark(4)->GetName(),cloud->GetLandmark(4));
+	wrappedMeter->SetMeterLink(cloud->GetLandmark(2)->GetName().GetCStr(),cloud->GetLandmark(2));
+	wrappedMeter->SetMeterLink(cloud->GetLandmark(3)->GetName().GetCStr(),cloud->GetLandmark(3));
+	wrappedMeter->SetMeterLink(cloud->GetLandmark(4)->GetName().GetCStr(),cloud->GetLandmark(4));
 	//wrappedMeter->PushIdVector(cloud->GetId()); // for landmark middlepoint is memorized as sequence of cloud id and interal id of the landmark
 	//wrappedMeter->PushIdVector(2); //this is for the vector syncronized with the gui widget, that is not used in gui test
 
@@ -512,15 +512,15 @@ void medOpExporterWrappedMeter::Test()
 	//printf("\n%.2f %.2f %.2f\n", l3[0] , l3[1], l3[2]);
 
 	//Inizialize exporter
-	medOpExporterWrappedMeter *exporter=new medOpExporterWrappedMeter("test exporter");
+	medOpExporterWrappedMeter *exporter=new medOpExporterWrappedMeter(_R("test exporter"));
 	exporter->SetInput(wrappedMeter);
-	mafString fileExp=MED_DATA_ROOT;
-	fileExp<<"/RAW_MAL/ExportWrappedMeter.txt";
+	mafString fileExp=_R(MED_DATA_ROOT);
+	fileExp+=_R("/RAW_MAL/ExportWrappedMeter.txt");
 	exporter->TestModeOn();
-	exporter->SetFileName(fileExp);
+	exporter->SetFileName(fileExp.GetCStr());
 	exporter->ExportWrappedMeterCoordinates(0,0);
 
-	std::fstream control(fileExp);
+	std::fstream control(fileExp.GetCStr());
 
 	int result = MAF_OK;
 	double pos1, pos2, pos3;

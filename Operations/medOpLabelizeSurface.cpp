@@ -226,12 +226,12 @@ void medOpLabelizeSurface::CreateGui()
 {
 	m_Gui = new mafGUI(this);
 
-	m_Gui->Bool(ID_USE_GIZMO,_("use gizmo"),&m_UseGizmo,1);
-	mafString gizmo_name[3] = {"translate","rotate","scale"};
-	m_Gui->Combo(ID_CHOOSE_GIZMO,_("gizmo"),&m_GizmoType,3,gizmo_name);
+	m_Gui->Bool(ID_USE_GIZMO,_L("use gizmo"),&m_UseGizmo,1);
+	mafString gizmo_name[3] = {_R("translate"),_R("rotate"),_R("scale")};
+	m_Gui->Combo(ID_CHOOSE_GIZMO,_L("gizmo"),&m_GizmoType,3,gizmo_name);
 
-	m_Gui->Double(ID_LABEL_VALUE,_("Label"),&m_LabelValue);
-	m_Gui->Lut(ID_LUT,"lut",m_VmeEditor->GetMaterial()->m_ColorLut);
+	m_Gui->Double(ID_LABEL_VALUE,_L("Label"),&m_LabelValue);
+	m_Gui->Lut(ID_LUT,_R("lut"),m_VmeEditor->GetMaterial()->m_ColorLut);
 	double b[6];
 	((mafVME *)m_Input)->GetOutput()->GetVMEBounds(b);
 	// bounding box dim
@@ -240,7 +240,7 @@ void medOpLabelizeSurface::CreateGui()
 	//m_Gui->Double(ID_PLANE_WIDTH,_("plane w."),&m_PlaneWidth,0.0);
 	//m_Gui->Double(ID_PLANE_HEIGHT,_("plane h."),&m_PlaneHeight,0.0);
 	m_Gui->Divider();
-	m_Gui->Button(ID_UNDO,_("Undo"));
+	m_Gui->Button(ID_UNDO,_L("Undo"));
 
 	m_Gui->Divider(1);
 	m_Gui->OkCancel();
@@ -369,7 +369,7 @@ void medOpLabelizeSurface::ShowClipPlane(bool show)
 
 			mafNEW(m_ImplicitPlaneGizmo);
 			m_ImplicitPlaneGizmo->SetData(m_Gizmo->GetOutput());
-			m_ImplicitPlaneGizmo->SetName("implicit plane gizmo");
+			m_ImplicitPlaneGizmo->SetName(_R("implicit plane gizmo"));
 			m_ImplicitPlaneGizmo->ReparentTo(mafVME::SafeDownCast(m_Input->GetRoot()));
 
 			// position the plane

@@ -47,7 +47,7 @@ public:
   mafTypeMacro(medViewSliceNotInterpolatedCompound, medViewCompoundWindowing);
 
   /** ctor */
-  medViewSliceNotInterpolatedCompound(const mafString& label = "View Slice not interpolated", bool show_ruler = false);
+  medViewSliceNotInterpolatedCompound(const mafString& label = _R("View Slice not interpolated"), bool show_ruler = false);
 
   /** dtor */
   ~medViewSliceNotInterpolatedCompound(); 

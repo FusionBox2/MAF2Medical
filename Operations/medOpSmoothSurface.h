@@ -41,7 +41,7 @@ class MED_OPERATION_EXPORT medOpSmoothSurface: public mafOp
 {
 public:
   /** object constructor */
-	medOpSmoothSurface(const mafString& label = "FilterSurface");
+	medOpSmoothSurface(const mafString& label = _R("FilterSurface"));
   /** object destructor */  
 	~medOpSmoothSurface();
   /** method for catch the dispatched events */

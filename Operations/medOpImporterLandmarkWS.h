@@ -39,7 +39,7 @@ class MED_OPERATION_EXPORT medOpImporterLandmarkWS : public mafOp
 {
 public:
   mafTypeMacro(medOpImporterLandmarkWS, mafOp)
-	medOpImporterLandmarkWS(const mafString& label = "");
+	medOpImporterLandmarkWS(const mafString& label = _R(""));
 	~medOpImporterLandmarkWS(); 
 	mafOp* Copy();
 
@@ -60,11 +60,11 @@ public:
   void Read();
 
   /** Set the filename for the file to import */
-  void SetFileName(const char *file_name){m_File = file_name;};
+  void SetFileName(const char *file_name){m_File = _R(file_name);};
 
 protected:
-  wxString m_FileDir;
-	wxString m_File;
+  mafString m_FileDir;
+	mafString m_File;
 	mafVMELandmarkCloud  *m_VmeCloud;
 };
 #endif

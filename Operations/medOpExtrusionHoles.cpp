@@ -438,7 +438,7 @@ void medOpExtrusionHoles::CreateOpDialog()
 	wxBusyCursor wait;
 
 	//===== setup interface ====
-	m_Dialog = new mafGUIDialog("Extrusion", mafCLOSEWINDOW | mafRESIZABLE);
+	m_Dialog = new mafGUIDialog(_R("Extrusion"), mafCLOSEWINDOW | mafRESIZABLE);
 
 	m_Rwi = new mafRWI(m_Dialog,ONE_LAYER,false);
 	m_Rwi->SetListener(this);
@@ -453,8 +453,8 @@ void medOpExtrusionHoles::CreateOpDialog()
 
 	wxPoint p = wxDefaultPosition;
 
-	m_ButtonOk = new mafGUIButton(m_Dialog, ID_OK,_("ok"), p, wxSize(80,20));
-	mafGUIButton  *b_cancel	= new mafGUIButton(m_Dialog, ID_CANCEL,_("cancel"), p, wxSize(80,20));
+	m_ButtonOk = new mafGUIButton(m_Dialog, ID_OK,_L("ok"), p, wxSize(80,20));
+	mafGUIButton  *b_cancel	= new mafGUIButton(m_Dialog, ID_CANCEL,_L("cancel"), p, wxSize(80,20));
 
 
 	m_ButtonOk->SetValidator(mafGUIValidator(this,ID_OK,m_ButtonOk));
@@ -470,7 +470,7 @@ void medOpExtrusionHoles::CreateOpDialog()
 	
 	wxStaticText *label2 = new wxStaticText(m_Dialog, -1, _("extrusion factor (diameters)"),p, wxSize(150, 16 ));
 	wxTextCtrl *extrusion = new wxTextCtrl(m_Dialog,ID_EXTRUSION_FACTOR, _("extrusion factor"),p,wxSize(50, 16 ), wxNO_BORDER );
-	mafGUIButton  *b_extrude	= new mafGUIButton(m_Dialog, ID_EXTRUDE,_("apply extrusion"), p, wxSize(90,20));
+	mafGUIButton  *b_extrude	= new mafGUIButton(m_Dialog, ID_EXTRUDE,_L("apply extrusion"), p, wxSize(90,20));
 
   wxStaticText *label3 = new wxStaticText(m_Dialog, -1, _("num. vertices"),p, wxSize(150, 16 ));
   wxTextCtrl *num_vertices = new wxTextCtrl(m_Dialog,ID_NUM_VERTICES, _("num. vertices"),p,wxSize(50, 16 ), wxNO_BORDER );

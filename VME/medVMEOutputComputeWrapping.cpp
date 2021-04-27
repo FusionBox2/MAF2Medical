@@ -54,8 +54,8 @@ mafGUI *medVMEOutputComputeWrapping::CreateGui()
   m_Gui = mafVMEOutput::CreateGui();
 
   medVMEComputeWrapping *wrappedMeter = (medVMEComputeWrapping *)m_VME;
-  m_Distance = wrappedMeter->GetDistance();
-  m_Gui->Label(_("distance: "), &m_Distance, true);
+  m_Distance = mafToString(wrappedMeter->GetDistance());
+  m_Gui->Label(_L("distance: "), &m_Distance, true);
 
 	double *coordinateFIRST = NULL;
 	double *coordinateLAST = NULL;
@@ -72,16 +72,16 @@ mafGUI *medVMEOutputComputeWrapping::CreateGui()
   }*/
 
   if(coordinateFIRST != NULL)
-    m_MiddlePoints[0] = wxString::Format("%.2f %.2f %.2f", coordinateFIRST[0], coordinateFIRST[1], coordinateFIRST[2]);
+    m_MiddlePoints[0] = mafString::Format(_R("%.2f %.2f %.2f"), coordinateFIRST[0], coordinateFIRST[1], coordinateFIRST[2]);
   if(coordinateLAST != NULL)
-    m_MiddlePoints[m_MiddlePoints.size()-1] = wxString::Format("%.2f %.2f %.2f", coordinateLAST[0], coordinateLAST[1], coordinateLAST[2]);
+    m_MiddlePoints[m_MiddlePoints.size()-1] = mafString::Format(_R("%.2f %.2f %.2f"), coordinateLAST[0], coordinateLAST[1], coordinateLAST[2]);
 
   
-	m_Gui->Label(_("first mp:"), &m_MiddlePoints[0], true);
-	m_Gui->Label(_("last mp:"), &m_MiddlePoints[m_MiddlePoints.size()-1], true);
+	m_Gui->Label(_L("first mp:"), &m_MiddlePoints[0], true);
+	m_Gui->Label(_L("last mp:"), &m_MiddlePoints[m_MiddlePoints.size()-1], true);
 
-  m_Angle = wrappedMeter->GetAngle();
-  m_Gui->Label(_("angle: "), &m_Angle, true);
+  m_Angle = mafToString(wrappedMeter->GetAngle());
+  m_Gui->Label(_L("angle: "), &m_Angle, true);
 	m_Gui->Divider();
 
   return m_Gui;
@@ -97,7 +97,7 @@ void medVMEOutputComputeWrapping::Update()
 
   if(wrappedMeter->GetMeterMode() == medVMEComputeWrapping::POINT_DISTANCE)
   {
-		m_Distance = ((medVMEComputeWrapping *)m_VME)->GetDistance();
+		m_Distance = mafToString(((medVMEComputeWrapping *)m_VME)->GetDistance());
 
     double *coordinateFIRST = NULL;
     double *coordinateLAST = NULL; 
@@ -117,11 +117,11 @@ void medVMEOutputComputeWrapping::Update()
 
 		
 		if(coordinateFIRST != NULL)
-			m_MiddlePoints[0] = wxString::Format("%.2f %.2f %.2f", coordinateFIRST[0], coordinateFIRST[1], coordinateFIRST[2]);
+			m_MiddlePoints[0] = mafString::Format(_R("%.2f %.2f %.2f"), coordinateFIRST[0], coordinateFIRST[1], coordinateFIRST[2]);
 		if(coordinateLAST != NULL)
-			m_MiddlePoints[m_MiddlePoints.size()-1] = wxString::Format("%.2f %.2f %.2f", coordinateLAST[0], coordinateLAST[1], coordinateLAST[2]);
+			m_MiddlePoints[m_MiddlePoints.size()-1] = mafString::Format(_R("%.2f %.2f %.2f"), coordinateLAST[0], coordinateLAST[1], coordinateLAST[2]);
 
-		m_Angle ="";
+		m_Angle =_R("");
   }
 /*	else if(wrappedMeter->GetMeterMode() == medVMEComputeWrapping::LINE_DISTANCE)
 	{

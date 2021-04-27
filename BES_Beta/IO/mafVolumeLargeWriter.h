@@ -50,7 +50,7 @@ public:
 
 	//Sets a new  associated brick file
 	inline void SetOutputFileName(const char* filename) {		
-		m_BrickFileName = filename;		
+		m_BrickFileName = _R(filename);		
 	}
 
 	//Gets the associated input data set

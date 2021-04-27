@@ -30,7 +30,7 @@ class MED_OPERATION_EXPORT medOpMergeDicomSeries : public mafOp
 {
 public:
 	/** constructor */
-  medOpMergeDicomSeries(const mafString& label = "Merge DICOM Series");
+  medOpMergeDicomSeries(const mafString& label = _R("Merge DICOM Series"));
 
   /** destructor */
   ~medOpMergeDicomSeries();
@@ -54,5 +54,5 @@ protected:
   int m_DicomSeriesInstanceUID;
   int m_ChangeManufacturer;
 
-  bool RanameSeriesAndManufacturer(const char *dicomDirABSPath, int dicomSeriesUID);
+  bool RenameSeriesAndManufacturer(const mafString& dicomDirABSPath, int dicomSeriesUID);
 };

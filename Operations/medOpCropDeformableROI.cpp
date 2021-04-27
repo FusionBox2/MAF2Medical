@@ -181,7 +181,7 @@ void medOpCropDeformableROI::Algorithm(mafVME *vme)
 		
 		mafNEW(m_ResultVme);
 		m_ResultVme->DeepCopy(m_Input);
-		mafString resultName = "Masked ";
+		mafString resultName = _R("Masked ");
 		resultName+=m_Input->GetName();
 		m_ResultVme->SetName(resultName);
 
@@ -250,13 +250,13 @@ void medOpCropDeformableROI::CreateGui()
 	// interface:
 	m_Gui = new mafGUI(this);
 
-	m_Gui->Label("");
-	m_Gui->Label("");
-	m_Gui->Double(ID_DISTANCE,_("Distance"),&m_Distance,0.0);
-	m_Gui->Double(ID_FILL_VALUE,_("Fill value"),&m_FillValue);
-	m_Gui->Bool(ID_INSIDE_OUT,_("Mask inside"),&m_InsideOut);
-	m_Gui->Label("");
-	m_Gui->Label("");
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_R(""));
+	m_Gui->Double(ID_DISTANCE,_L("Distance"),&m_Distance,0.0);
+	m_Gui->Double(ID_FILL_VALUE,_L("Fill value"),&m_FillValue);
+	m_Gui->Bool(ID_INSIDE_OUT,_L("Mask inside"),&m_InsideOut);
+	m_Gui->Label(_R(""));
+	m_Gui->Label(_R(""));
 	m_Gui->Divider(1);
 	m_Gui->OkCancel();
 
@@ -267,7 +267,7 @@ void medOpCropDeformableROI::MaskSelection()
 {
 	mafEvent *e; 
 	e = new mafEvent();
-	mafString title = _("Choose mask");
+	mafString title = _L("Choose mask");
 	e->SetId(VME_CHOOSE);
 	e->SetArg((long)&medOpCropDeformableROI::OutputSurfaceAccept);
 	e->SetString(&title);
