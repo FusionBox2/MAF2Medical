@@ -62,7 +62,7 @@ void medWizardBlockVMEFindOrSelection::ExcutionBegin()
   globalVMEAccept=m_AcceptedVME;
 
   if (m_SelectedVME)
-	  m_SelectedVME=m_SelectedVME->GetByPath(m_VmeParentSelect.c_str());
+	  m_SelectedVME=m_SelectedVME->GetByPath(mafWxToString(m_VmeParentSelect));
 
   if (m_SelectedVME)
   {

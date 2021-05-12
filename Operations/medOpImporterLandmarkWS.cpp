@@ -131,7 +131,7 @@ void medOpImporterLandmarkWS::Read()
 
   //check if file starts with the string "ANALOG"
   line = text.ReadLine(); //Ignore 4 lines of textual information
-  if (line.CompareTo("TRAJECTORIES")!= 0)
+  if (line.Cmp(wxString("TRAJECTORIES"))!= 0)
   {
     mafErrorMessage(_M("Invalid file format!"));
     return;
