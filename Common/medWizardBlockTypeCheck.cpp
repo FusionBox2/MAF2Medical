@@ -91,7 +91,7 @@ void medWizardBlockTypeCheck::ExcutionBegin()
 
   //Select the input VME for the operation
   if (m_SelectedVME)
-    m_SelectedVME=m_SelectedVME->GetByPath(m_VmeSelect.c_str());
+    m_SelectedVME=m_SelectedVME->GetByPath(mafWxToString(m_VmeSelect));
   else
     return;  
 

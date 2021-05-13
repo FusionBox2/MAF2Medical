@@ -126,11 +126,11 @@ void medOpImporterGRFWS::Read()
   wxString line;
   line = text.ReadLine(); 
 
-  if (line.CompareTo("FORCE PLATES")== 0)
+  if (line.Cmp(wxString("FORCE PLATES"))== 0)
   {
     ReadForcePlates();
   }
-  else if (line.CompareTo("VECTOR")== 0)
+  else if (line.Cmp(wxString("VECTOR"))== 0)
   {
     ReadSingleVector();
   }

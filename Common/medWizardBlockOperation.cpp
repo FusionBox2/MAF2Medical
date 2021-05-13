@@ -173,7 +173,7 @@ void medWizardBlockOperation::ExcutionBegin()
   ///////////////////////
   //Select the input VME for the operation
   if (m_SelectedVME)
-    m_SelectedVME=m_SelectedVME->GetByPath(m_VmeSelect.c_str());
+    m_SelectedVME=m_SelectedVME->GetByPath(mafWxToString(m_VmeSelect));
   
   if (m_SelectedVME)
   {
@@ -203,7 +203,7 @@ void medWizardBlockOperation::ExcutionBegin()
     for(int i=0;i<m_VmeShow.size();i++)
     {
       //detecting all other vme starting on selected vme and show it
-      mafNode *toShow=m_SelectedVME->GetByPath(m_VmeShow[i].c_str());
+      mafNode *toShow=m_SelectedVME->GetByPath(mafWxToString(m_VmeShow[i]));
       if (toShow != NULL)
         mafEventMacro(mafEvent(this,VME_SHOW,toShow,true));
     }
@@ -228,7 +228,7 @@ void medWizardBlockOperation::ExcutionEnd()
   //Hide the required VMEs
   for(int i=0;i<m_VmeHide.size();i++)
   {
-    mafNode *toHide=m_SelectedVME->GetByPath(m_VmeHide[i]);
+    mafNode *toHide=m_SelectedVME->GetByPath(mafWxToString(m_VmeHide[i]));
     mafEventMacro(mafEvent(this,VME_SHOW,toHide,false));
   }
 

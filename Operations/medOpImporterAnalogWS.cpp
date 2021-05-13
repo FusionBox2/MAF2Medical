@@ -112,7 +112,7 @@ void medOpImporterAnalogWS::Read()
 
   //check if file starts with the string "ANALOG"
   line = text.ReadLine(); 
-  if (line.CompareTo("ANALOG")!= 0)
+  if (line.Cmp(wxString("ANALOG"))!= 0)
   {
     mafErrorMessage(_M("Invalid file format!"));
     return;

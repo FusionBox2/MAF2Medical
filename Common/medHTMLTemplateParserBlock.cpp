@@ -528,29 +528,29 @@ int medHTMLTemplateParserBlock::PreParseTag( wxString *inputTemplate, int &parsi
     
     int subPos;
 
-    parsingPos+=Strlen(MED_HMTL_TAG_OPENING);
+    parsingPos+=strlen(MED_HMTL_TAG_OPENING);
     //cheking the opening tag type
     if (SubStringCompare(inputTemplate,MED_HTML_TAG_VARIABLE,parsingPos))
     {
       substitutionType=MED_HTML_SUBSTITUTION_VARIABLE;
-      parsingPos+=Strlen(MED_HTML_TAG_VARIABLE);
+      parsingPos+=strlen(MED_HTML_TAG_VARIABLE);
     }
     else if (SubStringCompare(inputTemplate,MED_HTML_TAG_LOOP,parsingPos))
     {
       substitutionType=MED_HTML_SUBSTITUTION_BLOCK;
-      parsingPos+=Strlen(MED_HTML_TAG_LOOP);
+      parsingPos+=strlen(MED_HTML_TAG_LOOP);
     }
     else if (SubStringCompare(inputTemplate,MED_HTML_TAG_IF,parsingPos))
     {
       substitutionType=MED_HTML_SUBSTITUTION_BLOCK;
-      parsingPos+=Strlen(MED_HTML_TAG_IF);
+      parsingPos+=strlen(MED_HTML_TAG_IF);
     }
     else if (SubStringCompare(inputTemplate,MED_HTML_TAG_ELSE,parsingPos))
     {
       //if I find a else tag I update local variables and continue parsing inside this block
       if (m_BlockType!=MED_HTML_TEMPLATE_IF)
         mafLogMessage(_M("medHTMLTemplateParserBlock: [MAFElse] found inside a non [MAFIf] block "));
-      parsingPos+=Strlen(MED_HTML_TAG_ELSE);
+      parsingPos+=strlen(MED_HTML_TAG_ELSE);
 
       ReadTagName(inputTemplate,parsingPos,tagName);
 
@@ -603,17 +603,17 @@ int medHTMLTemplateParserBlock::PreParseTag( wxString *inputTemplate, int &parsi
   //CLOSING TAG
   else if (SubStringCompare(inputTemplate,MED_HTML_TAG_CLOSING,parsingPos)) 
   {
-    parsingPos+=Strlen(MED_HTML_TAG_CLOSING);
+    parsingPos+=strlen(MED_HTML_TAG_CLOSING);
 
     if (SubStringCompare(inputTemplate,MED_HTML_TAG_LOOP,parsingPos))
     {
-      parsingPos+=Strlen(MED_HTML_TAG_LOOP);
+      parsingPos+=strlen(MED_HTML_TAG_LOOP);
       if (m_BlockType!=MED_HTML_TEMPLATE_LOOP)
         mafLogMessage(_M("medHTMLTemplateParserBlock: Invalid closing TAG Type"));
     }
     else if (SubStringCompare(inputTemplate,MED_HTML_TAG_IF,parsingPos))
     {
-      parsingPos+=Strlen(MED_HTML_TAG_IF);
+      parsingPos+=strlen(MED_HTML_TAG_IF);
       if (m_BlockType!=MED_HTML_TEMPLATE_IF)
         mafLogMessage(_M("medHTMLTemplateParserBlock: Invalid closing TAG Type"));
       //if there is not an ELSE TAG the if char are all chars now
