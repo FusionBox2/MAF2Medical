@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 
 # Find and load VTK settings.
 if(NOT VTK_BINARY_DIR)
-  find_package(VTK 6.0 REQUIRED NO_MODULE)
+  find_package(VTK REQUIRED NO_MODULE)
   include(${VTK_USE_FILE})
 endif()
 
