@@ -168,7 +168,7 @@ public:
 	};
 
 	static bool VMEAccept(mafNode *node) {return(node != NULL && node->IsMAFType(mafVME));};
-	static bool VMESurfaceParametricAccept(mafNode *node) {return(node != NULL && node->IsMAFType(mafVMESurfaceParametric));};
+	static bool VMESurfaceParametricAccept(mafNode *node) {return(node != NULL && (node->IsMAFType(mafVMESurfaceParametric)));};
 
 	/** Precess events coming from other objects */ 
 	virtual void OnEvent(mafEventBase *maf_event);

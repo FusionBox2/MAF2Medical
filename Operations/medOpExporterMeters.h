@@ -112,7 +112,9 @@ protected:
   
   
   mafString          m_File;
+  mafString			 m_FileCSV;
   std::ofstream      m_OutputFile;
+  std::ofstream		 m_OutputFileCSV;
   int                m_ExportRadio;
   mafTimeStamp       m_CurrentTime;
   std::vector<mafTimeStamp> m_Times;

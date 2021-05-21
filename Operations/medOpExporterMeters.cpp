@@ -82,7 +82,7 @@ bool medOpExporterMeters::Accept(mafNode *node)
 { 
   bool inputVMEAccepted = false;
 
-  if (node->IsA("medVMEWrappedMeter"))
+  if (node->IsA("medVMEWrappedMeter") || node->IsA("mafVMEMeter") )
   {
     inputVMEAccepted = true;
   }
@@ -174,12 +174,16 @@ void medOpExporterMeters::OpDo()
 
   mafString wildc = _R("configuration file (*.txt)|*.txt");
   m_File = mafGetSaveFile(initialFileName, wildc);
+  m_FileCSV = m_File;
+  m_FileCSV.Erase(m_File.Length() - 4, m_FileCSV.Length() - 1);
+  m_FileCSV.Append(_R(".csv"));
 
-  if (m_File.IsEmpty()) return;
+  if (m_File.IsEmpty() || m_FileCSV.IsEmpty()) return;
 
   Export();
   
   m_OutputFile.close();
+  m_OutputFileCSV.close();
 }
 //----------------------------------------------------------------------------
 void medOpExporterMeters::Export()
@@ -187,8 +191,9 @@ void medOpExporterMeters::Export()
 {
 
   m_OutputFile.open(m_File.GetCStr(), std::ios::out);
+  m_OutputFileCSV.open(m_FileCSV.GetCStr(), std::ios::out);
 
-  if (m_OutputFile.fail()) {
+  if (m_OutputFile.fail() || m_OutputFileCSV.fail()) {
     wxMessageBox("Error opening configuration file");
     return ;
   }
@@ -415,14 +420,19 @@ void medOpExporterMeters::WriteOnFile()
   for(int i=0; i< m_Times.size(); i++)
   {
     m_OutputFile << std::fixed << std::setprecision(3) << std::setw(8) <<m_Times[i] << "\t";
+	m_OutputFileCSV << std::fixed << std::setprecision(3) << std::setw(8) << m_Times[i] << ",";
+
   }
   m_OutputFile << std::endl;
+  m_OutputFileCSV << std::endl;
   // end header
 
   //name + coordinates
   for(int i=0; i< m_Meters.size(); i++)
   {
+	mafVMEMeter* meter = mafVMEMeter::SafeDownCast(m_Meters[i]);
     m_OutputFile << m_Meters[i]->GetName().GetCStr() << std::endl; // vme name
+	m_OutputFileCSV << m_Meters[i]->GetName().GetCStr() << "," << meter->GetValue() << std::endl;// vme name
     WriteCoordinatesOnFile(i);
   }
 }
@@ -439,14 +449,17 @@ void medOpExporterMeters::WriteCoordinatesOnFile(int index)
       if (i==0)
       {
         m_OutputFile << "Origin" << std::endl;
+		m_OutputFileCSV << "Origin" << std::endl;
       }
       else if (i == rows-3)
       {
         m_OutputFile << "Insertion" << std::endl;
+		m_OutputFileCSV << "Insertion" << std::endl;
       }
       else
       {
         m_OutputFile << "P" << (i)/3 << std::endl;
+		m_OutputFileCSV << "P" << (i) / 3 << std::endl;
       }
       
     }
@@ -455,8 +468,10 @@ void medOpExporterMeters::WriteCoordinatesOnFile(int index)
     {
       double value =  m_MetersCoordinatesList[index].get(i,j);
       m_OutputFile << std::fixed << std::setprecision(3) << std::setw(8) << value << "\t";
+	  m_OutputFileCSV << std::fixed << std::setprecision(3) << std::setw(8) << value << ",";
     }
     m_OutputFile << std::endl;
+	m_OutputFileCSV << std::endl;
   }
 }
 //----------------------------------------------------------------------------

@@ -141,7 +141,7 @@ void medOpScaleDataset::OnEvent(mafEventBase *maf_event)
 void medOpScaleDataset::OpDo()
 //----------------------------------------------------------------------------
 {
-  mafOpTransformInterface::OpDo();
+	;// mafOpTransformInterface::OpDo();
 }
 //----------------------------------------------------------------------------
 void medOpScaleDataset::OpUndo()
