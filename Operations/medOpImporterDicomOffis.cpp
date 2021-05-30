@@ -3411,9 +3411,9 @@ void medOpImporterDicomOffis::FillSeriesListBox()
 				//      TODO
 				m_SeriesListctrl->InsertItem((long) counter,seriesName.toWx());
 				//		m_SeriesListctrl->SetClientData((void *)m_SeriesIDToSlicesListMap[m_SelectedSeriesID]/*filesList*/);
-				long ptclientdata = (long) m_SeriesIDToSlicesListMap[m_SelectedSeriesID];
+				intptr_t ptclientdata = (intptr_t) m_SeriesIDToSlicesListMap[m_SelectedSeriesID];
 
-				m_SeriesListctrl->SetItemData((long) counter,(long) idser);
+				m_SeriesListctrl->SetItemPtrData((long) counter,(wxUIntPtr) idser);
 				wxColour itemREDcolour = wxColour(255,1,1);
 				if(numberOfImages < 6) 
 				{
