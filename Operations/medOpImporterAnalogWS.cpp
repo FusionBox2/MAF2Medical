@@ -186,7 +186,7 @@ void medOpImporterAnalogWS::Read()
     line.Replace(","," ");
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) n)/((double) rowNumber-1)*100.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) n)/((double) rowNumber-1)*100.)));
     }
   } 
 

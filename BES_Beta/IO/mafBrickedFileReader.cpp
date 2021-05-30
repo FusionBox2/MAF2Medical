@@ -440,7 +440,7 @@ void mafBrickedFileReader::GetBricksExtent(int VOI[6], int inBExt[6], int bndBEx
 	for (xyzb[2] = bndBExt[4]; xyzb[2] <= bndBExt[5]; xyzb[2]++, nBrickLineZ += m_NBricksDim[1], 
 		nLRIdxZ += m_NBricksDimSize[1]*m_NVoxelSizeInB)
 	{
-		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)(
+		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (intptr_t)(
 			100*(xyzb[2] - bndBExt[4]) / (bndBExt[5] - bndBExt[4] + 1))));
 
 		//planes from bndBExt[4] to inBExt[4] (exclusively)
@@ -578,7 +578,7 @@ void mafBrickedFileReader::GetBricksExtent(int VOI[6], int inBExt[6], int bndBEx
 
 	mafString szMsg = _L("Retrieving data ...");
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
-	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
+	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (intptr_t)0));
 
 	try
 	{

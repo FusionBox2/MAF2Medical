@@ -88,7 +88,7 @@ void medWizardBlockVMEFindOrSelection::ExcutionBegin()
 		  mafString title = mafWxToString(m_Title);
 		  mafEvent e(this,VME_CHOOSE);
 		  e.SetString(&title);
-		  e.SetArg((long)(&VMEAccept)); 
+		  e.SetArg((intptr_t)(&VMEAccept)); 
 		  // accept only Specified VME
 		  mafEventMacro(e);
 		  selVME=e.GetVme();

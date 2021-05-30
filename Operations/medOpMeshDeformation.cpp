@@ -880,7 +880,7 @@ void medOpMeshDeformation::OnEvent(mafEventBase *maf_event)
   
   mafEvent ev(this, VME_CHOOSE);   
   ev.SetString(&title);
-  ev.SetArg((long)&medOpMeshDeformation::SelectCurveVMECallback);
+  ev.SetArg((intptr_t)&medOpMeshDeformation::SelectCurveVMECallback);
 
   mafEventMacro(ev);
   return mafVME::SafeDownCast(ev.GetVme());

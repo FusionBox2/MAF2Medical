@@ -223,7 +223,7 @@ void medVisualPipeCollisionDetection::OnEvent(mafEventBase *maf_event)
       {
         //if user add a surface to compute collision
         mafString title = _L("Choose Surface");
-        e->SetArg((long)&medVisualPipeCollisionDetection::SurfaceAccept);
+        e->SetArg((intptr_t)&medVisualPipeCollisionDetection::SurfaceAccept);
         e->SetString(&title);
         e->SetId(VME_CHOOSE);
         mafEventMacro(*e);
@@ -241,7 +241,7 @@ void medVisualPipeCollisionDetection::OnEvent(mafEventBase *maf_event)
       {
         //if the user select a single surface for collision detection
         mafString title = _L("Choose Surface");
-        e->SetArg((long)&medVisualPipeCollisionDetection::SurfaceAccept);
+        e->SetArg((intptr_t)&medVisualPipeCollisionDetection::SurfaceAccept);
         e->SetString(&title);
         e->SetId(VME_CHOOSE);
         mafEventMacro(*e);

@@ -246,7 +246,7 @@ void medDataPipeCustomSegmentationVolume::ApplyManualSegmentation()
     if ((i%step) == 0)
     {
 	    progress = (i*100/maskScalar->GetNumberOfTuples());
-	    mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,progress);
+	    mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)progress);
 	    this->GetVME()->ForwardUpEvent(&eUpdate);
     }
 
@@ -333,7 +333,7 @@ void medDataPipeCustomSegmentationVolume::ApplyAutomaticSegmentation()
     if (i%step == 0)
     {
 	    progress = (i*100/volumeDimensions[2]);
-	    mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,progress);
+	    mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)progress);
 	    this->GetVME()->ForwardUpEvent(&eUpdate);
     }
 
@@ -512,7 +512,7 @@ void medDataPipeCustomSegmentationVolume::ApplyRefinementSegmentation()
     if ((i%step) == 0)
     {
       progress = (i*100/maskScalar->GetNumberOfTuples());
-      mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,progress);
+      mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)progress);
       this->GetVME()->ForwardUpEvent(&eUpdate);
     }
 
@@ -598,7 +598,7 @@ void medDataPipeCustomSegmentationVolume::ApplyRegionGrowingSegmentation()
     return;
   }
 
-  mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(long)5);
+  mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)5);
   this->GetVME()->ForwardUpEvent(&eUpdate);
 
   vtkMAFSmartPointer<vtkStructuredPoints> spInputOfRegionGrowing;

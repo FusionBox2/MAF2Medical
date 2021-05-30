@@ -260,7 +260,7 @@ void medVMESegmentationVolume::OnEvent(mafEventBase *maf_event)
       {
         mafString title = _L("Choose volume vme");
         e->SetId(VME_CHOOSE);
-        e->SetArg((long)&medVMESegmentationVolume::VolumeAccept);
+        e->SetArg((intptr_t)&medVMESegmentationVolume::VolumeAccept);
         e->SetString(&title);
         ForwardUpEvent(e);
         mafNode *n = e->GetVme();

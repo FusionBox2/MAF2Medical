@@ -447,7 +447,7 @@ void medOpExporterGRFWS::Write()
 
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) size)*25.)));
     }
   }
   // ---------------------
@@ -472,7 +472,7 @@ void medOpExporterGRFWS::Write()
 
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(25+((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(25+((double) i)/((double) size)*25.)));
     }
   }  
   // ---------------------
@@ -503,7 +503,7 @@ void medOpExporterGRFWS::Write()
       
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(50+((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(50+((double) i)/((double) size)*25.)));
     }
   }
   // ---------------------
@@ -528,7 +528,7 @@ void medOpExporterGRFWS::Write()
 
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(75+((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(75+((double) i)/((double) size)*25.)));
     }
   }  
 
@@ -550,7 +550,7 @@ void medOpExporterGRFWS::Write()
 
   if (!m_TestMode)
   {
-    mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)0.0));
+    mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)0.0));
   }
 
   // Write to final file
@@ -629,7 +629,7 @@ void medOpExporterGRFWS::Write()
 
       if (!m_TestMode)
       {
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) size)*100.)));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) size)*100.)));
       }
 
     }
@@ -773,7 +773,7 @@ void medOpExporterGRFWS::WriteFast()
 
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) size)*25.)));
     }
   }  
   // ---------------------
@@ -811,7 +811,7 @@ void medOpExporterGRFWS::WriteFast()
 
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(25+((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(25+((double) i)/((double) size)*25.)));
     }
   }  
   // ---------------------
@@ -858,7 +858,7 @@ void medOpExporterGRFWS::WriteFast()
       
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(50+((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(50+((double) i)/((double) size)*25.)));
     }
   }  
   // ---------------------
@@ -896,7 +896,7 @@ void medOpExporterGRFWS::WriteFast()
 
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(75+((double) i)/((double) size)*25.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(75+((double) i)/((double) size)*25.)));
     }
   }  
 
@@ -918,7 +918,7 @@ void medOpExporterGRFWS::WriteFast()
 
   if (!m_TestMode)
   {
-    mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)0.0));
+    mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)0.0));
   }
 
   // Write to final file
@@ -997,7 +997,7 @@ void medOpExporterGRFWS::WriteFast()
 
       if (!m_TestMode)
       {
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) size)*100.)));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) size)*100.)));
       }
 
     }
@@ -1091,7 +1091,7 @@ void medOpExporterGRFWS::WriteSingleVector()
 
       if (!m_TestMode)
       {
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) size)*100.)));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) size)*100.)));
       }
     }
 
@@ -1203,7 +1203,7 @@ void medOpExporterGRFWS::WriteSingleVectorFast()
 
       if (!m_TestMode)
       {
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) size)*100.)));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) size)*100.)));
       }
     }
 

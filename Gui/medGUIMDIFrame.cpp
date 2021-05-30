@@ -55,5 +55,5 @@ void medGUIMDIFrame::OnMenuWizard(wxCommandEvent& e)
 //----------------------------------------------------------------------------
 { 
   //Tell logic about click on wizard menu
-  mafEventMacro(mafEvent(this,MENU_WIZARD,(long)e.GetId()));
+  mafEventMacro(mafEvent(this,MENU_WIZARD,(intptr_t)e.GetId()));
 }

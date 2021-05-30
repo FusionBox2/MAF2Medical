@@ -3306,7 +3306,7 @@ void medViewArbitraryOrthoSlice::AccumulateTextures( mafVMESlicer *inSlicer, dou
 
 		if (showProgressBar)
 		{
-			mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,progress);
+			mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)progress);
 			mafEventMacro(eUpdate);
 		}
 
@@ -4092,7 +4092,7 @@ void medViewArbitraryOrthoSlice::SaveSlicesTextureToFile(int choosedExportAxis)
 	{          
 		long progress = (100 * ((double )i) / ((double) m_NumberOfAxialSections[choosedExportAxis]));
 
-		mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,progress);
+		mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)progress);
 		mafEventMacro(eUpdate);
 
 		// move the slicer in the target abs pose
@@ -4721,7 +4721,7 @@ void medViewArbitraryOrthoSlice::SaveSlicesFromRenderWindowToFile(int chooseExpo
 	{          
 		long progress = (100 * ((double )i) / ((double) m_NumberOfAxialSections[chooseExportAxis]));
 
-		mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,progress);
+		mafEvent eUpdate(this,PROGRESSBAR_SET_VALUE,(intptr_t)progress);
 		mafEventMacro(eUpdate);
 
 		// move the slicer in the target abs pose

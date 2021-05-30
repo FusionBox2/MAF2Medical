@@ -273,7 +273,7 @@ void medOpIterativeRegistration::OnEventThis(mafEventBase *maf_event)
     case ID_CHOOSE_TARGET:
     {
       mafString title = _L("Choose target vme");
-      mafEvent e(this,VME_CHOOSE,&title,(long)&medGUILandmark::VmeAccept);
+      mafEvent e(this,VME_CHOOSE,&title,(intptr_t)&medGUILandmark::VmeAccept);
       mafEventMacro(e); 
       m_TargetVME = mafVME::SafeDownCast(e.GetVme());
       if (m_TargetVME)

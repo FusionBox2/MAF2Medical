@@ -246,7 +246,7 @@ void mafBrickedFileWriter::SetInputZCoordinates(vtkDoubleArray* pCoords)
 		nSampleRate, m_NBrickSize[0]);
 
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
-	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
+	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (intptr_t)0));
 
 	vtkMAFLargeDataProvider* dp = m_InputDataSet->GetPointDataProvider();	
 	int nScalarsDscIndex = dp->GetIndexOfScalarsDescriptor();
@@ -289,7 +289,7 @@ void mafBrickedFileWriter::SetInputZCoordinates(vtkDoubleArray* pCoords)
 	vtkIdType64 nStartIndex = VOI[0]*dataIncr[0] + VOI[2]*dataIncr[1] + VOI[4]*dataIncr[2];		
 	for (int zb = 0; zb < nDims[2]; zb++, nStartIndex += dataIncrSkip[2])
 	{
-		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)(100*zb / nDims[2])));
+		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (intptr_t)(100*zb / nDims[2])));
 
 		//processing one plane
 		//process sampled lines at this plane
@@ -623,7 +623,7 @@ void mafBrickedFileWriter::CreateBricksIndexTable(int nCurBrickPlane)
 
 	mafString szMsg = _L("Initialization ...");
 	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szMsg));
-	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
+	mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (intptr_t)0));
 
 	try
 	{

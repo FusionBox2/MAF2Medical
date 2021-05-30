@@ -269,7 +269,7 @@ bool medOpMergeDicomSeries::RenameSeriesAndManufacturer(const mafString& dicomDi
       status = dicomImg.saveFile(currentSliceABSFileName.toStd().c_str());
 
       mafLogMessage(_M(_R("Modified file ") + currentSliceABSFileName));
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,long((double(i)/double(m_DICOMDirectoryReader->GetNumberOfFiles()))*100)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,intptr_t((double(i)/double(m_DICOMDirectoryReader->GetNumberOfFiles()))*100)));
 
     }  
   }

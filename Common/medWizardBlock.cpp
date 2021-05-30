@@ -117,7 +117,7 @@ void medWizardBlock::ExcutionBegin()
   m_InputVME=m_SelectedVME;
 
   if (m_BlockProgress>=0)
-    mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,m_BlockProgress));
+    mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)m_BlockProgress));
 }
 
 //----------------------------------------------------------------------------
