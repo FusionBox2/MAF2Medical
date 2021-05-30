@@ -248,7 +248,7 @@ void medGUIDynamicVP::OnEvent(mafEventBase *maf_event)
 //------------------------------------------------------------------------
 //Notifies the listener, sending the specified notify id 
 //and nData as and argument. 
-/*virtual*/ void medGUIDynamicVP::NotifyListener(long nData)
+/*virtual*/ void medGUIDynamicVP::NotifyListener(intptr_t nData)
 {
   //notify the listener about change
   mafEvent ev(this, m_NotifyId, nData);
