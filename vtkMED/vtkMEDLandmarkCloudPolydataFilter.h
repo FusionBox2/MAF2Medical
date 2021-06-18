@@ -15,7 +15,7 @@ University of Bedfordshire
 #define __vtkMEDLandmarkCloudPolydataFilter_h
 
 #include "vtkPolyData.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 
 
 #include "vtkSphereSource.h"
@@ -31,11 +31,11 @@ University of Bedfordshire
 //
 // Version: Nigel McFarlane 6.3.14
 //------------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDLandmarkCloudPolydataFilter : public vtkPolyDataToPolyDataFilter 
+class VTK_vtkMED_EXPORT vtkMEDLandmarkCloudPolydataFilter : public vtkPolyDataAlgorithm 
 {
 public:
   void PrintSelf(ostream& os, vtkIndent indent) const {}
-  vtkTypeRevisionMacro(vtkMEDLandmarkCloudPolydataFilter,vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDLandmarkCloudPolydataFilter,vtkPolyDataAlgorithm);
 
   /// Constructor
   static vtkMEDLandmarkCloudPolydataFilter *New();
@@ -132,7 +132,7 @@ protected:
 
   char m_ScalarName[256] ;
 
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   // visual pipes
   std::vector<vtkSphereSource*> m_SphereList ;          // sphere sources

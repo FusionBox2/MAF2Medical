@@ -19,15 +19,17 @@
 
 #include "vtkImageData.h"
 #include "vtkMEDConfigure.h"
-#include "vtkDataSetToImageFilter.h"
+#include "vtkDataSetAlgorithm.h"
 #include "vtkRectilinearGrid.h"
+#include "vtkImageAlgorithm.h"
 
+#include "vtkExecutive.h"
 #define MAX_NUMBER_OF_PIECES 20
 
 class vtkDoubleArray;
 
 //----------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDVolumeSlicerNotInterpolated : public vtkDataSetToImageFilter
+class VTK_vtkMED_EXPORT vtkMEDVolumeSlicerNotInterpolated : public vtkDataSetAlgorithm
 //----------------------------------------------------------------------------
 {
 public:
@@ -44,10 +46,10 @@ public:
   static vtkMEDVolumeSlicerNotInterpolated *New();
 
   /** RTTI Macro */
-  vtkTypeRevisionMacro(vtkMEDVolumeSlicerNotInterpolated, vtkDataSetToImageFilter);
+  vtkTypeRevisionMacro(vtkMEDVolumeSlicerNotInterpolated, vtkDataSetAlgorithm);
 
   /** Set the slicer output */
-  inline void SetOutput(vtkImageData * data) {vtkImageSource::SetOutput(data);};
+  inline void SetOutput(vtkImageData * data) { this->GetExecutive()->SetOutputData(0,data);};
 
   /** Set the slice origin */
   vtkSetVector3Macro(Origin,double);
@@ -77,15 +79,19 @@ protected:
 
   /** By default, UpdateInformation calls this method to copy information
   unmodified from the input to the output.*/
-  virtual void ExecuteInformation();
+  virtual int RequestInformation(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
    /**
    This method is the one that should be used by subclasses, right now the 
    default implementation is to call the backwards compatibility method */
-   /*virtual*/void ExecuteData(vtkDataObject *output);
+   /*virtual*/int RequestData(vtkInformation* v,
+       vtkInformationVector** inInfoVec,
+       vtkInformationVector* outInfoVec,vtkDataObject *output);
 
    /** Create geometry for the slice. */
-   virtual void ExecuteData(vtkImageData *output);
+   virtual int RequestData(vtkInformation* v,
+       vtkInformationVector** inInfoVec,
+       vtkInformationVector* outInfoVec,vtkImageData *output);
 
   double Origin[3];                           //< Origin of the cutting plane
   double SliceOrigin[3];                      //< Origin of the slice
@@ -116,4 +122,4 @@ private:
   void AddOutputsAttributes(int dimension, double spacing, int** dimensions, double** spacings, int size);
 
 };
-#endif //#ifndef __vtkMEDVolumeSlicerNotInterpolated_H__
+#endif

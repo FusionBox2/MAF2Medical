@@ -19,7 +19,10 @@
 //----------------------------------------------------------------------------
 #include "vtkMEDPoissonSurfaceReconstruction.h"
 
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
+#include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtkFloatArray.h"
 #include "vtkMath.h"
 #include "float.h"
@@ -44,14 +47,26 @@ vtkMEDPoissonSurfaceReconstruction::~vtkMEDPoissonSurfaceReconstruction()
 }
 
 //----------------------------------------------------------------------------
-void vtkMEDPoissonSurfaceReconstruction::Execute()
-//----------------------------------------------------------------------------
+int vtkMEDPoissonSurfaceReconstruction::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
-  vtkDataSet *input= this->GetInput();
-  vtkPolyData *output = this->GetOutput();
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkDataSet*input = vtkDataSet::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPolyData*output = vtkPolyData::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
+  //vtkDataSet *input= this->GetInput();
+  //vtkPolyData *output = this->GetOutput();
 
   // ghost cell stuff
-  unsigned char  updateLevel = (unsigned char)(output->GetUpdateGhostLevel());
+  unsigned char  updateLevel = (unsigned char)(this->GetUpdateGhostLevel());
   unsigned char  *cellGhostLevels = NULL;
 
   // make sure output is initialized
@@ -72,17 +87,31 @@ void vtkMEDPoissonSurfaceReconstruction::Execute()
   vtk_psr_output = output;
 
   PSR_main();
+
+  return 0;
 }
 
 //----------------------------------------------------------------------------
-void vtkMEDPoissonSurfaceReconstruction::ExecuteInformation()
-//----------------------------------------------------------------------------
+int vtkMEDPoissonSurfaceReconstruction::RequestInformation(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+ // vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+ // vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the info objects
+  vtkInformation* outInfo = outputVector->GetInformationObject(0);
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+
   if (this->GetInput() == NULL)
     {
     vtkErrorMacro("No Input");
-    return;
+    return 1;
     }
+
+  return 0;
 }
 
 //----------------------------------------------------------------------------
@@ -93,27 +122,40 @@ void vtkMEDPoissonSurfaceReconstruction::PrintSelf(ostream& os, vtkIndent indent
 }
 
 //----------------------------------------------------------------------------
-void vtkMEDPoissonSurfaceReconstruction::ComputeInputUpdateExtents(vtkDataObject *output)
-//----------------------------------------------------------------------------
+int vtkMEDPoissonSurfaceReconstruction::RequestUpdateExtent(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+  vtkPolyData* output = vtkPolyData::SafeDownCast(
+	  outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   int piece, numPieces, ghostLevels;
   
   if (this->GetInput() == NULL)
     {
     vtkErrorMacro("No Input");
-    return;
+    return 1;
     }
-  piece = output->GetUpdatePiece();
-  numPieces = output->GetUpdateNumberOfPieces();
-  ghostLevels = output->GetUpdateGhostLevel();
+
+  piece=this->GetUpdatePiece();
+  
+  numPieces = this->GetUpdateNumberOfPieces();
+  ghostLevels = this->GetUpdateGhostLevel();
   
   if (numPieces > 1)
     {
     ++ghostLevels;
     }
 
-  this->GetInput()->SetUpdateExtent(piece, numPieces, ghostLevels);
-  this->GetInput()->RequestExactExtentOn();
+  //this->GetInput()->SetUpdateExtent(piece, numPieces, ghostLevels);
+  //this->GetInput()->RequestExactExtentOn();
+  this->SetUpdateExtent(piece, numPieces, ghostLevels);
+  
+  return 0;
 }
 
 

@@ -31,19 +31,19 @@
 #ifndef __vtkMaskPolyDataFilter_h
 #define __vtkMaskPolyDataFilter_h
 
-#include "vtkDataSetToDataSetFilter.h"
+#include "vtkDataSetAlgorithm.h"
 #include "vtkPolyData.h"
 #include "vtkMath.h"
 #include "vtkPolygon.h"
 #include "vtkMEDConfigure.h"
 //#include "vtkSVTKWin32Header.h"
 
-class VTK_vtkMED_EXPORT vtkMaskPolyDataFilter : public vtkDataSetToDataSetFilter
+class VTK_vtkMED_EXPORT vtkMaskPolyDataFilter : public vtkDataSetAlgorithm
 {
 public:
   
   /** RTTI macro */
-  vtkTypeMacro(vtkMaskPolyDataFilter,vtkDataSetToDataSetFilter);
+  vtkTypeMacro(vtkMaskPolyDataFilter,vtkDataSetAlgorithm);
 
   const char *GetClassName() {return "vtkMaskPolyDataFilter";};
   void PrintSelf(ostream& os, vtkIndent indent);
@@ -72,8 +72,15 @@ public:
 
   /**
   Specify the polygonal dataset to perform the masking.*/
-  void SetMask(vtkPolyData *mask) {this->SetNthInput(1, mask);};
-  vtkPolyData *GetMask() { return (vtkPolyData *)(this->Inputs[1]);};
+  void SetMask(vtkPolyData *mask) {
+	 // this->SetNthInput(1, mask);
+	  this->SetInputData(1, mask);
+  };
+  vtkPolyData *GetMask() { 
+	  //return (vtkPolyData *)(this->getInputs[1]);
+  
+	  return (vtkPolyData*)(this->GetInput(1));
+  };
 
   /**
   Set / get the fill value*/
@@ -94,7 +101,7 @@ protected:
   vtkMaskPolyDataFilter(const vtkMaskPolyDataFilter&);
   void operator=(const vtkMaskPolyDataFilter&);
 
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
   vtkPolyData *Mask;
 	vtkPolyData *CurrentSliceMask;
 	vtkIdType *IdConversionTable;

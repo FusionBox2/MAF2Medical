@@ -20,11 +20,13 @@
 
 #include "vtkMEDConfigure.h"
 #include "vtkOpenGLVolumeRayCastMapper.h"
-
+#ifdef WIN32
+#include <windows.h>
+#endif
 class vtkRenderer;
 class vtkVolume;
 
-class VTK_vtkMED_EXPORT vtkMAFVolumeRayCastMapper : public vtkOpenGLVolumeRayCastMapper
+class VTK_vtkMED_EXPORT vtkMAFVolumeRayCastMapper : public vtkOpenGLVolumeRayCastMapper 
 {
 protected:
   unsigned long LastCheckSum;   //<Here is stored CheckSum used to detect if Casting needs to be reexecuted

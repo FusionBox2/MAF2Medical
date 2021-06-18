@@ -14,13 +14,13 @@ See the COPYINGS file for license details
 #define __vtkPatchLine_h
 
 #include "vtkMEDConfigure.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 
-class VTK_vtkMED_EXPORT vtkPatchLine : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkPatchLine : public vtkPolyDataAlgorithm
 {
 	public:
 	/** RTTI macro*/
-	vtkTypeRevisionMacro(vtkPatchLine, vtkPolyDataToPolyDataFilter);
+	vtkTypeRevisionMacro(vtkPatchLine, vtkPolyDataAlgorithm);
 
 	/** return object instance */
 		static vtkPatchLine *New();

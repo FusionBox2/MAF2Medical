@@ -15,7 +15,7 @@ University of Bedfordshire
 #define __vtkMEDHalfTubeRemoval_h
 
 #include "vtkMEDConfigure.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkPolyData.h"
 #include "vtkMEDPolyDataNavigator.h"
 
@@ -33,10 +33,10 @@ University of Bedfordshire
 //
 // Version 5.12.13
 //------------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDHalfTubeRemoval : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDHalfTubeRemoval : public vtkPolyDataAlgorithm
 {
 public:
-  vtkTypeRevisionMacro(vtkMEDHalfTubeRemoval,vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDHalfTubeRemoval,vtkPolyDataAlgorithm);
   static vtkMEDHalfTubeRemoval *New();
   void PrintSelf(ostream& os, vtkIndent indent) const {}
 
@@ -66,7 +66,7 @@ protected:
   vtkMEDHalfTubeRemoval();
   ~vtkMEDHalfTubeRemoval();
 
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   vtkPolyData *m_Input ;
   vtkPolyData *m_Output ;

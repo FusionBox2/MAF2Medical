@@ -22,6 +22,8 @@
 #include "vtkDoubleArray.h"
 #include "vtkLine.h"
 #include "vtkMath.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkPlane.h"
 #include "vtkPolyData.h"
@@ -2802,7 +2804,7 @@ void vtkMEDFillingHole::InitMesh()
   CTriangle *pTriangle;
   vtkIdList *ptids;
 
-  InputMesh = this->GetInput();
+  InputMesh = this->GetPolyDataInput(0);
   OutputMesh = this->GetOutput();
 
   NumOfTriangle = InputMesh->GetNumberOfCells();
@@ -2898,9 +2900,21 @@ void vtkMEDFillingHole::BuildPatchOutput()
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
-void vtkMEDFillingHole::Execute()
-//----------------------------------------------------------------------------
-{  
+int vtkMEDFillingHole::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
+{
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkDataSet *input = vtkDataSet::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkDataSet *output = vtkDataSet::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+  
   //InitManifoldMesh();
   InitMesh();
   BuildMesh();
@@ -2942,4 +2956,6 @@ void vtkMEDFillingHole::Execute()
   }
   DoneMesh();
   ClearMesh();
+
+  return 0;
 }

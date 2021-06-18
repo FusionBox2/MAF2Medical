@@ -30,12 +30,14 @@ vtkStandardNewMacro(vtkPatchLine);
 
 void vtkPatchLine::ExecuteData(vtkDataObject *output)
 {	
-	vtkSmartPointer<vtkPolyData> source = this->GetInput();
-	source->Update();
+	vtkSmartPointer<vtkPolyData> source = this->GetPolyDataInput(0);
+	//source->Update();
 	
 	//Remove duplicate points etc.
 	vtkMAFSmartPointer<vtkCleanPolyData> cleaner;
-	cleaner->SetInput(source.GetPointer());
+	//cleaner->SetInput(source.GetPointer());
+
+	cleaner->SetInputConnection(0,this->GetOutputPort());
 	cleaner->Update();  
 	source = cleaner->GetOutput();	
 	//source->Register(NULL); - not needed, reference is added by SmartPointer

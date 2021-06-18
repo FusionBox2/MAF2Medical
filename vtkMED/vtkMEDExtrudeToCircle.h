@@ -18,7 +18,7 @@
 #ifndef __vtkMEDExtrudeToCircle_h
 #define __vtkMEDExtrudeToCircle_h
 
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkPolyData.h"
 #include "vtkMatrix4x4.h"
 #include "vtkMEDConfigure.h"
@@ -30,13 +30,13 @@
 /// Extrusion filter based on vtkLinearExtrusionFilter. \n
 /// This creates an extrusion terminating in a circle.
 //------------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDExtrudeToCircle : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDExtrudeToCircle : public vtkPolyDataAlgorithm
 {
 public:
   //----------------------------------------------------------------------------
   // Public methods
   //----------------------------------------------------------------------------
-  vtkTypeRevisionMacro(vtkMEDExtrudeToCircle, vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDExtrudeToCircle, vtkPolyDataAlgorithm);
   static vtkMEDExtrudeToCircle *New();                  ///< New() method
   void PrintSelf(ostream& os, vtkIndent indent) const ; ///< print self
 
@@ -74,7 +74,7 @@ protected:
   vtkMEDExtrudeToCircle() ;   ///< constructor
   ~vtkMEDExtrudeToCircle() ;  ///< deconstructor
 
-  void Execute();       ///< execute method
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);       ///< execute method
 
   void Initialize() ;   ///< initialize filter (clear old data out for clean start)
 

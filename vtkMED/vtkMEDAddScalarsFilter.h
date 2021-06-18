@@ -15,9 +15,10 @@ University of Bedfordshire
 #define __vtkMEDAddScalarsFilter_h
 
 #include "vtkMEDConfigure.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkPolyData.h"
 #include <ostream>
+
 #include <vector>
 
 
@@ -28,10 +29,13 @@ University of Bedfordshire
 //
 // Version 18.2.14
 //------------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDAddScalarsFilter : public vtkPolyDataToPolyDataFilter
+
+  
+
+class VTK_vtkMED_EXPORT vtkMEDAddScalarsFilter : public vtkPolyDataAlgorithm
 {
 public:
-  vtkTypeRevisionMacro(vtkMEDAddScalarsFilter,vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDAddScalarsFilter,vtkPolyDataAlgorithm);
   static vtkMEDAddScalarsFilter *New();
   void PrintSelf(ostream& os, vtkIndent indent) const {}
 
@@ -80,11 +84,11 @@ public:
   /// This does not work on cell scalar attributes.
   void SetColorOfPoint(int ptId, double col[3], double alpha) ; 
 
-protected:
+protected :
   vtkMEDAddScalarsFilter();
   ~vtkMEDAddScalarsFilter() {};
 
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   float m_Color[4] ;
   char m_ScalarName[256] ;

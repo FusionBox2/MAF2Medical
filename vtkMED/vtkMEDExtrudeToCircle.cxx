@@ -14,7 +14,9 @@
 
 =========================================================================*/
 
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkIdList.h"
 #include "vtkPolyData.h"
@@ -25,7 +27,7 @@
 #include "vtkMEDExtrudeToCircle.h"
 #include "vtkMath.h"
 #include <assert.h>
-
+#include "vtkUnstructuredGrid.h"
 #ifndef vtkMath::Pi()
   #define _USE_MATH_DEFINES
 #endif
@@ -77,13 +79,25 @@ void vtkMEDExtrudeToCircle::Initialize()
 
 //------------------------------------------------------------------------------
 // Execute method
-void vtkMEDExtrudeToCircle::Execute()
-//------------------------------------------------------------------------------
+int vtkMEDExtrudeToCircle::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkUnstructuredGrid *input = vtkUnstructuredGrid::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkUnstructuredGrid *output = vtkUnstructuredGrid::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   vtkDebugMacro(<< "Executing ExtrudeToCircle Filter") ;
 
   // pointers to input and output
-  m_Input = this->GetInput() ;
+  m_Input = this->GetPolyDataInput(0) ;
   m_Output = this->GetOutput() ;
 
   // Make sure the filter is cleared of previous data before you run it !
@@ -130,6 +144,8 @@ void vtkMEDExtrudeToCircle::Execute()
   VerticesToVtkTriangles(triangles) ;
   m_Output->SetPolys(triangles) ;
   triangles->Delete() ;
+
+  return 0;
 }
 
 
@@ -1264,7 +1280,7 @@ void vtkMEDExtrudeToCircle::MeshData::PrintSelf(ostream& os, vtkIndent indent) c
 
   for (int i = 0 ;  i < NumRings ;  i++){
     os << indent << "ring " << i << "\t" ;
-    Ring[i].PrintSelf(os, 0) ;
+    Ring[i].PrintSelf(os, indent) ;
     os << std::endl ;
   }
 }
@@ -1275,10 +1291,12 @@ void vtkMEDExtrudeToCircle::MeshData::PrintSelf(ostream& os, vtkIndent indent) c
 void vtkMEDExtrudeToCircle::RingData::PrintSelf(ostream& os, vtkIndent indent) const
 //------------------------------------------------------------------------------
 {
+    
+    
   os << indent << "no. vertices = " << NumVerts << "\t" << "z = " << Z << std::endl ;
   for (int j = 0 ;  j < NumVerts ;  j++){
     os << indent << "vertex " << j << "\t" ;
-    Vertex[j].PrintSelf(os, 0) ;
+    Vertex[j].PrintSelf(os, indent) ;
   }
 }
 

@@ -15,7 +15,7 @@ University of Bedfordshire
 #define __vtkMEDSubdividePolylines_h
 
 #include "vtkMEDConfigure.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkPolyData.h"
 #include "vtkMEDPolyDataNavigator.h"
 
@@ -34,10 +34,10 @@ University of Bedfordshire
 //
 // Version 19.2.14
 //------------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDSubdividePolylines : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDSubdividePolylines : public vtkPolyDataAlgorithm
 {
 public:
-  vtkTypeRevisionMacro(vtkMEDSubdividePolylines,vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDSubdividePolylines,vtkPolyDataAlgorithm);
   static vtkMEDSubdividePolylines *New();
   void PrintSelf(ostream& os, vtkIndent indent) const ;
 
@@ -53,7 +53,7 @@ protected:
   vtkMEDSubdividePolylines();
   ~vtkMEDSubdividePolylines();
 
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   vtkMEDPolyDataNavigator* m_Nav ;
 

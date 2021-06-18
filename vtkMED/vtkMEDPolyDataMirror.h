@@ -14,7 +14,7 @@
 #ifndef __vtkMEDPolyDataMirror_h
 #define __vtkMEDPolyDataMirror_h
 
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkMEDConfigure.h"
 
 class vtkDoubleArray;
@@ -25,10 +25,10 @@ class vtkPolyData;
   class name: vtkMEDPolyDataMirror
   Mirror the polydata over one or more axises.
 */
-class VTK_vtkMED_EXPORT vtkMEDPolyDataMirror : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDPolyDataMirror : public vtkPolyDataAlgorithm
 {
 public:
-  vtkTypeRevisionMacro(vtkMEDPolyDataMirror,vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDPolyDataMirror,vtkPolyDataAlgorithm);
   void PrintSelf(ostream& os, vtkIndent indent);
 
   static vtkMEDPolyDataMirror *New();
@@ -58,7 +58,7 @@ protected:
   ~vtkMEDPolyDataMirror() {};
 
   // Usual data generation method
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   int FlipNormals;
   int MirrorXCoordinate;

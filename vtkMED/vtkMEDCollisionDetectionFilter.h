@@ -38,7 +38,7 @@
 #ifndef __vtkMEDCollisionDetectionFilter_h
 #define __vtkMEDCollisionDetectionFilter_h
 
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkMEDConfigure.h" // Include configuration header.
 
 #include "vtkLinearTransform.h"
@@ -50,10 +50,10 @@ class vtkPolyData;
 class vtkPoints;
 class vtkMatrix4x4;
 
-class VTK_vtkMED_EXPORT vtkMEDCollisionDetectionFilter : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDCollisionDetectionFilter : public vtkPolyDataAlgorithm
 {
 public:
-  vtkTypeRevisionMacro(vtkMEDCollisionDetectionFilter, vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDCollisionDetectionFilter, vtkPolyDataAlgorithm);
   void PrintSelf(ostream& os, vtkIndent indent);
 
 //BTX
@@ -167,7 +167,7 @@ protected:
   ~vtkMEDCollisionDetectionFilter();
 
   // Usual data generation method
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   vtkLinearTransform *Transform[2];
   vtkMatrix4x4 *Matrix[2];

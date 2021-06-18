@@ -22,6 +22,7 @@ See the COPYINGS file for license details
 #include "vtkMatrix4x4.h"
 #include "vtkMultiThreader.h"
 #include "vtkImageData.h"
+#include "vtkDataArray.h"
 #include "vtkVolumeProperty.h"
 #include "gl/gl.h"
 
@@ -56,13 +57,16 @@ vtkStandardNewMacro(vtkMAFVolumeRayCastMapper);
   }
   else
   {
-    this->GetInput()->UpdateInformation();
-    this->GetInput()->SetUpdateExtentToWholeExtent();
-    this->GetInput()->Update();
+      this->UpdateInformation();
+      this->SetUpdateExtentToWholeExtent();
+      this->Update();
+    //this->GetInput()->UpdateInformation();
+    //this->GetInput()->SetUpdateExtentToWholeExtent();
+    //this->GetInput()->Update();
   } 
 
 
-  int scalarType = this->GetInput()->GetPointData()->GetScalars()->GetDataType();
+  int scalarType = this->GetInput()->GetScalarType();// ->GetPointData()->GetScalars()->GetDataType();
   if (scalarType != VTK_UNSIGNED_SHORT && scalarType != VTK_UNSIGNED_CHAR)
   {
     vtkErrorMacro ("Cannot volume render data of type " 
@@ -97,7 +101,7 @@ vtkStandardNewMacro(vtkMAFVolumeRayCastMapper);
   // because that turns off stereo rendering!!!
   this->PerspectiveTransform->Identity();
   this->PerspectiveTransform->Concatenate(
-    cam->GetPerspectiveTransformMatrix(aspect[0]/aspect[1],0.0, 1.0 ));
+    cam->GetProjectionTransformMatrix(aspect[0]/aspect[1],0.0, 1.0 ));
   this->PerspectiveTransform->Concatenate(cam->GetViewTransformMatrix());
   this->PerspectiveMatrix->DeepCopy(this->PerspectiveTransform->GetMatrix());
 
@@ -285,7 +289,7 @@ vtkStandardNewMacro(vtkMAFVolumeRayCastMapper);
 #pragma region VTK Code (Ray casting, i.e., texture computation)
       // Set the number of threads to use for ray casting,
       // then set the execution method and do it.
-      this->Threader->SetNumberOfThreads( this->NumberOfThreads );
+      this->Threader->SetNumberOfThreads( this->GetNumberOfThreads() );
       this->Threader->SetSingleMethod( VolumeRayCastMapper_CastRays, 
         (void *)staticInfo);
       this->Threader->SingleMethodExecute();

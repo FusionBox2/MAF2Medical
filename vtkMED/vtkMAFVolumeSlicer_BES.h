@@ -32,11 +32,11 @@
 #define __vtkMAFVolumeSlicer_BES_h
 
 #include "vtkMEDConfigure.h"
-#include "vtkDataSetToDataSetFilter.h"
+#include "vtkDataSetAlgorithm.h"
 #include "vtkImageData.h"
 #include "vtkPolyData.h"
-
-
+#include "vtkDataSetAlgorithm.h"
+#include "vtkExecutive.h"
 //----------------------------------------------------------------------------
 // forward declarations :
 //----------------------------------------------------------------------------
@@ -51,10 +51,10 @@ class mafGPUOGL;
 #endif
 
 
-class VTK_vtkMED_EXPORT vtkMAFVolumeSlicer_BES : public vtkDataSetToDataSetFilter {
+class VTK_vtkMED_EXPORT vtkMAFVolumeSlicer_BES : public vtkDataSetAlgorithm {
 public:
   static vtkMAFVolumeSlicer_BES *New();
-  vtkTypeRevisionMacro(vtkMAFVolumeSlicer_BES, vtkDataSetToDataSetFilter);
+  vtkTypeRevisionMacro(vtkMAFVolumeSlicer_BES, vtkDataSetAlgorithm);
 
 #pragma region Attributes
   /**
@@ -104,6 +104,7 @@ public:
   //vtkSetMacro( GPUEnabled, int );
   void SetGPUEnabled(int enable);
   vtkGetMacro( GPUEnabled, int );
+  int RequestInformation(vtkInformation* vtkNotUsed(request), vtkInformationVector** inputVector, vtkInformationVector* outputVector);
 
   /** Set tri-linear interpolation to on */
   void SetTrilinearInterpolationOn(){m_TriLinearInterpolationOn = true;};
@@ -117,20 +118,20 @@ public:
 
 
   void SetOutput(vtkImageData *data) { 
-    vtkDataSetSource::SetOutput(data); 
+      vtkDataSetAlgorithm::GetExecutive()->SetOutputData(0, data); ;
   }
   
   void SetOutput(vtkPolyData  *data) { 
-    vtkDataSetSource::SetOutput(data); 
+      vtkDataSetAlgorithm::GetExecutive()->SetOutputData(0, data); ;
   }
 
   /**
   specify the image to be used for texturing output polydata object*/
   void SetTexture(vtkImageData *data) {
-    this->SetNthInput(1, (vtkDataObject*)data);
+    this->SetInputData(1, (vtkDataObject*)data);
   };
   vtkImageData *GetTexture() { 
-    return vtkImageData::SafeDownCast(this->Inputs[1]);
+    return vtkImageData::SafeDownCast(this->GetInput(1));
   };
 
   /** 
@@ -145,23 +146,23 @@ protected:
   /*virtual*/ unsigned long int GetMTime();
 
   /** By default copy the output update extent to the input. */
-  /*virtual*/ void ComputeInputUpdateExtents(vtkDataObject *output);
+  /*virtual*/ int RequestUpdateExtent(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   /** 
   By default, UpdateInformation calls this method to copy information
   unmodified from the input to the output.*/
-  /*virtual*/void ExecuteInformation();
+  /*virtual*/void ExecuteInformation (vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   /**
   This method is the one that should be used by subclasses, right now the 
   default implementation is to call the backwards compatibility method */
-  /*virtual*/void ExecuteData(vtkDataObject *output);
+  /*virtual*/ void ExecuteData(vtkDataObject *output);
 
   /** Create geometry for the slice. */
   virtual void ExecuteData(vtkPolyData *output);
 
   /** Create texture for the slice. */
-  virtual void ExecuteData(vtkImageData *output);
+  virtual void ExecuteData(vtkImageData *output, vtkInformationVector* outInfoVec);
 
 
   /** Prepares internal data structure for the given input data.

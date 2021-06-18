@@ -18,7 +18,7 @@
 #define __vtkMEDImageFillHolesRemoveIslands_H__
 
 #include "vtkMEDConfigure.h"
-#include "vtkStructuredPointsToStructuredPointsFilter.h"
+#include "vtkStructuredGridAlgorithm.h"
 
 class vtkImageData;
 class vtkStructuredPoints;
@@ -31,7 +31,7 @@ vtkMEDImageFillHolesRemoveIslands is a vtkStructuredPointsToStructuredPointsFilt
 that must be a binary image represented by a vtkUCharArray with values of 0 or 255 only.
 */
 //---------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDImageFillHolesRemoveIslands : public vtkStructuredPointsToStructuredPointsFilter
+class VTK_vtkMED_EXPORT vtkMEDImageFillHolesRemoveIslands : public vtkStructuredGridAlgorithm
 //---------------------------------------------------------------------------
 {
 public:
@@ -44,7 +44,7 @@ public:
   };
 
   /** Add collect revision method */
-  vtkTypeRevisionMacro(vtkMEDImageFillHolesRemoveIslands,vtkStructuredPointsToStructuredPointsFilter);
+  vtkTypeRevisionMacro(vtkMEDImageFillHolesRemoveIslands, vtkStructuredGridAlgorithm);
 
   /** Dynamic ctor */
   static vtkMEDImageFillHolesRemoveIslands *New();
@@ -76,7 +76,7 @@ public:
 protected:
 
   /** Execute this filter */
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   int Algorithm;                            //> fill holes or remove islands
   unsigned int EdgeSize;                    //> maximum holes/islands size

@@ -50,7 +50,7 @@
 
 #pragma warning(push)
 #pragma warning(disable:4996)
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #pragma warning(pop)
 
 #include <vector>
@@ -68,13 +68,13 @@ class vtkCellLocator;
 // EXPORT_STL_VECTOR(VTK_vtkMED_EXPORT,vtkIdType);
     
 
-class VTK_vtkMED_EXPORT vtkMEDPolyDataDeformation_M1 : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDPolyDataDeformation_M1 : public vtkPolyDataAlgorithm
 {
 public:
 
   static vtkMEDPolyDataDeformation_M1 *New();
 
-  vtkTypeRevisionMacro(vtkMEDPolyDataDeformation_M1, vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDPolyDataDeformation_M1, vtkPolyDataAlgorithm);
   void PrintSelf(ostream& os, vtkIndent indent);
 
   friend class CMatrixTestM1;
@@ -402,7 +402,7 @@ protected:
   /** 
   By default, UpdateInformation calls this method to copy information
   unmodified from the input to the output.*/
-  /*virtual*/void ExecuteInformation();
+  /*virtual*/int RequestInformation(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   /**
   This method is the one that should be used by subclasses, right now the 

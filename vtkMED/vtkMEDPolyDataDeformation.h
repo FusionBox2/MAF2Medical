@@ -53,7 +53,7 @@
 
 #pragma warning(push)
 #pragma warning(disable:4996)
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #pragma warning(pop)
 
 //#define DEBUG_vtkMEDPolyDataDeformation
@@ -68,13 +68,13 @@ class vtkCellLocator;
 // EXPORT_STL_VECTOR(VTK_vtkMED_EXPORT,CSkeletonEdge*);
 // EXPORT_STL_VECTOR(VTK_vtkMED_EXPORT,CSkeletonVertex*);
 
-class VTK_vtkMED_EXPORT vtkMEDPolyDataDeformation : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDPolyDataDeformation : public vtkPolyDataAlgorithm
 {
 
 public:
   static vtkMEDPolyDataDeformation *New();
 
-  vtkTypeRevisionMacro(vtkMEDPolyDataDeformation, vtkPolyDataToPolyDataFilter);  
+  vtkTypeRevisionMacro(vtkMEDPolyDataDeformation, vtkPolyDataAlgorithm);  
 
   friend class CMatrixTest;
   friend class CSkeletonEdgeTest;
@@ -422,7 +422,7 @@ protected:
   /** 
   By default, UpdateInformation calls this method to copy information
   unmodified from the input to the output.*/
-  /*virtual*/void ExecuteInformation();
+  /*virtual*/int RequestInformation(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   /**
   This method is the one that should be used by subclasses, right now the 

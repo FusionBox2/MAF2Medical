@@ -27,7 +27,7 @@ vtkCxxRevisionMacro(vtkMAFLargeDataProvider, "$Revision: 1.1.2.3 $");
 
 #include "mafMemDbg.h"
 #include <assert.h>
-
+typedef unsigned char       BYTE;
 vtkMAFLargeDataProvider::vtkMAFLargeDataProvider()
 {
 	TagArray = vtkFieldData::New();

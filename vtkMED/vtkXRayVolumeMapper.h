@@ -63,6 +63,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #else
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif

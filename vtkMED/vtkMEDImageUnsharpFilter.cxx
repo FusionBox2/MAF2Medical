@@ -77,7 +77,7 @@ void vtkMEDImageUnsharpFilter::ThreadedExecute(vtkImageData *inData,
   typedef itk::VTKImageToImageFilter< OutputImageType > ConvertervtkTOitk;
   ConvertervtkTOitk::Pointer vtkTOitk = ConvertervtkTOitk::New(); // i prefer the smart pointer...
 
-  vtkTOitk->SetInput( GetInput() );
+  vtkTOitk->SetInput(vtkImageData::SafeDownCast( GetInput()) );
 
   try
   {

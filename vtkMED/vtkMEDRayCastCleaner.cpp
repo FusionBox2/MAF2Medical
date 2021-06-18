@@ -17,13 +17,15 @@
 
 #include "vtkMedRayCastCleaner.h"
 
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkStructuredPoints.h"
 #include "vtkUnsignedShortArray.h"
 #include "vtkPointData.h"
 #include "vtkMAFSmartPointer.h"
 #include "mafDefines.h"
-
+#include "vtkPolyData.h"
 enum RAY_CAST_MODALITY
 {
   CT_MODALITY,
@@ -59,18 +61,30 @@ vtkMEDRayCastCleaner::~vtkMEDRayCastCleaner()
 
 
 //------------------------------------------------------------------------------
-void vtkMEDRayCastCleaner::Execute()
-//------------------------------------------------------------------------------
+int vtkMEDRayCastCleaner::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
-  vtkStructuredPoints *outputImage = this->GetOutput();
-  this->GetInput()->Update();
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkPolyData *input = vtkPolyData::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPolyData *output = vtkPolyData::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
+  vtkStructuredGrid *outputImage = this->GetOutput();
+ // this->GetInput()->Update();
 
   double range[2];
   double newValue, boneValue;
   //generating a copy of the input 
   outputImage->DeepCopy(this->GetInput());
-  outputImage->UpdateData();
-  outputImage->Update();
+ // outputImage->UpdateData();
+ // outputImage->Update();
 
   //getting image dimension for neighbors calculation  
   outputImage->GetDimensions(VolumeDimension);
@@ -123,11 +137,13 @@ void vtkMEDRayCastCleaner::Execute()
   outputImage->GetPointData()->SetScalars(newScalars);
   outputImage->GetPointData()->Modified();
   outputImage->GetPointData()->Update();
-  outputImage->UpdateData();
-  outputImage->Update();
+  //outputImage->UpdateData();
+  //outputImage->Update();
   this->SetOutput(outputImage);
 
   vtkDEL(newScalars);
+
+  return 0;
 }
 
 #define SP_COORD_TO_ID(x,y,z)  z*(VolumeDimension[0])*(VolumeDimension[1]) + y*(VolumeDimension[0]) + x;

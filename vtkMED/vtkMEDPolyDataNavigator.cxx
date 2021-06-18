@@ -14,7 +14,7 @@ University of Bedfordshire
 #include "vtkObjectFactory.h"
 #include "vtkObject.h"
 #include "vtkPolyData.h"
-#include "vtkIdType.h"
+#include "vtkType.h"
 #include "vtkIdList.h"
 #include "vtkCell.h"
 #include "vtkCellArray.h"
@@ -3714,8 +3714,8 @@ void vtkMEDPolyDataNavigator::MergePoints(vtkPolyData *polydata, vtkIdList *idsI
 
   // use vtkCleanPolydata to remove unused points
   vtkCleanPolyData *clean = vtkCleanPolyData::New() ;
-  clean->SetInput(polydata) ;
-  clean->GetOutput()->Update() ;
+  clean->SetInputData(polydata) ;
+  clean->Update() ;
   polydata->DeepCopy(clean->GetOutput()) ;
   clean->Delete() ;
 

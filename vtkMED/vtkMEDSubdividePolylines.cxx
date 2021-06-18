@@ -10,6 +10,8 @@ Copyright (c) 2012
 University of Bedfordshire
 =========================================================================*/
 
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkPolyData.h"
 #include "vtkIdList.h"
@@ -51,12 +53,25 @@ vtkMEDSubdividePolylines::~vtkMEDSubdividePolylines()
 //------------------------------------------------------------------------------
 // Execute method
 //------------------------------------------------------------------------------
-void vtkMEDSubdividePolylines::Execute()
+int vtkMEDSubdividePolylines::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkPointSet *input = vtkPointSet::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPointSet *output = vtkPointSet::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   vtkDebugMacro(<< "Executing vtkMEDSubdividePolylines Filter") ;
 
   // pointers to input and output
-  m_Input = this->GetInput() ;
+  m_Input = this->GetPolyDataInput(0) ;
   m_Output = this->GetOutput() ;
 
   m_Output->DeepCopy(m_Input) ;
@@ -88,6 +103,8 @@ void vtkMEDSubdividePolylines::Execute()
   // do the subdivision
   std::vector<std::vector<int> > newPtIds ;
   m_Nav->AddPointsToEdges(m_Output, edges, lambda, newPtIds) ;
+
+  return 0;
 }
 
 

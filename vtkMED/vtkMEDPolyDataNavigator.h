@@ -17,7 +17,7 @@ University of Bedfordshire
 #include "vtkMEDConfigure.h"
 #include "vtkObject.h"
 #include "vtkPolyData.h"
-#include "vtkIdType.h"
+#include "vtkType.h"
 #include "vtkIdList.h"
 #include <vector>
 #include <map>

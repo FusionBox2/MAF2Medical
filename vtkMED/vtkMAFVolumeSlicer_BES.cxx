@@ -21,7 +21,10 @@
 #endif
 
 #include "vtkMAFVolumeSlicer_BES.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
+#include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtkRectilinearGrid.h"
 #include "vtkCellArray.h"
 #include "vtkDoubleArray.h"
@@ -191,22 +194,38 @@ void vtkMAFVolumeSlicer_BES::SetPlaneOrigin(double x, double y, double z)
 
 //----------------------------------------------------------------------------
 //By default copy the output update extent to the input.
-void vtkMAFVolumeSlicer_BES::ComputeInputUpdateExtents(vtkDataObject *output) 
-//----------------------------------------------------------------------------
+int vtkMAFVolumeSlicer_BES::RequestUpdateExtent(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
   vtkDataObject *input = this->GetInput();
-  input->SetUpdateExtentToWholeExtent();
+  //input->SetUpdateExtentToWholeExtent();
+  this->UpdateWholeExtent();
+  return 0;
 }
 
 //----------------------------------------------------------------------------
 //By default, UpdateInformation calls this method to copy information
 //unmodified from the input to the output.
-/*virtual*/ void vtkMAFVolumeSlicer_BES::ExecuteInformation() 
-//----------------------------------------------------------------------------
+/*virtual*/
+int vtkMAFVolumeSlicer_BES::RequestInformation(  vtkInformation *vtkNotUsed(request),  vtkInformationVector **inputVector,  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  //vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+ // vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the info objects
+  vtkInformation* outInfo = outputVector->GetInformationObject(0);
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+
   vtkDataSet* input;
-  if ((input = GetInput()) == NULL || this->GetNumberOfOutputs() == 0)
-    return; //nothing to cut, or we have no output -> exit
+  if ((input = (vtkDataSet*)this->GetInput(0)) == NULL || this->GetNumberOfOutputPorts() == 0)
+    return 1; //nothing to cut, or we have no output -> exit
   
   this->NumComponents = input->GetPointData()->GetScalars()->GetNumberOfComponents();  
 
@@ -257,7 +276,7 @@ void vtkMAFVolumeSlicer_BES::ComputeInputUpdateExtents(vtkDataObject *output)
     if (gridData == NULL)
     {
       vtkDebugMacro("Invalid input for vtkMAFVolumeSlicer_BES");      
-      return;
+      return 1;
     }
 
     //rectilinear grid
@@ -282,7 +301,7 @@ void vtkMAFVolumeSlicer_BES::ComputeInputUpdateExtents(vtkDataObject *output)
       gridData->GetZCoordinates()->GetTuple(this->DataDimensions[2] - 1)[0]);
   }
 
-  for (int i = 0; i < this->GetNumberOfOutputs(); i++) 
+  for (int i = 0; i < this->GetNumberOfOutputPorts(); i++) 
   {
     vtkImageData* output = vtkImageData::SafeDownCast(this->GetOutput(i));
     if (output != NULL) 
@@ -294,9 +313,9 @@ void vtkMAFVolumeSlicer_BES::ComputeInputUpdateExtents(vtkDataObject *output)
         dims[2] = 1;  //force it to be 2D
         output->SetDimensions(dims);
       }
-      output->SetWholeExtent(output->GetExtent());
-      output->SetUpdateExtentToWholeExtent();
-
+      outInfo->Set(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), output->GetExtent(),6);
+     // output->SetUpdateExtentToWholeExtent();
+      this->UpdateWholeExtent();
 
       //if the cut should fill the whole output, we will need to get intersections
       if (this->AutoSpacing)
@@ -367,13 +386,13 @@ void vtkMAFVolumeSlicer_BES::ComputeInputUpdateExtents(vtkDataObject *output)
         //RELEASE NOTE: we have 3 numberOfPoints if the plane cuts or touches one corner. The latter one
         //is not considered to be an intersection, however, it is a singular case that we will not distinguish
         if (BNoIntersection = (numberOfPoints <= 2))
-          output->SetSpacing(spacing);  //spacing will be 1:1:1
+          outInfo->Set(vtkDataObject::SPACING(),spacing,3);  //spacing will be 1:1:1
         else
         {
           // find spacing now
           float maxSpacing = max(maxS - minS, maxT - minT);
           spacing[0] = spacing[1] = max(maxSpacing, 1.e-8f);
-          output->SetSpacing(spacing);
+          outInfo->Set(vtkDataObject::SPACING(),spacing,3);
           // http://bugzilla.hpc.cineca.it/show_bug.cgi?id=1427
           // Totally heuristic bug fix: magicNumber was 1.e-3 before.
           const float magicNumber = 1.e-5;
@@ -388,70 +407,81 @@ void vtkMAFVolumeSlicer_BES::ComputeInputUpdateExtents(vtkDataObject *output)
       }
 
       //if !AutoSpacing, we will use the original spacing used there
-      output->SetOrigin(this->GlobalPlaneOrigin);
+      outInfo->Set(vtkDataObject::ORIGIN(),this->GlobalPlaneOrigin,3);
     }
   }
+
+  return 0;
 }
 
 //------------------------------------------------------------------------
 //BES: 15.12.2008 - when using mafOpCrop in mafViewOrthoSlice, the input
 //dimensions change between ExecuteInformation and ExecuteData 
 //This routine is supposed to be called from ExecuteData and it fixes this problem
-void vtkMAFVolumeSlicer_BES::ExecuteDataHotFix(vtkDataObject *outputData)
+void vtkMAFVolumeSlicer_BES::ExecuteDataHotFix(vtkDataObject* outputData)
 //------------------------------------------------------------------------
 {
-  vtkDataSet* input = this->GetInput(); 
-  vtkImageData* output = vtkImageData::SafeDownCast(outputData);
-  if (input == NULL || output == NULL)
-    return;
+    vtkDataSet* input = (vtkDataSet*)this->GetInputDataObject(0, 0);
+    vtkImageData* output = vtkImageData::SafeDownCast(outputData);
+    if (input == NULL || output == NULL)
+        return;
 
 
-  int dims[3];
-  vtkImageData* imgData = vtkImageData::SafeDownCast(input);
-  if (imgData != NULL)
-    imgData->GetDimensions(dims);
-  else
-  {
-    vtkRectilinearGrid* gridData = vtkRectilinearGrid::SafeDownCast(input);
-    if (gridData == NULL)
-      return; //unsupported
+    int dims[3];
+    vtkImageData* imgData = vtkImageData::SafeDownCast(input);
+    if (imgData != NULL)
+        imgData->GetDimensions(dims);
+    else
+    {
+        vtkRectilinearGrid* gridData = vtkRectilinearGrid::SafeDownCast(input);
+        if (gridData == NULL)
+            return; //unsupported
 
-    gridData->GetDimensions(dims);        
-  }
+        gridData->GetDimensions(dims);
+    }
 
-  if (
-    dims[0] != this->DataDimensions[0] || 
-    dims[1] != this->DataDimensions[1] ||
-    dims[2] != this->DataDimensions[2]
-  )
-  {
-    //The previous execution of ExecuteInformation left Extent to be -1
-    //this would cause troubles during the reexecution of ExecuteInformation
-    int extent[6];      
-    output->GetWholeExtent(extent);
-    output->SetExtent(extent);
+    if (
+        dims[0] != this->DataDimensions[0] ||
+        dims[1] != this->DataDimensions[1] ||
+        dims[2] != this->DataDimensions[2]
+        )
+    {
+        //The previous execution of ExecuteInformation left Extent to be -1
+        //this would cause troubles during the reexecution of ExecuteInformation
+        int extent[6];
+        //  output->GetWholeExtent(extent);
 
-    LastPreprocessedInput = NULL; //to force PrepareVolume to reexecute
-    vtkMAFVolumeSlicer_BES::ExecuteInformation();                  
-  }
-}
+        //  output->SetExtent(extent);
+        this->SetUpdateExtentToWholeExtent();
+        LastPreprocessedInput = NULL; //to force PrepareVolume to reexecute
 
-//----------------------------------------------------------------------------
-//This method is the one that should be used by subclasses, right now the 
-//default implementation is to call the backwards compatibility method
-/*virtual*/ void vtkMAFVolumeSlicer_BES::ExecuteData(vtkDataObject *outputData) 
-//----------------------------------------------------------------------------
-{
-  //BES: 15.12.2008 - when using mafOpCrop in mafViewOrthoSlice, the input
-  //dimensions change between ExecuteInformation and ExecuteData
-  ExecuteDataHotFix(outputData); 
+        vtkInformation* request;
+        vtkInformationVector** inputVector2;
+        vtkInformationVector* outputVector2;
+        RequestInformation(request, inputVector2, outputVector2);
+        /*vtkMAFVolumeSlicer_BES::RequestInformation(  vtkInformation *vtkNotUsed(request),  vtkInformationVector **inputVector,  vtkInformationVector *outputVector)
+    {
+      // get the info objects
+      vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+      vtkInformation *outInfo = outputVector->GetInformationObject(0);
 
-  if (vtkImageData::SafeDownCast(outputData) != NULL)
-    this->ExecuteData((vtkImageData*)outputData);
-  else if (vtkPolyData::SafeDownCast(outputData) != NULL)
-    this->ExecuteData((vtkPolyData*)outputData);
-  
-  outputData->Modified();
+      // get the info objects
+      vtkInformation* outInfo = outputVector->GetInformationObject(0);
+      vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+      */
+      //BES: 15.12.2008 - when using mafOpCrop in mafViewOrthoSlice, the input
+      //dimensions change between ExecuteInformation and ExecuteData
+        ExecuteDataHotFix(outputData);
+
+        if (vtkImageData::SafeDownCast(outputData) != NULL)
+            this->ExecuteData((vtkImageData*)outputData);
+        else if (vtkPolyData::SafeDownCast(outputData) != NULL)
+            this->ExecuteData((vtkPolyData*)outputData);
+
+        outputData->Modified();
+    }
+
+
 }
 
 //----------------------------------------------------------------------------
@@ -465,7 +495,7 @@ void vtkMAFVolumeSlicer_BES::ExecuteDataHotFix(vtkDataObject *outputData)
   vtkImageData* texture = this->GetTexture();
   if (texture != NULL) 
   {
-    texture->Update();
+    //texture->Update();
     memcpy(this->GlobalPlaneOrigin, texture->GetOrigin(), sizeof(this->GlobalPlaneOrigin));
   }
   else
@@ -545,9 +575,9 @@ void vtkMAFVolumeSlicer_BES::ExecuteDataHotFix(vtkDataObject *outputData)
   int size[2];
   int extent[6];
 
-  assert(texture->GetSource() != this);
-  texture->UpdateInformation();
-  texture->GetWholeExtent(extent);
+  //assert(texture->GetSource() != this);
+  //texture->UpdateInformation();
+  texture->GetExtent(extent);
   if (extent[0] >= extent[1])
     texture->GetExtent(extent);
   size[0] = extent[1] - extent[0] + 1;
@@ -682,26 +712,35 @@ void vtkMAFVolumeSlicer_BES::ExecuteDataHotFix(vtkDataObject *outputData)
 
 //----------------------------------------------------------------------------
 //Create texture for the slice.
-/*virtual*/ void vtkMAFVolumeSlicer_BES::ExecuteData(vtkImageData *outputObject) 
+/*virtual*/ void vtkMAFVolumeSlicer_BES::ExecuteData(vtkImageData *outputObject, vtkInformationVector* outInfoVec)
 //----------------------------------------------------------------------------
 {
-  int extent[6];
-  outputObject->GetWholeExtent(extent);
-  outputObject->SetExtent(extent);
-  outputObject->SetNumberOfScalarComponents(this->NumComponents);
-  outputObject->AllocateScalars();  
- 
+ // int extent[6];
+  //outputObject->GetWholeExtent(extent);
+  //outputObject->SetExtent(extent);
+
+  vtkImageData* output = vtkImageData::GetData(outInfoVec);
+  // Allocate output scalars here
+  output->GetScalarType();
+  output->GetNumberOfScalarComponents();
+  vtkInformation* outInfo = outInfoVec->GetInformationObject(0);
+  
+  outputObject->SetNumberOfScalarComponents(output->GetNumberOfScalarComponents(), outInfo);
+  
+  outputObject->AllocateScalars(outInfo);
+  
+  
   if (BNoIntersection)
   {
     //there is no intersection with data => black texture
     void *outputPointer = outputObject->GetPointData()->GetScalars()->GetVoidPointer(0);
     memset(outputPointer, 0, outputObject->GetPointData()->GetScalars()->GetSize()*
       outputObject->GetPointData()->GetScalars()->GetDataTypeSize());
-    return;   //we are ready
+    return ;   //we are ready
   }
 
   //prepare input (preprocessing)
-  vtkDataSet* input = this->GetInput();
+  vtkDataSet* input = (vtkDataSet*)this->GetInput();
   vtkDataArray* pScalars = input->GetPointData()->GetScalars();
 
   const void *inputPointer  = pScalars->GetVoidPointer(0);    
@@ -729,8 +768,9 @@ void vtkMAFVolumeSlicer_BES::ExecuteDataHotFix(vtkDataObject *outputData)
   
   default:
     vtkErrorMacro(<< "vtkMAFVolumeSlicer_BES: Scalar type is not supported");
-    return;
+    
   }
+  return ;
 }
 
 //----------------------------------------------------------------------------

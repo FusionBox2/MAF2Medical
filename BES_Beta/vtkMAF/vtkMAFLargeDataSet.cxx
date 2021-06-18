@@ -398,8 +398,8 @@ void vtkMAFLargeDataSet::PrintSelf(ostream& os, vtkIndent indent)
 	os << indent << "  Z: " << sample[2] << "\n";	
 	os << indent << "  Autosampling: " << this->GetAutoSampleRate() << "\n";
 	os << indent << "  Memory limit: " << this->GetMemoryLimit() << "\n";	
-
+	bool ReleaseDataFlag=this->GetGlobalReleaseDataFlag();
 	os << indent << "Compute Time: " <<this->ComputeTime.GetMTime() << "\n";
-	os << indent << "Release Data: " << (this->ReleaseDataFlag ? "On\n" : "Off\n");
+	os << indent << "Release Data: " << (  ReleaseDataFlag ? "On\n" : "Off\n");
 }
 

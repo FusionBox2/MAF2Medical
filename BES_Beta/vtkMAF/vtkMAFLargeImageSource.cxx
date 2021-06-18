@@ -10,68 +10,106 @@
   See the COPYINGS file for license details 
   =========================================================================
 */
-
+#include "vtkObjectFactory.h"
 #include "vtkMAFLargeImageSource.h"
 #include "vtkMAFLargeImageData.h"
 #include "vtkMAFLargeDataProvider.h"
+#include "vtkExecutive.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 
-#include "vtkObjectFactory.h"
+#include "vtkUnstructuredGrid.h"
 
-#include "mafMemDbg.h"
 vtkCxxRevisionMacro(vtkMAFLargeImageSource, "$Revision: 1.1.2.2 $");
 vtkStandardNewMacro(vtkMAFLargeImageSource);
 
 //----------------------------------------------------------------------------
 vtkMAFLargeImageSource::vtkMAFLargeImageSource()
 {
-	this->vtkSource::SetNthOutput(0,vtkMAFLargeImageData::New());
+
+
+	
+
+
+	this->GetExecutive()->SetOutputData(0,vtkMAFLargeImageData::New());
 	// Releasing data for pipeline parallism.
 	// Filters will know it is empty. 
-	this->Outputs[0]->ReleaseData();
-	this->Outputs[0]->Delete();
+	this->GetOutput(0)->ReleaseData();
+	this->GetOutput(0)->Delete();
 }
 
 //----------------------------------------------------------------------------
 // Specify the input data or filter.
 void vtkMAFLargeImageSource::SetOutput(vtkMAFLargeImageData *output)
 {
-	this->vtkSource::SetNthOutput(0, output);
+	this->GetExecutive()->SetOutputData(0, output);
 }
 
 //----------------------------------------------------------------------------
 // Specify the input data or filter.
 vtkMAFLargeImageData *vtkMAFLargeImageSource::GetOutput()
 {
-	if (this->NumberOfOutputs < 1)
+	if (this->GetNumberOfOutputPorts() < 1)//NumberOfOutputs
 	{
 		return NULL;
 	}
 
-	return (vtkMAFLargeImageData *)(this->Outputs[0]);
+	return (vtkMAFLargeImageData *)(this->GetOutput(0));
 }
 
 
 //----------------------------------------------------------------------------
 // Convert to Imaging API
-void vtkMAFLargeImageSource::Execute()
+int vtkMAFLargeImageSource::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
-	vtkMAFLargeImageData *output = this->GetOutput();
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkUnstructuredGrid *input = vtkUnstructuredGrid::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkMAFLargeImageData*output = vtkMAFLargeImageData::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
+	//vtkMAFLargeImageData *output = this->GetOutput();
 
 	// If we have multiple Outputs, they need to be allocate
 	// in a subclass.  We cannot be sure all outputs are images.
-	output->SetExtent(output->GetUpdateExtent());
-	output->AllocateScalars();
+	//output->SetExtent(this->GetUpdateExtent());
+	//output->AllocateScalars();
 
 	this->Execute(this->GetOutput());
+
+	return 0;
 }
 
 //----------------------------------------------------------------------------
 // This function can be defined in a subclass to generate the data
 // for a region.
-void vtkMAFLargeImageSource::Execute(vtkMAFLargeImageData *)
+/*int vtkMAFLargeImageSource::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkUnstructuredGrid *input = vtkUnstructuredGrid::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkUnstructuredGrid *output = vtkUnstructuredGrid::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
 	vtkErrorMacro(<< "Execute(): Method not defined.");
-}
+
+
+	return 0;
+}*/
 
 
 //----------------------------------------------------------------------------
@@ -88,9 +126,14 @@ vtkMAFLargeImageData *vtkMAFLargeImageSource::AllocateOutputData(vtkDataObject *
 	// That is not computed in the graphics pipeline.
 	// Until I can eliminate the method, I will reexecute the ExecuteInformation
 	// before the execute.
-	this->ExecuteInformation();
+	//this->ExecuteInformation();
 
-	res->SetExtent(res->GetUpdateExtent());
+	vtkInformation* info;
+	vtkInformationVector *infoV,**infoVect;
+	this->RequestInformation(info,infoVect,infoV);
+
+
+	res->SetExtent(this->GetUpdateExtent());
 	res->AllocateScalars();
 	return res;
 }
@@ -98,7 +141,7 @@ vtkMAFLargeImageData *vtkMAFLargeImageSource::AllocateOutputData(vtkDataObject *
 //----------------------------------------------------------------------------
 vtkMAFLargeImageData *vtkMAFLargeImageSource::GetOutput(int idx)
 {
-	return (vtkMAFLargeImageData *) this->vtkSource::GetOutput(idx);
+	return (vtkMAFLargeImageData *) this->vtkAlgorithm::GetOutputPort(idx);
 }
 
 //----------------------------------------------------------------------------

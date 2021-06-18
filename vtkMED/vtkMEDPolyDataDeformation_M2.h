@@ -50,7 +50,7 @@
 
 #pragma warning(push)
 #pragma warning(disable:4996)
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #pragma warning(pop)
 
 #include <vector>
@@ -69,10 +69,10 @@ class CSkeletonVertex;
 // EXPORT_STL_VECTOR(VTK_vtkMED_EXPORT,CSkeletonVertex*);
 // EXPORT_STL_VECTOR(VTK_vtkMED_EXPORT,vtkIdType);
 
-class VTK_vtkMED_EXPORT vtkMEDPolyDataDeformation_M2 : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDPolyDataDeformation_M2 : public vtkPolyDataAlgorithm
 {
 public:
-  vtkTypeRevisionMacro(vtkMEDPolyDataDeformation_M2, vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDPolyDataDeformation_M2, vtkPolyDataAlgorithm);
 
   static vtkMEDPolyDataDeformation_M2 *New();
 
@@ -417,7 +417,7 @@ protected:
   /** 
   By default, UpdateInformation calls this method to copy information
   unmodified from the input to the output.*/
-  /*virtual*/void ExecuteInformation();
+  /*virtual*/int RequestInformation(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   /**
   This method is the one that should be used by subclasses, right now the 

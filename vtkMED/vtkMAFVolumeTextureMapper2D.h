@@ -20,7 +20,9 @@
 
 #include "vtkMEDConfigure.h"
 #include "vtkOpenGLVolumeTextureMapper2D.h"
-
+#ifdef WIN32
+#include <windows.h>
+#endif
 class vtkRenderer;
 class vtkVolume;
 /**

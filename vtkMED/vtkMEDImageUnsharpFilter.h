@@ -21,16 +21,16 @@
 #define __vtkMEDImageUnsharpFilter_h
 
 #include "vtkMEDConfigure.h"
-#include "vtkImageToImageFilter.h"
+#include "vtkThreadedImageAlgorithm.h"
 /**
 class name : vtkMEDImageUnsharpFilter.
 Filter for applying unsharp to an image
 */
-class VTK_vtkMED_EXPORT vtkMEDImageUnsharpFilter : public vtkImageToImageFilter
+class VTK_vtkMED_EXPORT vtkMEDImageUnsharpFilter : public vtkThreadedImageAlgorithm
 {
 public:
   /** RTTI macro*/
-  vtkTypeRevisionMacro(vtkMEDImageUnsharpFilter,vtkImageToImageFilter);
+  vtkTypeRevisionMacro(vtkMEDImageUnsharpFilter,vtkThreadedImageAlgorithm);
   /** print information */
   void PrintSelf(ostream& os, vtkIndent indent);
 

@@ -19,19 +19,19 @@ under MAF (www.openmaf.org)
 #ifndef __vtkHoleConnectivity_h
 #define __vtkHoleConnectivity_h
 
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include "vtkMEDConfigure.h"
 /**
   class name: vtkHoleConnectivity
   This filter uses vtkPolyDataConnectivityFilter in order to extract the Closest Point Region
   after pass it the coordinates of the point.
 */
-class VTK_vtkMED_EXPORT vtkHoleConnectivity : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkHoleConnectivity : public vtkPolyDataAlgorithm
 {
 public:
 
   /** RTTI macro */
-  vtkTypeMacro(vtkHoleConnectivity,vtkPolyDataToPolyDataFilter);
+  vtkTypeMacro(vtkHoleConnectivity,vtkPolyDataAlgorithm);
 
   /** retrieve class name */
 	const char *GetClassName() {return "vtkHoleConnectivity";};
@@ -57,7 +57,7 @@ protected:
 	~vtkHoleConnectivity();
 
   /** execute the filter */
-	void Execute();
+	int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
 	vtkIdType PointID;
 	double Point[3];

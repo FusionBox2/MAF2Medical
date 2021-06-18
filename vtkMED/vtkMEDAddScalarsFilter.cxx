@@ -10,7 +10,9 @@ Copyright (c) 2012
 University of Bedfordshire
 =========================================================================*/
 
-#include "vtkMEDAddScalarsFilter.h"
+
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkPolyData.h"
 #include "vtkDataArray.h"
@@ -18,14 +20,14 @@ University of Bedfordshire
 #include "vtkPointData.h"
 #include "vtkCellData.h"
 #include "vtkIdList.h"
-#include "assert.h"
 
+#include "assert.h"
+#include "vtkMEDAddScalarsFilter.h"
 
 
 
 vtkCxxRevisionMacro(vtkMEDAddScalarsFilter, "$Revision: 1.61 $");
 vtkStandardNewMacro(vtkMEDAddScalarsFilter);
-
 
 
 //------------------------------------------------------------------------------
@@ -132,8 +134,8 @@ void vtkMEDAddScalarsFilter::SetColorOfCell(int cellId, double r, double g, doub
     m_UserColors.push_back(newcol) ;
   }
   else{
-    m_Input = this->GetInput() ;
-    m_Input->Update() ;
+    m_Input = this->GetPolyDataInput(0) ;
+   // m_Input->Update() ;
     vtkIdList* idlist = vtkIdList::New() ;
     m_Input->GetCellPoints(cellId, idlist) ;
     for (int j = 0 ;  j < idlist->GetNumberOfIds() ;  j++){
@@ -220,12 +222,25 @@ void vtkMEDAddScalarsFilter::SetName(char* name)
 //------------------------------------------------------------------------------
 // Execute method
 //------------------------------------------------------------------------------
-void vtkMEDAddScalarsFilter::Execute()
+int vtkMEDAddScalarsFilter::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkDataSet *input = vtkDataSet::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkDataSet *output = vtkDataSet::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   vtkDebugMacro(<< "Executing vtkMEDAddScalarsFilter") ;
 
   // pointers to input and output
-  m_Input = this->GetInput() ;
+  m_Input = this->GetPolyDataInput(0) ;
   m_Output = this->GetOutput() ;
 
   m_Output->DeepCopy(m_Input) ;
@@ -249,7 +264,7 @@ void vtkMEDAddScalarsFilter::Execute()
   else{
     // error: unknown mode
     scalars->Delete() ;
-    return ;
+    return 1;
   }
 
 
@@ -279,12 +294,13 @@ void vtkMEDAddScalarsFilter::Execute()
   else{
     // error: unknown mode
     scalars->Delete() ;
-    return ;
+    return 1;
   }
 
 
   // clean up and exit
   scalars->Delete() ;
+  return 0;
 }
 
 

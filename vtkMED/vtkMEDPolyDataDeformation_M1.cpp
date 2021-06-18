@@ -12,6 +12,8 @@ See the COPYINGS file for license details
 */
 
 #include "vtkMEDPolyDataDeformation_M1.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkPolyData.h"
 #include "vtkIdList.h"
@@ -608,15 +610,21 @@ void vtkMEDPolyDataDeformation_M1::PrintSelf(ostream& os, vtkIndent indent)
 //------------------------------------------------------------------------
 //By default, UpdateInformation calls this method to copy information
 //unmodified from the input to the output.
-/*virtual*/void vtkMEDPolyDataDeformation_M1::ExecuteInformation()
-//------------------------------------------------------------------------
+/*virtual*/int vtkMEDPolyDataDeformation_M1::RequestInformation(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
   //check input
-  vtkPolyData* input = GetInput();
+  vtkPolyData* input = GetPolyDataInput(0);
   if (input == NULL)
   {
     vtkErrorMacro(<< "Invalid input for vtkMEDPolyDataDeformation_M1.");
-    return;   //we have no input
+    return 1;   //we have no input
   }
 
   //check output
@@ -625,32 +633,30 @@ void vtkMEDPolyDataDeformation_M1::PrintSelf(ostream& os, vtkIndent indent)
     SetOutput(vtkPolyData::New());
 
   //copy input to output
-  Superclass::ExecuteInformation();  
-}
 
-#ifdef DEBUG_vtkMEDPolyDataDeformation_M1
-#include "vtkCharArray.h"
-#include "vtkPointData.h"
-#endif
+  vtkInformation* re;
+  Superclass::RequestInformation(
+      re,
+       inputVector,
+       outputVector);
+ /* {
+      // get the info objects
+      vtkInformation* inInfo = inputVector[0]->GetInformationObject(0);
+      vtkInformation* outInfo = outputVector->GetInformationObject(0);
 
-//------------------------------------------------------------------------
-//This method is the one that should be used by subclasses, right now the 
-//default implementation is to call the backwards compatibility method
-/*virtual*/void vtkMEDPolyDataDeformation_M1::ExecuteData(vtkDataObject *output)
-{
-  //check whether output is valid
-  vtkPolyData* input = GetInput();
-  if (input == NULL)
-    return;
-
-  vtkPolyData* pPoly = vtkPolyData::SafeDownCast(output);
-  if (pPoly != NULL)
-    pPoly->DeepCopy(input);
-
+      //check whether output is valid
+      vtkPolyData* input = GetInput();
+      if (input == NULL)
+          return 1;
+  }*/
+      vtkPolyData* pPoly = vtkPolyData::SafeDownCast(output);
+      if (pPoly != NULL)
+          pPoly->DeepCopy(input);
+  
   if (pPoly == NULL || pPoly->GetPoints() == NULL || pPoly->GetPoints()->GetNumberOfPoints() == 0)
   {
     vtkWarningMacro(<< "Invalid output for vtkMEDPolyDataDeformation_M1.");
-    return;   //we have no valid output
+    return 1;   //we have no valid output
   }  
 
   //process every single skeleton and construct 
@@ -658,7 +664,7 @@ void vtkMEDPolyDataDeformation_M1::PrintSelf(ostream& os, vtkIndent indent)
   if (!CreateSuperSkeleton())
   {
     vtkWarningMacro(<< "Missing control skeleton for vtkMEDPolyDataDeformation_M1.");
-    return;
+    return 1;
   }
 
   //OK, we have super skeleton, let us build cells and neighbors (if they do not exist)
@@ -682,7 +688,7 @@ void vtkMEDPolyDataDeformation_M1::PrintSelf(ostream& os, vtkIndent indent)
   //this will need cell locator
   //octree based locator for cells of the input mesh should be enough
   vtkCellLocator* cellLocator = vtkCellLocator::New();    
-  cellLocator->SetDataSet(GetInput());
+  cellLocator->SetDataSet(this->GetPolyDataInput(0));
   cellLocator->Update();
 
   nCount = (int)m_SuperSkeleton->m_pOC_Skel->Edges.size();
@@ -759,6 +765,9 @@ void vtkMEDPolyDataDeformation_M1::PrintSelf(ostream& os, vtkIndent indent)
   CreatePolyDataFromSuperskeleton();
 #endif
   DestroySuperSkeleton();
+
+
+  return 0;
 }  
 
 
@@ -1660,7 +1669,7 @@ void vtkMEDPolyDataDeformation_M1::ComputeLFS(CSkeletonVertex* pOC)
 void vtkMEDPolyDataDeformation_M1::ComputeROI(CSkeletonEdge* pEdge)
 //------------------------------------------------------------------------
 {
-  vtkPoints* input = GetInput()->GetPoints();
+  vtkPoints* input = GetPolyDataInput(0)->GetPoints();
   int nPoints = input->GetNumberOfPoints();
   
   pEdge->m_ROI.clear();           //clear previous data (if present)
@@ -1691,7 +1700,7 @@ void vtkMEDPolyDataDeformation_M1::ComputeROI(CSkeletonEdge* pEdge)
 void vtkMEDPolyDataDeformation_M1::RefineCurveROIs(vtkCellLocator* locator)
 //------------------------------------------------------------------------
 {
-  vtkPoints* input = GetInput()->GetPoints();
+  vtkPoints* input = GetPolyDataInput(0)->GetPoints();
   int nPoints = input->GetNumberOfPoints(); 
 
   //number of edges to which points are mapped at present
@@ -1979,7 +1988,7 @@ bool vtkMEDPolyDataDeformation_M1::CheckSelfIntersection(CSkeletonEdge* pEdge1, 
   //that contain all projected points
   double rk[2] = {0.0, 0.0};
 
-  vtkPoints* input = GetInput()->GetPoints();
+  vtkPoints* input = GetPolyDataInput(0)->GetPoints();
   CSkeletonEdge* pCurEdge = pEdge1;
   for (int i = 0; i < 2; i++)
   {
@@ -2200,7 +2209,7 @@ void vtkMEDPolyDataDeformation_M1
 
 
 
-  vtkPolyData* input = GetInput();
+  vtkPolyData* input = GetPolyDataInput(0);
 
   CSkeletonVertex* pSkelVert1 = pEdge->Verts[0]; 
   CSkeletonVertex* pSkelVert2 = pEdge->Verts[1];
@@ -2372,7 +2381,7 @@ typedef struct vtkMEDPolyDataDeformation_M1::JOIN_VERTEX
 void vtkMEDPolyDataDeformation_M1::ComputeMeshParametrization()
 //------------------------------------------------------------------------
 { 
-  vtkPolyData* input = GetInput();
+  vtkPolyData* input = GetPolyDataInput(0);
 
   //points that belong to an edge of one curve that si connected to 
   //another edge of another curve must be influenced by both edges
@@ -2719,7 +2728,7 @@ double vtkMEDPolyDataDeformation_M1::ComputeInputMeshAvgEdgeLength()
   double dblEdgeLen = 0.0;
   int nEdges = 0;
 
-  vtkPolyData* input = GetInput();
+  vtkPolyData* input = GetPolyDataInput(0);
   input->BuildCells();  //just for sure
 
   int nCells = input->GetNumberOfCells();

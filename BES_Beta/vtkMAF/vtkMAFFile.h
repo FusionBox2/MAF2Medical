@@ -27,6 +27,8 @@ under _WIN32 (although they are supported for _WIN64)
 #include <windows.h>
 #endif //_WIN32
 
+
+
 #pragma once
 
 //This is nothrow version

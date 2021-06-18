@@ -11,11 +11,14 @@
 #include "vtkCellData.h"
 #include "vtkDoubleArray.h"
 #include "vtkMath.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkPointData.h"
 #include "vtkPolyData.h"
 #include "vtkPolygon.h"
 #include "vtkTriangleStrip.h"
+#include "vtkUnstructuredGrid.h"
 #include "vtkPolyDataNormals.h"
 
 vtkCxxRevisionMacro(vtkMEDPolyDataMirror, "$Revision: 1.3.2.1 $");
@@ -31,15 +34,27 @@ vtkMEDPolyDataMirror::vtkMEDPolyDataMirror()
   this->MirrorZCoordinate = 0;
 }
 //----------------------------------------------------------------------------
-void vtkMEDPolyDataMirror::Execute()
-//----------------------------------------------------------------------------
+int vtkMEDPolyDataMirror::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkPolyData*input = vtkPolyData::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPolyData*output = vtkPolyData::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   vtkPoints *inPts;
   vtkPoints *newPts;
   vtkIdType numPts;
-  vtkPolyData *input = this->GetInput();
+  //vtkPolyData *input = this->GetPolyDataInput(0);
   vtkPolyData *intermediate = vtkPolyData::New();
-  vtkPolyData *output = this->GetOutput();
+  //vtkPolyData *output = this->GetOutput();
 
   vtkDebugMacro(<<"PolyDataMirror Execute begin");
   // Check input
@@ -47,13 +62,13 @@ void vtkMEDPolyDataMirror::Execute()
   if ( !input )
     {
     vtkErrorMacro(<<"No input data");
-    return;
+    return 1;
     }
   inPts = input->GetPoints();
   if ( !inPts )
     {
     vtkErrorMacro(<<"No input data");
-    return;
+    return 1;
     }
   numPts = inPts->GetNumberOfPoints();
   newPts = vtkPoints::New();
@@ -82,7 +97,7 @@ void vtkMEDPolyDataMirror::Execute()
   intermediate->SetLines(input->GetLines());
   intermediate->SetPolys(input->GetPolys());
   intermediate->SetStrips(input->GetStrips());
-	intermediate->Update();
+//	intermediate->Update();
 
   vtkPointData *pd=input->GetPointData(), *outPD=intermediate->GetPointData();
   outPD->PassData(pd);
@@ -111,6 +126,8 @@ void vtkMEDPolyDataMirror::Execute()
   //pdn->Delete();   
 
   this->UpdateProgress (1);
+
+  return 0;
 }
 
 //----------------------------------------------------------------------------

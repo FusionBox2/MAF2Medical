@@ -17,9 +17,12 @@
 #ifndef __vtkMEDVolumeToClosedSmoothSurface_H__
 #define __vtkMEDVolumeToClosedSmoothSurface_H__
 
+
+
 #include "vtkMEDConfigure.h"
 #include "vtkMAFContourVolumeMapper.h"
 #include "vtkMatrix4x4.h"
+
 class vtkImageData;
 class vtkStructuredPoints;
 class vtkDataArray;

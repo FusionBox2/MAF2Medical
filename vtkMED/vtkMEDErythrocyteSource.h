@@ -16,7 +16,7 @@
 #pragma once
 
 #include "vtkMEDConfigure.h"
-#include "vtkPolyDataSource.h"
+#include "vtkPolyDataAlgorithm.h"
 
 /** This class generates polydata with model of erythrocyte (blood cell).
 The technique behind it is general enough to be generalized for other
@@ -24,10 +24,10 @@ types of cells, if needed. Model is based on the paper:
 S. Mu?oz San Martín, J.L. Sebastián,M. Sancho and G. Álvarez:
 Modeling Human Erythrocyte Shape and Size Abnormalities
 http://arxiv.org/ftp/q-bio/papers/0507/0507024.pdf*/
-class VTK_vtkMED_EXPORT vtkMEDErythrocyteSource : public vtkPolyDataSource
+class VTK_vtkMED_EXPORT vtkMEDErythrocyteSource : public vtkPolyDataAlgorithm
 {
 public:  
-  vtkTypeRevisionMacro(vtkMEDErythrocyteSource,vtkPolyDataSource);
+  vtkTypeRevisionMacro(vtkMEDErythrocyteSource,vtkPolyDataAlgorithm);
   static vtkMEDErythrocyteSource *New();
   
 protected:

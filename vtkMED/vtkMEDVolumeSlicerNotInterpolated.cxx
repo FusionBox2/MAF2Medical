@@ -23,6 +23,8 @@
 //----------------------------------------------------------------------------
 
 #include "vtkMEDVolumeSlicerNotInterpolated.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkImageData.h"
 /*#include "vtkRectilinearGrid.h"*/
@@ -77,15 +79,21 @@ vtkMEDVolumeSlicerNotInterpolated::~vtkMEDVolumeSlicerNotInterpolated()
 }
 
 //----------------------------------------------------------------------------
-void vtkMEDVolumeSlicerNotInterpolated::ExecuteInformation() 
-//----------------------------------------------------------------------------
+int vtkMEDVolumeSlicerNotInterpolated::RequestInformation(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+  
   vtkDataSet* input = NULL;
-  if ((input = GetInput()) == NULL || this->GetNumberOfOutputs() == 0)
-    return; // No input or no output
+  if ((input = vtkDataSet::SafeDownCast(inputVector[0])) == NULL || this->GetNumberOfOutputPorts() == 0)//GetNumberOfOutputs()
+    return 1; // No input or no output
 
   if ((NumberOfComponents = input->GetPointData()->GetNumberOfComponents()) == 0)
-    return; // Nothing to display
+    return 1; // Nothing to display
 
   input->GetBounds(Bounds);
 
@@ -128,7 +136,7 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteInformation()
     {
       OutputDataType = VTK_IMAGE_DATA;
       NumberOfPieces = 0;
-      return;
+      return 1;
     }
 
     SliceDimensions[0] = InputDimensions[AxisX];
@@ -212,7 +220,7 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteInformation()
     {
       OutputDataType = VTK_IMAGE_DATA;
       NumberOfPieces = 0;
-      return;
+      return 1;
     }
     SliceDimensions[0] = InputDimensions[AxisX];
     SliceDimensions[1] = InputDimensions[AxisY];
@@ -385,7 +393,8 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteInformation()
   {
     // output data type is image data also for rg
     OutputDataType = VTK_IMAGE_DATA;
-    SetNumberOfOutputs(NumberOfPieces);
+    
+    SetNumberOfOutputPorts(NumberOfPieces);
   }
   else
   {
@@ -398,6 +407,8 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteInformation()
   // x + y * InputDimensions[0] + BaseIndex for SLICE_Z
   // x + z * InputDimensions[0] * InputDimensions[1] + BaseIndex for SLICE_Y
   // y * InputDimensions[0] + z * InputDimensions[1] * InputDimensions[0] + BaseIndex for SLICE_X
+
+  return 0;
 }
 
 //----------------------------------------------------------------------------
@@ -425,18 +436,27 @@ void vtkMEDVolumeSlicerNotInterpolated::AddOutputsAttributes(int dimension, doub
 }
 
 //----------------------------------------------------------------------------
-void vtkMEDVolumeSlicerNotInterpolated::ExecuteData(vtkDataObject *output)
+int vtkMEDVolumeSlicerNotInterpolated::RequestData(vtkInformation* v,
+    vtkInformationVector** inInfoVec,
+    vtkInformationVector* outInfoVec,vtkDataObject *output)
 //----------------------------------------------------------------------------
 {
+
+    vtkImageData* input = vtkImageData::GetData(inInfoVec[0]);
+   // vtkImageData* output = vtkImageData::GetData(outInfoVec);
   // Redirect on correct output type ExecuteData function
   if (vtkImageData::SafeDownCast(output) != NULL)
-    this->ExecuteData((vtkImageData*)output);
+    this->RequestData(v,inInfoVec, outInfoVec,(vtkImageData*)output);
 
   output->Modified();
+
+  return 0;
 }
 
 //----------------------------------------------------------------------------
-void vtkMEDVolumeSlicerNotInterpolated::ExecuteData(vtkImageData *output)
+int vtkMEDVolumeSlicerNotInterpolated::RequestData(vtkInformation* outInfo,
+    vtkInformationVector** inInfoVec,
+    vtkInformationVector* outInfoVec,vtkImageData *output)
 //----------------------------------------------------------------------------
 {
   int iStart = 0;
@@ -444,10 +464,10 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteData(vtkImageData *output)
   for(int idx = 0; idx < NumberOfPieces; idx++) // iterate over pieces
   {
     vtkDataSet* input = NULL;
-    if ((input = GetInput()) == NULL || this->GetNumberOfOutputs() == 0 && OutputDataType == VTK_IMAGE_DATA)
-      return; // No input or no output
+    if ((input = vtkDataSet::SafeDownCast(inInfoVec[0])) == NULL || this->GetNumberOfOutputPorts() == 0 && OutputDataType == VTK_IMAGE_DATA)
+      return 1; // No input or no output
 
-    input->Update();
+    //input->Update();
     vtkDataArray * inputScalars = input->GetPointData()->GetScalars();
 
     // Fill variables for scalar index recognition
@@ -506,7 +526,7 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteData(vtkImageData *output)
         break;
       }
     default:
-      return;
+      return 1;
     }
 
     // get dimensions
@@ -604,30 +624,42 @@ void vtkMEDVolumeSlicerNotInterpolated::ExecuteData(vtkImageData *output)
       OutputRectilinearGrid->GetCellData()->Update();
 
       OutputRectilinearGrid->Modified();
-      OutputRectilinearGrid->Update();
+      //OutputRectilinearGrid->Update();
     }
     else
     {
-      vtkImageData *output = this->GetOutput(idx);
+      //vtkImageData *output = (vtkImageData*)this->GetOutput(idx);
+      vtkImageData* output = vtkImageData::GetData(outInfoVec);
       if (output == NULL)
       {
-        this->Outputs[idx] = output = vtkImageData::New();
+          output = vtkImageData::New();
+          this->GetExecutive()->SetOutputData(idx, output);
+          
       }
       // Prepare and generate output image
-      output->SetSpacing(spacing[0],spacing[1],spacing[2]);
+     // outInfo->Set(vtkDataObject::SPACING(),spacing[0],spacing[1],spacing[2],3);
       output->SetExtent(0, (dimensions[0] - 1) , 0, (dimensions[1] - 1), 0, (dimensions[2] - 1));
-      output->SetOrigin(SlicePieceOrigins[idx][0],SlicePieceOrigins[idx][1],SlicePieceOrigins[idx][2]);
+     // outInfo->Set(vtkDataObject::ORIGIN(),SlicePieceOrigins[idx][0],SlicePieceOrigins[idx][1],SlicePieceOrigins[idx][2],3);
 
       // Set the image scalars
-      output->SetScalarType(inputScalars->GetDataType());
-      output->GetPointData()->RemoveArray("SCALARS");
-      output->GetPointData()->SetScalars(scalars);
-      output->GetPointData()->SetActiveScalars("SCALARS");
-      output->GetPointData()->Update();
+    //  outInfo->Set(vtkDataObject::SCALAR_TYPE(),inputScalars->GetDataType());
+
+      vtkInformation* outInfo = outInfoVec->GetInformationObject(0);
+      
+      output->AllocateScalars(outInfo);
+      output->SetOrigin( SlicePieceOrigins[idx][0], SlicePieceOrigins[idx][1], SlicePieceOrigins[idx][2]);
+      output->SetSpacing(spacing[0], spacing[1], spacing[2]);
+      //output->GetPointData()->RemoveArray("SCALARS");
+     // output->GetPointData()->SetScalars(scalars);
+      //output->GetPointData()->SetActiveScalars("SCALARS");
+      //output->GetPointData()->Update();
       scalars->Delete();
 
       output->Modified();
-      output->Update();
+      //output->Update();
+      this->Update();
     }
   }
+
+  return 0;
 }

@@ -14,7 +14,7 @@
 #include "vtkMAFLargeImageData.h"
 #include "vtkMAFDataArrayDescriptor.h"
 #include "vtkMAFLargeDataProvider.h"
-
+#include "vtkTemplateAliasMacro.h"
 #include "vtkImageData.h"
 #include "vtkGenericCell.h"
 #include "vtkMath.h"
@@ -27,7 +27,89 @@
 
 vtkCxxRevisionMacro(vtkMAFLargeImageData, "$Revision: 1.1.2.3 $");
 vtkStandardNewMacro(vtkMAFLargeImageData);
+#define vtkTemplateMacro3(func, arg1, arg2, arg3) \
+    case VTK_DOUBLE: \
+        { typedef double VTK_TT; \
+         func(arg1, arg2, arg3); } \
+       break; \
+       case VTK_FLOAT: \
+       { typedef float VTK_TT; \
+        func(arg1, arg2, arg3); } \
+         break; \
+       case VTK_LONG: \
+         { typedef long VTK_TT; \
+         func(arg1, arg2, arg3); } \
+         break; \
+      case VTK_UNSIGNED_LONG: \
+         { typedef unsigned long VTK_TT; \
+         func(arg1, arg2, arg3); } \
+         break; \
+       case VTK_INT: \
+         { typedef int VTK_TT; \
+         func(arg1, arg2, arg3); } \
+         break; \
+       case VTK_UNSIGNED_INT: \
+         { typedef unsigned int VTK_TT; \
+         func(arg1, arg2, arg3); } \
+         break; \
+       case VTK_SHORT: \
+         { typedef short VTK_TT; \
+         func(arg1, arg2, arg3); } \
+         break; \
+       case VTK_UNSIGNED_SHORT: \
+         { typedef unsigned short VTK_TT; \
+         func(arg1, arg2, arg3); } \
+         break; \
+       case VTK_CHAR: \
+         { typedef char VTK_TT; \
+         func(arg1, arg2, arg3); } \
+        break; \
+       case VTK_UNSIGNED_CHAR: \
+         { typedef unsigned char VTK_TT; \
+        func(arg1, arg2, arg3); } \
+         break
 
+#define vtkTemplateMacro4(func, arg1, arg2, arg3, arg4) \
+       case VTK_DOUBLE: \
+         { typedef double VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_FLOAT: \
+        { typedef float VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_LONG: \
+         { typedef long VTK_TT; \
+       func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_UNSIGNED_LONG: \
+         { typedef unsigned long VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_INT: \
+         { typedef int VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_UNSIGNED_INT: \
+         { typedef unsigned int VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_SHORT: \
+         { typedef short VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_UNSIGNED_SHORT: \
+         { typedef unsigned short VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_CHAR: \
+         { typedef char VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break; \
+       case VTK_UNSIGNED_CHAR: \
+        { typedef unsigned char VTK_TT; \
+         func(arg1, arg2, arg3, arg4); } \
+         break
 //----------------------------------------------------------------------------
 vtkMAFLargeImageData::vtkMAFLargeImageData()
 {
@@ -804,10 +886,10 @@ void vtkMAFLargeImageData::PrintSelf(ostream& os, vtkIndent indent)
 		os << ", " << this->Extent[idx];
 	}
 	os << ")\n";
-	os << indent << "WholeExtent: (" << this->WholeExtent[0];
+	os << indent << "WholeExtent: (" << this->GetExtent()[0];
 	for (idx = 1; idx < 6; ++idx)
 	{
-		os << ", " << this->WholeExtent[idx];
+		os << ", " << this->GetExtent()[idx];
 	}
 	os << ")\n";
 }
@@ -816,7 +898,7 @@ void vtkMAFLargeImageData::PrintSelf(ostream& os, vtkIndent indent)
 void vtkMAFLargeImageData::UpdateData()
 {
 	//this should update the providers information
-	this->vtkDataObject::UpdateData();
+	//this->vtkDataObject::UpdateData();
 	
 	//check if the snapshot requires to be updated
 	unsigned long mtime = this->GetMTime();
@@ -830,7 +912,7 @@ void vtkMAFLargeImageData::UpdateData()
       )
 		{
 			this->ExecuteSnapshotInformation();
-			output->AllocateScalars();
+			output->AllocateScalars(this->ScalarType, this->GetNumberOfScalarComponents());
 			this->ExecuteSnapshotData();
 			
 			this->Snapshot->Modified();
@@ -898,8 +980,9 @@ void vtkMAFLargeImageData::UpdateData()
 	}
 
 	output->SetExtent(outExtent);
-	output->SetWholeExtent(outExtent);
-	output->SetUpdateExtentToWholeExtent();
+	//output->SetWholeExtent(outExtent);
+	//output->extentSetUpdateExtentToWholeExtent();
+	
 	//we have set a new Extent for the output snapshot
 
 	//now we must update origin and spacing
@@ -918,8 +1001,8 @@ void vtkMAFLargeImageData::UpdateData()
 	output->SetSpacing(sp);		
 
 	//set scalar type, number of components and we are ready
-	output->SetScalarType(this->ScalarType);
-	output->SetNumberOfScalarComponents(this->NumberOfScalarComponents);
+	//output->SetScalarType(this->ScalarType);
+	//output->SetNumberOfScalarComponents(this->NumberOfScalarComponents);
 }
 
 #pragma region READING_TEMPLATES
@@ -938,7 +1021,8 @@ void vtkMAFLargeImageDataUpdate2(vtkMAFLargeImageData *self, vtkImageData *data,
 
 	//Get the output extent (the sampled) and increments in the output data
 	int outExtent[6], outIncr[3];	
-	data->GetWholeExtent(outExtent);	
+	data->GetExtent(outExtent);	
+	
 	data->GetIncrements(outIncr);
 
 	//adjust the output pointer outPtr2 
@@ -1084,7 +1168,7 @@ void vtkMAFLargeImageDataUpdate1(vtkMAFLargeImageData *self, vtkImageData *data,
 
 
 //Fills the snapshot with the data (size of snapshot is set in prior to this
-//call in ExecuteSnapshotInformation
+//call in ExecuteSnapshotInformations
 /*virtual*/ void vtkMAFLargeImageData::ExecuteSnapshotData()
 {
 	this->ComputeIncrements();
@@ -1093,7 +1177,7 @@ void vtkMAFLargeImageDataUpdate1(vtkMAFLargeImageData *self, vtkImageData *data,
 	void* ptr = NULL;
 	switch (this->GetScalarType())
 	{
-		vtkTemplateMacro3(vtkMAFLargeImageDataUpdate1, this, 
+		vtkTemplateMacro3(vtkMAFLargeImageDataUpdate1, this,
 			(vtkImageData*)this->Snapshot, (VTK_TT *)(ptr));
 
 	default:

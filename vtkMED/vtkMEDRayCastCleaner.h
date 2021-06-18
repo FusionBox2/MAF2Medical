@@ -18,7 +18,7 @@
 #define __vtkMEDRayCastCleaner_H__
 
 #include "vtkMEDConfigure.h"
-#include "vtkStructuredPointsToStructuredPointsFilter.h"
+#include "vtkStructuredGridAlgorithm.h"
 
 class vtkImageData;
 class vtkStructuredPoints;
@@ -34,13 +34,13 @@ if a blood voxel is in bone boundary the corresponding scalar output contains th
 the effect of this filter is like a bone sanding.
 */
 //---------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDRayCastCleaner : public vtkStructuredPointsToStructuredPointsFilter
+class VTK_vtkMED_EXPORT vtkMEDRayCastCleaner : public vtkStructuredGridAlgorithm
 //---------------------------------------------------------------------------
 {
 public:
   
   /** Add collect revision method */
-  vtkTypeRevisionMacro(vtkMEDRayCastCleaner,vtkStructuredPointsToStructuredPointsFilter);
+  vtkTypeRevisionMacro(vtkMEDRayCastCleaner, vtkStructuredGridAlgorithm);
 
   /** Dynamic constructor */
   static vtkMEDRayCastCleaner *New();
@@ -78,7 +78,7 @@ public:
 protected:
 
   /** Execute this filter */
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
 private:
 

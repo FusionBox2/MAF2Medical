@@ -21,10 +21,10 @@
 // Include:
 //----------------------------------------------------------------------------
 #include "vtkMEDConfigure.h"
-#include "vtkstd/vector"
+//#include "vtkstd/vector"
 #include "vtkCellArray.h"
 #include "vtkPointLocator.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 #include <cmath>
 #include <algorithm>
 
@@ -37,7 +37,7 @@
   class name: vtkMEDFillingHole
   Filter which fill holes of a vtkPolydata
 */
-class VTK_vtkMED_EXPORT vtkMEDFillingHole : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDFillingHole : public vtkPolyDataAlgorithm
 {
 public:
 #pragma region Nested classes
@@ -146,7 +146,7 @@ public:
   static vtkMEDFillingHole *New();
 
   /** RTTI macro */
-  vtkTypeRevisionMacro(vtkMEDFillingHole,vtkPolyDataToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDFillingHole,vtkPolyDataAlgorithm);
   /** print information of the class */
   void PrintSelf(ostream& os, vtkIndent indent);
 
@@ -309,7 +309,7 @@ protected:
   /** Build internal mesh. It suppose that the input mesh is manifold */
   void InitMesh();
   /** filter execution */
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
   /** mesh allocation */
   void DoneMesh();
 

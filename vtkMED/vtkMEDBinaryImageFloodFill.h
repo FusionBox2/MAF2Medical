@@ -18,7 +18,8 @@
 #define __vvtkMEDBinaryImageFloodFill_H__
 
 #include "vtkMEDConfigure.h"
-#include "vtkStructuredPointsToStructuredPointsFilter.h"
+#include "vtkStructuredPoints.h"
+#include "vtkStructuredGridAlgorithm.h"
 
 class vtkImageData;
 class vtkStructuredPoints;
@@ -30,13 +31,13 @@ class vtkStructuredPoints;
     This filter operate on binary images and fill/erease the area identified by the specified seed.
 */
 //---------------------------------------------------------------------------
-class VTK_vtkMED_EXPORT vtkMEDBinaryImageFloodFill : public vtkStructuredPointsToStructuredPointsFilter
+class VTK_vtkMED_EXPORT vtkMEDBinaryImageFloodFill : public vtkStructuredGridAlgorithm
 //---------------------------------------------------------------------------
 {
 public:
 
   /** Add collect revision method */
-  vtkTypeRevisionMacro(vtkMEDBinaryImageFloodFill,vtkStructuredPointsToStructuredPointsFilter);
+  vtkTypeRevisionMacro(vtkMEDBinaryImageFloodFill, vtkStructuredGridAlgorithm);
 
   /** Dynamic ctor */
   static vtkMEDBinaryImageFloodFill *New();
@@ -65,7 +66,7 @@ public:
 protected:
 
   /** Execute this filter */
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   unsigned char ReplaceValue; //> ON_PIXEL
   unsigned char Threshold[2]; //> Threshold for connectivity threshold filter

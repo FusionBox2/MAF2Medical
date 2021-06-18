@@ -19,6 +19,8 @@
 #include "vtkMEDBinaryImageFloodFill.h"
 
 #include "vtkMAFSmartPointer.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkStructuredPoints.h"
 #include "vtkUnsignedCharArray.h"
@@ -71,18 +73,30 @@ void vtkMEDImageFillHolesRemoveIslands::SetAlgorithm(int algorithm)
 }
 
 //------------------------------------------------------------------------------
-void vtkMEDImageFillHolesRemoveIslands::Execute()
-//------------------------------------------------------------------------------
+int vtkMEDImageFillHolesRemoveIslands::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+ // vtkDataSet *input = vtkDataSet::SafeDownCast(
+ //   inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  //vtkDataSet *output = vtkDataSet::SafeDownCast(
+  //  outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   // get input
   vtkStructuredPoints *input = (vtkStructuredPoints*)this->GetInput();
-  input->Update();
+  //input->Update();
 
   // prepare output
-  vtkStructuredPoints *output = this->GetOutput();
+  vtkStructuredGrid *output = this->GetOutput();
   output->DeepCopy(input);
-  output->UpdateData();
-  output->Update();
+  //output->UpdateData();
+  //output->Update();
 
   int recognitionSquareEdge = EdgeSize + 2; // Number of pixels of the recognition square
 
@@ -91,8 +105,8 @@ void vtkMEDImageFillHolesRemoveIslands::Execute()
   
   // Flood fill external region of the shape to allow fill big holes inside the shape
   vtkMEDBinaryImageFloodFill *flood_fill = vtkMEDBinaryImageFloodFill::New();
-  flood_fill->SetInput(input);
-  flood_fill->Update();
+  flood_fill->SetInputData(input);
+  //flood_fill->Update();
 
   // get flood fill scalars
   vtkUnsignedCharArray* filled_scalars = (vtkUnsignedCharArray*)input->GetPointData()->GetScalars();
@@ -185,7 +199,10 @@ void vtkMEDImageFillHolesRemoveIslands::Execute()
   output->GetPointData()->Update();
   output->GetPointData()->Modified();
   flood_fill->Delete();
-  output->UpdateData();
-  output->Update();
+ // output->UpdateData();
+ // output->Update();
   this->SetOutput(output);
+
+
+  return 0;
 }

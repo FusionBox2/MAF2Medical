@@ -10,6 +10,8 @@ Copyright (c) 2012
 University of Bedfordshire
 =========================================================================*/
 
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkPolyData.h"
 #include "vtkDataArray.h"
@@ -56,7 +58,7 @@ vtkMEDHalfTubeRemoval::~vtkMEDHalfTubeRemoval()
 //------------------------------------------------------------------------------
 unsigned long vtkMEDHalfTubeRemoval::GetMTime()
 {
-  unsigned long mTime1 = this->vtkPolyDataToPolyDataFilter::GetMTime() ;
+  unsigned long mTime1 = this->vtkPolyDataAlgorithm::GetMTime() ;
 
   if (m_CenterLine != NULL){
     unsigned long mTime2 = m_CenterLine->GetMTime() ;
@@ -71,23 +73,36 @@ unsigned long vtkMEDHalfTubeRemoval::GetMTime()
 //------------------------------------------------------------------------------
 // Execute method
 //------------------------------------------------------------------------------
-void vtkMEDHalfTubeRemoval::Execute()
+int vtkMEDHalfTubeRemoval::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkDataSet *input = vtkDataSet::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkDataSet *output = vtkDataSet::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
   vtkDebugMacro(<< "Executing vtkMEDHalfTubeRemoval Filter") ;
 
   // pointers to input and output
-  m_Input = this->GetInput() ;
+  m_Input = this->GetPolyDataInput(0) ;
   m_Output = this->GetOutput() ;
 
   m_Output->DeepCopy(m_Input) ;
 
   if ((m_CenterLine == NULL) || (m_RemovalMode == REMOVE_NONE))
-    return ;
+    return 1 ;
 
   vtkMEDPolyDataNavigator* nav = vtkMEDPolyDataNavigator::New() ;
   vtkIdList* cellsToRemove = vtkIdList::New() ;
 
-  m_CenterLine->Update() ;
+  //m_CenterLine->Update() ;
 
   for (int i = 0 ;  i < m_Output->GetNumberOfCells() ;  i++){
     // get position of cell
@@ -114,6 +129,8 @@ void vtkMEDHalfTubeRemoval::Execute()
 
   cellsToRemove->Delete() ;
   nav->Delete() ;
+
+  return 0;
 }
 
 
@@ -187,8 +204,8 @@ void vtkMEDHalfTubeRemoval::SetRemovalModeBack()
 //------------------------------------------------------------------------------
 void vtkMEDHalfTubeRemoval::SetViewingPositionAuto(double pos[3], double focus[3], double upVector[3])
 {
-  m_Input = this->GetInput() ;
-  m_Input->Update() ;
+  m_Input = this->GetPolyDataInput(0) ;
+  //m_Input->Update() ;
 
   if (m_CenterLine == NULL){
     std::cout << "vtkMEDHalfTubeRemoval: undefined center line\n" ;

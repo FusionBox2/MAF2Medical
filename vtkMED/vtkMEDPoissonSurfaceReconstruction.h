@@ -24,11 +24,14 @@
 #include "vtkPolyData.h"
 #include "vtkCellArray.h"
 #include "vtkPointData.h"
-#include "vtkDataSetToPolyDataFilter.h"
+#include "vtkDataSetAlgorithm.h"
 
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
+
+#include <windows.h>
+
 
 //----------------------------------------------------------------------------
 // forward declarations :
@@ -42,13 +45,13 @@ class name: vtkMEDPoissonSurfaceReconstruction
 This class implement Poisson Surface Reconstruction method.
 A paper can be viewed here: research.microsoft.com/en-us/um/people/hoppe/poissonrecon.pdf
 */
-class VTK_vtkMED_EXPORT vtkMEDPoissonSurfaceReconstruction : public vtkDataSetToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDPoissonSurfaceReconstruction : public vtkDataSetAlgorithm
 {
 public:
   /** create instance of the object */
   static vtkMEDPoissonSurfaceReconstruction *New();
   /** RTTI macro */
-  vtkTypeRevisionMacro(vtkMEDPoissonSurfaceReconstruction,vtkDataSetToPolyDataFilter);
+  vtkTypeRevisionMacro(vtkMEDPoissonSurfaceReconstruction,vtkDataSetAlgorithm);
   /** print object information */
   void PrintSelf(ostream& os, vtkIndent indent);
 
@@ -65,12 +68,12 @@ protected:
 
   // Description:
   // the main function that does the work
-  void Execute();
+  int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   /** computation of extents and update values*/
-  void ComputeInputUpdateExtents(vtkDataObject *output);
+  int RequestUpdateExtent(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
   /** only check if input is not null */
-  void ExecuteInformation(); 
+  int RequestInformation (vtkInformation *, vtkInformationVector **, vtkInformationVector *); 
   
 private:
   /** copy constructor not implemented */

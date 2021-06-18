@@ -24,7 +24,7 @@
 #include "vtkPolyData.h"
 #include "vtkCellArray.h"
 #include "vtkPointData.h"
-#include "vtkPolyDataToPolyDataFilter.h"
+#include "vtkPolyDataAlgorithm.h"
 
 //----------------------------------------------------------------------------
 // forward declarations :
@@ -37,13 +37,13 @@
 class name: vtkMEDFixTopology
 This class is a filter which use vtkMEDPoissonSurfaceReconstruction class for fixing the topology.
 */
-class VTK_vtkMED_EXPORT vtkMEDFixTopology : public vtkPolyDataToPolyDataFilter
+class VTK_vtkMED_EXPORT vtkMEDFixTopology : public vtkPolyDataAlgorithm
 {
   public:
     /** create instance of the class*/
     static vtkMEDFixTopology *New();
     /** RTTI macro*/
-    vtkTypeRevisionMacro(vtkMEDFixTopology,vtkPolyDataToPolyDataFilter);
+    vtkTypeRevisionMacro(vtkMEDFixTopology,vtkPolyDataAlgorithm);
     /** print information*/
     void PrintSelf(ostream& os, vtkIndent indent);
   
@@ -54,7 +54,7 @@ class VTK_vtkMED_EXPORT vtkMEDFixTopology : public vtkPolyDataToPolyDataFilter
     ~vtkMEDFixTopology();
 
     /** execute the filter*/
-    void Execute();
+    int RequestData(vtkInformation *, vtkInformationVector **, vtkInformationVector *);
 
   private:
     /** copy constructor not implemented*/

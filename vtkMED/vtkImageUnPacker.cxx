@@ -11,10 +11,12 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 #include "vtkImageUnPacker.h"
 #include "vtkImageData.h"
-
+#include "vtkStructuredGrid.h"
 vtkCxxRevisionMacro(vtkImageUnPacker, "$Revision: 1.1.1.1.8.1 $");
 vtkStandardNewMacro(vtkImageUnPacker);
 
@@ -43,7 +45,7 @@ vtkImageUnPacker::~vtkImageUnPacker()
 void vtkImageUnPacker::PrintSelf(ostream& os, vtkIndent indent)
 //----------------------------------------------------------------------------
 {
-  vtkImageSource::PrintSelf(os,indent);
+  vtkImageAlgorithm::PrintSelf(os,indent);
 
   os << indent << "FileName: " <<
     (this->FileName ? this->FileName : "(none)") << "\n";
@@ -51,9 +53,15 @@ void vtkImageUnPacker::PrintSelf(ostream& os, vtkIndent indent)
 
 //----------------------------------------------------------------------------
 // This method returns the largest data that can be generated.
-void vtkImageUnPacker::ExecuteInformation()
-//----------------------------------------------------------------------------
+int vtkImageUnPacker::RequestInformation(
+  vtkInformation *request,
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
 	// Here information on the image are read and set in the Output cache.
 	
 	if (ReadImageInformation(this->GetInput()))
@@ -61,19 +69,37 @@ void vtkImageUnPacker::ExecuteInformation()
 		vtkGenericWarningMacro("Problems extracting the image information. ");
 	}
 
-	GetOutput()->SetWholeExtent(GetDataExtent());
-	GetOutput()->SetUpdateExtent(GetDataExtent());
-	GetOutput()->SetScalarType(GetDataScalarType());
-	GetOutput()->SetNumberOfScalarComponents(GetNumberOfScalarComponents());
+	this->SetDataExtent(GetDataExtent());
+	this->SetUpdateExtent(GetDataExtent());
+
+
+	GetOutput()->SetScalarType(GetDataScalarType(), request);
+	GetOutput()->SetNumberOfScalarComponents(GetNumberOfScalarComponents(), request);
+
+	return 0;
 }
 
 //----------------------------------------------------------------------------
 // This function reads an image from a stream.
-void vtkImageUnPacker::Execute(vtkImageData *data)
-//----------------------------------------------------------------------------
+int vtkImageUnPacker::RequestData(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector, vtkImageData* data)
 {
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+
+  // get the input and output
+  vtkStructuredGrid *input = vtkStructuredGrid::SafeDownCast(
+    inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkStructuredGrid *output = vtkStructuredGrid::SafeDownCast(
+    outInfo->Get(vtkDataObject::DATA_OBJECT()));
+
 	if (VtkImageUnPackerUpdate(this->Input,data))
 	{
 		vtkErrorMacro("Cannot Unpack Image!");
 	}
+
+	return 0;
 }

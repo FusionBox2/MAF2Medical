@@ -17,7 +17,9 @@
 #include "vtkMAFLargeImageData.h"
 #include "vtkMAFFileDataProvider.h"
 #include "vtkMAFMultiFileDataProvider.h"
-
+#include "vtkStreamingDemandDrivenPipeline.h"
+#include "vtkInformation.h"
+#include "vtkInformationVector.h"
 #include "vtkObjectFactory.h"
 
 vtkCxxRevisionMacro(vtkMAFLargeImageReader, "$Revision: 1.1.2.1 $");
@@ -164,8 +166,15 @@ vtkMAFLargeImageReader::~vtkMAFLargeImageReader()
 
 // By default, UpdateInformation calls this method to copy information
 // unmodified from the input to the output.
-/*virtual*/ void vtkMAFLargeImageReader::ExecuteInformation()
-{	
+/*virtual*/ int vtkMAFLargeImageReader::RequestInformation(
+  vtkInformation *vtkNotUsed(request),
+  vtkInformationVector **inputVector,
+  vtkInformationVector *outputVector)
+{
+  // get the info objects
+  vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
+  vtkInformation *outInfo = outputVector->GetInformationObject(0);
+	
 	//default computation of output extent
 	vtkMAFLargeImageData *output = this->GetOutput();	
 
@@ -174,25 +183,30 @@ vtkMAFLargeImageReader::~vtkMAFLargeImageReader()
 	
 	//set the dimensions of underlaying file
 	//NB: Extent will be set to UpdateExtent by the caller
-	output->SetWholeExtent(this->DataExtent);
-	output->SetUpdateExtentToWholeExtent();
-
+	outInfo->Set(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),this->DataExtent,6);
+	
+	this->SetUpdateExtentToWholeExtent();
 	// set the whole extent (area of interest in the image data) to our VOI
 	if ((this->DataVOI[0] | this->DataVOI[1] | this->DataVOI[2] |
 		this->DataVOI[3] | this->DataVOI[4] | this->DataVOI[5]) != 0)	
 		output->SetVOI(this->DataVOI);	//if it was set
 	
 	// set the spacing
-	output->SetSpacing(this->DataSpacing);
+	outInfo->Set(vtkDataObject::SPACING(),this->DataSpacing,3);
 
 	// set the origin.
-	output->SetOrigin(this->DataOrigin);
+	outInfo->Set(vtkDataObject::ORIGIN(),this->DataOrigin,3);
 
-	output->SetScalarType(this->DataScalarType);
-	output->SetNumberOfScalarComponents(this->NumberOfScalarComponents);
+	//outInfo->Set(vtkDataObject::SCALAR_TYPE(),this->DataScalarType);
+	//outInfo->Set(vtkDataObject::SCALAR_NUMBER_OF_COMPONENTS(),this->NumberOfScalarComponents);
+	
+	vtkDataObject::SetPointDataActiveScalarInfo(
+		outInfo, this->DataScalarType, this->NumberOfScalarComponents);
 	output->SetDataLowerLeft(this->FileLowerLeft != 0);
 	output->SetDataMask(this->DataMask);	
 	output->SetMemoryLimit(this->MemoryLimit);
+
+	return 0;
 }
 
 //----------------------------------------------------------------------------
