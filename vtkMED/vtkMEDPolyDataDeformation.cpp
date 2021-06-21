@@ -663,7 +663,7 @@ vtkMEDPolyDataDeformation::~vtkMEDPolyDataDeformation()
 //By default, UpdateInformation calls this method to copy information
 //unmodified from the input to the output.
 /*virtual*/int vtkMEDPolyDataDeformation::RequestInformation(
-  vtkInformation *vtkNotUsed(request),
+  vtkInformation *request,
   vtkInformationVector **inputVector,
   vtkInformationVector *outputVector)
 {
@@ -685,8 +685,7 @@ vtkMEDPolyDataDeformation::~vtkMEDPolyDataDeformation()
     SetOutput(vtkPolyData::New());
 
   //copy input to output
-  vtkInformation* re;
-  Superclass::RequestInformation(      re,    inputVector,  outputVector);
+  Superclass::RequestInformation(request, inputVector,  outputVector);
       /*
 {
   // get the info objects

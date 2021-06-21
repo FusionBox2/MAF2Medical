@@ -27,7 +27,7 @@
 
 #include "vtkVolumeRayCastMapper.h"
 
-class VTK_RENDERING_EXPORT vtkOpenGLVolumeRayCastMapper : public vtkVolumeRayCastMapper
+class VTK_vtkMED_EXPORT vtkOpenGLVolumeRayCastMapper : public vtkVolumeRayCastMapper
 {
 public:
   static vtkOpenGLVolumeRayCastMapper *New();
