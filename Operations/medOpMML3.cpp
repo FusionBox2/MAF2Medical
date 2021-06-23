@@ -1660,7 +1660,7 @@ void medOpMML3::OnMuscleSelection()
   mafString title = _R("Select Muscle (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMESurface)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMESurface)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -2417,7 +2417,7 @@ void medOpMML3::OnLandmark1AtlasPatientSelection()
   mafString title = _R("Select Landmark 1 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -2536,7 +2536,7 @@ void medOpMML3::OnLandmark2AtlasPatientSelection()
   mafString title = _R("Select Landmark 2 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -2654,7 +2654,7 @@ void medOpMML3::OnLandmark3AtlasPatientSelection()
   mafString title = _R("Select Landmark 3 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -2772,7 +2772,7 @@ void medOpMML3::OnLandmark4AtlasPatientSelection()
   mafString title = _R("Select Landmark 3 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -2890,7 +2890,7 @@ void medOpMML3::OnLandmarkAxis1AtlasSelection()
   mafString title = _R("Select Landmark Axis1 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -2987,7 +2987,7 @@ void medOpMML3::OnLandmarkAxis2AtlasSelection()
   mafString title = _R("Select Landmark Axis2 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;
@@ -3084,7 +3084,7 @@ void medOpMML3::OnLandmarkAxis3AtlasSelection()
   mafString title = _R("Select Landmark Axis3 (Atlas)");
   mafEvent e(this,VME_CHOOSE);
   e.SetString(&title);
-  e.SetArg((long)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
+  e.SetArg((intptr_t)(&medOpMML3::AcceptVMELandmark)) ; // accept only landmark vme's
   mafEventMacro(e);
   mafVME *vme = (mafVME*)e.GetVme();
   if(!vme) return;

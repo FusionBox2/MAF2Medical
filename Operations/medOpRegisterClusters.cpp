@@ -207,7 +207,7 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
 		  case ID_CHOOSE:
 		  {
 			  mafString s(_L("Choose cloud"));
-        mafEvent e(this,VME_CHOOSE, &s, (long)&medOpRegisterClusters::ClosedCloudAccept);
+        mafEvent e(this,VME_CHOOSE, &s, (intptr_t)&medOpRegisterClusters::ClosedCloudAccept);
 			  mafEventMacro(e);
 			  mafNode *vme = e.GetVme();
 		    OnChooseTargetVme(vme);
@@ -218,7 +218,7 @@ void medOpRegisterClusters::OnEvent(mafEventBase *maf_event)
 		  case ID_CHOOSE_SURFACE:
 		  {
 			  mafString s(_L("Choose surface"));
-        mafEvent e(this,VME_CHOOSE, &s, (long)&medOpRegisterClusters::SurfaceAccept);
+        mafEvent e(this,VME_CHOOSE, &s, (intptr_t)&medOpRegisterClusters::SurfaceAccept);
 			  mafEventMacro(e);
 			  mafNode *vme = e.GetVme();
 		    OnChooseSurfaceVme(vme);
@@ -343,7 +343,7 @@ void medOpRegisterClusters::OpDo()
 			long p = t * 100 / numTimeStamps;
 		//	mafProgressBarSetValueMacro(p);
       if(!m_TestMode)
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,p));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)p));
 			//Set the new time for the vme used to register the one frame source 
       m_Target->SetTimeStamp(currTime); //set current time
       m_Target->Update(); //>UpdateAllData();

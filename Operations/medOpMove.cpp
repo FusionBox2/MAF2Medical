@@ -245,7 +245,7 @@ void medOpMove::OnEvent(mafEventBase *maf_event)
 void medOpMove::OpDo()
 //----------------------------------------------------------------------------
 {
-  mafOpTransformInterface::OpDo();
+	//mafOpTransformInterface::OpDo();
 }
 //----------------------------------------------------------------------------
 void medOpMove::OpUndo()
@@ -318,9 +318,26 @@ void medOpMove::OnEventThis(mafEventBase *maf_event)
       ((mafVME*)m_Input)->SetAbsMatrix(m_NewAbsMatrix, m_CurrentTime);
 
       // update gizmos positions
-      if (m_GizmoTranslate) m_GizmoTranslate->SetAbsPose(m_RefSysVME->GetOutput()->GetAbsMatrix());
-      if (m_GizmoRotate) m_GizmoRotate->SetAbsPose(m_RefSysVME->GetOutput()->GetAbsMatrix());
-      if (m_GuiTransformMouse) m_GuiTransformMouse->SetRefSys(m_RefSysVME);
+
+	  //Modified
+	  if (m_GizmoTranslate)
+		  //m_GizmoTranslate->SetAbsPose(m_RefSysVME->GetOutput()->GetAbsMatrix());
+	  {
+		  mafString m=m_RefSysVME->GetName();
+		  wxBusyInfo wait(m.toWx());
+		  Sleep(2000);
+		  m_GizmoTranslate->SetAbsPose(m_RefSysVME->GetOutput()->GetMatrix());		 
+	  }
+	  if (m_GizmoRotate)
+		  //m_GizmoRotate->SetAbsPose(m_RefSysVME->GetOutput()->GetAbsMatrix());
+	  {
+		 
+		   m_GizmoRotate->SetAbsPose(m_RefSysVME->GetOutput()->GetMatrix());
+	  }
+
+	  if (m_GuiTransformMouse)
+		  m_GuiTransformMouse->SetRefSys(m_RefSysVME);
+	 
 
       // update gui 
       m_GuiTransformTextEntries->SetAbsPose(((mafVME *)m_Input)->GetOutput()->GetAbsMatrix());

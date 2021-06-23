@@ -235,7 +235,7 @@ void medOpSplitSurface::OnEventThis(mafEventBase *maf_event)
 		case ID_CHOOSE_SURFACE:
 			{
 				mafString title = _R("Choose m_Clipper Surface");
-        e->SetArg((long)&medOpSplitSurface::SurfaceAccept);
+        e->SetArg((intptr_t)&medOpSplitSurface::SurfaceAccept);
 				e->SetString(&title);
 				e->SetId(VME_CHOOSE);
 				mafEventMacro(*e);

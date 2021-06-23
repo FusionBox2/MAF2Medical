@@ -536,7 +536,7 @@ void medPipeVectorFieldGlyphs::InitFilterList(int nScalars)
 			m_RangeCtrl->SetItemState(idx1 , wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
 				wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
 			m_RangeCtrl->EnsureVisible(idx1 + 1);
-			m_RangeCtrl->SetItemData(idx1 , (long)pItem);
+			m_RangeCtrl->SetItemPtrData(idx1 , (wxUIntPtr)pItem);
 			idx1++;
 
 		}else if (linkName.StartsWith(_R(FILTER_LINK_NAME2)) &&  nScalars>0)
@@ -573,7 +573,7 @@ void medPipeVectorFieldGlyphs::InitFilterList(int nScalars)
 			m_RangeCtrl2->SetItemState(idx2 , wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
 				wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
 			m_RangeCtrl2->EnsureVisible(idx2 + 1);
-			m_RangeCtrl2->SetItemData(idx2 , (long)pItem);
+			m_RangeCtrl2->SetItemPtrData(idx2 , (wxUIntPtr)pItem);
 			idx2++;
 
 		}
@@ -924,7 +924,7 @@ bool medPipeVectorFieldGlyphs::AddItem2()
 		pItem->value[0] = dValue1;
 		pItem->value[1] = dValue2;
 
-		m_RangeCtrl2->SetItemData(nListCount, (long)pItem);
+		m_RangeCtrl2->SetItemPtrData(nListCount, (wxUIntPtr)pItem);
 		rtn = true;
 	}else{
 		mafMessage(_M("invalid value,please check"));
@@ -972,7 +972,7 @@ bool medPipeVectorFieldGlyphs::AddItem()
 		pItem->value[0] = dValue1;
 		pItem->value[1] = dValue2;
 
-		m_RangeCtrl->SetItemData(nListCount, (long)pItem);
+		m_RangeCtrl->SetItemPtrData(nListCount, (wxUIntPtr)pItem);
 		rtn = true;
 	}else{
 		mafMessage(_M("invalid value,please check"));

@@ -173,7 +173,7 @@ void medOpExporterLandmarkWS::Write()
 
       if (!m_TestMode)
       {
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) timeStamps.size())*100.)));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) timeStamps.size())*100.)));
       }
     }
 

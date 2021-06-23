@@ -473,7 +473,7 @@ void medGeometryEditorPolylineGraph::VmePicked(mafEvent *e)
         MovePoint(vertexCoord);
 
         #ifndef _DEBUG
-          mafLogMessage(_M(mafString::Format(_R(("%.3f %.3f %.3f"),vertexCoord[0],vertexCoord[1],vertexCoord[2]))));
+          mafLogMessage(_M(mafString::Format(_R("%.3f %.3f %.3f"),vertexCoord[0],vertexCoord[1],vertexCoord[2])));
         #endif
 			}
 			else if(m_PointTool==ID_SELECT_POINT)

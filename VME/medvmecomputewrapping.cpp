@@ -5450,17 +5450,17 @@ void medVMEComputeWrapping::EventWraped(mafEvent *e){
 	mafString title = _L("Choose meter vme link");
 	e->SetId(VME_CHOOSE);
 	if (button_id == ID_WRAPPED_METER_LINK1)
-		e->SetArg((long)&medVMEComputeWrapping::VMESurfaceParametricAccept);
+		e->SetArg((intptr_t)&medVMEComputeWrapping::VMESurfaceParametricAccept);
 	else if (button_id == ID_WRAPPED_METER_LINK2)
-		e->SetArg((long)&medVMEComputeWrapping::VMESurfaceParametricAccept);
+		e->SetArg((intptr_t)&medVMEComputeWrapping::VMESurfaceParametricAccept);
 
 	else if (button_id == ID_WRAPPED_METER_LINK)//old object
-		e->SetArg((long)&medVMEComputeWrapping::VMESurfaceParametricAccept);
+		e->SetArg((intptr_t)&medVMEComputeWrapping::VMESurfaceParametricAccept);
 
 	else if (button_id == ID_VIA_POINT)
-		e->SetArg((long)&medVMEComputeWrapping::VMESurfaceParametricAccept);
+		e->SetArg((intptr_t)&medVMEComputeWrapping::VMESurfaceParametricAccept);
 	else
-		e->SetArg((long)&medVMEComputeWrapping::VMEAccept);
+		e->SetArg((intptr_t)&medVMEComputeWrapping::VMEAccept);
 	e->SetString(&title);
 
 	ForwardUpEvent(e);
@@ -5674,7 +5674,7 @@ void medVMEComputeWrapping::OnEvent(mafEventBase *maf_event)
 				}*/
 				mafString title = _L("Choose a vme");
 				e->SetId(VME_CHOOSE);
-				e->SetArg((long)&medVMEComputeWrapping::VMEAccept);
+				e->SetArg((intptr_t)&medVMEComputeWrapping::VMEAccept);
 				e->SetString(&title);
 				ForwardUpEvent(e);
 				mafNode *n = e->GetVme();

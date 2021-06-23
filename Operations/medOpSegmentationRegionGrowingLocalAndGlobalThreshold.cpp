@@ -234,7 +234,7 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::MorphologicalMathema
   ConvertervtkTOitk::Pointer vtkTOitk = ConvertervtkTOitk::New();
   vtkTOitk->SetInput( m_SegmentedImage );
   vtkTOitk->Update();
-  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)10));
+  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)10));
 
   //Structuring element is a sphere
   StructuringElementType  structuringElement;
@@ -246,20 +246,20 @@ void medOpSegmentationRegionGrowingLocalAndGlobalThreshold::MorphologicalMathema
   binaryDilate->SetInput( vtkTOitk->GetOutput() );
   binaryDilate->SetDilateValue( m_LowerLabel );
   binaryDilate->Update();
-  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)50));
+  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)50));
 
   ErodeFilterType::Pointer  binaryErode  = ErodeFilterType::New();
   binaryErode->SetKernel(  structuringElement );
   binaryErode->SetInput( binaryDilate->GetOutput() );
   binaryErode->SetErodeValue( m_LowerLabel );
   binaryErode->Update();
-  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)90));
+  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)90));
 
   typedef itk::ImageToVTKImageFilter< OutputImageType > ConverteritkTOvtk;
   ConverteritkTOvtk::Pointer itkTOvtk = ConverteritkTOvtk::New();
   itkTOvtk->SetInput( binaryErode->GetOutput() );
   itkTOvtk->Update();
-  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)100));
+  mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)100));
 
   m_MorphoImage->DeepCopy(itkTOvtk->GetOutput());
   m_MorphoImage->Update();

@@ -2201,9 +2201,9 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
         mafString title = _L("Choose meter vme link");
         e->SetId(VME_CHOOSE);
         if (button_id == ID_WRAPPED_METER_LINK)
-		  e->SetArg((long)&medVMEWrappedMeter::VMESurfaceParametricAccept);
+		  e->SetArg((intptr_t)&medVMEWrappedMeter::VMESurfaceParametricAccept);
 		else
-          e->SetArg((long)&medVMEWrappedMeter::VMEAccept);
+          e->SetArg((intptr_t)&medVMEWrappedMeter::VMEAccept);
         e->SetString(&title);
         ForwardUpEvent(e);
         mafNode *n = e->GetVme();
@@ -2287,7 +2287,7 @@ void medVMEWrappedMeter::OnEvent(mafEventBase *maf_event)
         }*/
         mafString title = _L("Choose a vme");
         e->SetId(VME_CHOOSE);
-        e->SetArg((long)&medVMEWrappedMeter::VMEAccept);
+        e->SetArg((intptr_t)&medVMEWrappedMeter::VMEAccept);
         e->SetString(&title);
         ForwardUpEvent(e);
         mafNode *n = e->GetVme();

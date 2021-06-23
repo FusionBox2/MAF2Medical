@@ -204,7 +204,7 @@ protected:
 
   /** Notifies the listener, sending the specified notify id 
   and nData as and argument.  */
-  virtual void NotifyListener(long nData);
+  virtual void NotifyListener(intptr_t nData);
 
   /**
 	Creates GUI (to be added into m_GUI_This) according to the given style. 

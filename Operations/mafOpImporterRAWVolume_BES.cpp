@@ -635,7 +635,7 @@ bool mafOpImporterRAWVolume_BES::Import()
 {
 	if(!this->m_TestMode) {
 		mafEventMacro(mafEvent(this,PROGRESSBAR_SHOW));			
-		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (long)0));
+		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_VALUE, (intptr_t)0));
 
 		mafString szText = _L("Importing RAW data ...");
 		mafEventMacro(mafEvent(this, PROGRESSBAR_SET_TEXT, &szText));

@@ -159,7 +159,7 @@ void medOpExporterAnalogWS::Write()
       }
       if (!m_TestMode)
       {
-        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) i)/((double) emgMatrix.columns())*100.)));
+        mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) i)/((double) emgMatrix.columns())*100.)));
       }
     }
     

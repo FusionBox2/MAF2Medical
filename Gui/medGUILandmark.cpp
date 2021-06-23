@@ -219,7 +219,7 @@ void medGUILandmark::OnEvent(mafEventBase *maf_event)
     case ID_REF_SYS:
       {
         mafString title = _L("Choose VME ref sys");
-        mafEvent e(this,VME_CHOOSE,&title,(long)&medGUILandmark::VmeAccept);
+        mafEvent e(this,VME_CHOOSE,&title,(intptr_t)&medGUILandmark::VmeAccept);
         mafEventMacro(e); 
         SetRefSysVME(mafVME::SafeDownCast(e.GetVme())); 			
       }

@@ -452,7 +452,7 @@ void medOpImporterGRFWS::ReadForcePlates()
     count++;
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) count)/((double) totlines)*100.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) count)/((double) totlines)*100.)));
     }
 
   }while (!inputFile.Eof());
@@ -607,7 +607,7 @@ void medOpImporterGRFWS::ReadSingleVector()
     count++;
     if (!m_TestMode)
     {
-      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(long)(((double) count)/((double) totlines)*100.)));
+      mafEventMacro(mafEvent(this,PROGRESSBAR_SET_VALUE,(intptr_t)(((double) count)/((double) totlines)*100.)));
     }
 
   }while (!inputFile.Eof());

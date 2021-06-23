@@ -288,7 +288,7 @@ void medOpInteractiveClipSurface::OnEventThis(mafEventBase *maf_event)
           return;
         }
         mafString s(_R("Choose Constrain"));
-        mafEvent e(this,VME_CHOOSE, &s, (long)&medOpInteractiveClipSurface::ConstrainAccept);
+        mafEvent e(this,VME_CHOOSE, &s, (intptr_t)&medOpInteractiveClipSurface::ConstrainAccept);
         mafEventMacro(e);
         mafNode *vme = e.GetVme();
         if(vme != NULL)
@@ -302,7 +302,7 @@ void medOpInteractiveClipSurface::OnEventThis(mafEventBase *maf_event)
 		case ID_CHOOSE_SURFACE:
 			{
 				mafString title = _R("Choose m_Clipper Surface");
-				e->SetArg((long)&medOpInteractiveClipSurface::SurfaceAccept);
+				e->SetArg((intptr_t)&medOpInteractiveClipSurface::SurfaceAccept);
 				e->SetString(&title);
 				e->SetId(VME_CHOOSE);
 				mafEventMacro(*e);
